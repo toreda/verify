@@ -10,7 +10,7 @@
 
 &nbsp;
 # `@toreda/chk`
-Simple TTL-based object cache in TypeScript.
+Automated object and data validation using schemas.
 
 &nbsp;
 
@@ -47,7 +47,7 @@ npm install @toreda/chk
 [MIT](LICENSE) &copy; Toreda, Inc.
 
 ## Copyright
-Copyright &copy; 2019 - 2022 Toreda, Inc. All Rights Reserved.
+Copyright &copy; 2022 Toreda, Inc. All Rights Reserved.
 
 &nbsp;
 

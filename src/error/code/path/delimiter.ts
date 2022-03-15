@@ -10,7 +10,7 @@ import Defaults from '../../../defaults';
  *
  * @category Errors
  */
-export function errorCodePathDelimiter(value?: string): string {
+export function errorCodePathDelimiter(value?: string | null): string {
 	if (typeof value !== 'string') {
 		return Defaults.ErrorCode.PathDelimiter;
 	}

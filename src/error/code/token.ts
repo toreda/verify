@@ -10,7 +10,7 @@ import Defaults from '../../defaults';
  *
  * @category Errors
  */
-export function errorCodeToken(value?: string): string {
+export function errorCodeToken(value?: string | null): string {
 	if (typeof value !== 'string') {
 		return Defaults.ErrorCode.CodeToken;
 	}

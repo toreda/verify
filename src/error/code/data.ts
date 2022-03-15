@@ -9,6 +9,7 @@ export interface ErrorCodeData {
 	entity: string;
 	path: string[];
 	code: string;
-	codeToken: string;
-	pathDelim: string;
+	text?: string;
+	customCodeToken?: string;
+	customPathDelim?: string;
 }

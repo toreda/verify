@@ -10,4 +10,5 @@ export interface ErrorCodeArgs {
 	/** Signals the end of the error path string and start of the error code string. Uses global
 	 * default value if not provided. */
 	codeToken?: string;
+	text?: string;
 }

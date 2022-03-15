@@ -2,6 +2,8 @@ export default class Defaults {
 	public static ErrorCode = {
 		PathDelimiter: '::',
 		CodeToken: '|',
-		EmptyPath: []
+		EmptyPath: [],
+		Entity: '___',
+		Code: '___'
 	} as const;
 }

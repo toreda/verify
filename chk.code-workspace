@@ -4,7 +4,10 @@
 			"path": "."
 		}
 	],
-	"settings": {},
+
+	"settings": {
+
+	},
 	"extensions": {
 		"recommendations": [
 			"yzhang.markdown-all-in-one",

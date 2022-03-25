@@ -1,6 +1,6 @@
 export default class Defaults {
 	public static ErrorCode = {
-		PathDelimiter: '::',
+		PathDelimiter: ':',
 		CodeToken: '|',
 		EmptyPath: [],
 		Entity: '___',

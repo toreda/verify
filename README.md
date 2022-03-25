@@ -32,10 +32,19 @@ npm install @toreda/chk
 
 # Usage
 
+This package uses `Fate` objects from `@toreda/fate` to return validation results.
+
+&nbsp;
+## Validation
 ```typescript
 
 ```
 
+
+## Creating Error Codes
+```typescript
+
+```
 
 # Source Code
 `@toreda/chk` is an open source package provided under the MIT License. Download, clone, or check the complete project source [here on Github](https://www.npmjs.com/package/@toreda/chk). We welcome bug reports, comments, and pull requests.

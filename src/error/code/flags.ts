@@ -4,7 +4,7 @@
  *
  * @category Errors
  */
-export interface ErrorCodeArgs {
+export interface ErrorCodeFlags {
 	/** 1 or more characters delimiting error path segments.*/
 	pathDelimiter?: string;
 	/** Signals the end of the error path string and start of the error code string. Uses global

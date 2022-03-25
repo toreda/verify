@@ -1,4 +1,4 @@
-import type {ErrorCodeArgs} from '../code/args';
+import type {ErrorCodeFlags} from '../code/flags';
 import {errorCodePathDelimiter} from '../code/path/delimiter';
 import {errorCodeToken} from '../code/token';
 
@@ -13,20 +13,22 @@ import {errorCodeToken} from '../code/token';
  *
  * @category Errors
  */
-export function errorMkCode<EntityT extends string, PathT extends string, CodeT extends string>(
+export function errorMkCode<CodeT extends string, EntityT extends string, PathT extends string>(
+	code: CodeT,
 	entity: EntityT,
 	path: PathT | PathT[],
-	code: CodeT,
-	args?: ErrorCodeArgs
+	opts?: ErrorCodeFlags
 ): string {
-	const pathDelim = errorCodePathDelimiter(args?.pathDelimiter);
-	const codeToken = errorCodeToken(args?.codeToken);
-
+	const codeToken = errorCodeToken(opts?.codeToken);
+	const pathDelim = errorCodePathDelimiter(opts?.pathDelimiter);
 	let base: string;
+
 	if (Array.isArray(path)) {
 		base = `${entity}${pathDelim}${path.join(pathDelim)}`;
-	} else {
+	} else if (typeof path === 'string') {
 		base = `${entity}${pathDelim}${path}`;
+	} else {
+		base = `${entity}`;
 	}
 
 	return `${base}${codeToken}${code}`;

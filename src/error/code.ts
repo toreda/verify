@@ -1,6 +1,6 @@
 import Defaults from '../defaults';
-import type {ErrorCodeArgs} from './code/args';
 import type {ErrorCodeData} from './code/data';
+import type {ErrorCodeFlags} from './code/flags';
 import type {Stringable} from '@toreda/types';
 import {errorCodePathDelimiter} from './code/path/delimiter';
 import {errorCodeToken} from './code/token';
@@ -27,7 +27,7 @@ export class ErrorCode<EntityT extends string, PathT extends string, CodeT exten
 
 	public readonly text: string | undefined;
 
-	constructor(entity: EntityT, path: PathT | PathT[], code: CodeT, args?: ErrorCodeArgs) {
+	constructor(entity: EntityT, path: PathT | PathT[], code: CodeT, args?: ErrorCodeFlags) {
 		this.entity = entity ?? Defaults.ErrorCode.Entity;
 		this.path = this.mkPath(path);
 		this.code = code ?? Defaults.ErrorCode.CodeToken;

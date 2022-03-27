@@ -1,11 +1,11 @@
-import {ChkResult} from './result';
+import {ChkChainRoot} from './chain/root';
+import {ChkRoot} from './root';
 import {Fate} from '@toreda/fate';
 import {NodeContains} from '../node/contains';
-import {NodeHave} from 'src/node/have';
-import {NodeIs} from 'src/node/is';
-import {NodeMatch} from 'src/node/match';
+import {NodeHave} from '../node/have';
+import {NodeIs} from '../node/is';
+import {NodeMatch} from '../node/match';
 import {NodeMust} from '../node/must';
-import {NodeRoot} from '../node/root';
 
 export class ChkChain<ValueT> {
 	public readonly must: NodeMust<ValueT>;
@@ -13,21 +13,23 @@ export class ChkChain<ValueT> {
 	public readonly is: NodeIs<ValueT>;
 	public readonly has: NodeHave<ValueT>;
 	public readonly matches: NodeMatch<ValueT>;
-	private readonly root: NodeRoot<ValueT>;
+	private readonly chkRoot: ChkRoot<ValueT>;
+	private readonly chainRoot: ChkChainRoot<ValueT>;
 
-	constructor(root: NodeRoot<ValueT>) {
-		this.root = root;
-		this.must = new NodeMust<ValueT>(root);
-		this.contains = new NodeContains<ValueT>(root);
-		this.has = new NodeHave<ValueT>(root);
-		this.is = new NodeIs<ValueT>(root);
-		this.matches = new NodeMatch<ValueT>(root);
+	constructor(chkRoot: ChkRoot<ValueT>) {
+		this.chkRoot = chkRoot;
+		const chainRoot = new ChkChainRoot<ValueT>(chkRoot.value);
+		this.must = new NodeMust<ValueT>(chainRoot);
+		this.contains = new NodeContains<ValueT>(chainRoot);
+		this.has = new NodeHave<ValueT>(chainRoot);
+		this.is = new NodeIs<ValueT>(chainRoot);
+		this.matches = new NodeMatch<ValueT>(chainRoot);
+
+		this.chainRoot = chainRoot;
 	}
 
-	public async execute(value?: ValueT | null): Promise<Fate<ChkResult<ValueT>>> {
-		const fate = new Fate<ChkResult<ValueT>>();
-		const result = new ChkResult<ValueT>();
-		fate.data = result;
+	public async execute(value?: ValueT | null): Promise<Fate<never>> {
+		const fate = new Fate<never>();
 
 		return fate;
 	}

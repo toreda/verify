@@ -1,11 +1,11 @@
 import {Fate} from '@toreda/fate';
-import type {Matcher} from '../matcher';
+import {MatcherFunc} from './func';
 
 export class MatcherBound<ValueT, CmpT> {
-	public readonly fn: Matcher<ValueT, CmpT[]>;
-	public readonly args: CmpT[];
+	public readonly fn: MatcherFunc<CmpT>;
+	public readonly args: CmpT;
 
-	constructor(fn: Matcher<ValueT, CmpT[]>, args: CmpT[]) {
+	constructor(fn: MatcherFunc<CmpT>, args: CmpT) {
 		this.fn = fn;
 		this.args = args;
 	}
@@ -13,7 +13,12 @@ export class MatcherBound<ValueT, CmpT> {
 	public async execute(value?: ValueT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 		try {
-			const result = this.fn(this.args);
+			const result = await this.fn(this.args);
+			if (result === true) {
+				fate.success(true);
+			} else {
+				fate.setErrorCode(`validation_fail`);
+			}
 		} catch (e) {
 			fate.error(e);
 			fate.setErrorCode('exception');

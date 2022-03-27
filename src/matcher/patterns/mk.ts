@@ -1,5 +1,5 @@
+import {ChkChainRoot} from 'src/chk/chain/root';
 import type {Matcher} from '../..//matcher';
-import {NodeRoot} from '../../node/root';
 import {Pattern} from '../../pattern';
 
 /**
@@ -11,7 +11,7 @@ import {Pattern} from '../../pattern';
  */
 export function matcherPatternsMk<NextT, ValueT>(
 	next: NextT,
-	root: NodeRoot<ValueT>
+	root: ChkChainRoot<ValueT>
 ): Matcher<NextT, Pattern<ValueT>[]> {
 	return (patterns: Pattern<ValueT>[]): NextT => {
 		return next;

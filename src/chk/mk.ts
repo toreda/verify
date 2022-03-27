@@ -1,23 +1,26 @@
 import {Chk} from '../chk';
 import {ChkChain} from './chain';
 import {ChkResult} from './result';
+import {ChkRoot} from '../chk/root';
 import {Fate} from '@toreda/fate';
-import {NodeRoot} from '../node/root';
+import {NodeMust} from 'src/node/must';
 
 export function chkMk<ValueT>(): Chk<ValueT> {
-	const root = new NodeRoot<ValueT>();
+	const root = new ChkRoot<ValueT>();
 	const chain = new ChkChain<ValueT>(root);
 
 	return Object.assign(
 		async (value?: ValueT | null): Promise<Fate<ChkResult<ValueT>>> => {
-			return chain.execute(value);
+			if
+			return root.execute(value);
 		},
 		{
 			must: chain.must,
 			contains: chain.contains,
 			has: chain.has,
 			is: chain.is,
-			matches: chain.matches
+			matches: chain.matches,
+			value: root.value
 		}
 	);
 }

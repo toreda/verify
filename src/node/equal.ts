@@ -1,9 +1,9 @@
-import {NodeRoot} from './root';
+import {ChkChainRoot} from '../chk/chain/root';
 
 export class NodeEqual<ValueT> {
-	private readonly root: NodeRoot<ValueT>;
+	private readonly _root: ChkChainRoot<ValueT>;
 
-	constructor(root: NodeRoot<ValueT>) {
-		this.root = root;
+	constructor(root: ChkChainRoot<ValueT>) {
+		this._root = root;
 	}
 }

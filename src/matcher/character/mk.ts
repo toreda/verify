@@ -1,4 +1,4 @@
-import {ChkChainRoot} from 'src/chk/chain/root';
+import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
 import {Pattern} from '../../pattern';
 

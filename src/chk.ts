@@ -1,4 +1,5 @@
 import {ChkResult} from './chk/result';
+import {ChkValue} from './chk/value';
 import {Fate} from '@toreda/fate';
 import {NodeContains} from './node/contains';
 import {NodeHave} from './node/have';
@@ -13,4 +14,5 @@ export interface Chk<ValueT> {
 	is: NodeIs<ValueT>;
 	matches: NodeMatch<ValueT>;
 	contains: NodeContains<ValueT>;
+	value: ChkValue<ValueT>;
 }

@@ -8,13 +8,17 @@ export class ChkRoot<ValueT> {
 
 	constructor() {
 		this.value = new ChkValue<ValueT>();
-		this.chains = new ChkChains<ValueT>(this.value);
+		this.chains = new ChkChains<ValueT>();
 	}
 
 	public async execute(value?: ValueT | null): Promise<Fate<never>> {
 		const result = new Fate<never>();
 
-		for (const chain of this.chains.items) {
+		for (const chain of this.chains) {
+			if (chain === null) {
+				continue;
+			}
+
 			try {
 				const chainResult = await chain.execute(value);
 				if (!chainResult.success()) {

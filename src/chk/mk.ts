@@ -3,7 +3,6 @@ import {ChkChain} from './chain';
 import {ChkResult} from './result';
 import {ChkRoot} from '../chk/root';
 import {Fate} from '@toreda/fate';
-import {NodeMust} from 'src/node/must';
 
 export function chkMk<ValueT>(): Chk<ValueT> {
 	const root = new ChkRoot<ValueT>();
@@ -11,7 +10,6 @@ export function chkMk<ValueT>(): Chk<ValueT> {
 
 	return Object.assign(
 		async (value?: ValueT | null): Promise<Fate<ChkResult<ValueT>>> => {
-			if
 			return root.execute(value);
 		},
 		{

@@ -1,4 +1,3 @@
-import {ChkResult} from './chk/result';
 import {ChkValue} from './chk/value';
 import {Fate} from '@toreda/fate';
 import {NodeContains} from './node/contains';
@@ -8,7 +7,7 @@ import {NodeMatch} from './node/match';
 import {NodeMust} from './node/must';
 
 export interface Chk<ValueT> {
-	(value?: ValueT | null): Promise<Fate<ChkResult<ValueT>>>;
+	(value?: ValueT | null): Promise<Fate<ValueT>>;
 	must: NodeMust<ValueT>;
 	has: NodeHave<ValueT>;
 	is: NodeIs<ValueT>;

@@ -23,9 +23,14 @@
  *
  */
 
-/**
- * Alias expressing expected type for unique Pattern Id values.
- *
- * @category Pattern Validation
- */
-export type PatternChainId = string;
+export function isNumberFinite(value: unknown): value is number {
+	if (typeof value !== 'number') {
+		return false;
+	}
+
+	if (Number.isNaN(value)) {
+		return false;
+	}
+
+	return Number.isFinite(value);
+}

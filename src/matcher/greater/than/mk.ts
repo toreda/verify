@@ -23,7 +23,10 @@
  *
  */
 
+import {ChkChainRoot} from '../../../chk/chain/root';
 import type {Matcher} from '../../../matcher';
+import {MatcherFunc} from 'src/matcher/func';
+import {greaterThan} from '../../../greater/than';
 
 /**
  *
@@ -32,8 +35,22 @@ import type {Matcher} from '../../../matcher';
  *
  * @category Matcher Factory
  */
-export function matcherGreaterThanMk<NextT>(next: NextT): Matcher<NextT, number> {
-	return (value: number) => {
+export function matcherGreaterThanMk<NextT, ValueT>(
+	next: NextT,
+	root: ChkChainRoot<ValueT>
+): Matcher<NextT, ValueT> {
+	const rootValue = root.value;
+
+	return (compare: ValueT) => {
+		const fn: MatcherFunc<ValueT> = async (right: ValueT): Promise<boolean> => {
+			if (!rootValue) {
+				return false;
+			}
+
+			return greaterThan(rootValue.get(), right);
+		};
+		root.bindMatcher<ValueT>(fn, compare);
+
 		return next;
 	};
 }

@@ -26,6 +26,9 @@
 import {ChkChainRoot} from '../chk/chain/root';
 import {NodeLength} from './length';
 
+/**
+ * @category Nodes
+ */
 export class NodeHave<ValueT> {
 	public readonly length: NodeLength<ValueT>;
 

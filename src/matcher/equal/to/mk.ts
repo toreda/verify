@@ -23,7 +23,9 @@
  *
  */
 
+import {ChkChainRoot} from 'src/chk/chain/root';
 import type {Matcher} from '../../../matcher';
+import {equalTo} from 'src/equal/to';
 
 /**
  *
@@ -32,8 +34,10 @@ import type {Matcher} from '../../../matcher';
  *
  * @category Matcher Factory
  */
-export function matcherEqualToMk<NextT>(next: NextT): Matcher<NextT, number> {
-	return (value: number) => {
-		return next;
+export function matcherEqualToMk<NextT, ValueT>(next: NextT, root: ChkChainRoot<ValueT>): Matcher<NextT, ValueT> {
+	const value = root.value;
+
+	return (right: ValueT) => {
+		return equalTo<ValueT>(value.get(), right);
 	};
 }

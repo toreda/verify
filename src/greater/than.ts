@@ -10,7 +10,7 @@ import {isNumberFinite} from '../is/number/finite';
  *
  * @category Comparators
  */
-export function greaterThan(left: number, right: number): boolean {
+export function greaterThan(left: unknown, right: unknown): boolean {
 	if (!isNumberFinite(left) || !isNumberFinite(right)) {
 		return false;
 	}

@@ -12,6 +12,7 @@ export {ChkRoot} from './chk/root';
 export {chkStringId} from './chk/string/id';
 export {chkUrl} from './chk/url';
 export {ChkValue} from './chk/value';
+export {equalTo} from './equal/to';
 export {ErrorBaseCode} from './error/base/code';
 export {ErrorBasePath} from './error/base/path';
 export {ErrorCode} from './error/code';

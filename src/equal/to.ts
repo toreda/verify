@@ -23,27 +23,27 @@
  *
  */
 
-import {ChkChainRoot} from '../chk/chain/root';
-import type {Matcher} from '../matcher';
-import {NodeLink} from './link';
-import {matcherEqualToMk} from '../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/less/than/mk';
-
 /**
- * @category Nodes
+ *
+ * @param left
+ * @param right
+ * @returns
+ *
+ * @category Matchers
  */
-export class NodeIs<ValueT> {
-	public readonly lessThan: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly greaterThan: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly equalTo: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly empty: Matcher<NodeLink<ValueT>, ValueT>;
+export async function equalTo<ValueT>(left: ValueT, right: ValueT): Promise<boolean> {
+	if (typeof left !== typeof right) {
+		return false;
+	}
 
-	constructor(root: ChkChainRoot<ValueT>) {
-		const link = new NodeLink<ValueT>(root);
+	const type = typeof left;
 
-		this.lessThan = matcherLessThanMk<NodeLink<ValueT>, ValueT>(link, root);
-		this.greaterThan = matcherGreaterThanMk<NodeLink<ValueT>, ValueT>(link, root);
-		this.equalTo = matcherEqualToMk<NodeLink<ValueT>, ValueT>(link, root);
+	switch (type) {
+		case 'string':
+			return left === right;
+		case 'number':
+			return left === right;
+		default:
+			return false;
 	}
 }

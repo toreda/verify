@@ -25,7 +25,7 @@
 
 import {ChkValue} from '../value';
 import {MatcherBound} from '../../matcher/bound';
-import {MatcherFunc} from '../../matcher/func';
+import type {MatcherFunc} from '../../matcher/func';
 
 /**
  * Root object for a ChkChain. Referenced all nodes and matchers in chain.

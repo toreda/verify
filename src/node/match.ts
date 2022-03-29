@@ -30,6 +30,9 @@ import {Pattern} from '../pattern';
 import {matcherPatternMk} from '../matcher/pattern/mk';
 import {matcherPatternsMk} from '../matcher/patterns/mk';
 
+/**
+ * @category Nodes
+ */
 export class NodeMatch<ValueT> {
 	public readonly pattern: Matcher<NodeLink<ValueT>, Pattern<ValueT>>;
 	public readonly patterns: Matcher<NodeLink<ValueT>, Pattern<ValueT>[]>;

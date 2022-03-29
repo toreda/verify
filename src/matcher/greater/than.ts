@@ -28,4 +28,4 @@ import type {Matcher} from '../../matcher';
 /**
  * @category Matchers
  */
-export type MatcherGreaterThan<NextT> = Matcher<NextT, number>;
+export type MatcherGreaterThan<NextT, ValueT> = Matcher<NextT, ValueT>;

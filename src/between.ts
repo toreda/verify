@@ -23,27 +23,21 @@
  *
  */
 
-import {ChkChainRoot} from '../chk/chain/root';
-import type {Matcher} from '../matcher';
-import {NodeLink} from './link';
-import {matcherEqualToMk} from '../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/less/than/mk';
+import {isNumberFinite} from './is/number/finite';
 
 /**
- * @category Nodes
+ *
+ * @param left
+ * @param value
+ * @param right
+ * @returns
+ *
+ * @category Validator Functions
  */
-export class NodeIs<ValueT> {
-	public readonly lessThan: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly greaterThan: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly equalTo: Matcher<NodeLink<ValueT>, ValueT>;
-	public readonly empty: Matcher<NodeLink<ValueT>, ValueT>;
-
-	constructor(root: ChkChainRoot<ValueT>) {
-		const link = new NodeLink<ValueT>(root);
-
-		this.lessThan = matcherLessThanMk<NodeLink<ValueT>, ValueT>(link, root);
-		this.greaterThan = matcherGreaterThanMk<NodeLink<ValueT>, ValueT>(link, root);
-		this.equalTo = matcherEqualToMk<NodeLink<ValueT>, ValueT>(link, root);
+export async function between<ValueT>(left: ValueT, value: ValueT, right: ValueT): Promise<boolean> {
+	if (!isNumberFinite(left) || !isNumberFinite(value) || !isNumberFinite(right)) {
+		return false;
 	}
+
+	return value > left && value < right;
 }

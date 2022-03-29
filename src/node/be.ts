@@ -24,9 +24,7 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import type {MatcherEqualTo} from '../matcher/equal/to';
-import type {MatcherGreaterThan} from '../matcher/greater/than';
-import type {MatcherLessThan} from '../matcher/less/than';
+import {Matcher} from 'src/matcher';
 import {NodeLink} from './link';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
@@ -36,15 +34,15 @@ import {matcherLessThanMk} from '../matcher/less/than/mk';
  * @category Nodes
  */
 export class NodeBe<ValueT> {
-	public readonly lessThan: MatcherLessThan<NodeLink<ValueT>>;
-	public readonly greaterThan: MatcherGreaterThan<NodeLink<ValueT>>;
-	public readonly equalTo: MatcherEqualTo<NodeLink<ValueT>>;
+	public readonly lessThan: Matcher<NodeLink<ValueT>, ValueT>;
+	public readonly greaterThan: Matcher<NodeLink<ValueT>, ValueT>;
+	public readonly equalTo: Matcher<NodeLink<ValueT>, ValueT>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
 		const and = new NodeLink<ValueT>(root);
 
-		this.lessThan = matcherLessThanMk<NodeLink<ValueT>>(and);
-		this.greaterThan = matcherGreaterThanMk<NodeLink<ValueT>>(and);
-		this.equalTo = matcherEqualToMk<NodeLink<ValueT>>(and);
+		this.lessThan = matcherLessThanMk<NodeLink<ValueT>, ValueT>(and, root);
+		this.greaterThan = matcherGreaterThanMk<NodeLink<ValueT>, ValueT>(and, root);
+		this.equalTo = matcherEqualToMk<NodeLink<ValueT>, ValueT>(and, root);
 	}
 }

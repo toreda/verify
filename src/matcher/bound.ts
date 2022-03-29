@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {MatcherFunc} from './func';
+import type {MatcherFunc} from './func';
 
 /**
  * @category Matchers

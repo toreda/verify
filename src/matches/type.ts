@@ -23,19 +23,10 @@
  *
  */
 
-import {isNumber} from '../number';
-
-/**
- *
- * @param value
- * @returns
- *
- * @category Validator Functions
- */
-export function isNumberFinite(value: unknown): value is number {
-	if (!isNumber(value)) {
-		return false;
+export function matchesType(value: unknown, type: string): boolean {
+	if (type === 'array') {
+		return Array.isArray(value);
 	}
 
-	return Number.isFinite(value);
+	return typeof value === type;
 }

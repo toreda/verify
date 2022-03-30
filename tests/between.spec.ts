@@ -78,10 +78,10 @@ describe('between', () => {
 			expect(result).toBe(false);
 		});
 
-		it(`should return true when integer value is between integer args`, async () => {
+		it(`should return true when value is between integer args`, async () => {
 			const result = await between<number>(0, 10, 20);
 
-			expect(result).toBe(false);
+			expect(result).toBe(true);
 		});
 
 		it(`should return true when left arg is negative`, async () => {

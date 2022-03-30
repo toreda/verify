@@ -23,19 +23,19 @@
  *
  */
 
-import {isNumber} from '../number';
-
 /**
- *
+ * Determine if provided value arg is array with length 1 or more.
  * @param value
  * @returns
  *
  * @category Validator Functions
  */
-export function isNumberFinite(value: unknown): value is number {
-	if (!isNumber(value)) {
+export function isArrayNonEmpty(value: unknown): boolean {
+	if (!Array.isArray(value)) {
 		return false;
 	}
 
-	return Number.isFinite(value);
+	const arr = value as unknown[];
+
+	return arr.length > 0;
 }

@@ -23,19 +23,36 @@
  *
  */
 
-import {isNumber} from '../number';
+import {isIntPos} from '../int/pos';
+import {isNumberFinite} from '../number/finite';
 
 /**
- *
+ * Determine if provided value arg is an array.
  * @param value
  * @returns
  *
  * @category Validator Functions
  */
-export function isNumberFinite(value: unknown): value is number {
-	if (!isNumber(value)) {
+export function isPrimeInt(value: unknown): value is number {
+	if (!isNumberFinite(value)) {
 		return false;
 	}
 
-	return Number.isFinite(value);
+	if (value <= 1) {
+		return false;
+	}
+
+	if (!isIntPos(value)) {
+		return false;
+	}
+
+	const square = Math.sqrt(value);
+
+	for (let i = 2; i <= square; i++) {
+		if (value % i === 0) {
+			return false;
+		}
+	}
+
+	return true;
 }

@@ -23,19 +23,23 @@
  *
  */
 
-import {isNumber} from '../number';
+import {isNumberFinite} from '../number/finite';
 
 /**
- *
+ * Determine if provided value arg is an array.
  * @param value
  * @returns
  *
  * @category Validator Functions
  */
-export function isNumberFinite(value: unknown): value is number {
-	if (!isNumber(value)) {
+export function isPowOf(value: unknown, pow: number): boolean {
+	if (!isNumberFinite(value) || !isNumberFinite(pow)) {
 		return false;
 	}
 
-	return Number.isFinite(value);
+	if (value === 1) {
+		return pow === 1;
+	}
+
+	return false;
 }

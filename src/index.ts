@@ -44,7 +44,7 @@ export {matcherLessThanMk} from './matcher/less/than/mk';
 export {matcherPatternMk} from './matcher/pattern/mk';
 export {MatcherPatterns} from './matcher/patterns';
 export {matcherPatternsMk} from './matcher/patterns/mk';
-export {matchesOneOrMoreTypes} from './matches/any/types';
+export {matchesAnyType} from './matches/one/type';
 export {matchesType} from './matches/type';
 export {NodeAnd} from './node/and';
 export {NodeAny} from './node/any';

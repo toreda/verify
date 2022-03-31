@@ -24,8 +24,11 @@
  */
 
 import {ChkChainRoot} from '../../../chk/chain/root';
+import type {GreaterThanArgs} from './args';
 import type {Matcher} from '../../../matcher';
-import {MatcherFunc} from 'src/matcher/func';
+import {MatcherCall} from 'src/matcher/call';
+import type {MatcherFunc} from '../../../matcher/func';
+import {NodeLink} from '../../../node/link';
 import {greaterThan} from '../../../greater/than';
 
 /**
@@ -35,21 +38,25 @@ import {greaterThan} from '../../../greater/than';
  *
  * @category Matcher Factory
  */
-export function matcherGreaterThanMk<NextT, ValueT>(
-	next: NextT,
-	root: ChkChainRoot<ValueT>
-): Matcher<NextT, ValueT> {
-	const rootValue = root.value;
-
-	return (compare: ValueT) => {
-		const fn: MatcherFunc<ValueT> = async (right: ValueT): Promise<boolean> => {
-			if (!rootValue) {
-				return false;
-			}
-
-			return greaterThan(rootValue.get(), right);
+export function matcherGreaterThanMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<number, NodeLink<ValueT>> {
+	return (right: number) => {
+		const fn: MatcherFunc<ValueT, GreaterThanArgs> = async (
+			params: GreaterThanArgs
+		): Promise<boolean> => {
+			return greaterThan(root.value.get(), params?.right);
 		};
-		root.bindMatcher<ValueT>(fn, compare);
+
+		const call: MatcherCall<ValueT, GreaterThanArgs> = {
+			fn: fn,
+			params: {
+				right: right
+			}
+		};
+
+		root.addMatcher<GreaterThanArgs>(call);
 
 		return next;
 	};

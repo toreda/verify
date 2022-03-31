@@ -27,9 +27,10 @@ import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
 import {MatcherFunc} from '../../matcher/func';
 import {between} from '../../between';
+import {matcherArgsMk} from '../params/mk';
 
 /**
- *
+ * Create a
  * @param next
  * @param root
  * @returns
@@ -51,7 +52,15 @@ export function matcherBetweenMk<NextT, ValueT>(
 			return between(left, rootValue.get(), right);
 		};
 
-		root.bindMatcher<ValueT>(fn, compare);
+		root.addMatcher<ValueT>(
+			fn,
+			matcherArgsMk<ValueT>({
+				left: left,
+				right: right,
+				value: rootValue.get()
+			})
+		);
+
 		return next;
 	};
 }

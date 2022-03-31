@@ -30,4 +30,4 @@ import type {Matcher} from '../../matcher';
  *
  * @category Matcher Types
  */
-export type MatcherEqualTo<NextT, ValueT> = Matcher<NextT, ValueT>;
+export type MatcherEqualTo<ValueT, NextT> = Matcher<string | number, NextT>;

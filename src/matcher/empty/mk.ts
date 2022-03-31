@@ -23,17 +23,33 @@
  *
  */
 
+import {ChkChainRoot} from '../../chk/chain/root';
+import type {Matcher} from '../../matcher';
+import {MatcherCall} from '../call';
+import type {MatcherFunc} from '../../matcher/func';
+import {empty} from '../../empty';
+
 /**
- * Global default values used when optional arguments are not provided.
  *
- * @category Default Values
+ * @param next
+ * @returns
+ *
+ * @category Matcher Factory
  */
-export default class Defaults {
-	public static ErrorCode = {
-		PathDelimiter: ':',
-		CodeToken: '|',
-		EmptyPath: [],
-		Entity: '___',
-		Code: '___'
-	} as const;
+export function matcherEmptyMk<ValueT, NextT>(
+	root: ChkChainRoot<ValueT>,
+	next: NextT
+): Matcher<never, NextT> {
+	return () => {
+		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
+			return empty<ValueT>(value);
+		};
+
+		const call: MatcherCall<ValueT, never> = {
+			fn: fn
+		};
+		root.addMatcher<never>(call);
+
+		return next;
+	};
 }

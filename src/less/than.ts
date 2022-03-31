@@ -1,9 +1,9 @@
 import {isNumberFinite} from '../is/number/finite';
 
-export function lessThan(left: unknown, right: unknown): boolean {
-	if (!isNumberFinite(left) || !isNumberFinite(right)) {
+export function lessThan<ValueT>(value: ValueT, right: number): boolean {
+	if (!isNumberFinite(value) || !isNumberFinite(right)) {
 		return false;
 	}
 
-	return left < right;
+	return value < right;
 }

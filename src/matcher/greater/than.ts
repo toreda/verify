@@ -23,9 +23,10 @@
  *
  */
 
+import type {GreaterThanArgs} from './than/args';
 import type {Matcher} from '../../matcher';
 
 /**
  * @category Matchers
  */
-export type MatcherGreaterThan<NextT, ValueT> = Matcher<NextT, ValueT>;
+export type MatcherGreaterThan<NextT> = Matcher<NextT, GreaterThanArgs>;

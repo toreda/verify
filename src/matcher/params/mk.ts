@@ -24,16 +24,16 @@
  */
 
 /**
- * Global default values used when optional arguments are not provided.
  *
- * @category Default Values
+ * @param args
+ * @returns
+ *
+ * @category Matcher Factories
  */
-export default class Defaults {
-	public static ErrorCode = {
-		PathDelimiter: ':',
-		CodeToken: '|',
-		EmptyPath: [],
-		Entity: '___',
-		Code: '___'
-	} as const;
+export function matcherParamsMk<ParamT>(params?: Partial<ParamT> | null): ParamT {
+	if (!params) {
+		return {} as ParamT;
+	}
+
+	return params;
 }

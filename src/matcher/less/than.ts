@@ -25,4 +25,7 @@
 
 import type {Matcher} from '../../matcher';
 
-export type MatcherLessThan<NextT, ValueT> = Matcher<NextT, ValueT>;
+/**
+ * @category Matchers
+ */
+export type MatcherLessThan<NextT> = Matcher<NextT, number>;

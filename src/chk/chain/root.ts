@@ -23,9 +23,10 @@
  *
  */
 
+import type {ANY} from '@toreda/types';
 import {ChkValue} from '../value';
 import {MatcherBound} from '../../matcher/bound';
-import type {MatcherFunc} from '../../matcher/func';
+import type {MatcherCall} from '../../matcher/call';
 
 /**
  * Root object for a ChkChain. Referenced all nodes and matchers in chain.
@@ -34,18 +35,18 @@ import type {MatcherFunc} from '../../matcher/func';
  */
 export class ChkChainRoot<ValueT> {
 	public readonly value: ChkValue<ValueT>;
-	public readonly matchers: MatcherBound<ValueT, unknown>[];
+	public readonly matchers: MatcherBound<ValueT, ANY>[];
 
 	constructor(value: ChkValue<ValueT>) {
 		this.value = value;
 		this.matchers = [];
 	}
 
-	public bindMatcher<CmpT>(fn: MatcherFunc<ValueT>, args: CmpT): boolean {
+	public addMatcher<ParamT>(call: MatcherCall<ValueT, ParamT>): boolean {
 		let result = true;
 
 		try {
-			const bound = new MatcherBound<ValueT, unknown>(fn, args);
+			const bound = new MatcherBound<ValueT, ParamT>(call);
 			this.matchers.push(bound);
 		} catch (e) {
 			result = false;

@@ -24,24 +24,28 @@
  */
 
 import {Fate} from '@toreda/fate';
+import {MatcherCall} from './call';
 import type {MatcherFunc} from './func';
+import {MatcherParams} from './params';
+import {matcherParamsMk} from '../matcher/params/mk';
 
 /**
  * @category Matchers
  */
-export class MatcherBound<ValueT, CmpT> {
-	public readonly fn: MatcherFunc<CmpT>;
-	public readonly args: CmpT;
+export class MatcherBound<ValueT, ParamT> {
+	public readonly fn: MatcherFunc<ValueT, ParamT>;
+	public readonly params: MatcherParams<ParamT>;
 
-	constructor(fn: MatcherFunc<CmpT>, args: CmpT) {
-		this.fn = fn;
-		this.args = args;
+	constructor(call: MatcherCall<ValueT, ParamT>) {
+		this.fn = call.fn;
+
+		this.params = matcherParamsMk<ParamT>(call?.params);
 	}
 
 	public async execute(value?: ValueT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 		try {
-			const result = await this.fn(this.args);
+			const result = await this.fn(value, this.params);
 			if (result === true) {
 				fate.success(true);
 			} else {

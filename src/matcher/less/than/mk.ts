@@ -24,8 +24,10 @@
  */
 
 import {ChkChainRoot} from '../../../chk/chain/root';
+import type {LessThanArgs} from './args';
 import type {Matcher} from '../../../matcher';
 import {MatcherFunc} from '../../../matcher/func';
+import {NodeLink} from 'src/node/link';
 import {lessThan} from '../../../less/than';
 
 /**
@@ -36,22 +38,24 @@ import {lessThan} from '../../../less/than';
  *
  * @category Matchers
  */
-export function matcherLessThanMk<NextT, ValueT>(
-	next: NextT,
-	root: ChkChainRoot<ValueT>
-): Matcher<NextT, ValueT> {
-	const rootValue = root.value;
-
-	return (compare: ValueT) => {
-		const fn: MatcherFunc<ValueT> = async (right: ValueT): Promise<boolean> => {
-			if (!rootValue) {
-				return false;
-			}
-
-			return lessThan(rootValue.get(), right);
+export function matcherLessThanMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<number, NodeLink<ValueT>> {
+	return (right: number) => {
+		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
+			value: ValueT,
+			params: LessThanArgs
+		): Promise<boolean> => {
+			return lessThan<ValueT>(value, params?.right);
 		};
 
-		root.bindMatcher<ValueT>(fn, compare);
+		root.addMatcher<LessThanArgs>({
+			fn: fn,
+			params: {
+				right: right
+			}
+		});
 		return next;
 	};
 }

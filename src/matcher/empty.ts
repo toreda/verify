@@ -36,19 +36,21 @@ import {empty} from '../empty';
  *
  * @category Matchers
  */
-export function matcherEmpty<NextT, ValueT>(next: NextT, root: ChkChainRoot<ValueT>): Matcher<NextT, ValueT> {
+export function matcherEmpty<ValueT, NextT>(root: ChkChainRoot<ValueT>, next: NextT): Matcher<ValueT, NextT> {
 	const rootValue = root.value;
 
-	return (compare: ValueT) => {
-		const fn: MatcherFunc<ValueT> = async (): Promise<boolean> => {
+	return () => {
+		const fn: MatcherFunc<ValueT, unknown> = async (value?: ValueT | null): Promise<boolean> => {
 			if (!rootValue) {
 				return false;
 			}
 
-			return empty(rootValue.get());
+			return empty(value);
 		};
 
-		root.bindMatcher<ValueT>(fn, compare);
+		root.addMatcher<ValueT>({
+			fn: fn
+		});
 		return next;
 	};
 }

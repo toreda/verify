@@ -23,4 +23,9 @@
  *
  */
 
-export type MatcherFunc<ArgT> = (args: ArgT) => Promise<boolean>;
+/**
+ * Generic type signature for matcher functions.
+ *
+ * @category Matchers
+ */
+export type MatcherFunc<ValueT, ParamT> = (value?: ValueT | null, params?: ParamT) => Promise<boolean>;

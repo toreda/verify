@@ -28,4 +28,4 @@
  *
  * @category Matchers
  */
-export type Matcher<NextT, CmpT> = (...arg: CmpT[]) => NextT;
+export type Matcher<ParamT, NextT> = (params: ParamT) => NextT;

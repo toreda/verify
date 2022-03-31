@@ -23,9 +23,12 @@
  *
  */
 
-import {ChkChainRoot} from 'src/chk/chain/root';
+import {ChkChainRoot} from '../../../chk/chain/root';
+import {EqualToArgs} from './args';
 import type {Matcher} from '../../../matcher';
-import {equalTo} from 'src/equal/to';
+import type {MatcherFunc} from '../../../matcher/func';
+import {NodeLink} from 'src/node/link';
+import {equalTo} from '../../../equal/to';
 
 /**
  *
@@ -34,10 +37,25 @@ import {equalTo} from 'src/equal/to';
  *
  * @category Matcher Factory
  */
-export function matcherEqualToMk<NextT, ValueT>(next: NextT, root: ChkChainRoot<ValueT>): Matcher<NextT, ValueT> {
-	const value = root.value;
+export function matcherEqualToMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<number, NodeLink<ValueT>> {
+	return (right: number) => {
+		const fn: MatcherFunc<ValueT, EqualToArgs> = async (
+			value: ValueT,
+			params: EqualToArgs
+		): Promise<boolean> => {
+			return equalTo<ValueT>(value, params);
+		};
 
-	return (right: ValueT) => {
-		return equalTo<ValueT>(value.get(), right);
+		root.addMatcher<EqualToArgs>({
+			fn: fn,
+			params: {
+				right: right
+			}
+		});
+
+		return next;
 	};
 }

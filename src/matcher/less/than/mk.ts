@@ -26,8 +26,8 @@
 import {ChkChainRoot} from '../../../chk/chain/root';
 import type {LessThanArgs} from './args';
 import type {Matcher} from '../../../matcher';
-import {MatcherFunc} from '../../../matcher/func';
-import {NodeLink} from 'src/node/link';
+import type {MatcherFunc} from '../../../matcher/func';
+import {NodeLink} from '../../../node/link';
 import {lessThan} from '../../../less/than';
 
 /**
@@ -41,13 +41,13 @@ import {lessThan} from '../../../less/than';
 export function matcherLessThanMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
 	next: NodeLink<ValueT>
-): Matcher<number, NodeLink<ValueT>> {
-	return (right: number) => {
+): Matcher<ValueT, number> {
+	return (right: number): NodeLink<ValueT> => {
 		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
-			value: ValueT,
-			params: LessThanArgs
+			value?: ValueT | null,
+			params?: LessThanArgs
 		): Promise<boolean> => {
-			return lessThan<ValueT>(value, params?.right);
+			return lessThan(value, params?.right);
 		};
 
 		root.addMatcher<LessThanArgs>({
@@ -56,6 +56,7 @@ export function matcherLessThanMk<ValueT>(
 				right: right
 			}
 		});
+
 		return next;
 	};
 }

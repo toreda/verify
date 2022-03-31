@@ -23,10 +23,6 @@
  *
  */
 
-import type {GreaterThanArgs} from './than/args';
-import type {Matcher} from '../../matcher';
-
-/**
- * @category Matchers
- */
-export type MatcherGreaterThan<NextT> = Matcher<NextT, GreaterThanArgs>;
+export interface GreaterThanCall {
+	right: number;
+}

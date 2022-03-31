@@ -36,7 +36,7 @@ export class PatternNode<ValueT> {
 		this.patternId = id;
 	}
 
-	public async execute(value?: ValueT | null): Promise<Fate<never>> {
+	public async execute(_value?: ValueT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 
 		return fate.setDone(true);

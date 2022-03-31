@@ -25,7 +25,8 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import type {Matcher} from '../matcher';
-import {MatcherFunc} from '../matcher/func';
+import type {MatcherFunc} from '../matcher/func';
+import {NodeLink} from '../node/link';
 import {empty} from '../empty';
 
 /**
@@ -36,21 +37,19 @@ import {empty} from '../empty';
  *
  * @category Matchers
  */
-export function matcherEmpty<ValueT, NextT>(root: ChkChainRoot<ValueT>, next: NextT): Matcher<ValueT, NextT> {
-	const rootValue = root.value;
-
+export function matcherEmpty<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<ValueT, never> {
 	return () => {
-		const fn: MatcherFunc<ValueT, unknown> = async (value?: ValueT | null): Promise<boolean> => {
-			if (!rootValue) {
-				return false;
-			}
-
+		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
 			return empty(value);
 		};
 
-		root.addMatcher<ValueT>({
+		root.addMatcher<never>({
 			fn: fn
 		});
+
 		return next;
 	};
 }

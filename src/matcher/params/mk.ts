@@ -30,7 +30,7 @@
  *
  * @category Matcher Factories
  */
-export function matcherParamsMk<ParamT>(params?: Partial<ParamT> | null): ParamT {
+export function matcherParamsMk<ParamT>(params?: ParamT | null): ParamT {
 	if (!params) {
 		return {} as ParamT;
 	}

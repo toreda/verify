@@ -33,16 +33,14 @@ import {NodeMatch} from '../node/match';
 import {NodeMust} from '../node/must';
 
 export class ChkChain<ValueT> {
+	private readonly root: ChkChainRoot<ValueT>;
 	public readonly must: NodeMust<ValueT>;
 	public readonly contains: NodeContains<ValueT>;
 	public readonly is: NodeIs<ValueT>;
 	public readonly has: NodeHave<ValueT>;
 	public readonly matches: NodeMatch<ValueT>;
-	private readonly chkRoot: ChkRoot<ValueT>;
-	private readonly chainRoot: ChkChainRoot<ValueT>;
 
 	constructor(chkRoot: ChkRoot<ValueT>) {
-		this.chkRoot = chkRoot;
 		const chainRoot = new ChkChainRoot<ValueT>(chkRoot.value);
 		this.must = new NodeMust<ValueT>(chainRoot);
 		this.contains = new NodeContains<ValueT>(chainRoot);
@@ -50,11 +48,40 @@ export class ChkChain<ValueT> {
 		this.is = new NodeIs<ValueT>(chainRoot);
 		this.matches = new NodeMatch<ValueT>(chainRoot);
 
-		this.chainRoot = chainRoot;
+		this.root = chainRoot;
 	}
 
+	/**
+	 * Execute all matchers in this chain in the order they were added.
+	 * @param value
+	 * @returns
+	 */
 	public async execute(value?: ValueT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
+
+		let succeeded = 0;
+		let executed = 0;
+		for (const matcher of this.root.matchers) {
+			try {
+				const result = await matcher.execute(value);
+				if (result.success()) {
+					succeeded++;
+				} else {
+					fate.setErrorCode(result.errorCode());
+				}
+			} catch (e) {
+				fate.setErrorCode(`execute:matcher:error`);
+				fate.error(e);
+			}
+
+			executed++;
+		}
+
+		// Chain execution result is success when all matchers returned
+		// successful validation results.
+		if (executed === succeeded) {
+			fate.setSuccess(true);
+		}
 
 		return fate;
 	}

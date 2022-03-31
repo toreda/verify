@@ -34,7 +34,7 @@ import {isNumberFinite} from './is/number/finite';
  *
  * @category Validator Functions
  */
-export async function between<ValueT>(left: ValueT, value: ValueT, right: ValueT): Promise<boolean> {
+export async function between<ValueT>(left: number, value: ValueT, right: number): Promise<boolean> {
 	if (!isNumberFinite(left) || !isNumberFinite(value) || !isNumberFinite(right)) {
 		return false;
 	}

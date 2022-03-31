@@ -25,6 +25,7 @@
 
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
+import {NodeLink} from '../../node/link';
 import {Pattern} from '../../pattern';
 
 /**
@@ -34,11 +35,11 @@ import {Pattern} from '../../pattern';
  *
  * @category Matchers
  */
-export function matcherPatternMk<NextT, ValueT>(
-	next: NextT,
-	root: ChkChainRoot<ValueT>
-): Matcher<NextT, Pattern<ValueT>> {
-	return (pattern: Pattern<ValueT>): NextT => {
+export function matcherPatternMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<ValueT, Pattern<ValueT>> {
+	return (_pattern: Pattern<ValueT>): NodeLink<ValueT> => {
 		return next;
 	};
 }

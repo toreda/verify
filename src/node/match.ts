@@ -34,12 +34,12 @@ import {matcherPatternsMk} from '../matcher/patterns/mk';
  * @category Nodes
  */
 export class NodeMatch<ValueT> {
-	public readonly pattern: Matcher<NodeLink<ValueT>, Pattern<ValueT>>;
-	public readonly patterns: Matcher<NodeLink<ValueT>, Pattern<ValueT>[]>;
+	public readonly pattern: Matcher<ValueT, Pattern<ValueT>>;
+	public readonly patterns: Matcher<ValueT, Pattern<ValueT>[]>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
 		const link = new NodeLink<ValueT>(root);
-		this.pattern = matcherPatternMk<NodeLink<ValueT>, unknown>(link, root);
-		this.patterns = matcherPatternsMk<NodeLink<ValueT>, unknown>(link, root);
+		this.pattern = matcherPatternMk<ValueT>(root, link);
+		this.patterns = matcherPatternsMk<ValueT>(root, link);
 	}
 }

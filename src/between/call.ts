@@ -23,9 +23,7 @@
  *
  */
 
-import type {Matcher} from '../../matcher';
-
-/**
- * @category Matchers
- */
-export type MatcherLessThan<NextT> = Matcher<NextT, number>;
+export interface BetweenCall {
+	left: number;
+	right: number;
+}

@@ -1,3 +1,4 @@
+export {BetweenCall} from './between/call';
 export {Chk} from './chk';
 export {chkArray} from './chk/array';
 export {chkBigInt} from './chk/big/int';
@@ -34,12 +35,9 @@ export {isStringNonEmpty} from './is/string/non/empty';
 export {lessThan} from './less/than';
 export {Matcher} from './matcher';
 export {MatcherBound} from './matcher/bound';
-export {MatcherEqualTo} from './matcher/equal/to';
 export {matcherEqualToMk} from './matcher/equal/to/mk';
 export {MatcherFunc} from './matcher/func';
-export {MatcherGreaterThan} from './matcher/greater/than';
 export {matcherGreaterThanMk} from './matcher/greater/than/mk';
-export {MatcherLessThan} from './matcher/less/than';
 export {matcherLessThanMk} from './matcher/less/than/mk';
 export {matcherPatternMk} from './matcher/pattern/mk';
 export {MatcherPatterns} from './matcher/patterns';

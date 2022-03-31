@@ -24,9 +24,8 @@
  */
 
 import {ChkChainRoot} from '../../../chk/chain/root';
-import type {GreaterThanArgs} from './args';
+import type {GreaterThanCall} from './call';
 import type {Matcher} from '../../../matcher';
-import {MatcherCall} from 'src/matcher/call';
 import type {MatcherFunc} from '../../../matcher/func';
 import {NodeLink} from '../../../node/link';
 import {greaterThan} from '../../../greater/than';
@@ -41,22 +40,21 @@ import {greaterThan} from '../../../greater/than';
 export function matcherGreaterThanMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
 	next: NodeLink<ValueT>
-): Matcher<number, NodeLink<ValueT>> {
+): Matcher<ValueT, number> {
 	return (right: number) => {
-		const fn: MatcherFunc<ValueT, GreaterThanArgs> = async (
-			params: GreaterThanArgs
+		const fn: MatcherFunc<ValueT, GreaterThanCall> = async (
+			value?: ValueT | null,
+			params?: GreaterThanCall
 		): Promise<boolean> => {
-			return greaterThan(root.value.get(), params?.right);
+			return greaterThan(value, params?.right);
 		};
 
-		const call: MatcherCall<ValueT, GreaterThanArgs> = {
+		root.addMatcher<GreaterThanCall>({
 			fn: fn,
 			params: {
 				right: right
 			}
-		};
-
-		root.addMatcher<GreaterThanArgs>(call);
+		});
 
 		return next;
 	};

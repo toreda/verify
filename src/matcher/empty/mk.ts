@@ -25,8 +25,8 @@
 
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
-import {MatcherCall} from '../call';
 import type {MatcherFunc} from '../../matcher/func';
+import {NodeLink} from '../../node/link';
 import {empty} from '../../empty';
 
 /**
@@ -36,19 +36,18 @@ import {empty} from '../../empty';
  *
  * @category Matcher Factory
  */
-export function matcherEmptyMk<ValueT, NextT>(
+export function matcherEmptyMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
-	next: NextT
-): Matcher<never, NextT> {
+	next: NodeLink<ValueT>
+): Matcher<ValueT, never> {
 	return () => {
 		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
 			return empty<ValueT>(value);
 		};
 
-		const call: MatcherCall<ValueT, never> = {
+		root.addMatcher<never>({
 			fn: fn
-		};
-		root.addMatcher<never>(call);
+		});
 
 		return next;
 	};

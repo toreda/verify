@@ -31,7 +31,7 @@
  *
  * @category Matchers
  */
-export async function equalTo<ValueT>(left: unknown, right: unknown): Promise<boolean> {
+export async function equalTo(left: unknown, right: unknown): Promise<boolean> {
 	if (left === null || right === null) {
 		return false;
 	}

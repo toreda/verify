@@ -35,8 +35,8 @@ export class ChkChains<ValueT> implements Iterable<ArrayFunc<ChkChain<ValueT>, b
 		this._items = [];
 	}
 
-	[Symbol.iterator](): ChkChainsItor<ValueT | null> {
-		return new ChkChainsItor<ValueT | null>(this._items);
+	[Symbol.iterator](): ChkChainsItor<ValueT> {
+		return new ChkChainsItor<ValueT>(this._items);
 	}
 
 	public forEach(fn: ArrayFunc<ChkChain<ValueT>, boolean>): void {
@@ -49,11 +49,18 @@ export class ChkChains<ValueT> implements Iterable<ArrayFunc<ChkChain<ValueT>, b
 		}
 	}
 
-	public add(chain: ChkChain<ValueT>): void {
+	/**
+	 * Add matcher chain to list of chains.
+	 * @param chain
+	 * @returns
+	 */
+	public add(chain: ChkChain<ValueT>): boolean {
 		if (!chain) {
-			return;
+			return false;
 		}
 
 		this._items.push(chain);
+
+		return true;
 	}
 }

@@ -26,7 +26,6 @@
 import {Fate} from '@toreda/fate';
 import {MatcherCall} from './call';
 import type {MatcherFunc} from './func';
-import {MatcherParams} from './params';
 import {matcherParamsMk} from '../matcher/params/mk';
 
 /**
@@ -34,7 +33,7 @@ import {matcherParamsMk} from '../matcher/params/mk';
  */
 export class MatcherBound<ValueT, ParamT> {
 	public readonly fn: MatcherFunc<ValueT, ParamT>;
-	public readonly params: MatcherParams<ParamT>;
+	public readonly params: ParamT;
 
 	constructor(call: MatcherCall<ValueT, ParamT>) {
 		this.fn = call.fn;

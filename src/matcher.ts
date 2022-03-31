@@ -23,9 +23,11 @@
  *
  */
 
+import {NodeLink} from './node/link';
+
 /**
  * Type signature for matcher functions.
  *
  * @category Matchers
  */
-export type Matcher<ParamT, NextT> = (params: ParamT) => NextT;
+export type Matcher<ValueT, NodeParamT> = (...params: NodeParamT[]) => NodeLink<ValueT>;

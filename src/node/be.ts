@@ -24,7 +24,7 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import {Matcher} from 'src/matcher';
+import {Matcher} from '../matcher';
 import {NodeLink} from './link';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
@@ -34,9 +34,9 @@ import {matcherLessThanMk} from '../matcher/less/than/mk';
  * @category Nodes
  */
 export class NodeBe<ValueT> {
-	public readonly lessThan: Matcher<number, NodeLink<ValueT>>;
-	public readonly greaterThan: Matcher<number, NodeLink<ValueT>>;
-	public readonly equalTo: Matcher<number, NodeLink<ValueT>>;
+	public readonly lessThan: Matcher<ValueT, number>;
+	public readonly greaterThan: Matcher<ValueT, number>;
+	public readonly equalTo: Matcher<ValueT, number>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
 		const and = new NodeLink<ValueT>(root);

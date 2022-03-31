@@ -23,11 +23,12 @@
  *
  */
 
+import type {BetweenCall} from '../../between/call';
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
-import {MatcherFunc} from '../../matcher/func';
+import type {MatcherFunc} from '../../matcher/func';
+import {NodeLink} from '../../node/link';
 import {between} from '../../between';
-import {matcherArgsMk} from '../params/mk';
 
 /**
  * Create a
@@ -37,29 +38,22 @@ import {matcherArgsMk} from '../params/mk';
  *
  * @category Matchers
  */
-export function matcherBetweenMk<NextT, ValueT>(
-	next: NextT,
-	root: ChkChainRoot<ValueT>
-): Matcher<NextT, ValueT> {
-	const rootValue = root.value;
-
-	return (left: ValueT, right: ValueT) => {
-		const fn: MatcherFunc<ValueT> = async (): Promise<boolean> => {
-			if (!rootValue) {
-				return false;
-			}
-
-			return between(left, rootValue.get(), right);
+export function matcherBetweenMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	next: NodeLink<ValueT>
+): Matcher<ValueT, number> {
+	return (left: number, right: number) => {
+		const fn: MatcherFunc<ValueT, BetweenCall> = async (value?: ValueT | null): Promise<boolean> => {
+			return between(left, value, right);
 		};
 
-		root.addMatcher<ValueT>(
-			fn,
-			matcherArgsMk<ValueT>({
+		root.addMatcher<BetweenCall>({
+			fn: fn,
+			params: {
 				left: left,
-				right: right,
-				value: rootValue.get()
-			})
-		);
+				right: right
+			}
+		});
 
 		return next;
 	};

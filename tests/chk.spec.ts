@@ -18,7 +18,6 @@ describe('chk', () => {
 
 		chk1.must.be.greaterThan(311);
 
-		chk1.must.be.equalTo()
 		expect(chk1).not.toBe(result2);
 	});
 

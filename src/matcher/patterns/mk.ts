@@ -39,7 +39,7 @@ export function matcherPatternsMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
 	next: NodeLink<ValueT>
 ): Matcher<ValueT, Pattern<ValueT>[]> {
-	return (patterns: Pattern<ValueT>[]): NodeLink<ValueT> => {
+	return (_patterns: Pattern<ValueT>[]): NodeLink<ValueT> => {
 		return next;
 	};
 }

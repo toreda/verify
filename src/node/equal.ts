@@ -24,11 +24,13 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
+import {Node} from '../node';
 
-export class NodeEqual<ValueT> {
-	private readonly _root: ChkChainRoot<ValueT>;
-
+/**
+ * @category Nodes
+ */
+export class NodeEqual<ValueT> extends Node<ValueT, unknown> {
 	constructor(root: ChkChainRoot<ValueT>) {
-		this._root = root;
+		super('equal', root);
 	}
 }

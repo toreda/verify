@@ -23,19 +23,23 @@
  *
  */
 
+import {isNumberFinite} from '../is/number/finite';
+
 /**
- * Determine if provided value arg is array with length 1 or more.
+ * Determine if provided value arg is an array.
  * @param value
  * @returns
  *
  * @category Validator Functions
  */
-export function isArrayNonEmpty(value: unknown): boolean {
-	if (!Array.isArray(value)) {
+export function powOf(value: unknown, pow: number): boolean {
+	if (!isNumberFinite(value) || !isNumberFinite(pow)) {
 		return false;
 	}
 
-	const arr = value as unknown[];
+	if (value === 1) {
+		return pow === 1;
+	}
 
-	return arr.length > 0;
+	return false;
 }

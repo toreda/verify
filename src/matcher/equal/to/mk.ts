@@ -24,7 +24,7 @@
  */
 
 import {ChkChainRoot} from '../../../chk/chain/root';
-import {EqualToArgs} from './args';
+import {EqualToCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
 import {NodeLink} from '../../../node/link';
@@ -42,14 +42,14 @@ export function matcherEqualToMk<ValueT>(
 	next: NodeLink<ValueT>
 ): Matcher<ValueT, unknown> {
 	return (right: unknown) => {
-		const fn: MatcherFunc<ValueT, EqualToArgs> = async (
+		const fn: MatcherFunc<ValueT, EqualToCall> = async (
 			value?: ValueT | null,
-			params?: EqualToArgs
+			params?: EqualToCall
 		): Promise<boolean> => {
 			return equalTo(value, params);
 		};
 
-		root.addMatcher<EqualToArgs>({
+		root.addMatcher<EqualToCall>({
 			fn: fn,
 			params: {
 				right: right

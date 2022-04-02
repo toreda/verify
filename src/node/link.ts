@@ -24,16 +24,19 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import type {Node} from '../node';
+import {Node} from '../node';
 import {NodeAnd} from './and';
+import type {NodeId} from './id';
 
 /**
  * @category Nodes
  */
-export class NodeLink<ValueT> implements Node<ValueT> {
+export class NodeLink<ValueT> extends Node<ValueT> {
 	public readonly and: NodeAnd<ValueT>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
-		this.and = new NodeAnd<ValueT>(root);
+
+	constructor(id: NodeId, root: ChkChainRoot<ValueT>) {
+		super(id, root);
+		const and = new NodeAnd<ValueT>(root);
 	}
 }

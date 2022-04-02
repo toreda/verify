@@ -23,6 +23,12 @@
  *
  */
 
-export interface MatcherArgsCustom<ArgT> {
-	[k: string]: ArgT;
+/**
+ * Call arguments used by EqualTo validator functions.
+ *
+ * @category Validator Functions
+ */
+export interface EqualToCall {
+	left?: unknown;
+	right?: unknown;
 }

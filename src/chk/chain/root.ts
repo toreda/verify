@@ -52,6 +52,6 @@ export class ChkChainRoot<ValueT> {
 			result = false;
 		}
 
-		return true;
+		return result;
 	}
 }

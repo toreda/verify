@@ -25,6 +25,7 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import type {Matcher} from '../matcher';
+import type {Node} from '../node';
 import {NodeLink} from './link';
 import {Pattern} from '../pattern';
 import {matcherPatternMk} from '../matcher/pattern/mk';
@@ -33,13 +34,15 @@ import {matcherPatternsMk} from '../matcher/patterns/mk';
 /**
  * @category Nodes
  */
-export class NodeMatch<ValueT> {
-	public readonly pattern: Matcher<ValueT, Pattern<ValueT>>;
-	public readonly patterns: Matcher<ValueT, Pattern<ValueT>[]>;
+export class NodeMatch<ValueT> extends Node<ValueT> {
+	//public readonly pattern: Matcher<ValueT, Pattern<ValueT>>;
+	//public readonly patterns: Matcher<ValueT, Pattern<ValueT>[]>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
-		const link = new NodeLink<ValueT>(root);
-		this.pattern = matcherPatternMk<ValueT>(root, link);
-		this.patterns = matcherPatternsMk<ValueT>(root, link);
+		super('match', root);
+
+		//const link = new NodeLink<ValueT>(root);
+		//this.pattern = matcherPatternMk<ValueT>(root, link);
+		//this.patterns = matcherPatternsMk<ValueT>(root, link);
 	}
 }

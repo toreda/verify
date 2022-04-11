@@ -26,17 +26,15 @@
 import {ChkChainRoot} from '../chk/chain/root';
 import {Node} from '../node';
 import {NodeAnd} from './and';
-import type {NodeId} from './id';
 
 /**
  * @category Nodes
  */
-export class NodeLink<ValueT> extends Node<ValueT> {
+export class NodeLink<ValueT> extends Node<ValueT, unknown> {
 	public readonly and: NodeAnd<ValueT>;
 
-
-	constructor(id: NodeId, root: ChkChainRoot<ValueT>) {
-		super(id, root);
-		const and = new NodeAnd<ValueT>(root);
+	constructor(root: ChkChainRoot<ValueT>) {
+		super('link', root);
+		this.and = new NodeAnd<ValueT>(root);
 	}
 }

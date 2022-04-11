@@ -1,1 +1,1 @@
-export type NodeType = 'be' | 'equal' | 'must' | 'matcher' | 'link';
+export type NodeType = 'be' | 'equal' | 'must' | 'match' | 'matcher' | 'link';

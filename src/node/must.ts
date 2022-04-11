@@ -24,7 +24,7 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import {Node} from 'src/node';
+import {Node} from '../node';
 import {NodeBe} from './be';
 import {NodeContains} from './contains';
 import {NodeEqual} from './equal';
@@ -34,14 +34,16 @@ import {NodeMatch} from './match';
  * @category Nodes
  */
 export class NodeMust<ValueT> extends Node<ValueT, unknown> {
+	public readonly be: NodeBe<ValueT>;
+
 	constructor(root: ChkChainRoot<ValueT>) {
 		super('must', root);
 
 		const match = new NodeMatch<ValueT>(root);
 		const equal = new NodeEqual<ValueT>(root);
-		const be = new NodeBe<ValueT>(root);
+		this.be = new NodeBe<ValueT>(root);
 		const contain = new NodeContains<ValueT>(root);
 
-		this.children.push(match, equal, be, contain);
+		//this.children.push(match, equal, be, contain);
 	}
 }

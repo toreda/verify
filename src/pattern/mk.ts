@@ -23,6 +23,12 @@
  *
  */
 
+/**
+ *
+ * @returns
+ *
+ * @category Patterns
+ */
 export function patternMk<T>(): unknown {
 	return null;
 }

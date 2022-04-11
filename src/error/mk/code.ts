@@ -38,10 +38,10 @@ import {errorCodeToken} from '../code/token';
  *
  * @category Errors
  */
-export function errorMkCode<CodeT extends string, EntityT extends string, PathT extends string>(
+export function errorMkCode<CodeT extends string, EntityT extends string, PathT = string | unknown>(
 	code: CodeT,
 	entity: EntityT,
-	path: PathT | PathT[],
+	path?: PathT | PathT[],
 	opts?: ErrorCodeFlags
 ): string {
 	const codeToken = errorCodeToken(opts?.codeToken);

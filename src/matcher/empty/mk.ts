@@ -36,11 +36,12 @@ import {empty} from '../../empty';
  *
  * @category Matcher Factory
  */
-export function matcherEmptyMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
-): Matcher<ValueT, never> {
+export function matcherEmptyMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, never> {
 	return () => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new NodeLink<ValueT>(root);
+
 		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
 			return empty<ValueT>(value);
 		};
@@ -49,6 +50,6 @@ export function matcherEmptyMk<ValueT>(
 			fn: fn
 		});
 
-		return next;
+		return link;
 	};
 }

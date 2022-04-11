@@ -7,7 +7,7 @@ describe('errorMkCode', () => {
 		const code = '4441';
 		const path = 'aaaa';
 
-		const result = errorMkCode<string, string, string>(code, entity, path);
+		const result = errorMkCode<string, string>(code, entity);
 		expect(result).toBe(`${entity}${Defaults.ErrorCode.CodeToken}${code}`);
 	});
 

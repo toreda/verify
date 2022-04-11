@@ -23,40 +23,15 @@
  *
  */
 
-import {ChkChainRoot} from '../../../chk/chain/root';
-import {EqualToCall} from './call';
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../../matcher/func';
-import {NodeLink} from '../../../node/link';
-import {equalTo} from '../../../equal/to';
+import {empty} from '../../../empty';
 
 /**
  *
- * @param next
+ * @param value
  * @returns
  *
- * @category Matcher Factory
+ * @category Validator Functions
  */
-export function matcherEqualToMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, unknown> {
-	return (right: unknown) => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new NodeLink<ValueT>(root);
-
-		const fn: MatcherFunc<ValueT, EqualToCall> = async (
-			value?: ValueT | null,
-			params?: EqualToCall
-		): Promise<boolean> => {
-			return equalTo(value, params);
-		};
-
-		root.addMatcher<EqualToCall>({
-			fn: fn,
-			params: {
-				right: right
-			}
-		});
-
-		return link;
-	};
+export function isArrayNotEmpty(value: unknown[]): value is Array<unknown> {
+	return !empty(value);
 }

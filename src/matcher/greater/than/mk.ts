@@ -37,11 +37,12 @@ import {greaterThan} from '../../../greater/than';
  *
  * @category Matcher Factory
  */
-export function matcherGreaterThanMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
-): Matcher<ValueT, number> {
+export function matcherGreaterThanMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, number> {
 	return (right: number) => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new NodeLink<ValueT>(root);
+
 		const fn: MatcherFunc<ValueT, GreaterThanCall> = async (
 			value?: ValueT | null,
 			params?: GreaterThanCall
@@ -56,6 +57,6 @@ export function matcherGreaterThanMk<ValueT>(
 			}
 		});
 
-		return next;
+		return link;
 	};
 }

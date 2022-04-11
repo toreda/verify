@@ -24,6 +24,6 @@
  */
 
 /**
- * @category Pattern Validation
+ * @category Patterns
  */
 export type PatternId = string;

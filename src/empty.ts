@@ -30,7 +30,7 @@
  *
  * @cattegory Validator
  */
-export async function empty<ValueT>(value?: ValueT | null): Promise<boolean> {
+export function empty<ValueT>(value?: ValueT | null): boolean {
 	if (Array.isArray(value)) {
 		return value.length === 0;
 	}

@@ -25,7 +25,6 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import type {Matcher} from '../matcher';
-import {NodeLink} from './link';
 import {matcherEmptyMk} from '../matcher/empty/mk';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
@@ -41,11 +40,9 @@ export class NodeIs<ValueT> {
 	public readonly empty: Matcher<ValueT, never>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
-		const link = new NodeLink<ValueT>(root);
-
-		this.empty = matcherEmptyMk<ValueT>(root, link);
-		this.lessThan = matcherLessThanMk<ValueT>(root, link);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(root, link);
-		this.equalTo = matcherEqualToMk<ValueT>(root, link);
+		this.empty = matcherEmptyMk<ValueT>(root);
+		this.lessThan = matcherLessThanMk<ValueT>(root);
+		this.greaterThan = matcherGreaterThanMk<ValueT>(root);
+		this.equalTo = matcherEqualToMk<ValueT>(root);
 	}
 }

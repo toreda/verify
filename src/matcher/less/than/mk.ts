@@ -26,6 +26,7 @@
 import {ChkChainRoot} from '../../../chk/chain/root';
 import type {LessThanArgs} from './args';
 import type {Matcher} from '../../../matcher';
+import {MatcherFlags} from 'src/matcher/flags';
 import type {MatcherFunc} from '../../../matcher/func';
 import {NodeLink} from '../../../node/link';
 import {lessThan} from '../../../less/than';
@@ -38,7 +39,10 @@ import {lessThan} from '../../../less/than';
  *
  * @category Matchers
  */
-export function matcherLessThanMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, number> {
+export function matcherLessThanMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: MatcherFlags
+): Matcher<ValueT, number> {
 	return (right: number): NodeLink<ValueT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.

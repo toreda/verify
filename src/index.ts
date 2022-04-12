@@ -57,6 +57,7 @@ export {NodeLink} from './node/link';
 export {NodeMatch} from './node/match';
 export {NodeMust} from './node/must';
 export {NodeOr} from './node/or';
+export {NodeType} from './node/type';
 export {Pattern} from './pattern';
 export {PatternChain} from './pattern/chain';
 export {PatternChainId} from './pattern/chain/id';

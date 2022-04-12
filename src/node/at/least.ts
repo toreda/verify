@@ -23,26 +23,21 @@
  *
  */
 
-import {ChkChainRoot} from '../chk/chain/root';
-import type {Matcher} from '../matcher';
-import {matcherEmptyMk} from '../matcher/empty/mk';
-import {matcherEqualToMk} from '../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/less/than/mk';
+import {ChkChainRoot} from '../../chk/chain/root';
+import type {Matcher} from '../../matcher';
+import {matcherEqualToMk} from '../../matcher/equal/to/mk';
+import {matcherGreaterThanMk} from '../../matcher/greater/than/mk';
+import {matcherLessThanMk} from '../../matcher/less/than/mk';
 
 /**
  * @category Nodes
  */
-export class NodeIs<ValueT> {
+export class NodeAtLeast<ValueT> {
+	public readonly equalTo: Matcher<ValueT, unknown>;
 	public readonly lessThan: Matcher<ValueT, number>;
 	public readonly greaterThan: Matcher<ValueT, number>;
-	public readonly equalTo: Matcher<ValueT, number>;
-	public readonly empty: Matcher<ValueT, never>;
-	public readonly notEmpty: Matcher<ValueT, never>;
 
 	constructor(root: ChkChainRoot<ValueT>) {
-		this.empty = matcherEmptyMk<ValueT>(root);
-		this.notEmpty = matcherEmptyMk<ValueT>(root);
 		this.lessThan = matcherLessThanMk<ValueT>(root);
 		this.greaterThan = matcherGreaterThanMk<ValueT>(root);
 		this.equalTo = matcherEqualToMk<ValueT>(root);

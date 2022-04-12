@@ -25,6 +25,7 @@
 
 import {Fate} from '@toreda/fate';
 import {MatcherCall} from './call';
+import type {MatcherFlags} from './flags';
 import type {MatcherFunc} from './func';
 import {matcherParamsMk} from '../matcher/params/mk';
 
@@ -34,17 +35,52 @@ import {matcherParamsMk} from '../matcher/params/mk';
 export class MatcherBound<ValueT, ParamT> {
 	public readonly fn: MatcherFunc<ValueT, ParamT>;
 	public readonly params: ParamT;
+	public readonly flags: MatcherFlags;
 
-	constructor(call: MatcherCall<ValueT, ParamT>) {
+	constructor(call: MatcherCall<ValueT, ParamT>, flags?: Partial<MatcherFlags>) {
 		this.fn = call.fn;
-
+		this.flags = this.mkFlags(flags);
 		this.params = matcherParamsMk<ParamT>(call?.params);
+	}
+
+	/**
+	 * Create fully formed flags object with each property set to either a valid provided
+	 * value, or set to the default value.
+	 * @param input
+	 * @returns
+	 */
+	public mkFlags(input?: Partial<MatcherFlags>): MatcherFlags {
+		const flags: MatcherFlags = {
+			invertResult: false
+		};
+
+		if (typeof input?.invertResult === 'boolean') {
+			flags.invertResult = input.invertResult;
+		}
+
+		return flags;
+	}
+
+	/**
+	 * Apply relevant result modifiers and transform the result value accordingly.
+	 * @param result
+	 * @returns
+	 */
+	public applyResultModifiers(result: boolean): boolean {
+		if (this.flags.invertResult === true) {
+			return !result;
+		}
+
+		return result;
 	}
 
 	public async execute(value?: ValueT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
+
 		try {
-			const result = await this.fn(value, this.params);
+			const fnResult = await this.fn(value, this.params);
+			const result = this.applyResultModifiers(fnResult);
+
 			if (result === true) {
 				fate.success(true);
 			} else {

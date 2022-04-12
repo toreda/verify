@@ -25,4 +25,5 @@
 
 export interface LessThanArgs {
 	right: number;
+	invertResult?: boolean;
 }

@@ -27,6 +27,7 @@ import type {ANY} from '@toreda/types';
 import {ChkValue} from '../value';
 import {MatcherBound} from '../../matcher/bound';
 import type {MatcherCall} from '../../matcher/call';
+import {MatcherFlags} from 'src/matcher/flags';
 
 /**
  * Root object for a ChkChain. Referenced all nodes and matchers in chain.
@@ -42,7 +43,7 @@ export class ChkChainRoot<ValueT> {
 		this.matchers = [];
 	}
 
-	public addMatcher<ParamT>(call: MatcherCall<ValueT, ParamT>): boolean {
+	public addMatcher<ParamT>(call: MatcherCall<ValueT, ParamT>, flags?: MatcherFlags): boolean {
 		let result = true;
 
 		try {

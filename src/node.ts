@@ -32,13 +32,13 @@ import type {NodeType} from './node/type';
  * @category Nodes
  */
 export class Node<ValueT, ParamT> {
-	public readonly type: NodeType;
+	public readonly nodeType: NodeType;
 	public readonly matcher: MatcherFunc<ValueT, ParamT> | null;
 	public readonly root: ChkChainRoot<ValueT>;
 	//public readonly children: Node<ValueT, unknown>[];
 
-	constructor(type: NodeType, root: ChkChainRoot<ValueT>, options?: NodeOptions) {
-		this.type = type;
+	constructor(nodeType: NodeType, root: ChkChainRoot<ValueT>, options?: NodeOptions) {
+		this.nodeType = nodeType;
 		this.root = root;
 		this.matcher = this.matcherMk(options?.matcher);
 	}

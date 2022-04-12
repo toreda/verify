@@ -21,7 +21,38 @@ describe('MatcherBound', () => {
 		instance.flags.invertResult = false;
 	});
 
-	describe('Constructor', () => {});
+	describe('Constructor', () => {
+		it(`should set fn property to the provided call.fn arg`, () => {
+			const fn = jest.fn().mockImplementation(() => {
+				return true;
+			});
+
+			const custom = new MatcherBound({
+				fn: fn
+			});
+
+			expect(custom.fn).toStrictEqual(fn);
+		});
+
+		it(`should set params property to the provided call.fn arg`, () => {
+			const fn = jest.fn().mockImplementation(() => {
+				return true;
+			});
+
+			const params = {
+				a: 'aaaa',
+				b: 4719714,
+				c: 88819187
+			};
+
+			const custom = new MatcherBound({
+				fn: fn,
+				params: params
+			});
+
+			expect(custom.params).toStrictEqual(params);
+		});
+	});
 
 	describe('Implementation', () => {
 		describe('mkFlags', () => {

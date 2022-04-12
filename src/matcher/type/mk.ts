@@ -23,37 +23,33 @@
  *
  */
 
-import type {BetweenCall} from '../../between/call';
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../../matcher/func';
+import {MatcherFunc} from '../func';
 import {NodeLink} from '../../node/link';
-import {between} from '../../between';
 
 /**
+ *
  * @param next
- * @param root
  * @returns
  *
  * @category Matchers
  */
-export function matcherBetweenMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
-): Matcher<ValueT, number> {
-	return (left: number, right: number) => {
-		const fn: MatcherFunc<ValueT, BetweenCall> = async (value?: ValueT | null): Promise<boolean> => {
-			return between(left, value, right);
+export function matcherTypeMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, string> {
+	return (typeName: string): NodeLink<ValueT> => {
+		const link = new NodeLink<ValueT>(root);
+		const fn: MatcherFunc<ValueT, string> = async (value?: ValueT | null): Promise<boolean> => {
+			if (typeName === 'array') {
+				return Array.isArray(value);
+			}
+
+			return typeof value === typeName;
 		};
 
-		root.addMatcher<BetweenCall>({
-			fn: fn,
-			params: {
-				left: left,
-				right: right
-			}
+		root.addMatcher<string>({
+			fn: fn
 		});
 
-		return next;
+		return link;
 	};
 }

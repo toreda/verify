@@ -40,7 +40,7 @@ export function matcherPatternMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<Va
 	return (_pattern: Pattern<ValueT>): NodeLink<ValueT> => {
 		const link = new NodeLink<ValueT>(root);
 
-		const fn: MatcherFunc<ValueT, unknown> = async (value?: ValueT | null): Promise<boolean> => {
+		const fn: MatcherFunc<ValueT, unknown> = async (_value?: ValueT | null): Promise<boolean> => {
 			return false;
 		};
 

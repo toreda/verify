@@ -26,6 +26,7 @@
 import {ChkChainRoot} from '../chk/chain/root';
 import {Node} from '../node';
 import {NodeAnd} from './and';
+import type {NodeFlags} from './flags';
 
 /**
  * @category Nodes
@@ -33,8 +34,8 @@ import {NodeAnd} from './and';
 export class NodeLink<ValueT> extends Node<ValueT, unknown> {
 	public readonly and: NodeAnd<ValueT>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
 		super('link', root);
-		this.and = new NodeAnd<ValueT>(root);
+		this.and = new NodeAnd<ValueT>(root, flags);
 	}
 }

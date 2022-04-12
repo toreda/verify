@@ -25,7 +25,7 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import {NodeContains} from './contains';
-import {NodeFlags} from './flags';
+import type {NodeFlags} from './flags';
 import {NodeHave} from './have';
 import {NodeIs} from './is';
 

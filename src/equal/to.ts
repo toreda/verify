@@ -31,11 +31,7 @@
  *
  * @category Matchers
  */
-export async function equalTo(left: unknown, right: unknown): Promise<boolean> {
-	if (left === null || right === null) {
-		return false;
-	}
-
+export function equalTo(left: unknown, right: unknown): boolean {
 	if (typeof left !== typeof right) {
 		return false;
 	}
@@ -46,6 +42,8 @@ export async function equalTo(left: unknown, right: unknown): Promise<boolean> {
 		case 'string':
 			return left === right;
 		case 'number':
+			return left === right;
+		case 'boolean':
 			return left === right;
 		default:
 			return false;

@@ -31,7 +31,7 @@ import type {NodeFlags} from './flags';
  * @category Nodes
  */
 export class NodeContains<ValueT> extends Node<ValueT, unknown> {
-	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
+	constructor(root: ChkChainRoot<ValueT>, _flags?: NodeFlags) {
 		super('contains', root);
 	}
 }

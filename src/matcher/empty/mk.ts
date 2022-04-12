@@ -26,6 +26,7 @@
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
+import type {NodeFlags} from '../../node/flags';
 import {NodeLink} from '../../node/link';
 import {empty} from '../../empty';
 
@@ -36,7 +37,10 @@ import {empty} from '../../empty';
  *
  * @category Matcher Factory
  */
-export function matcherEmptyMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, never> {
+export function matcherEmptyMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: NodeFlags
+): Matcher<ValueT, never> {
 	return () => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
@@ -47,7 +51,8 @@ export function matcherEmptyMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<Valu
 		};
 
 		root.addMatcher<never>({
-			fn: fn
+			fn: fn,
+			flags: flags
 		});
 
 		return link;

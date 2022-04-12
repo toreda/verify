@@ -27,6 +27,7 @@ import {ChkChainRoot} from '../../../chk/chain/root';
 import {EqualToCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
+import type {NodeFlags} from '../../../node/flags';
 import {NodeLink} from '../../../node/link';
 import {equalTo} from '../../../equal/to';
 
@@ -37,7 +38,10 @@ import {equalTo} from '../../../equal/to';
  *
  * @category Matcher Factory
  */
-export function matcherEqualToMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, unknown> {
+export function matcherEqualToMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: NodeFlags
+): Matcher<ValueT, unknown> {
 	return (right: unknown) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
@@ -54,7 +58,8 @@ export function matcherEqualToMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<Va
 			fn: fn,
 			params: {
 				right: right
-			}
+			},
+			flags: flags
 		});
 
 		return link;

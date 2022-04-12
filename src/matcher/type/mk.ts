@@ -25,7 +25,8 @@
 
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
-import {MatcherFunc} from '../func';
+import type {MatcherFunc} from '../func';
+import type {NodeFlags} from '../../node/flags';
 import {NodeLink} from '../../node/link';
 
 /**
@@ -35,9 +36,13 @@ import {NodeLink} from '../../node/link';
  *
  * @category Matchers
  */
-export function matcherTypeMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, string> {
+export function matcherTypeMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: NodeFlags
+): Matcher<ValueT, string> {
 	return (typeName: string): NodeLink<ValueT> => {
 		const link = new NodeLink<ValueT>(root);
+
 		const fn: MatcherFunc<ValueT, string> = async (value?: ValueT | null): Promise<boolean> => {
 			if (typeName === 'array') {
 				return Array.isArray(value);
@@ -47,7 +52,8 @@ export function matcherTypeMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<Value
 		};
 
 		root.addMatcher<string>({
-			fn: fn
+			fn: fn,
+			flags: flags
 		});
 
 		return link;

@@ -24,32 +24,22 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import type {Matcher} from '../matcher';
-import type {MatcherFunc} from '../matcher/func';
-import {NodeLink} from '../node/link';
-import {empty} from '../empty';
+import {Node} from '../node';
+import {NodeContains} from './contains';
+import type {NodeFlags} from './flags';
+import {NodeHave} from './have';
 
 /**
- *
- * @param next
- * @param root
- * @returns
- *
- * @category Matchers
+ * @category Nodes
  */
-export function matcherEmpty<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
-): Matcher<ValueT, never> {
-	return () => {
-		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
-			return empty(value);
-		};
+export class NodeNot<ValueT> extends Node<ValueT, unknown> {
+	public readonly contain: NodeContains<ValueT>;
+	public readonly have: NodeHave<ValueT>;
 
-		root.addMatcher<never>({
-			fn: fn
-		});
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
+		super('not', root);
 
-		return next;
-	};
+		this.contain = new NodeContains<ValueT>(root, flags);
+		this.have = new NodeHave<ValueT>(root, flags);
+	}
 }

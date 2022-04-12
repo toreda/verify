@@ -27,6 +27,7 @@ import {ChkChainRoot} from '../../../chk/chain/root';
 import type {GreaterThanCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
+import type {NodeFlags} from '../../../node/flags';
 import {NodeLink} from '../../../node/link';
 import {greaterThan} from '../../../greater/than';
 
@@ -37,7 +38,10 @@ import {greaterThan} from '../../../greater/than';
  *
  * @category Matcher Factory
  */
-export function matcherGreaterThanMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, number> {
+export function matcherGreaterThanMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: NodeFlags
+): Matcher<ValueT, number> {
 	return (right: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
@@ -54,7 +58,8 @@ export function matcherGreaterThanMk<ValueT>(root: ChkChainRoot<ValueT>): Matche
 			fn: fn,
 			params: {
 				right: right
-			}
+			},
+			flags: flags
 		});
 
 		return link;

@@ -25,6 +25,7 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import {NodeContains} from './contains';
+import {NodeFlags} from './flags';
 import {NodeHave} from './have';
 import {NodeIs} from './is';
 
@@ -36,9 +37,9 @@ export class NodeAnd<ValueT> {
 	public readonly is: NodeIs<ValueT>;
 	public readonly have: NodeHave<ValueT>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
-		this.is = new NodeIs<ValueT>(root);
-		this.contain = new NodeContains<ValueT>(root);
-		this.have = new NodeHave<ValueT>(root);
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
+		this.is = new NodeIs<ValueT>(root, flags);
+		this.contain = new NodeContains<ValueT>(root, flags);
+		this.have = new NodeHave<ValueT>(root, flags);
 	}
 }

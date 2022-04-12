@@ -28,6 +28,7 @@ import {Node} from '../node';
 import {NodeBe} from './be';
 import {NodeContains} from './contains';
 import {NodeEqual} from './equal';
+import type {NodeFlags} from './flags';
 import {NodeMatch} from './match';
 
 /**
@@ -35,15 +36,15 @@ import {NodeMatch} from './match';
  */
 export class NodeMust<ValueT> extends Node<ValueT, unknown> {
 	public readonly be: NodeBe<ValueT>;
+	public readonly match: NodeMatch<ValueT>;
+	public readonly equal: NodeEqual<ValueT>;
+	public readonly contain: NodeContains<ValueT>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
 		super('must', root);
-
-		const match = new NodeMatch<ValueT>(root);
-		const equal = new NodeEqual<ValueT>(root);
-		this.be = new NodeBe<ValueT>(root);
-		const contain = new NodeContains<ValueT>(root);
-
-		//this.children.push(match, equal, be, contain);
+		this.match = new NodeMatch<ValueT>(root, flags);
+		this.equal = new NodeEqual<ValueT>(root, flags);
+		this.be = new NodeBe<ValueT>(root, flags);
+		this.contain = new NodeContains<ValueT>(root, flags);
 	}
 }

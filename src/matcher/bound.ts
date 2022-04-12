@@ -25,8 +25,8 @@
 
 import {Fate} from '@toreda/fate';
 import {MatcherCall} from './call';
-import type {MatcherFlags} from './flags';
 import type {MatcherFunc} from './func';
+import type {NodeFlags} from '../node/flags';
 import {matcherParamsMk} from '../matcher/params/mk';
 
 /**
@@ -35,11 +35,11 @@ import {matcherParamsMk} from '../matcher/params/mk';
 export class MatcherBound<ValueT, ParamT> {
 	public readonly fn: MatcherFunc<ValueT, ParamT>;
 	public readonly params: ParamT;
-	public readonly flags: MatcherFlags;
+	public readonly flags: NodeFlags;
 
-	constructor(call: MatcherCall<ValueT, ParamT>, flags?: Partial<MatcherFlags>) {
+	constructor(call: MatcherCall<ValueT, ParamT>) {
 		this.fn = call.fn;
-		this.flags = this.mkFlags(flags);
+		this.flags = this.mkFlags(call?.flags);
 		this.params = matcherParamsMk<ParamT>(call?.params);
 	}
 
@@ -49,8 +49,8 @@ export class MatcherBound<ValueT, ParamT> {
 	 * @param input
 	 * @returns
 	 */
-	public mkFlags(input?: Partial<MatcherFlags>): MatcherFlags {
-		const flags: MatcherFlags = {
+	public mkFlags(input?: Partial<NodeFlags>): NodeFlags {
+		const flags: NodeFlags = {
 			invertResult: false
 		};
 

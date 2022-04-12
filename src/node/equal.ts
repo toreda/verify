@@ -25,12 +25,13 @@
 
 import {ChkChainRoot} from '../chk/chain/root';
 import {Node} from '../node';
+import type {NodeFlags} from './flags';
 
 /**
  * @category Nodes
  */
 export class NodeEqual<ValueT> extends Node<ValueT, unknown> {
-	constructor(root: ChkChainRoot<ValueT>) {
+	constructor(root: ChkChainRoot<ValueT>, _flags?: NodeFlags) {
 		super('equal', root);
 	}
 }

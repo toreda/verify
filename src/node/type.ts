@@ -1,4 +1,4 @@
 /**
  * @category Nodes
  */
-export type NodeType = 'be' | 'equal' | 'must' | 'match' | 'matcher' | 'link';
+export type NodeType = 'be' | 'equal' | 'must' | 'match' | 'matcher' | 'link' | 'not' | 'contains';

@@ -26,21 +26,21 @@
 import {ChkChainRoot} from '../chk/chain/root';
 import type {Matcher} from '../matcher';
 import {Node} from '../node';
+import type {NodeFlags} from './flags';
 import {matcherTypeMk} from '../matcher/type/mk';
-import {matcherTypesMk} from 'src/matcher/types/mk';
+import {matcherTypesMk} from '../matcher/types/mk';
 
 /**
  * @category Nodes
  */
 export class NodeMatch<ValueT> extends Node<ValueT, unknown> {
-	//public readonly pattern: Matcher<ValueT, Pattern<ValueT>>;
-	//public readonly patterns: Matcher<ValueT, Pattern<ValueT>[]>;
 	public readonly type: Matcher<ValueT, string>;
 	public readonly atLeastOneType: Matcher<ValueT, string[]>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
 		super('matcher', root);
-		this.type = matcherTypeMk<ValueT>(root);
-		this.atLeastOneType = matcherTypesMk<ValueT>(root);
+
+		this.type = matcherTypeMk<ValueT>(root, flags);
+		this.atLeastOneType = matcherTypesMk<ValueT>(root, flags);
 	}
 }

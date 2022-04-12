@@ -26,8 +26,8 @@
 import {ChkChainRoot} from '../../../chk/chain/root';
 import type {LessThanArgs} from './args';
 import type {Matcher} from '../../../matcher';
-import {MatcherFlags} from 'src/matcher/flags';
 import type {MatcherFunc} from '../../../matcher/func';
+import type {NodeFlags} from '../../../node/flags';
 import {NodeLink} from '../../../node/link';
 import {lessThan} from '../../../less/than';
 
@@ -41,7 +41,7 @@ import {lessThan} from '../../../less/than';
  */
 export function matcherLessThanMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
-	flags?: MatcherFlags
+	flags?: NodeFlags
 ): Matcher<ValueT, number> {
 	return (right: number): NodeLink<ValueT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
@@ -59,7 +59,8 @@ export function matcherLessThanMk<ValueT>(
 			fn: fn,
 			params: {
 				right: right
-			}
+			},
+			flags: flags
 		});
 
 		return link;

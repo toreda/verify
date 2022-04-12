@@ -24,8 +24,9 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
-import {Matcher} from '../matcher';
+import type {Matcher} from '../matcher';
 import {Node} from '../node';
+import type {NodeFlags} from './flags';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
 import {matcherLessThanMk} from '../matcher/less/than/mk';
@@ -38,11 +39,11 @@ export class NodeBe<ValueT> extends Node<ValueT, unknown> {
 	public readonly greaterThan: Matcher<ValueT, number>;
 	public readonly equalTo: Matcher<ValueT, number>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
 		super('be', root);
 
-		this.lessThan = matcherLessThanMk<ValueT>(root);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(root);
-		this.equalTo = matcherEqualToMk<ValueT>(root);
+		this.lessThan = matcherLessThanMk<ValueT>(root, flags);
+		this.greaterThan = matcherGreaterThanMk<ValueT>(root, flags);
+		this.equalTo = matcherEqualToMk<ValueT>(root, flags);
 	}
 }

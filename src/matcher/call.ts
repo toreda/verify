@@ -24,6 +24,7 @@
  */
 
 import type {MatcherFunc} from './func';
+import type {NodeFlags} from '../node/flags';
 
 /**
  * @category Matchers
@@ -31,4 +32,5 @@ import type {MatcherFunc} from './func';
 export interface MatcherCall<ValueT, ParamT> {
 	fn: MatcherFunc<ValueT, ParamT>;
 	params?: ParamT;
+	flags?: NodeFlags;
 }

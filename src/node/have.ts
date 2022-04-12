@@ -24,6 +24,7 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
+import type {NodeFlags} from './flags';
 import {NodeLength} from './length';
 
 /**
@@ -32,7 +33,7 @@ import {NodeLength} from './length';
 export class NodeHave<ValueT> {
 	public readonly length: NodeLength<ValueT>;
 
-	constructor(root: ChkChainRoot<ValueT>) {
-		this.length = new NodeLength<ValueT>(root);
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
+		this.length = new NodeLength<ValueT>(root, flags);
 	}
 }

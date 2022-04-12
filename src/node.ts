@@ -24,8 +24,6 @@
  */
 
 import {ChkChainRoot} from './chk/chain/root';
-import type {MatcherFunc} from './matcher/func';
-import type {NodeOptions} from './node/options';
 import type {NodeType} from './node/type';
 
 /**
@@ -33,35 +31,10 @@ import type {NodeType} from './node/type';
  */
 export class Node<ValueT, ParamT> {
 	public readonly nodeType: NodeType;
-	public readonly matcher: MatcherFunc<ValueT, ParamT> | null;
 	public readonly root: ChkChainRoot<ValueT>;
-	//public readonly children: Node<ValueT, unknown>[];
 
-	constructor(nodeType: NodeType, root: ChkChainRoot<ValueT>, options?: NodeOptions) {
+	constructor(nodeType: NodeType, root: ChkChainRoot<ValueT>) {
 		this.nodeType = nodeType;
 		this.root = root;
-		this.matcher = this.matcherMk(options?.matcher);
-	}
-
-	public async execute(value?: ValueT | null): Promise<boolean> {
-		return false;
-	}
-
-	private matcherMk(matcher?: MatcherFunc<ValueT, ParamT>): MatcherFunc<ValueT, ParamT> | null {
-		if (typeof matcher !== 'function') {
-			return null;
-		}
-
-		return matcher;
-	}
-
-	private childrenMk(children?: Node<ValueT, unknown>[] | null): Node<ValueT, unknown>[] {
-		const base = [] as Node<ValueT, unknown>[];
-
-		if (!Array.isArray(children)) {
-			return base;
-		}
-
-		return children;
 	}
 }

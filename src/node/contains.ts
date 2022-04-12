@@ -24,14 +24,14 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
+import {Node} from '../node';
+import type {NodeFlags} from './flags';
 
 /**
  * @category Nodes
  */
-export class NodeContains<ValueT> {
-	private readonly _root: ChkChainRoot<ValueT>;
-
-	constructor(root: ChkChainRoot<ValueT>) {
-		this._root = root;
+export class NodeContains<ValueT> extends Node<ValueT, unknown> {
+	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
+		super('contains', root);
 	}
 }

@@ -27,6 +27,7 @@ import type {BetweenCall} from '../../between/call';
 import {ChkChainRoot} from '../../chk/chain/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
+import type {NodeFlags} from '../../node/flags';
 import {NodeLink} from '../../node/link';
 import {between} from '../../between';
 
@@ -39,9 +40,11 @@ import {between} from '../../between';
  */
 export function matcherBetweenMk<ValueT>(
 	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
+	flags?: NodeFlags
 ): Matcher<ValueT, number> {
 	return (left: number, right: number) => {
+		const link = new NodeLink<ValueT>(root, flags);
+
 		const fn: MatcherFunc<ValueT, BetweenCall> = async (value?: ValueT | null): Promise<boolean> => {
 			return between(left, value, right);
 		};
@@ -54,6 +57,6 @@ export function matcherBetweenMk<ValueT>(
 			}
 		});
 
-		return next;
+		return link;
 	};
 }

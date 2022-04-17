@@ -24,10 +24,37 @@
  */
 
 import {ChkChainRoot} from '../../chk/chain/root';
+import type {Matcher} from '../../matcher';
+import type {MatcherFunc} from '../../matcher/func';
+import type {NodeFlags} from '../../node/flags';
+import {NodeLink} from '../../node/link';
+import {divisible} from '../../divisible';
 
 /**
- * @category Matchers
+ *
+ * @param next
+ * @returns
+ *
+ * @category Matcher Factory
  */
-export interface MatcherArgsRoot<ValueT> {
-	chainRoot: ChkChainRoot<ValueT>;
+export function matcherDivisibleMk<ValueT>(
+	root: ChkChainRoot<ValueT>,
+	flags?: NodeFlags
+): Matcher<ValueT, number> {
+	return (by: number) => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new NodeLink<ValueT>(root);
+
+		const fn: MatcherFunc<ValueT, number> = async (value?: ValueT | null): Promise<boolean> => {
+			return divisible(value, by);
+		};
+
+		root.addMatcher<number>({
+			fn: fn,
+			flags: flags
+		});
+
+		return link;
+	};
 }

@@ -24,10 +24,12 @@
  */
 
 import {ChkChainRoot} from '../chk/chain/root';
+import type {Matcher} from '../matcher';
 import {Node} from '../node';
 import {NodeContains} from './contains';
 import type {NodeFlags} from './flags';
 import {NodeHave} from './have';
+import {matcherDivisibleMk} from '../matcher/divisible/mk';
 
 /**
  * @category Nodes
@@ -35,11 +37,18 @@ import {NodeHave} from './have';
 export class NodeNot<ValueT> extends Node<ValueT, unknown> {
 	public readonly contain: NodeContains<ValueT>;
 	public readonly have: NodeHave<ValueT>;
+	public readonly divisibleBy: Matcher<ValueT, number>;
 
 	constructor(root: ChkChainRoot<ValueT>, flags?: NodeFlags) {
 		super('not', root);
 
-		this.contain = new NodeContains<ValueT>(root, flags);
-		this.have = new NodeHave<ValueT>(root, flags);
+		const modFlags: NodeFlags = {
+			...flags,
+			invertResult: true
+		};
+
+		this.contain = new NodeContains<ValueT>(root, modFlags);
+		this.have = new NodeHave<ValueT>(root, modFlags);
+		this.divisibleBy = matcherDivisibleMk<ValueT>(root, modFlags);
 	}
 }

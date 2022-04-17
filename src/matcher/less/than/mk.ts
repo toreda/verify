@@ -24,7 +24,7 @@
  */
 
 import {ChkChainRoot} from '../../../chk/chain/root';
-import type {LessThanArgs} from './args';
+import type {LessThanArgs} from '../../../less/than/args';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
 import type {NodeFlags} from '../../../node/flags';

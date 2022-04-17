@@ -23,12 +23,14 @@
  *
  */
 
-import type {ArrayFunc, Iterable} from '@toreda/types';
+import type {ArrayFunc, Iterable, Itor, ItorItem} from '@toreda/types';
 
 import {ChkChain} from './chain';
 import {ChkChainsItor} from './chains/itor';
 
-export class ChkChains<ValueT> implements Iterable<ArrayFunc<ChkChain<ValueT>, boolean>, void> {
+export class ChkChains<ValueT>
+	implements Iterable<ArrayFunc<ChkChain<ValueT>, boolean>, void, ItorItem<ChkChain<ValueT> | null>>
+{
 	private readonly _items: ChkChain<ValueT>[];
 
 	constructor() {

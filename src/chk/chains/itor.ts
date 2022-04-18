@@ -23,12 +23,11 @@
  *
  */
 
-import type {Itor, ItorItem} from '@toreda/types';
-
 import {ChkChain} from '../chain';
-import {chkChainsItorItemMk} from './itor/item/mk';
 
-export class ChkChainsItor<ValueT> implements Itor<ChkChain<ValueT> | null> {
+export class ChkChainsItor<ValueT>
+	implements Iterator<ChkChain<ValueT> | null, ChkChain<ValueT> | null, undefined>
+{
 	public ndx: number;
 	private readonly _items: ChkChain<ValueT>[];
 
@@ -37,15 +36,29 @@ export class ChkChainsItor<ValueT> implements Itor<ChkChain<ValueT> | null> {
 		this.ndx = 0;
 	}
 
-	public next(): ItorItem<ChkChain<ValueT> | null> {
+	public next(): IteratorResult<ChkChain<ValueT> | null, ChkChain<ValueT> | null> {
 		if (!this._items.length) {
-			return chkChainsItorItemMk<ChkChain<ValueT> | null>(null, true);
+			return {
+				value: null,
+				done: true
+			} as IteratorReturnResult<ChkChain<ValueT> | null>;
 		}
 
 		const value = this._items[this.ndx];
 		const done = this.ndx === this._items.length;
 
 		this.ndx++;
-		return chkChainsItorItemMk<ChkChain<ValueT> | null>(value, done);
+
+		if (done === true) {
+			return {
+				value: value,
+				done: true
+			} as IteratorResult<ChkChain<ValueT> | null>;
+		} else {
+			return {
+				value: value,
+				done: false
+			} as IteratorYieldResult<ChkChain<ValueT> | null>;
+		}
 	}
 }

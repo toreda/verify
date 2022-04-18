@@ -23,25 +23,23 @@
  *
  */
 
-import type {ArrayFunc, Iterable, Itor, ItorItem} from '@toreda/types';
+import type {ArrayFunc, Iterable} from '@toreda/types';
 
 import {ChkChain} from './chain';
 import {ChkChainsItor} from './chains/itor';
 
-export class ChkChains<ValueT>
-	implements Iterable<ArrayFunc<ChkChain<ValueT>, boolean>, void, ItorItem<ChkChain<ValueT> | null>>
-{
+export class ChkChains<ValueT> implements Iterable<ChkChain<ValueT> | null, ChkChain<ValueT> | null> {
 	private readonly _items: ChkChain<ValueT>[];
 
 	constructor() {
 		this._items = [];
 	}
 
-	[Symbol.iterator](): ChkChainsItor<ValueT> {
+	[Symbol.iterator](): Iterator<ChkChain<ValueT> | null, ChkChain<ValueT> | null> {
 		return new ChkChainsItor<ValueT>(this._items);
 	}
 
-	public forEach(fn: ArrayFunc<ChkChain<ValueT>, boolean>): void {
+	public forEach(fn: ArrayFunc<ChkChain<ValueT> | null, ChkChain<ValueT> | null>): ChkChain<ValueT> | null {
 		for (let i = 0; i < this._items.length; i++) {
 			const item = this._items[i];
 
@@ -49,6 +47,8 @@ export class ChkChains<ValueT>
 				fn(item, i, this._items);
 			} catch (e) {}
 		}
+
+		return null;
 	}
 
 	/**

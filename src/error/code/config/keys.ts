@@ -24,8 +24,8 @@
  */
 
 /**
- * Expressive alias for NodeId arguments.
+ * Use to check determine if target string is a supported config key.
  *
- * @category Nodes
+ * @category Error Codes
  */
-export type NodeId = string;
+export const errorCodeConfigKeys: Set<string> = new Set<string>(['customCodeToken', 'customPathDelim']);

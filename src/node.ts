@@ -29,7 +29,7 @@ import type {NodeType} from './node/type';
 /**
  * @category Nodes
  */
-export class Node<ValueT, ParamT> {
+export class Node<ValueT, _ParamT> {
 	public readonly nodeType: NodeType;
 	public readonly root: ChkChainRoot<ValueT>;
 

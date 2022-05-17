@@ -38,9 +38,9 @@ import {errorCodeToken} from '../code/token';
  *
  * @category Errors
  */
-export function errorMkCode<CodeT extends string, EntityT extends string, PathT = string | unknown>(
+export function errorMkCode<CodeT extends string, RootT extends string, PathT = string | unknown>(
 	code: CodeT,
-	entity: EntityT,
+	root: RootT,
 	path?: PathT | PathT[],
 	opts?: ErrorCodeFlags
 ): string {
@@ -49,11 +49,11 @@ export function errorMkCode<CodeT extends string, EntityT extends string, PathT 
 	let base: string;
 
 	if (Array.isArray(path)) {
-		base = `${entity}${pathDelim}${path.join(pathDelim)}`;
+		base = `${root}${pathDelim}${path.join(pathDelim)}`;
 	} else if (typeof path === 'string') {
-		base = `${entity}${pathDelim}${path}`;
+		base = `${root}${pathDelim}${path}`;
 	} else {
-		base = `${entity}`;
+		base = `${root}`;
 	}
 
 	return `${base}${codeToken}${code}`;

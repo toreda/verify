@@ -23,6 +23,11 @@
  *
  */
 
+/**
+ *
+ *
+ * @category
+ */
 export interface BetweenCall {
 	left: number;
 	right: number;

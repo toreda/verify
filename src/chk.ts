@@ -22,6 +22,7 @@
  * 	SOFTWARE.
  *
  */
+
 import {ChkValue} from './chk/value';
 import {Fate} from '@toreda/fate';
 import {NodeContains} from './node/contains';

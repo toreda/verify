@@ -29,6 +29,6 @@
  *
  * @category Patterns
  */
-export function patternMk<T>(): unknown {
+export function patternMk(): unknown {
 	return null;
 }

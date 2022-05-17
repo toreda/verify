@@ -33,7 +33,7 @@ export default class Defaults {
 		PathDelimiter: ':',
 		CodeToken: '|',
 		EmptyPath: [],
-		Entity: '___',
+		Root: '___',
 		Code: '___'
 	} as const;
 }

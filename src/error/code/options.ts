@@ -24,8 +24,10 @@
  */
 
 /**
- * Expressive alias for NodeId arguments.
- *
- * @category Nodes
+ * @category Error Codes
  */
-export type NodeId = string;
+export interface ErrorCodeOptions {
+	customPathDelim?: string;
+	customCodeToken?: string;
+	text?: string;
+}

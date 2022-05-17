@@ -24,8 +24,13 @@
  */
 
 /**
- * Expressive alias for NodeId arguments.
+ * Contains the root entity responsible for error and path to origin involved in error.
  *
- * @category Nodes
+ * @category Error Codes
  */
-export type NodeId = string;
+export interface ErrorContextData {
+	/** Root object, node, or other origin responsible for error code. */
+	root: string;
+	/** Ordered nodes, components, entities, and properties forming error path from origin. */
+	path?: string[];
+}

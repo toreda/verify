@@ -23,24 +23,21 @@
  *
  */
 
-import Defaults from '../defaults';
 import type {ErrorCodeData} from './code/data';
-import type {ErrorCodeFlags} from './code/flags';
+import {ErrorConfig} from './config';
+import {ErrorContext} from './context';
 import type {Stringable} from '@toreda/types';
+import {errorCodeConfigKeys} from './code/config/keys';
 import {errorCodePathDelimiter} from './code/path/delimiter';
 import {errorCodeToken} from './code/token';
 
 /**
- * @category Errors
+ * @category Error Codes
  */
-export class ErrorCode<EntityT extends string, PathT extends string, CodeT extends string>
+export class ErrorCode<CodeT extends string, RootT extends string, PathT extends string>
 	implements Stringable
 {
-	/** Entity which error is referring to. */
-	public readonly entity: string;
-	/** Component path identifying the specific property, system, or child
-	 * 	object within Entity which reror code refers to. */
-	public readonly path: string[];
+	public readonly context: ErrorContext<RootT, PathT>;
 	/** Error code returned by entity. */
 	public readonly code: string;
 	/** Custom delimiter string overriding the default path delimiter for this
@@ -51,33 +48,26 @@ export class ErrorCode<EntityT extends string, PathT extends string, CodeT exten
 	public readonly customCodeToken: string | undefined;
 
 	public readonly text: string | undefined;
+	public readonly cfg: ErrorConfig;
 
-	constructor(entity: EntityT, path: PathT | PathT[], code: CodeT, args?: ErrorCodeFlags) {
-		this.entity = entity ?? Defaults.ErrorCode.Entity;
-		this.path = this.mkPath(path);
-		this.code = code ?? Defaults.ErrorCode.CodeToken;
-
-		this.text = args?.text;
-		this.customPathDelim = args?.pathDelimiter;
-		this.customCodeToken = args?.codeToken;
+	constructor(code: CodeT, root: RootT, ...path: PathT[]) {
+		this.code = code;
+		this.context = new ErrorContext<RootT, PathT>(root, ...path);
+		this.cfg = {};
 	}
 
-	/**
-	 * Create path component from arg string or array of strings.
-	 * @param value
-	 * @param args
-	 * @returns
-	 */
-	public mkPath(value?: PathT | PathT[] | null): string[] {
-		if (Array.isArray(value)) {
-			return value;
+	public setConfig(key: string, value: unknown): boolean {
+		if (typeof key !== 'string') {
+			return false;
 		}
 
-		if (typeof value === 'string') {
-			return [value];
+		if (!errorCodeConfigKeys.has(key)) {
+			return false;
 		}
 
-		return [];
+		this.cfg[key] = value;
+
+		return true;
 	}
 
 	/**
@@ -88,12 +78,10 @@ export class ErrorCode<EntityT extends string, PathT extends string, CodeT exten
 	 */
 	public toData(): ErrorCodeData {
 		return {
-			entity: this.entity,
-			path: this.path,
+			context: this.context.toData(),
 			code: this.code,
 			text: this.text,
-			customCodeToken: this.customCodeToken,
-			customPathDelim: this.customPathDelim
+			cfg: this.cfg
 		};
 	}
 
@@ -102,10 +90,10 @@ export class ErrorCode<EntityT extends string, PathT extends string, CodeT exten
 	 * @returns
 	 */
 	public toString(): string {
-		const delim = errorCodePathDelimiter(this.customPathDelim);
-		const token = errorCodeToken(this.customCodeToken);
+		const delim = errorCodePathDelimiter(this.cfg.customPathDelim);
+		const token = errorCodeToken(this.cfg.customCodeToken);
 
-		const base = `${this.entity}${delim}${this.path.join(delim)}`;
+		const base = `${this.context.root}${delim}${this.context.path.join(delim)}`;
 
 		return `${base}${token}${this.code}`;
 	}

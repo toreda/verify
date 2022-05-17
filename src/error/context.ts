@@ -23,9 +23,32 @@
  *
  */
 
+import Defaults from '../defaults';
+import type {ErrorContextData} from './context/data';
+
 /**
- * Expressive alias for NodeId arguments.
  *
- * @category Nodes
+ *
+ * @category Error Codes
  */
-export type NodeId = string;
+export class ErrorContext<RootT extends string, PathT extends string> {
+	public readonly root: RootT | string;
+	public readonly path: PathT[];
+
+	constructor(root: RootT, ...path: PathT[]) {
+		if (root === undefined) {
+			this.root = Defaults.ErrorCode.Root;
+		} else {
+			this.root = root;
+		}
+
+		this.path = Array.isArray(path) ? path : [path];
+	}
+
+	public toData(): ErrorContextData {
+		return {
+			root: this.root,
+			path: this.path
+		};
+	}
+}

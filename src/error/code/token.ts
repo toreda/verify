@@ -33,7 +33,7 @@ import Defaults from '../../defaults';
  * @param value
  * @returns
  *
- * @category Errors
+ * @category Error Codes
  */
 export function errorCodeToken(value?: string | null): string {
 	if (typeof value !== 'string') {

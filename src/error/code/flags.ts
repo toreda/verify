@@ -27,7 +27,7 @@
  * Optional arguments used in error code creation. Each arg not explicitly
  * provided uses the arg's default value.
  *
- * @category Errors
+ * @category Error Codes
  */
 export interface ErrorCodeFlags {
 	/** 1 or more characters delimiting error path segments.*/

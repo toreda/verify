@@ -24,8 +24,8 @@
  */
 
 /**
- * Expressive alias for NodeId arguments.
+ * Identifies supported custom configuration keys.
  *
- * @category Nodes
+ * @category Error Codes
  */
-export type NodeId = string;
+export type ErrorCodeConfigKey = 'customCodeToken' | 'customPathDelim';

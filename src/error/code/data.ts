@@ -23,18 +23,20 @@
  *
  */
 
+import {ErrorConfig} from '../config';
+import type {ErrorContextData} from '../context/data';
+
 /**
  * Simple data object containing only stringifiable properties. All child properties
  * must be primitives or other simple data objects. Object references and recursive
  * loops are not permitted within ErrorCodeData properties.
  *
- * @category Errors
+ * @category Error Codes
  */
 export interface ErrorCodeData {
-	entity: string;
-	path: string[];
+	context: ErrorContextData;
+	/** Error code without path. */
 	code: string;
 	text?: string;
-	customCodeToken?: string;
-	customPathDelim?: string;
+	cfg: ErrorConfig;
 }

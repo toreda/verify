@@ -28,6 +28,8 @@ import {NodeContains} from './contains';
 import {NodeIs} from './is';
 
 /**
+ * Links two or more validation chain statements to form a boolean expression.
+ *
  * @category Nodes
  */
 export class NodeOr<ValueT> {

@@ -23,8 +23,6 @@
  *
  */
 
-import {empty} from '../../empty';
-
 /**
  *
  * @param value
@@ -33,5 +31,9 @@ import {empty} from '../../empty';
  * @category Validator Functions
  */
 export function isArrayEmpty(value: unknown[]): value is Array<unknown> {
-	return empty(value);
+	if (!Array.isArray(value)) {
+		return false;
+	}
+
+	return value.length === 0;
 }

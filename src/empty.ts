@@ -31,16 +31,20 @@
  * @cattegory Validator
  */
 export function empty<ValueT>(value?: ValueT | null): boolean {
+	if (value === undefined || value === null) {
+		return false;
+	}
+
 	if (Array.isArray(value)) {
 		return value.length === 0;
 	}
 
-	if (typeof value === 'string') {
-		return value.trim().length === 0;
+	if (Object.keys(value).length === 0) {
+		return true;
 	}
 
-	if (value === {}) {
-		return true;
+	if (typeof value === 'string') {
+		return value.trim().length === 0;
 	}
 
 	return false;

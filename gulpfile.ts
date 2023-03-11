@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2022 Toreda, Inc.
+ *	Copyright (c) 2019 – 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,42 +23,49 @@
  *
  */
 
-import {Levels, Log} from '@toreda/log';
+import gulp, {dest, series, src} from 'gulp';
 
-import {Build} from '@toreda/build-tools';
-import {EventEmitter} from 'events';
-import {series} from 'gulp';
+import {ESLint} from 'eslint';
+import del from 'del';
+import ts from 'gulp-typescript';
 
-const log = new Log({
-	consoleEnabled: true,
-	globalLevel: Levels.ALL
+const eslint = new ESLint({
+	useEslintrc: true
 });
 
-const build: Build = new Build({
-	log: log,
-	events: new EventEmitter(),
-	linter: {
-		globInputPaths: true
-	}
-});
+const srcPatterns = ['src/**.ts', 'src/**/*.ts'];
+const tsc = ts.createProject('tsconfig.json');
 
-async function runLint(): Promise<NodeJS.ReadWriteStream> {
-	return build.gulpSteps.lint({
-		formatterId: 'stylish',
-		srcPatterns: ['./src/**.ts', './src/**/**.ts']
+async function linter() {
+	const result = await eslint.lintFiles(srcPatterns);
+	const formatter = await eslint.loadFormatter('stylish');
+
+	const output = formatter.format(result);
+	console.log(output);
+}
+
+function createDist() {
+	// Hack to create folder structures without actually reading files.
+	// Nested folders need to be created in their nested order.
+	// NOTE: In other projects this task is handled by `@toreda/build-tools`, however
+	// we cannot use it here because this package is a dependency of build-tools.
+	return src('*.*', {read: false}).pipe(gulp.dest('./dist'));
+}
+
+async function cleanDist() {
+	// NOTE: In other projects this task is handled by `@toreda/build-tools`, however
+	// we cannot use it here because this package is a dependency of build-tools.
+	return del(`dist/**`, {
+		force: true,
+		dryRun: false
 	});
 }
 
-function createDist(): Promise<NodeJS.ReadWriteStream> {
-	return build.gulpSteps.createDir('./dist', true);
+function buildSrc() {
+	// Build typescript sources and output them in './dist'.
+	// NOTE: In other projects this task is handled by `@toreda/build-tools`, however
+	// we cannot use it here because this package is a dependency of build-tools.
+	return src(srcPatterns).pipe(tsc()).pipe(dest('dist'));
 }
 
-function cleanDist(): Promise<NodeJS.ReadWriteStream> {
-	return build.gulpSteps.cleanDir('./dist', true);
-}
-
-function buildSrc(): Promise<NodeJS.ReadWriteStream> {
-	return build.run.typescript('./dist', 'tsconfig.json');
-}
-
-exports.default = series(createDist, cleanDist, runLint, buildSrc);
+exports.default = series(createDist, cleanDist, linter, buildSrc);

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2022 Toreda, Inc.
+ *	Copyright (c) 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,11 @@ export interface ChkFlags {
 	 * Default: true
 	 */
 	notrim?: boolean;
+	error?: {
+		root?: string;
+		pathPrepend?: string[];
+		pathAppend?: string[];
+	};
 	/**
 	 * Extra flags to allow patterns which are otherwise disallowed by default.
 	 */
@@ -49,5 +54,6 @@ export interface ChkFlags {
 		 * Default: false
 		 */
 		empty?: boolean;
+		null?: boolean;
 	};
 }

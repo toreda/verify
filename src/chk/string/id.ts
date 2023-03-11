@@ -25,6 +25,7 @@
 
 import type {ChkFlags} from '../flags';
 import {Fate} from '@toreda/fate';
+import {errorMkCode} from 'src/error/mk/code';
 
 /**
  * Check if value is a valid id string according to the optional validation rules when provided.
@@ -39,35 +40,70 @@ import {Fate} from '@toreda/fate';
 export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fate<T> {
 	const fate = new Fate<T>();
 
+	let pathAppend: string[] = [];
+	let pathPrepend: string[] = [];
+
+	// Use of conditional plus Array checks rather than ternary statements with assignment due to
+	// TypeScript incorrectly flagging the array values as possibly undefined.
+	if (flags && flags.error) {
+		if (Array.isArray(flags.error.pathPrepend)) {
+			pathPrepend = [...flags.error.pathPrepend];
+		}
+
+		if (Array.isArray(flags.error.pathAppend)) {
+			pathAppend = [...flags.error.pathAppend];
+		}
+	}
+
+	const errorRoot = typeof flags?.error?.root === 'string' ? flags?.error?.root : id;
+
+	if (id === null || id === undefined) {
+		return fate.setErrorCode(errorMkCode('missing_arg', 'id', [...pathPrepend, 'arg', ...pathAppend]));
+	}
+
 	if (typeof id !== 'string') {
-		return fate.setErrorCode('no_id');
+		return fate.setErrorCode(errorMkCode('bad_arg_format', 'id', [...pathPrepend, 'arg', ...pathAppend]));
 	}
 
 	if (value === undefined) {
-		return fate.setErrorCode(`${id}:missing`);
+		return fate.setErrorCode(
+			errorMkCode('missing_arg', errorRoot, [...pathPrepend, 'value', 'arg', ...pathAppend])
+		);
+	}
+
+	if (value === null && flags?.allow?.null === true) {
+		return fate.setSuccess(true);
 	}
 
 	if (typeof value !== 'string') {
-		return fate.setErrorCode(`${id}:bad_format`);
+		return fate.setErrorCode(
+			errorMkCode('bad_format', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+		);
 	}
 
 	const trimmed = flags?.notrim !== true ? value.trim() : value;
 
 	if (!trimmed) {
-		if (flags?.allow && flags.allow.empty !== true) {
-			return fate.setErrorCode(`${id}:empty`);
+		if (flags?.allow?.empty !== true) {
+			return fate.setErrorCode(
+				errorMkCode('empty', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+			);
 		}
 	}
 
 	if (flags?.length) {
 		if (typeof flags.length.max === 'number' && trimmed.length > flags.length.max) {
-			return fate.setErrorCode(`${id}:too_long`);
+			return fate.setErrorCode(
+				errorMkCode('too_long', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+			);
 		}
 
 		if (typeof flags.length.min === 'number' && trimmed.length < flags.length.min) {
-			return fate.setErrorCode(`${id}:too_short`);
+			return fate.setErrorCode(
+				errorMkCode('too_short', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+			);
 		}
 	}
 
-	return fate;
+	return fate.setSuccess(true);
 }

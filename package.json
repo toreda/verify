@@ -36,11 +36,6 @@
 	"resolutions": {
 		"glob-parent": "^5.1.2"
 	},
-	"peerDependencies": {
-		"@toreda/fate": "^0.6.7",
-		"@toreda/time": "^0.1.6",
-		"@toreda/types": "^2.16.0"
-	},
 	"dependencies": {},
 	"scripts": {
 		"build": "yarn build:prod",

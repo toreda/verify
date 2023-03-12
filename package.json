@@ -1,11 +1,11 @@
 {
 	"name": "@toreda/chk",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"main": "./dist/index.js",
 	"repository": "https://github.com/toreda/chk",
 	"author": "Toreda, Inc.",
 	"license": "MIT",
-	"description": "Eliminate more edge cases with less code. Automate common validation logic.",
+	"description": "Eliminate more edge cases with less code. Automates common validation.",
 	"public": true,
 	"prettier": "@toreda/prettier-config",
 	"devDependencies": {

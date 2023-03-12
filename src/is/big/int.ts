@@ -23,6 +23,13 @@
  *
  */
 
-export function isBigInt<CallerT>(caller: CallerT): CallerT {
-	return caller;
+/**
+ * Determine if value is a built-in JavaScript bigint type.
+ * @param caller
+ * @returns
+ *
+ * @category		Validators – Numbers
+ */
+export function isBigInt(value: unknown): boolean {
+	return typeof value === 'bigint';
 }

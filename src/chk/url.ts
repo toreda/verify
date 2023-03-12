@@ -23,6 +23,8 @@
  *
  */
 
+import type {ChkFlags} from './flags';
+import {Codes} from '../codes';
 import {Fate} from '@toreda/fate';
 
 /**
@@ -32,11 +34,26 @@ import {Fate} from '@toreda/fate';
  *
  * @category Url
  */
-export function chkUrl(value?: string | null): Fate<never> {
+export function chkUrl(value?: string | null, flags?: ChkFlags): Fate<never> {
 	const fate = new Fate<never>();
 
+	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
+	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
+
 	if (value === undefined || value === null) {
-		return fate.setErrorCode('missing');
+		return fate.setErrorCode(Codes.missing());
+	}
+
+	if (typeof value !== 'string') {
+		return fate.setErrorCode(Codes.badFormat());
+	}
+
+	if (value.length > maxLen) {
+		return fate.setErrorCode(Codes.tooLong());
+	}
+
+	if (value.length < minLen) {
+		return fate.setErrorCode(Codes.tooShort());
 	}
 
 	return fate.setSuccess(true);

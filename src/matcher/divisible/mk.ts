@@ -35,7 +35,7 @@ import {divisible} from '../../divisible';
  * @param next
  * @returns
  *
- * @category Matcher Factory
+ * @category Matcher Factories
  */
 export function matcherDivisibleMk<ValueT>(
 	root: ChkChainRoot<ValueT>,

@@ -9,11 +9,10 @@
 [![license](https://img.shields.io/github/license/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/blob/master/LICENSE)
 
 &nbsp;
-# `@toreda/chk`
-Automated object and data validation using schemas.
+# `@toreda/chk` - Pronounced *Check* [ chek ]
+Eliminate more edge cases with less code. Automates common type checks and validation checks.
 
 &nbsp;
-
 
 # Install
 `@toreda/chk` is available as an [NPM package](https://www.npmjs.com/package/@toreda/chk).
@@ -32,7 +31,7 @@ npm install @toreda/chk
 
 # Usage
 
-This package uses `Fate` objects from `@toreda/fate` to return validation results.
+## Basic Validation
 
 &nbsp;
 ## Validation
@@ -56,9 +55,12 @@ This package uses `Fate` objects from `@toreda/fate` to return validation result
 [MIT](LICENSE) &copy; Toreda, Inc.
 
 ## Copyright
-Copyright &copy; 2022 Toreda, Inc. All Rights Reserved.
+Copyright &copy; 2023 Toreda, Inc. All Rights Reserved.
 
 &nbsp;
+
+# Github
+https://github.com/toreda
 
 # Website
 https://www.toreda.com

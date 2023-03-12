@@ -23,6 +23,14 @@
  *
  */
 
+/**
+ * Determine if value is a primitive 'number' type.
+ * @param value
+ * @returns 		`true` 	`value` is a valid JavaScript number primitive including infinite and NaN.
+ *					`false`	`value` is not a valid JavaScript number primitive.
+ *
+ * @category		Validators – Numbers
+ */
 export function isNumber(value: unknown): boolean {
 	return typeof value === 'number';
 }

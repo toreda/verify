@@ -24,7 +24,7 @@
  */
 
 /**
- * Generic type signature for matcher functions.
+ * Generic type signature used by all Matchers within validation chain nodes.
  *
  * @category Matchers
  */

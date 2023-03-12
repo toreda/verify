@@ -24,6 +24,8 @@
  */
 
 /**
+ * Expressive type describing that a value uniquely identifies a Pattern object.
+ *
  * @category Patterns
  */
 export type PatternId = string;

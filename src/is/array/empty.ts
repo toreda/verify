@@ -24,11 +24,13 @@
  */
 
 /**
- *
+ * Determine if `value` both an array and is empty.
  * @param value
- * @returns
+ * @returns			`true`	value is an array with length 0.
+ *					`false`	value is not an array, or has is an array with 1 or
+ *							more elements.
  *
- * @category Validator Functions
+ * @category		Validators – Collections
  */
 export function isArrayEmpty(value: unknown[]): value is Array<unknown> {
 	if (!Array.isArray(value)) {

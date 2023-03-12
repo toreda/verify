@@ -27,11 +27,11 @@ import {isIntPos} from '../int/pos';
 import {isNumberFinite} from '../number/finite';
 
 /**
- * Determine if provided value arg is an array.
+ * Determine if provided value arg is a number and a prime number.
  * @param value
  * @returns
  *
- * @category Validator Functions
+ * @category		Validators – Numbers
  */
 export function isPrimeInt(value: unknown): value is number {
 	if (!isNumberFinite(value)) {

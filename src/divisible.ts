@@ -30,6 +30,8 @@ import {isNumberFinite} from './is/number/finite';
  * @param value		Number to be divided.
  * @param by		Number to divide value by.
  * @returns
+ *
+ * @category		Validators – Numbers
  */
 export function divisible(value: unknown, by: unknown): value is number {
 	if (!isNumberFinite(value) || !isNumberFinite(by)) {

@@ -36,7 +36,7 @@ import {equalTo} from '../../../equal/to';
  * @param next
  * @returns
  *
- * @category Matcher Factory
+ * @category Matcher Factories
  */
 export function matcherEqualToMk<ValueT>(
 	root: ChkChainRoot<ValueT>,

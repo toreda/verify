@@ -30,8 +30,8 @@ import {NodeLink} from '../../node/link';
 import {Pattern} from '../../pattern';
 
 /**
- *
- * @param next
+ * Creates a pattern matcher node for target validation chain.
+ * @param root		Root node for the validation chain matcher will be used in.
  * @returns
  *
  * @category Matchers

@@ -23,6 +23,13 @@
  *
  */
 
+/**
+ * Determine if value is a JavaScript string.
+ * @param value
+ * @returns
+ *
+ * @category		Validators – Strings
+ */
 export function isString(value: unknown): boolean {
 	return typeof value === 'string';
 }

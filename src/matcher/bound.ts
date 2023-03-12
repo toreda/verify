@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {MatcherCall} from './call';
+import type {MatcherCall} from './call';
 import type {MatcherFunc} from './func';
 import type {NodeFlags} from '../node/flags';
 import {matcherParamsMk} from '../matcher/params/mk';

@@ -23,6 +23,11 @@
  *
  */
 
+/**
+ * Arguments needed when invoking greaterThan matcher nodes.
+ *
+ * @category Matchers
+ */
 export interface GreaterThanCall {
 	right: number;
 }

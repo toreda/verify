@@ -28,7 +28,7 @@
  * @param value
  * @returns
  *
- * @category Validator Functions
+ * @category		Validators – Collections
  */
 export function isArray(value: unknown): boolean {
 	return Array.isArray(value);

@@ -25,7 +25,7 @@
 
 import type {ChkFlags} from '../flags';
 import {Fate} from '@toreda/fate';
-import {errorMkCode} from 'src/error/mk/code';
+import {errorMkCode} from '../../error/mk/code';
 
 /**
  * Check if value is a valid id string according to the optional validation rules when provided.

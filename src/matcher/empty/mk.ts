@@ -35,7 +35,7 @@ import {empty} from '../../empty';
  * @param next
  * @returns
  *
- * @category Matcher Factory
+ * @category Matcher Factories
  */
 export function matcherEmptyMk<ValueT>(
 	root: ChkChainRoot<ValueT>,

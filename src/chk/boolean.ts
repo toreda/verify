@@ -24,13 +24,14 @@
  */
 
 import {Fate} from '@toreda/fate';
+import {isBoolean} from '../is/boolean';
 
 /**
  * Determine if target value is a valid boolean.
  * @param value
  * @returns
  *
- * @category Validation
+ * @category Stand-alone Validators
  */
 export function chkBoolean(value?: null): Fate<never> {
 	const fate = new Fate<never>();
@@ -39,7 +40,7 @@ export function chkBoolean(value?: null): Fate<never> {
 		return fate.setErrorCode('missing');
 	}
 
-	if (value !== true && value !== false) {
+	if (!isBoolean(value)) {
 		return fate.setErrorCode('bad_value_type');
 	}
 

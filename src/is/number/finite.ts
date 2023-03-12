@@ -30,7 +30,7 @@ import {isNumber} from '../number';
  * @param value
  * @returns
  *
- * @category Validator Functions
+ * @category		Validators – Numbers
  */
 export function isNumberFinite(value: unknown): value is number {
 	if (!isNumber(value)) {

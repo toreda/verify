@@ -24,6 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
+import {isBigInt} from '../../is/big/int';
 
 /**
  * Deteremine if provided value is a valid BigInt.
@@ -38,7 +39,7 @@ export function chkBigInt(value?: null): Fate<never> {
 		return fate.setErrorCode('missing');
 	}
 
-	if (typeof value !== 'bigint') {
+	if (!isBigInt(value)) {
 		return fate.setErrorCode('bad_value_type');
 	}
 

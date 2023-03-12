@@ -23,7 +23,17 @@
  *
  */
 
-export function matchesAnyType(value: unknown, types: string[]): boolean {
+import type {Primitive} from '@toreda/types';
+
+/**
+ * Determine if value's type matches a primitive or other typename provided by caller.
+ * Will return false when the `types` arg is not provided, or is an empty array. Returns
+ * immediately when a value in `types` matches the type of value.
+ * @param value
+ * @param types
+ * @returns
+ */
+export function matchesAnyType(value: unknown, types?: Primitive[]): boolean {
 	if (!Array.isArray(types)) {
 		return false;
 	}
@@ -35,5 +45,5 @@ export function matchesAnyType(value: unknown, types: string[]): boolean {
 		}
 	}
 
-	return true;
+	return false;
 }

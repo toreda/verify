@@ -36,7 +36,7 @@ import {greaterThan} from '../../../greater/than';
  * @param next
  * @returns
  *
- * @category Matcher Factory
+ * @category Matcher Factories
  */
 export function matcherGreaterThanMk<ValueT>(
 	root: ChkChainRoot<ValueT>,

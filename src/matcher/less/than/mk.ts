@@ -32,12 +32,11 @@ import {NodeLink} from '../../../node/link';
 import {lessThan} from '../../../less/than';
 
 /**
- *
- * @param next
- * @param root
+ * Create matcher for validation chain which determines if chain value is less than target.
+ * @param root		Root node in validation chain matcher will be added to.
  * @returns
  *
- * @category Matchers
+ * @category Matcher Factories
  */
 export function matcherLessThanMk<ValueT>(
 	root: ChkChainRoot<ValueT>,

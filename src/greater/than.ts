@@ -8,7 +8,7 @@ import {isNumberFinite} from '../is/number/finite';
  * @param right
  * @returns
  *
- * @category Comparators
+ * @category		Validators – Numbers
  */
 export function greaterThan(left: unknown, right: unknown): boolean {
 	if (!isNumberFinite(left) || !isNumberFinite(right)) {

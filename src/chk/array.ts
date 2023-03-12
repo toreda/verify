@@ -32,7 +32,7 @@ import {Fate} from '@toreda/fate';
  * @param flags
  * @returns
  *
- * @category Validation
+ * @category Stand-alone Validators
  */
 export function chkArray(value?: unknown[] | null, flags?: ChkFlags): Fate<never> {
 	const fate = new Fate<never>();

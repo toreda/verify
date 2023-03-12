@@ -23,6 +23,14 @@
  *
  */
 
+/**
+ *
+ * @param value
+ * @param type
+ * @returns
+ *
+ * @category		Validators – Types
+ */
 export function matchesType(value: unknown, type: string): boolean {
 	if (type === 'array') {
 		return Array.isArray(value);

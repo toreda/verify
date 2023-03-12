@@ -15,7 +15,8 @@
 			"**/Thumbs.db": true,
 			"test-report.xml": true,
 			"node_modules/**": true,
-			"coverage/**": true
+			"coverage/**": true,
+			"docs/**": true
 		}
 	},
 	"extensions": {

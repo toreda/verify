@@ -26,13 +26,13 @@
 import {isNumberFinite} from './is/number/finite';
 
 /**
- *
+ * Determine if `value` is strictly greater than `left` AND less than `right`.
  * @param left
  * @param value
  * @param right
  * @returns
  *
- * @category Validator Functions
+ * @category		Validators – Numbers
  */
 export async function between<ValueT>(left: number, value: ValueT, right: number): Promise<boolean> {
 	if (!isNumberFinite(left) || !isNumberFinite(value) || !isNumberFinite(right)) {

@@ -30,10 +30,13 @@
  */
 export default class Defaults {
 	public static ErrorCode = {
-		PathDelimiter: ':',
-		CodeToken: '|',
-		EmptyPath: [],
-		Root: '___',
-		Code: '___'
+		PathDelimiter: ':' as const,
+		CodeToken: '|' as const,
+		EmptyPath: [] as const,
+		Root: '___' as const,
+		Code: '___' as const
+	} as const;
+	public static Chk = {
+		VarLabel: 'value' as const
 	} as const;
 }

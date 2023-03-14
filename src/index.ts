@@ -16,6 +16,7 @@ export {ChkRoot} from './chk/root';
 export {chkStringId} from './chk/string/id';
 export {chkUrl} from './chk/url';
 export {ChkValue} from './chk/value';
+export {ChkVarLabel, chkVarLabel} from './chk/var/label';
 export {Code} from './code';
 export {CodeDefaults} from './code/defaults';
 export {Codes} from './codes';

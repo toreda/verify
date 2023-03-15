@@ -1,6 +1,8 @@
 import {chkStringId} from '../../../src/chk/string/id';
+import {chkVarLabel} from '../../../src/chk/var/label';
 import {errorMkCode} from '../../../src/error/mk/code';
 const EMPTY_STRING = '';
+const VAR_LABEL = 'arg';
 
 describe('chkStringId', () => {
 	const ID = 'somefield';
@@ -21,10 +23,12 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value arg is undefined`, () => {
-		const result = chkStringId<never>(ID, undefined as any);
+		const result = chkStringId<never>(ID, undefined as any, {
+			varLabel: VAR_LABEL
+		});
 
 		expect(result.success()).toBe(false);
-		expect(result.errorCode()).toBe(errorMkCode('missing_arg', ID, ['value', 'arg']));
+		expect(result.errorCode()).toBe(errorMkCode('missing_arg', ID, ['arg']));
 	});
 
 	it(`should fail when value arg is null and allowNull is false`, () => {

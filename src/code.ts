@@ -27,6 +27,7 @@
  * @category Error Codes
  */
 export type Code =
+	| 'bad_arg_format'
 	| 'bad_config'
 	| 'bad_content'
 	| 'bad_data'

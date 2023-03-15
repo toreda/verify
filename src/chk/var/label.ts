@@ -37,7 +37,7 @@ export type ChkVarLabel = 'value' | 'arg';
  *
  * @category Validation
  */
-export function chkVarLabel(label?: ChkVarLabel | null): string {
+export function chkVarLabel(label?: ChkVarLabel | string | null): ChkVarLabel {
 	if (!label) {
 		return Defaults.Chk.VarLabel;
 	}

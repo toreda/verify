@@ -116,6 +116,17 @@ describe('Codes', () => {
 		Codes.reset();
 	});
 
+	describe('getInstance', () => {
+		it(`should return a Codes instance on each call`, () => {
+			for (let i = 0; i < 5; i++) {
+				const result = Codes.getInstance();
+
+				expect(result instanceof Codes).toBe(true);
+			}
+		});
+	});
+
+
 	for (const item of ITEMS) {
 		it(`Codes.${item.method}() should return code '${item.code}'`, () => {
 			expect(item.method()).toBe(item.code);

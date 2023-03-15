@@ -58,5 +58,5 @@ export interface ChkFlags {
 		empty?: boolean;
 		null?: boolean;
 	};
-	varLabel?: ChkVarLabel;
+	varLabel?: ChkVarLabel | string;
 }

@@ -24,7 +24,9 @@
  */
 
 import type {ChkFlags} from '../flags';
+import {Codes} from '../../codes';
 import {Fate} from '@toreda/fate';
+import {chkVarLabel} from '../var/label';
 import {errorMkCode} from '../../error/mk/code';
 
 /**
@@ -56,18 +58,23 @@ export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fat
 	}
 
 	const errorRoot = typeof flags?.error?.root === 'string' ? flags?.error?.root : id;
+	const label = chkVarLabel(flags?.varLabel);
 
 	if (id === null || id === undefined) {
-		return fate.setErrorCode(errorMkCode('missing_arg', 'id', [...pathPrepend, 'arg', ...pathAppend]));
+		return fate.setErrorCode(
+			errorMkCode(Codes.missingArg(), 'id', [...pathPrepend, 'arg', ...pathAppend])
+		);
 	}
 
 	if (typeof id !== 'string') {
-		return fate.setErrorCode(errorMkCode('bad_arg_format', 'id', [...pathPrepend, 'arg', ...pathAppend]));
+		return fate.setErrorCode(
+			errorMkCode(Codes.badArgFormat(), 'id', [...pathPrepend, 'arg', ...pathAppend])
+		);
 	}
 
 	if (value === undefined) {
 		return fate.setErrorCode(
-			errorMkCode('missing_arg', errorRoot, [...pathPrepend, 'value', 'arg', ...pathAppend])
+			errorMkCode(Codes.missingArg(), errorRoot, [...pathPrepend, label, ...pathAppend])
 		);
 	}
 
@@ -77,7 +84,7 @@ export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fat
 
 	if (typeof value !== 'string') {
 		return fate.setErrorCode(
-			errorMkCode('bad_format', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+			errorMkCode(Codes.badFormat(), errorRoot, [...pathPrepend, label, ...pathAppend])
 		);
 	}
 
@@ -85,22 +92,20 @@ export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fat
 
 	if (!trimmed) {
 		if (flags?.allow?.empty !== true) {
-			return fate.setErrorCode(
-				errorMkCode('empty', errorRoot, [...pathPrepend, 'value', ...pathAppend])
-			);
+			return fate.setErrorCode(errorMkCode('empty', errorRoot, [...pathPrepend, label, ...pathAppend]));
 		}
 	}
 
 	if (flags?.length) {
 		if (typeof flags.length.max === 'number' && trimmed.length > flags.length.max) {
 			return fate.setErrorCode(
-				errorMkCode('too_long', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+				errorMkCode('too_long', errorRoot, [...pathPrepend, label, ...pathAppend])
 			);
 		}
 
 		if (typeof flags.length.min === 'number' && trimmed.length < flags.length.min) {
 			return fate.setErrorCode(
-				errorMkCode('too_short', errorRoot, [...pathPrepend, 'value', ...pathAppend])
+				errorMkCode('too_short', errorRoot, [...pathPrepend, label, ...pathAppend])
 			);
 		}
 	}

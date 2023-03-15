@@ -2,10 +2,11 @@
  * @category Error Codes
  */
 export class CodeDefaults {
+	public static BadArgFormat = 'bad_arg_format' as const;
 	public static BadConfig = 'bad_config' as const;
-	public static BadEncoding = 'bad_encoding' as const;
-	public static BadData = 'bad_data' as const;
 	public static BadContent = 'bad_content' as const;
+	public static BadData = 'bad_data' as const;
+	public static BadEncoding = 'bad_encoding' as const;
 	public static BadFormat = 'bad_format' as const;
 	public static EmptyArg = 'empty_arg' as const;
 	public static EmptyArray = 'empty_array' as const;

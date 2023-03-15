@@ -50,6 +50,13 @@ export class Codes {
 		instance.codeMap.set(code, value);
 	}
 
+	public static badArgFormat(): string {
+		const instance = Codes.getInstance();
+		const value = instance.codeMap.get('bad_arg_format');
+
+		return typeof value === 'string' ? value : CodeDefaults.Missing;
+	}
+
 	public static missing(): string {
 		const instance = Codes.getInstance();
 		const value = instance.codeMap.get('missing');

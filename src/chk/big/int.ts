@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ import {isBigInt} from '../../is/big/int';
  *
  * @category Validation
  */
-export function chkBigInt(value?: null): Fate<never> {
-	const fate = new Fate<never>();
+export function chkBigInt(value?: unknown): Fate<bigint> {
+	const fate = new Fate<bigint>();
 
 	if (value === undefined || value === null) {
 		return fate.setErrorCode('missing');
@@ -43,5 +43,6 @@ export function chkBigInt(value?: null): Fate<never> {
 		return fate.setErrorCode('bad_value_type');
 	}
 
+	fate.data = value;
 	return fate.setSuccess(true);
 }

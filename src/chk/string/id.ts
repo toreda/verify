@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,8 @@ import {errorMkCode} from '../../error/mk/code';
  *
  * @category Chk
  */
-export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fate<T> {
-	const fate = new Fate<T>();
+export function chkStringId(id: string, value: unknown, flags?: ChkFlags): Fate<string> {
+	const fate = new Fate<string>();
 
 	let pathAppend: string[] = [];
 	let pathPrepend: string[] = [];
@@ -110,5 +110,6 @@ export function chkStringId<T>(id: string, value: string, flags?: ChkFlags): Fat
 		}
 	}
 
+	fate.data = value;
 	return fate.setSuccess(true);
 }

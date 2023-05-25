@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,6 @@
  *
  * @category		Validators – Numbers
  */
-export function isBigInt(value: unknown): boolean {
+export function isBigInt(value: unknown): value is bigint {
 	return typeof value === 'bigint';
 }

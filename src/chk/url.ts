@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +32,10 @@ import {Fate} from '@toreda/fate';
  * @param value
  * @returns
  *
- * @category Url
+ * @category Urls
  */
-export function chkUrl(value?: string | null, flags?: ChkFlags): Fate<never> {
-	const fate = new Fate<never>();
+export function chkUrl(value?: unknown, flags?: ChkFlags): Fate<string> {
+	const fate = new Fate<string>();
 
 	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
 	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
@@ -56,5 +56,6 @@ export function chkUrl(value?: string | null, flags?: ChkFlags): Fate<never> {
 		return fate.setErrorCode(Codes.tooShort());
 	}
 
+	fate.data = value;
 	return fate.setSuccess(true);
 }

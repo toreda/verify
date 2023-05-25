@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,20 +26,20 @@
 import {isNumberFinite} from '../is/number/finite';
 
 /**
- * Determine if provided value arg is an array.
- * @param value
+ * Determine if `value` arg is a power of `pow` arg.
+ * @param 		value
  * @returns
  *
- * @category		Validators – Numbers
+ * @category 	Validators – Numbers
  */
-export function powOf(value: unknown, pow: number): boolean {
-	if (!isNumberFinite(value) || !isNumberFinite(pow)) {
+export function powOf(value: unknown, exponent: number): boolean {
+	if (!isNumberFinite(value) || !isNumberFinite(exponent)) {
 		return false;
 	}
 
 	if (value === 1) {
-		return pow === 1;
+		return exponent === 1;
 	}
 
-	return false;
+	return (Math.log(value) / Math.log(exponent)) % 1 === 0;
 }

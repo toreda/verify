@@ -30,4 +30,12 @@ describe('chkArray', () => {
 		expect(result.errorCode()).toBe(EMPTY_STRING);
 		expect(result.success()).toBe(true);
 	});
+
+	it(`should return input as fate payload when successful`, () => {
+		const value: string[] = [];
+		const result = chkArray<string>(value);
+
+		expect(result.data).toStrictEqual(value);
+		expect(result.success()).toBe(true);
+	});
 });

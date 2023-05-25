@@ -1,5 +1,4 @@
 import {chkStringId} from '../../../src/chk/string/id';
-import {chkVarLabel} from '../../../src/chk/var/label';
 import {errorMkCode} from '../../../src/error/mk/code';
 const EMPTY_STRING = '';
 const VAR_LABEL = 'arg';
@@ -9,21 +8,21 @@ describe('chkStringId', () => {
 	const VALUE = 'aklha97141';
 
 	it(`should fail when id arg is undefined`, () => {
-		const result = chkStringId<never>(undefined as any, VALUE);
+		const result = chkStringId(undefined as any, VALUE);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe(errorMkCode('missing_arg', 'id', ['arg']));
 	});
 
 	it(`should fail when id arg is null`, () => {
-		const result = chkStringId<never>(null as any, VALUE);
+		const result = chkStringId(null as any, VALUE);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe(errorMkCode('missing_arg', 'id', ['arg']));
 	});
 
 	it(`should fail when value arg is undefined`, () => {
-		const result = chkStringId<never>(ID, undefined as any, {
+		const result = chkStringId(ID, undefined as any, {
 			varLabel: VAR_LABEL
 		});
 
@@ -32,7 +31,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value arg is null and allowNull is false`, () => {
-		const result = chkStringId<never>(ID, null as any, {
+		const result = chkStringId(ID, null as any, {
 			allow: {
 				null: false
 			}
@@ -43,7 +42,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should succeed when value arg is null and allowNull is true`, () => {
-		const result = chkStringId<never>(ID, null as any, {
+		const result = chkStringId(ID, null as any, {
 			allow: {
 				null: true
 			}
@@ -54,21 +53,21 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value arg is truthy non-string`, () => {
-		const result = chkStringId<never>(ID, 10 as any);
+		const result = chkStringId(ID, 10 as any);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe(errorMkCode('bad_format', ID, ['value']));
 	});
 
 	it(`should fail when value arg is falsy non-string`, () => {
-		const result = chkStringId<never>(ID, 0 as any);
+		const result = chkStringId(ID, 0 as any);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe(errorMkCode('bad_format', ID, ['value']));
 	});
 
 	it(`should succeed when value arg is all spaces and notrim is true`, () => {
-		const result = chkStringId<never>(ID, '    ', {
+		const result = chkStringId(ID, '    ', {
 			notrim: true
 		});
 
@@ -76,7 +75,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should succeed when value arg is an empty string and empty strings are enabled`, () => {
-		const result = chkStringId<never>(ID, EMPTY_STRING, {
+		const result = chkStringId(ID, EMPTY_STRING, {
 			allow: {
 				empty: true
 			}
@@ -86,7 +85,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should succeed when value arg is an empty string and empty strings are disabled`, () => {
-		const result = chkStringId<never>(ID, EMPTY_STRING, {
+		const result = chkStringId(ID, EMPTY_STRING, {
 			allow: {
 				empty: false
 			}
@@ -97,7 +96,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value exceeds max length flag`, () => {
-		const result = chkStringId<never>(ID, '9714197', {
+		const result = chkStringId(ID, '9714197', {
 			length: {
 				max: 3
 			}
@@ -108,7 +107,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value is shorter than min length`, () => {
-		const result = chkStringId<never>(ID, 'AJF', {
+		const result = chkStringId(ID, 'AJF', {
 			length: {
 				min: 5
 			}
@@ -119,7 +118,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should succeed when value is between the min and max lengths`, () => {
-		const result = chkStringId<never>(ID, 'AF8105', {
+		const result = chkStringId(ID, 'AF8105', {
 			length: {
 				min: 4,
 				max: 8
@@ -130,7 +129,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value is less than the max length but less than the min`, () => {
-		const result = chkStringId<never>(ID, 'A841', {
+		const result = chkStringId(ID, 'A841', {
 			length: {
 				min: 8,
 				max: 20
@@ -142,7 +141,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should succeed when min and max lengths are the same value and value length matches them`, () => {
-		const result = chkStringId<never>(ID, 'MVRJ', {
+		const result = chkStringId(ID, 'MVRJ', {
 			length: {
 				min: 4,
 				max: 4
@@ -153,7 +152,7 @@ describe('chkStringId', () => {
 	});
 
 	it(`should fail when value is an empty string and allow empty is false`, () => {
-		const result = chkStringId<never>(ID, EMPTY_STRING, {
+		const result = chkStringId(ID, EMPTY_STRING, {
 			length: {
 				min: 4,
 				max: 10
@@ -165,5 +164,13 @@ describe('chkStringId', () => {
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe(errorMkCode('empty', ID, ['value']));
+	});
+
+	it(`should return input as fate payload when successful`, () => {
+		const value = 'aaa7997-9714971-9746746661';
+		const result = chkStringId(ID, value);
+
+		expect(result.data).toBe(value);
+		expect(result.success()).toBe(true);
 	});
 });

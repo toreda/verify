@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,8 @@ import {isArray} from '../../is/array';
  *
  * @category Stand-alone Validators
  */
-export function chkArrayEmpty(value?: unknown[] | null): Fate<never> {
-	const fate = new Fate<never>();
+export function chkArrayEmpty<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
+	const fate = new Fate<ValueT[]>();
 
 	if (value === undefined || value === null) {
 		return fate.setErrorCode('missing');
@@ -45,9 +45,11 @@ export function chkArrayEmpty(value?: unknown[] | null): Fate<never> {
 		return fate.setErrorCode('bad_format');
 	}
 
-	if (value.length > 0) {
+	const arr = value as ValueT[];
+	if (arr.length > 0) {
 		return fate.setErrorCode('not_empty');
 	}
 
+	fate.data = arr;
 	return fate.setSuccess(true);
 }

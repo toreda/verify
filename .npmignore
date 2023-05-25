@@ -3,10 +3,12 @@
 .github
 .gitignore
 .prettierrc.js
-.vscode
+.swc/
+.swcrc
+.vscode/
 *.code-workspace
-coverage
-demo/
+coverage/
+demo
 docs/
 examples/
 gulpfile.ts
@@ -15,7 +17,8 @@ node_modules
 sonar-project.properties
 src/
 test-report.xml
-tests
+tests/
 tsconfig.json
+typedoc.js
 yarn-debug.log
 yarn-error.log

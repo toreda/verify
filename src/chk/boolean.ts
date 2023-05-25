@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2023 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@ import {isBoolean} from '../is/boolean';
  *
  * @category Stand-alone Validators
  */
-export function chkBoolean(value?: null): Fate<never> {
-	const fate = new Fate<never>();
+export function chkBoolean(value?: unknown): Fate<boolean> {
+	const fate = new Fate<boolean>();
 
 	if (value === null || value === undefined) {
 		return fate.setErrorCode('missing');
@@ -44,5 +44,6 @@ export function chkBoolean(value?: null): Fate<never> {
 		return fate.setErrorCode('bad_value_type');
 	}
 
+	fate.data = value;
 	return fate.setSuccess(true);
 }

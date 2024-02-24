@@ -78,7 +78,11 @@ export function chkStringId(id: string, value: unknown, flags?: ChkFlags): Fate<
 		);
 	}
 
+
+	// Must do null check BEFORE the not a string check, otherwise the null check condition
+	// will not be executed.
 	if (value === null && flags?.allow?.null === true) {
+		fate.data = null;
 		return fate.setSuccess(true);
 	}
 

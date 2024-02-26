@@ -23,48 +23,19 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import {Schema} from '../../schema';
+import type {SchemaOptions} from '../options';
+import {Log} from '@toreda/log';
+import {type SchemaData} from '../data';
+import {type SchemaOutputFactory} from '../output/factory';
 
 /**
- *
- * @param next
- * @returns
- *
- * @category Matchers
+ * @category Schemas
  */
-export function matcherTypesMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
-): Matcher<ValueT, string[]> {
-	return (typeNames: string[]): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
-		const fn: MatcherFunc<ValueT, string[]> = async (value?: ValueT | null): Promise<boolean> => {
-			if (!Array.isArray(typeNames)) {
-				return false;
-			}
-
-			for (const name of typeNames) {
-				if (name === 'array' && Array.isArray(value)) {
-					return true;
-				}
-
-				if (typeof value === name) {
-					return true;
-				}
-			}
-
-			return false;
-		};
-
-		root.addMatcher<string[]>({
-			fn: fn,
-			flags: flags
-		});
-
-		return link;
-	};
+export interface SchemaParseInit<DataT extends SchemaData, OutputT = DataT> {
+	data?: DataT | null;
+	schema: Schema<DataT, OutputT>;
+	options?: SchemaOptions<DataT, OutputT>;
+	factory?: SchemaOutputFactory<OutputT>;
+	base: Log;
 }

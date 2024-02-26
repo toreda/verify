@@ -23,48 +23,9 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import type {SchemaErrorEntity} from './entity';
 
 /**
- *
- * @param next
- * @returns
- *
- * @category Matchers
+ * @category Schemas
  */
-export function matcherTypesMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
-): Matcher<ValueT, string[]> {
-	return (typeNames: string[]): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
-		const fn: MatcherFunc<ValueT, string[]> = async (value?: ValueT | null): Promise<boolean> => {
-			if (!Array.isArray(typeNames)) {
-				return false;
-			}
-
-			for (const name of typeNames) {
-				if (name === 'array' && Array.isArray(value)) {
-					return true;
-				}
-
-				if (typeof value === name) {
-					return true;
-				}
-			}
-
-			return false;
-		};
-
-		root.addMatcher<string[]>({
-			fn: fn,
-			flags: flags
-		});
-
-		return link;
-	};
-}
+export type SchemaErrorPath = 'record_property' | 'schema_property' | SchemaErrorEntity;

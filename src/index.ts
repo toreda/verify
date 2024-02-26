@@ -87,3 +87,9 @@ export {PatternId} from './pattern/id';
 export {patternMk} from './pattern/mk';
 export {PatternNode} from './pattern/node';
 export {powOf} from './pow/of';
+
+export {Schema} from './schema';
+export {SchemaConfig} from './schema/config';
+export {SchemaOptions} from './schema/options';
+export {SchemaOutputFactory} from './schema/output/factory';
+export {SchemaParseInit} from './schema/parse/init';

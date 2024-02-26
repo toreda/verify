@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.0] - 2023-0525
+## Added
+* Schema system with JSON-style rule config.
+
+
+## [0.6.0] - 2023-05-25
 ## Changed
 * `chk` functions return the provided `value` argument as `fate.data`. Some `chk` functions now accept a generic type which defaults to unknown and is not required to call. No other existing aspects of the returned `fate` object have changed. `fate.data` was already present but was not set to anything.
 
@@ -53,8 +57,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0]
 * *No notes available for release.*
 
-[Unreleased]: https://github.com/toreda/chk/compare/v0.5.4...HEAD
+[Unreleased]: https://github.com/toreda/chk/compare/v0.6.0...HEAD
 
+[0.6.0]: https://github.com/toreda/chk/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/toreda/chk/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/toreda/chk/compare/v0.5.0...v0.5.3
 [0.5.0]: https://github.com/toreda/chk/compare/v0.4.1...v0.5.0

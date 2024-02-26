@@ -23,48 +23,29 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import type {SchemaErrorCode} from './error/code';
+import type {SchemaErrorEntity} from './error/entity';
+import {errorMkCode} from '../error/mk/code';
+import type {SchemaErrorPath} from './error/path';
 
 /**
- *
- * @param next
+ * Create full error code string containing the originating entity and path from entity to
+ * specific component, function, or property which produced the error.
+ * @param code
+ * @param entity
+ * @param path
  * @returns
  *
- * @category Matchers
+ * @category Schemas
  */
-export function matcherTypesMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
-): Matcher<ValueT, string[]> {
-	return (typeNames: string[]): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
-		const fn: MatcherFunc<ValueT, string[]> = async (value?: ValueT | null): Promise<boolean> => {
-			if (!Array.isArray(typeNames)) {
-				return false;
-			}
+export function schemaError(
+	code: SchemaErrorCode,
+	entity: SchemaErrorEntity,
+	...path: SchemaErrorPath[]
+): string {
+	if (Array.isArray(path)) {
+		path.unshift(entity);
+	}
 
-			for (const name of typeNames) {
-				if (name === 'array' && Array.isArray(value)) {
-					return true;
-				}
-
-				if (typeof value === name) {
-					return true;
-				}
-			}
-
-			return false;
-		};
-
-		root.addMatcher<string[]>({
-			fn: fn,
-			flags: flags
-		});
-
-		return link;
-	};
+	return errorMkCode<SchemaErrorCode, SchemaErrorEntity, SchemaErrorPath>(code, 'schemas', path);
 }

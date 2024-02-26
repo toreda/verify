@@ -24,25 +24,39 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {isBigInt} from '../../is/big/int';
+import {schemaError} from './error';
+import type {SchemaParseInit} from './parse/init';
+import {type SchemaData} from './data';
+import {schemaPrimitiveFactory} from './primitive/factory';
 
 /**
- * Deteremine if provided value is a valid BigInt.
- * @param value
+ * @returns
  *
- * @category Validation
+ * @category Schemas
  */
-export function chkBigInt(value?: unknown): Fate<bigint> {
-	const fate = new Fate<bigint>();
+export async function schemaParse<InputT extends SchemaData, OutputT extends SchemaData>(
+	init: SchemaParseInit<InputT, OutputT>
+): Promise<Fate<OutputT | null>> {
+	const fate = new Fate<OutputT | null>();
+	const log = init.base.makeLog('schemaParse');
 
-	if (value === undefined || value === null) {
-		return fate.setErrorCode('missing');
+	if (!init) {
+		return fate.setErrorCode(schemaError('missing_init', 'schemaParse', 'init'));
 	}
 
-	if (!isBigInt(value)) {
-		return fate.setErrorCode('bad_value_type');
+	if (init.data === null || typeof init.data === 'undefined') {
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.data'));
 	}
 
-	fate.data = value;
-	return fate.setSuccess(true);
+	if (Object.keys(init.data).length === 0) {
+		return fate.setErrorCode(schemaError('empty_data_object', 'schemaParse', 'init.data'));
+	}
+
+	if (init.schema === null || typeof init.schema === 'undefined') {
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.schema'));
+	}
+
+	const factory = typeof init.factory === 'function' ? init.factory : schemaPrimitiveFactory;
+q
+	return init.schema.parse(init.data, factory, log);
 }

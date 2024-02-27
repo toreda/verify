@@ -32,10 +32,10 @@ import {type SchemaOutputFactory} from '../output/factory';
 /**
  * @category Schemas
  */
-export interface SchemaParseInit<DataT extends SchemaData, OutputT = DataT> {
-	data?: DataT | null;
-	schema: Schema<DataT, OutputT>;
-	options?: SchemaOptions<DataT, OutputT>;
-	factory?: SchemaOutputFactory<OutputT>;
+export interface SchemaParseInit<DataT, InputT extends SchemaData<DataT>, OutputT extends SchemaData<DataT>> {
+	data?: SchemaData<DataT> | null;
+	schema: Schema<DataT, InputT, OutputT>;
+	options?: SchemaOptions;
+	factory: SchemaOutputFactory<DataT, OutputT>;
 	base: Log;
 }

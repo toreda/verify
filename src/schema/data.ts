@@ -23,9 +23,11 @@
  *
  */
 
+import {type Primitive} from '@toreda/types';
+
 /**
  * @category Schemas
  */
-export interface SchemaData {
-	[k: string]: unknown;
+export interface SchemaData<DataT> {
+	[k: string]: DataT;
 }

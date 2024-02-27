@@ -23,14 +23,27 @@
  *
  */
 
-import type {SchemaField} from '../field';
-import type {SchemaOptions} from '../options';
+import {Fate} from '@toreda/fate';
+import {schemaParse} from '../parse';
+import {SchemaParseInit} from './init';
+import {schemaPrimitiveFactory} from '../primitive/factory';
+import {SchemaData} from '../data';
+import {Primitive} from '@toreda/types';
 
 /**
+ *
+ * @param init
+ * @returns
+ *
  * @category Schemas
  */
-export interface SchemaInit<InputT> {
-	name: string;
-	fields: SchemaField<InputT>[];
-	options?: SchemaOptions;
+export async function schemaParseSimple(
+	init: SchemaParseInit<Primitive, SchemaData<Primitive>, SchemaData<Primitive>>
+): Promise<Fate<SchemaData<Primitive> | null>> {
+	return schemaParse({
+		base: init.base,
+		data: init.data,
+		factory: schemaPrimitiveFactory,
+		schema: init.schema
+	});
 }

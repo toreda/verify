@@ -26,6 +26,6 @@
 /**
  * @category Schemas
  */
-export interface SchemaOptions<DataT = unknown, OutputT = DataT> {
+export interface SchemaOptions {
 	strict?: boolean;
 }

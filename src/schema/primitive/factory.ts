@@ -39,11 +39,11 @@ import {type Primitive} from '@toreda/types';
  * @category Schemas
  */
 export async function schemaPrimitiveFactory(
-	data: Map<string, unknown>,
+	data: Map<string, Primitive>,
 	base: Log
-): Promise<Fate<SchemaData | null>> {
+): Promise<Fate<SchemaData<Primitive> | null>> {
 	const log = base.makeLog('schemaPrimitiveFactory');
-	const fate = new Fate<SchemaData | null>();
+	const fate = new Fate<SchemaData<Primitive> | null>();
 
 	if (!data) {
 		log.error(`Missing argument: data`);
@@ -56,10 +56,11 @@ export async function schemaPrimitiveFactory(
 	}
 
 	try {
-		const o: SchemaData = {};
+		const o: SchemaData<Primitive> = {};
 		for (const [id, field] of data) {
 			o[id] = field;
 		}
+
 		fate.setSuccess(true);
 	} catch (e: unknown) {
 		const msg = e instanceof Error ? e.message : 'unknown_err_type';

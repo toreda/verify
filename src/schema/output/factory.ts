@@ -4,7 +4,7 @@ import {Log} from '@toreda/log';
 /**
  * @category Schemas
  */
-export type SchemaOutputFactory<OutputT> = (
-	data: Map<string, unknown>,
+export type SchemaOutputFactory<DataT, OutputT> = (
+	data: Map<string, DataT>,
 	base: Log
 ) => Promise<Fate<OutputT | null>>;

@@ -38,12 +38,12 @@ import {type SchemaData} from './schema/data';
 /**
  * @category Schemas
  */
-export class Schema<InputT extends SchemaData, OutputT = InputT> {
+export class Schema<DataT, InputT, OutputT> {
 	public readonly schemaName: string;
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
 
-	constructor(init: SchemaInit<InputT, OutputT>) {
+	constructor(init: SchemaInit<InputT>) {
 		this.schemaName = init.name;
 		this.fields = this.makeFields(init.fields);
 		this.cfg = new SchemaConfig(init.options);
@@ -146,8 +146,8 @@ export class Schema<InputT extends SchemaData, OutputT = InputT> {
 	}
 
 	public async parse(
-		data: InputT,
-		factory: SchemaOutputFactory<OutputT>,
+		data: SchemaData<DataT>,
+		factory: SchemaOutputFactory<DataT, OutputT>,
 		base: Log
 	): Promise<Fate<OutputT | null>> {
 		const fate = new Fate<OutputT | null>();
@@ -171,7 +171,7 @@ export class Schema<InputT extends SchemaData, OutputT = InputT> {
 		const total = this.fields.size;
 		let processed = 0;
 
-		const mapped = new Map<string, unknown>();
+		const mapped = new Map<string, DataT>();
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();

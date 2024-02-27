@@ -17,7 +17,10 @@
 			"node_modules/**": true,
 			"coverage/**": true,
 			"docs/**": true
-		}
+		},
+		"javascript.preferences.importModuleSpecifier": "relative",
+		"javascript.preferences.importModuleSpecifierEnding": "minimal",
+		"typescript.preferences.importModuleSpecifier": "relative"
 	},
 	"extensions": {
 		"recommendations": [

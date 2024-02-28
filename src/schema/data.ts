@@ -23,8 +23,6 @@
  *
  */
 
-import {type Primitive} from '@toreda/types';
-
 /**
  * @category Schemas
  */

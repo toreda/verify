@@ -151,21 +151,27 @@ export class Schema<DataT, InputT, OutputT> {
 		base: Log
 	): Promise<Fate<OutputT | null>> {
 		const fate = new Fate<OutputT | null>();
+
+		if (!base) {
+			console.error(`Missing argument: base`);
+			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'base'));
+		}
+
 		const log = base.makeLog(`schema:${this.schemaName}.parse`);
+
 		if (!data) {
+			log.error(`Missing argument: data`);
 			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'data'));
 		}
 
 		if (!factory) {
+			log.error(`Missing argument: factory`);
 			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'factory'));
 		}
 
 		if (typeof factory !== 'function') {
+			log.error(`Non-function argument: factory`);
 			return fate.setErrorCode(schemaError('nonfunction_argument', 'schema.parse', 'factory'));
-		}
-
-		if (!base) {
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'base'));
 		}
 
 		const total = this.fields.size;
@@ -197,8 +203,10 @@ export class Schema<DataT, InputT, OutputT> {
 			} catch (e: unknown) {
 				const msg = e instanceof Error ? e.message : 'unknown_err_type';
 				fate.setErrorCode(schemaError('exception', 'schema.parse', `error: ${msg}.`));
+				log.error(`Exception parsing schema: ${msg}.`);
 			}
 		} else {
+			log.error(`schema_field_mismatch: schema.parse - expected '${total}' but got ${processed}`);
 			fate.setErrorCode(
 				schemaError(
 					`schema_field_mismatch`,

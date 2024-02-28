@@ -5,8 +5,8 @@ import {stringValue} from '@toreda/strong-types';
 import {type SchemaParseInit} from '../src/schema/parse/init';
 import {schemaParse} from '../src/schema/parse';
 import {type SchemaData} from '../src/schema/data';
-import {Primitive} from '@toreda/types';
-import {SchemaOutputFactory} from '../src/schema/output/factory';
+import {type Primitive} from '@toreda/types';
+import {type SchemaOutputFactory} from '../src/schema/output/factory';
 import {Fate} from '@toreda/fate';
 
 const EMPTY_OBJECT = {};
@@ -50,10 +50,23 @@ describe('schemaParse', () => {
 
 	beforeAll(() => {
 		basicFactory = async (
-			_data: Map<string, Primitive>,
+			input: Map<string, Primitive>,
 			_base: Log
 		): Promise<Fate<SampleData | null>> => {
 			const fate = new Fate<SampleData | null>();
+
+			fate.data = {
+				bool1: false,
+				int1: 0,
+				str1: ''
+			};
+
+			// The factory's job is to map a validated data object onto
+			// the desired type. Validation is already complete and only
+			// transformation happens at this step.
+			for (const [id, value] of input.entries()) {
+				fate.data[id] = value;
+			}
 
 			return fate.setSuccess(true);
 		};
@@ -239,6 +252,7 @@ describe('schemaParse', () => {
 						factory: basicFactory
 					});
 
+					expect(result.data).not.toBeNull();
 					expect(result.data?.bool1).toBe(expectedOutput);
 					expect(result.success()).toBe(true);
 				});
@@ -254,6 +268,7 @@ describe('schemaParse', () => {
 						factory: basicFactory
 					});
 
+					expect(result.data).not.toBeNull();
 					expect(result.data?.bool1).toBe(expectedOutput);
 					expect(result.success()).toBe(true);
 				});
@@ -348,11 +363,11 @@ describe('schemaParse', () => {
 			}
 
 			field.nullable = false;
-			field.name, '__field_name__';
-			const result = await customSchema.validateField(field.name, field, null);
+			field.name = '__field_name__';
+			const result = await customSchema.validateField(typeof field.name, field, null);
 
 			expect(result.errorCode()).toBe(
-				schemaError('null_field_value_disallowed', customSchema.schemaName, field.name)
+				schemaError('null_field_value_disallowed', customSchema.schemaName, typeof field.name)
 			);
 			expect(result.success()).toBe(false);
 		});
@@ -767,11 +782,50 @@ describe('schemaParse', () => {
 	});
 
 	describe('Schema', () => {
-		it(`should fail with code when data arg is undefined`, async () => {
-			const result = await sampleSchema.parse(undefined as any, basicFactory, base);
+		describe('parse', () => {
+			it(`should fail with code when data arg is undefined`, async () => {
+				const result = await sampleSchema.parse(undefined as any, basicFactory, base);
 
-			expect(result.success()).toBe(false);
-			expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+			});
+
+			it(`should fail with code when data arg is null`, async () => {
+				const result = await sampleSchema.parse(null as any, basicFactory, base);
+
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+			});
+
+			it(`should fail with code when factory arg is undefined`, async () => {
+				const result = await sampleSchema.parse(sampleData, undefined as any, base);
+
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'factory'));
+			});
+
+			it(`should fail with code when factory arg is null`, async () => {
+				const result = await sampleSchema.parse(sampleData, null as any, base);
+
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'factory'));
+			});
+
+
+			it(`should fail with code when base arg is undefined`, async () => {
+				const result = await sampleSchema.parse(sampleData, basicFactory, undefined as any);
+
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
+			});
+
+			it(`should fail with code when base arg is undefined`, async () => {
+				const result = await sampleSchema.parse(sampleData, basicFactory, undefined as any);
+
+				expect(result.success()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
+			});
+
 		});
 	});
 });

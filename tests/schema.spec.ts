@@ -6,7 +6,7 @@ import {type SchemaParseInit} from '../src/schema/parse/init';
 import {schemaParse} from '../src/schema/parse';
 import {type SchemaData} from '../src/schema/data';
 import {type Primitive} from '@toreda/types';
-import {type SchemaOutputFactory} from '../src/schema/output/factory';
+import {type SchemaOutputTransformer} from '../src/schema/output/transformer';
 import {Fate} from '@toreda/fate';
 
 const EMPTY_OBJECT = {};
@@ -46,10 +46,10 @@ describe('schemaParse', () => {
 	let sampleSchema: SampleSchema;
 	let init: SchemaParseInit<Primitive, SampleData, SampleData>;
 	let base: Log;
-	let basicFactory: SchemaOutputFactory<Primitive, SampleData>;
+	let basicTransformer: SchemaOutputTransformer<Primitive, SampleData>;
 
 	beforeAll(() => {
-		basicFactory = async (
+		basicTransformer = async (
 			input: Map<string, Primitive>,
 			_base: Log
 		): Promise<Fate<SampleData | null>> => {
@@ -90,7 +90,7 @@ describe('schemaParse', () => {
 			data: sampleData,
 			schema: sampleSchema,
 			options: {},
-			factory: basicFactory,
+			transformer: basicTransformer,
 			base: base
 		};
 	});
@@ -101,7 +101,7 @@ describe('schemaParse', () => {
 				data: EMPTY_OBJECT as any,
 				schema: sampleSchema,
 				base: base,
-				factory: basicFactory
+				transformer: basicTransformer
 			});
 
 			expect(result.success()).toBe(false);
@@ -113,7 +113,7 @@ describe('schemaParse', () => {
 			const result = await schemaParse<Primitive, SampleData, SampleData>({
 				data: sampleData,
 				schema: sampleSchema,
-				factory: basicFactory,
+				transformer: basicTransformer,
 				base: base
 			});
 
@@ -129,7 +129,7 @@ describe('schemaParse', () => {
 				data: sampleData,
 				schema: sampleSchema,
 				base: base,
-				factory: basicFactory
+				transformer: basicTransformer
 			});
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -151,7 +151,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: customSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.errorCode()).toBe(
@@ -170,7 +170,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.data?.str1).toBe(expectedOutput);
@@ -185,7 +185,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.data?.str1).toBe(expectedOutput);
@@ -212,7 +212,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: customSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.success()).toBe(false);
@@ -233,7 +233,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: customSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.success()).toBe(true);
@@ -249,7 +249,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.data).not.toBeNull();
@@ -265,7 +265,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.data).not.toBeNull();
@@ -286,7 +286,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.success()).toBe(false);
@@ -308,7 +308,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: customSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.errorCode()).toBe(
@@ -332,7 +332,7 @@ describe('schemaParse', () => {
 						data: sampleData,
 						schema: customSchema,
 						base: base,
-						factory: basicFactory
+						transformer: basicTransformer
 					});
 
 					expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -345,7 +345,7 @@ describe('schemaParse', () => {
 	describe('parse', () => {
 		it(`should fail when data arg is undefined`, async () => {
 			const customSchema = new SampleSchema();
-			const result = await customSchema.parse(undefined as any, basicFactory, base);
+			const result = await customSchema.parse(undefined as any, basicTransformer, base);
 
 			expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
 			expect(result.success()).toBe(false);
@@ -353,6 +353,25 @@ describe('schemaParse', () => {
 	});
 
 	describe('validateField', () => {
+		it(`should fail when field argument is undefined`, async () => {
+			sampleData.bool1 = null as any;
+
+			const customSchema = new SampleSchema();
+			const field = customSchema.fields.get('bool1');
+			if (!field) {
+				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
+			}
+
+			field.nullable = false;
+			field.name = '__field_name__';
+			const result = await customSchema.validateField(typeof field.name, undefined as any, null);
+
+			expect(result.errorCode()).toBe(
+				schemaError('missing_record_field', customSchema.schemaName, typeof field.name)
+			);
+			expect(result.success()).toBe(false);
+		});
+
 		it(`should fail when value is null and nullable is disabled`, async () => {
 			sampleData.bool1 = null as any;
 
@@ -784,14 +803,14 @@ describe('schemaParse', () => {
 	describe('Schema', () => {
 		describe('parse', () => {
 			it(`should fail with code when data arg is undefined`, async () => {
-				const result = await sampleSchema.parse(undefined as any, basicFactory, base);
+				const result = await sampleSchema.parse(undefined as any, basicTransformer, base);
 
 				expect(result.success()).toBe(false);
 				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
 			});
 
 			it(`should fail with code when data arg is null`, async () => {
-				const result = await sampleSchema.parse(null as any, basicFactory, base);
+				const result = await sampleSchema.parse(null as any, basicTransformer, base);
 
 				expect(result.success()).toBe(false);
 				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
@@ -811,21 +830,19 @@ describe('schemaParse', () => {
 				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'factory'));
 			});
 
-
 			it(`should fail with code when base arg is undefined`, async () => {
-				const result = await sampleSchema.parse(sampleData, basicFactory, undefined as any);
+				const result = await sampleSchema.parse(sampleData, basicTransformer, undefined as any);
 
 				expect(result.success()).toBe(false);
 				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
-				const result = await sampleSchema.parse(sampleData, basicFactory, undefined as any);
+				const result = await sampleSchema.parse(sampleData, basicTransformer, undefined as any);
 
 				expect(result.success()).toBe(false);
 				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
 			});
-
 		});
 	});
 });

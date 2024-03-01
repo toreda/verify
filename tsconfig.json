@@ -28,7 +28,8 @@
 	"ts-node": {
 		"swc": true,
 		"compilerOptions": {
-			"noEmit": true
+			"noEmit": true,
+			"skipLibCheck": true
 		}
 	}
 }

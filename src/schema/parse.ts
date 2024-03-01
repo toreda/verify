@@ -29,8 +29,6 @@ import type {SchemaParseInit} from './parse/init';
 import {type SchemaData} from './data';
 
 /**
- * @returns
- *
  * @category Schemas
  */
 export async function schemaParse<DataT, InputT extends SchemaData<DataT>, OutputT extends SchemaData<DataT>>(
@@ -55,13 +53,13 @@ export async function schemaParse<DataT, InputT extends SchemaData<DataT>, Outpu
 		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.schema'));
 	}
 
-	if (init.factory === null || typeof init.factory === 'undefined') {
-		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.factory'));
+	if (init.transformer === null || typeof init.transformer === 'undefined') {
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.transformer'));
 	}
 
-	if (typeof init.factory !== 'function') {
-		return fate.setErrorCode(schemaError('nonfunction_factory', 'schemaParse', 'init.factory'));
+	if (typeof init.transformer !== 'function') {
+		return fate.setErrorCode(schemaError('nonfunction_transformer', 'schemaParse', 'init.transformer'));
 	}
 
-	return init.schema.parse(init.data, init.factory, log);
+	return init.schema.parse(init.data, init.transformer, log);
 }

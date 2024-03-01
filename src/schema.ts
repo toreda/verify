@@ -32,7 +32,7 @@ import {isBoolean} from './is/boolean';
 import {isString} from './is/string';
 import {SchemaConfig} from './schema/config';
 import type {SchemaInit} from './schema/schema/init';
-import {type SchemaOutputFactory} from './schema/output/factory';
+import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
 
 /**
@@ -147,7 +147,7 @@ export class Schema<DataT, InputT, OutputT> {
 
 	public async parse(
 		data: SchemaData<DataT>,
-		factory: SchemaOutputFactory<DataT, OutputT>,
+		factory: SchemaOutputTransformer<DataT, OutputT>,
 		base: Log
 	): Promise<Fate<OutputT | null>> {
 		const fate = new Fate<OutputT | null>();

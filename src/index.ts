@@ -91,5 +91,5 @@ export {powOf} from './pow/of';
 export {Schema} from './schema';
 export {SchemaConfig} from './schema/config';
 export {SchemaOptions} from './schema/options';
-export {SchemaOutputFactory} from './schema/output/factory';
+export {SchemaOutputTransformer} from './schema/output/transformer';
 export {SchemaParseInit} from './schema/parse/init';

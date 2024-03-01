@@ -23,21 +23,51 @@
  *
  */
 
-import {Schema} from '../../schema';
-import type {SchemaOptions} from '../options';
+import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
+import {schemaError} from '../error';
 import {type SchemaData} from '../data';
-import {type SchemaOutputTransformer} from '../output/transformer';
+import {type Primitive} from '@toreda/types';
 
 /**
- * Parameters needed for each `schema.parse(...)` call.
+ * Default transformer that expects a map of string -> primitive values and produces
+ * a simple object of the same mapping.
+ * @param data
+ * @param base
+ * @returns
  *
  * @category Schemas
  */
-export interface SchemaParseInit<DataT, InputT extends SchemaData<DataT>, OutputT extends SchemaData<DataT>> {
-	data?: SchemaData<DataT> | null;
-	schema: Schema<DataT, InputT, OutputT>;
-	options?: SchemaOptions;
-	transformer: SchemaOutputTransformer<DataT, OutputT>;
-	base: Log;
+export async function schemaPrimitiveTransformer(
+	data: Map<string, Primitive>,
+	base: Log
+): Promise<Fate<SchemaData<Primitive> | null>> {
+	const log = base.makeLog('schemaPrimitiveTransformer');
+	const fate = new Fate<SchemaData<Primitive> | null>();
+
+	if (!data) {
+		log.error(`Missing argument: data`);
+		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveTransformer', 'data'));
+	}
+
+	if (!base) {
+		log.error(`Missing argument: base`);
+		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveTransformer', 'base'));
+	}
+
+	try {
+		const o: SchemaData<Primitive> = {};
+		for (const [id, field] of data) {
+			o[id] = field;
+		}
+
+		fate.setSuccess(true);
+	} catch (e: unknown) {
+		const msg = e instanceof Error ? e.message : 'unknown_err_type';
+
+		log.error(`Exception: ${msg}.`);
+		fate.setErrorCode(schemaError('exception', 'schemaPrimitiveTransformer', `Error: ${msg}`));
+	}
+
+	return fate;
 }

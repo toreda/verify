@@ -26,7 +26,6 @@
 import {StrongMap} from '@toreda/strong-types';
 import type {SchemaOptions} from './options';
 import type {Bool} from '@toreda/strong-types';
-
 import {boolMake} from '@toreda/strong-types';
 
 /**

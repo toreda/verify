@@ -25,49 +25,13 @@
 
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
-import {schemaError} from '../error';
-import {type SchemaData} from '../data';
-import {type Primitive} from '@toreda/types';
 
 /**
- * Default factory that expects a map of string -> primitive values and produces
- * a simple object of the same mapping.
- * @param data
- * @param base
- * @returns
+ * Transforms schema parser output.
  *
  * @category Schemas
  */
-export async function schemaPrimitiveFactory(
-	data: Map<string, Primitive>,
+export type SchemaOutputTransformer<DataT, OutputT> = (
+	data: Map<string, DataT>,
 	base: Log
-): Promise<Fate<SchemaData<Primitive> | null>> {
-	const log = base.makeLog('schemaPrimitiveFactory');
-	const fate = new Fate<SchemaData<Primitive> | null>();
-
-	if (!data) {
-		log.error(`Missing argument: data`);
-		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveFactory', 'data'));
-	}
-
-	if (!base) {
-		log.error(`Missing argument: base`);
-		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveFactory', 'base'));
-	}
-
-	try {
-		const o: SchemaData<Primitive> = {};
-		for (const [id, field] of data) {
-			o[id] = field;
-		}
-
-		fate.setSuccess(true);
-	} catch (e: unknown) {
-		const msg = e instanceof Error ? e.message : 'unknown_err_type';
-
-		log.error(`Exception: ${msg}.`);
-		fate.setErrorCode(schemaError('exception', 'schemaPrimitiveFactory', `Error: ${msg}`));
-	}
-
-	return fate;
-}
+) => Promise<Fate<OutputT | null>>;

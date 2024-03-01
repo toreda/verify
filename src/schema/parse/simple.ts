@@ -25,13 +25,13 @@
 
 import {Fate} from '@toreda/fate';
 import {schemaParse} from '../parse';
-import {SchemaParseInit} from './init';
-import {schemaPrimitiveFactory} from '../primitive/factory';
-import {SchemaData} from '../data';
-import {Primitive} from '@toreda/types';
+import {type SchemaParseInit} from './init';
+import {schemaPrimitiveTransformer} from '../primitive/transformer';
+import {type SchemaData} from '../data';
+import {type Primitive} from '@toreda/types';
 
 /**
- *
+ * Default parser for simple schemas only containing string keys and primitive values.
  * @param init
  * @returns
  *
@@ -43,7 +43,7 @@ export async function schemaParseSimple(
 	return schemaParse({
 		base: init.base,
 		data: init.data,
-		factory: schemaPrimitiveFactory,
+		transformer: schemaPrimitiveTransformer,
 		schema: init.schema
 	});
 }

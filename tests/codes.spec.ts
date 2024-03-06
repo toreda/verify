@@ -126,7 +126,6 @@ describe('Codes', () => {
 		});
 	});
 
-
 	for (const item of ITEMS) {
 		it(`Codes.${item.method}() should return code '${item.code}'`, () => {
 			expect(item.method()).toBe(item.code);

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 /**
  * Contains the root entity responsible for error and path to origin involved in error.
  *
- * @category Error Codes
+ * @category Error Handling
  */
 export interface ErrorContextData {
 	/** Root object, node, or other origin responsible for error code. */

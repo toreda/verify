@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
+import {StatementRoot} from '../../statement/root';
 import type {Matcher} from '../..//matcher';
-import {NodeLink} from '../../node/link';
+import {BlockLink} from '../../block/link';
 import {Pattern} from '../../pattern';
 
 /**
@@ -33,13 +33,13 @@ import {Pattern} from '../../pattern';
  * @param next
  * @returns
  *
- * @category Matchers
+ * @category Matcher Predicate Factories
  */
 export function matcherPatternsMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	next: NodeLink<ValueT>
+	root: StatementRoot<ValueT>,
+	next: BlockLink<ValueT>
 ): Matcher<ValueT, Pattern<ValueT>[]> {
-	return (_patterns: Pattern<ValueT>[]): NodeLink<ValueT> => {
+	return (_patterns: Pattern<ValueT>[]): BlockLink<ValueT> => {
 		return next;
 	};
 }

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
  */
 
 import type {MatcherFunc} from './func';
-import type {NodeFlags} from '../node/flags';
+import type {BlockFlags} from '../block/flags';
 
 /**
  * @category Matchers
@@ -32,5 +32,5 @@ import type {NodeFlags} from '../node/flags';
 export interface MatcherCall<ValueT, ParamT> {
 	fn: MatcherFunc<ValueT, ParamT>;
 	params?: ParamT;
-	flags?: NodeFlags;
+	flags?: BlockFlags;
 }

@@ -5,7 +5,7 @@
 	"repository": "https://github.com/toreda/chk",
 	"author": "Toreda, Inc.",
 	"license": "MIT",
-	"description": "Automate type safety & validation checks with reusable helpers. Eliminate edge cases with less code.",
+	"description": "Automated validation. Eliminate edge cases with less code.",
 	"public": true,
 	"prettier": "@toreda/prettier-config",
 	"devDependencies": {
@@ -23,7 +23,7 @@
 		"@types/big.js": "^6.2.2",
 		"@types/gulp": "^4.0.10",
 		"@types/jest": "^29.5.12",
-		"@types/node": "^20.11.21",
+		"@types/node": "^20.11.24",
 		"@typescript-eslint/eslint-plugin": "^7.0.2",
 		"@typescript-eslint/parser": "^7.0.2",
 		"@typescript-eslint/typescript-estree": "^7.0.2",

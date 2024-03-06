@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 import Defaults from '../../defaults';
 
 /**
- * @category Validation
+ * @category Rule Chains
  */
 export type ChkVarLabel = 'value' | 'arg';
 
@@ -35,7 +35,7 @@ export type ChkVarLabel = 'value' | 'arg';
  * @param label
  * @returns
  *
- * @category Validation
+ * @category Rule Chains
  */
 export function chkVarLabel(label?: ChkVarLabel | string | null): ChkVarLabel {
 	if (!label) {

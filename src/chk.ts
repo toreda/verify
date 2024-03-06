@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,23 @@
  *
  */
 
-import {ChkValue} from './chk/value';
+import {Value} from './value';
 import {Fate} from '@toreda/fate';
-import {NodeContains} from './node/contains';
-import {NodeHave} from './node/have';
-import {NodeIs} from './node/is';
-import {NodeMatch} from './node/match';
-import {NodeMust} from './node/must';
+import {BlockContains} from './block/contains';
+import {BlockHave} from './block/have';
+import {BlockIs} from './block/is';
+import {BlockMatch} from './block/match';
+import {BlockMust} from './block/must';
 
 /**
- * @category Chk
+ * @category Rulesets
  */
-export interface Chk<ValueT> {
+export interface Ruleset<ValueT> {
 	(value?: ValueT | null): Promise<Fate<ValueT>>;
-	must: NodeMust<ValueT>;
-	has: NodeHave<ValueT>;
-	is: NodeIs<ValueT>;
-	matches: NodeMatch<ValueT>;
-	contains: NodeContains<ValueT>;
-	value: ChkValue<ValueT>;
+	must: BlockMust<ValueT>;
+	has: BlockHave<ValueT>;
+	is: BlockIs<ValueT>;
+	matches: BlockMatch<ValueT>;
+	contains: BlockContains<ValueT>;
+	value: Value<ValueT>;
 }

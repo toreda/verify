@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,29 +23,28 @@
  *
  */
 
-import {ChkChainRoot} from '../../../chk/chain/root';
-import {EqualToCall} from './call';
+import {StatementRoot} from '../../../statement/root';
+import {type EqualToCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
-import type {NodeFlags} from '../../../node/flags';
-import {NodeLink} from '../../../node/link';
+import type {BlockFlags} from '../../../block/flags';
+import {BlockLink} from '../../../block/link';
 import {equalTo} from '../../../equal/to';
 
 /**
- *
- * @param next
+ * Expects a validation chain root node and returns an equalTo matcher node.
  * @returns
  *
  * @category Matcher Factories
  */
 export function matcherEqualToMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
+	root: StatementRoot<ValueT>,
+	flags?: BlockFlags
 ): Matcher<ValueT, unknown> {
 	return (right: unknown) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new NodeLink<ValueT>(root);
+		const link = new BlockLink<ValueT>(root);
 
 		const fn: MatcherFunc<ValueT, EqualToCall> = async (
 			value?: ValueT | null,

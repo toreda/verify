@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,13 @@
  *
  */
 
+/**
+ *
+ * @param next
+ * @returns
+ *
+ * @category
+ */
 export function isNumberMk<NextT>(next: NextT): NextT {
 	return next;
 }

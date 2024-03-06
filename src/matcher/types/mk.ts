@@ -23,25 +23,22 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
+import {StatementRoot} from '../../statement/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
 
 /**
  *
- * @param next
- * @returns
- *
- * @category Matchers
+ * @category Matcher Predicate Factories
  */
 export function matcherTypesMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
+	root: StatementRoot<ValueT>,
+	flags?: BlockFlags
 ): Matcher<ValueT, string[]> {
-	return (typeNames: string[]): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
+	return (typeNames: string[]): BlockLink<ValueT> => {
+		const link = new BlockLink<ValueT>(root);
 		const fn: MatcherFunc<ValueT, string[]> = async (value?: ValueT | null): Promise<boolean> => {
 			if (!Array.isArray(typeNames)) {
 				return false;

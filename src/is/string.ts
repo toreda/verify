@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -24,11 +24,11 @@
  */
 
 /**
- * Determine if value is a JavaScript string.
- * @param value
+ * Determine if `value` is a string primitive of length 0 or greater.
+ * @param value		Value to check.
  * @returns
  *
- * @category		Validators – Strings
+ * @category		 String Validators
  */
 export function isString(value: unknown): boolean {
 	return typeof value === 'string';

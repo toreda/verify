@@ -31,7 +31,7 @@ import {Log} from '@toreda/log';
 import {isBoolean} from './is/boolean';
 import {isString} from './is/string';
 import {SchemaConfig} from './schema/config';
-import type {SchemaInit} from './schema/schema/init';
+import type {SchemaInit} from './schema/init';
 import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
 

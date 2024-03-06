@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,16 @@
 import {Fate} from '@toreda/fate';
 import type {MatcherCall} from './call';
 import type {MatcherFunc} from './func';
-import type {NodeFlags} from '../node/flags';
+import type {BlockFlags} from '../block/flags';
 import {matcherParamsMk} from '../matcher/params/mk';
 
 /**
- * @category Matchers
+ * @category Matcher Predicates
  */
 export class MatcherBound<ValueT, ParamT> {
 	public readonly fn: MatcherFunc<ValueT, ParamT>;
 	public readonly params: ParamT;
-	public readonly flags: NodeFlags;
+	public readonly flags: BlockFlags;
 
 	constructor(call: MatcherCall<ValueT, ParamT>) {
 		this.fn = call.fn;
@@ -49,8 +49,8 @@ export class MatcherBound<ValueT, ParamT> {
 	 * @param input
 	 * @returns
 	 */
-	public mkFlags(input?: Partial<NodeFlags>): NodeFlags {
-		const flags: NodeFlags = {
+	public mkFlags(input?: Partial<BlockFlags>): BlockFlags {
+		const flags: BlockFlags = {
 			invertResult: false
 		};
 

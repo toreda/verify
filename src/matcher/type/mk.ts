@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,25 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
+import {StatementRoot} from '../../statement/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
 
 /**
  *
  * @param next
  * @returns
  *
- * @category Matchers
+ * @category Matcher Predicate Factories
  */
 export function matcherTypeMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
+	root: StatementRoot<ValueT>,
+	flags?: BlockFlags
 ): Matcher<ValueT, string> {
-	return (typeName: string): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
+	return (typeName: string): BlockLink<ValueT> => {
+		const link = new BlockLink<ValueT>(root);
 
 		const fn: MatcherFunc<ValueT, string> = async (value?: ValueT | null): Promise<boolean> => {
 			if (typeName === 'array') {

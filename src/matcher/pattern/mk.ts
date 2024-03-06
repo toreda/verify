@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
+import {StatementRoot} from '../../statement/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../func';
-import {NodeLink} from '../../node/link';
+import {BlockLink} from '../../block/link';
 import {Pattern} from '../../pattern';
 
 /**
@@ -34,11 +34,11 @@ import {Pattern} from '../../pattern';
  * @param root		Root node for the validation chain matcher will be used in.
  * @returns
  *
- * @category Matchers
+ * @category Matcher Predicate Factories
  */
-export function matcherPatternMk<ValueT>(root: ChkChainRoot<ValueT>): Matcher<ValueT, Pattern<ValueT>> {
-	return (_pattern: Pattern<ValueT>): NodeLink<ValueT> => {
-		const link = new NodeLink<ValueT>(root);
+export function matcherPatternMk<ValueT>(root: StatementRoot<ValueT>): Matcher<ValueT, Pattern<ValueT>> {
+	return (_pattern: Pattern<ValueT>): BlockLink<ValueT> => {
+		const link = new BlockLink<ValueT>(root);
 
 		const fn: MatcherFunc<ValueT, unknown> = async (_value?: ValueT | null): Promise<boolean> => {
 			return false;

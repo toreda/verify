@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import Defaults from '../../../defaults';
  * @param value
  * @returns
  *
- * @category Errors
+ * @category Error Handling
  */
 export function errorCodePathDelimiter(value?: string | null): string {
 	if (typeof value !== 'string') {

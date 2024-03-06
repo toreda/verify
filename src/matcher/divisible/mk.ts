@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2023 Toreda, Inc.
+ *	Copyright (c) 2019 - 2024 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,28 +23,29 @@
  *
  */
 
-import {ChkChainRoot} from '../../chk/chain/root';
+import {StatementRoot} from '../../statement/root';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
-import type {NodeFlags} from '../../node/flags';
-import {NodeLink} from '../../node/link';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
 import {divisible} from '../../divisible';
 
 /**
- *
- * @param next
+ * Factory function producing `divisible` matcher predicate functions used in ruleset chains.
+ * @param 		root	Root node in chain.
+ * @param 		flags	Optional flags applied to this node.
  * @returns
  *
- * @category Matcher Factories
+ * @category Matcher Predicate Factories
  */
 export function matcherDivisibleMk<ValueT>(
-	root: ChkChainRoot<ValueT>,
-	flags?: NodeFlags
+	root: StatementRoot<ValueT>,
+	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (by: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new NodeLink<ValueT>(root);
+		const link = new BlockLink<ValueT>(root);
 
 		const fn: MatcherFunc<ValueT, number> = async (value?: ValueT | null): Promise<boolean> => {
 			return divisible(value, by);

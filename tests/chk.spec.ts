@@ -1,11 +1,11 @@
-import {Chk} from '../src/chk';
-import {chkMk} from '../src/chk/mk';
+import {Ruleset} from '../src/chk';
+import {rulesetMk} from '../src/ruleset/mk';
 
 const ROOT_CONSTRAINTS: string[] = ['is', 'be', 'have', 'match'];
 
-describe('chk', () => {
-	let instance: Chk<string>;
-	let chkStr: Chk<string>;
+describe('Ruleset', () => {
+	let instance: Ruleset<string>;
+	let chkStr: Ruleset<string>;
 
 	beforeAll(() => {
 		instance = chkMk<string>();

@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../statement/root';
+import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
 import type {BlockFlags} from '../../block/flags';
@@ -36,10 +36,7 @@ import {empty} from '../../empty';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherEmptyMk<ValueT>(
-	root: StatementRoot<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, never> {
+export function matcherEmptyMk<ValueT>(root: BlockRoot<ValueT>, flags?: BlockFlags): Matcher<ValueT, never> {
 	return () => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.

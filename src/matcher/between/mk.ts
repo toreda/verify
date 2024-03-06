@@ -24,7 +24,7 @@
  */
 
 import type {BetweenCall} from '../../between/call';
-import {StatementRoot} from '../../statement/root';
+import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
 import type {BlockFlags} from '../../block/flags';
@@ -32,14 +32,14 @@ import {BlockLink} from '../../block/link';
 import {between} from '../../between';
 
 /**
- * @param next
- * @param root
+ * @param root		Root Block at the start of every statement.
+ * @param flags		Optional flags which transform the block or statement result.
  * @returns
  *
- * @category Matcher Predicate Factories
+ * @category Matcher Predicate Factories`
  */
 export function matcherBetweenMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (left: number, right: number) => {

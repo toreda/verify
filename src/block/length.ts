@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
@@ -34,14 +34,14 @@ import {matcherLessThanMk} from '../matcher/less/than/mk';
 /**
  * Contains matcher predicates for length properties.
  *
- * @category Rule Chains
+ * @category Statement Blocks
  */
 export class BlockLength<ValueT> extends Block<ValueT, unknown> {
 	public readonly equalTo: Matcher<ValueT, unknown>;
 	public readonly lessThan: Matcher<ValueT, number>;
 	public readonly greaterThan: Matcher<ValueT, number>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('matcher', root);
 
 		this.lessThan = matcherLessThanMk<ValueT>(root, flags);

@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../statement/root';
+import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../func';
 import type {BlockFlags} from '../../block/flags';
@@ -34,7 +34,7 @@ import {BlockLink} from '../../block/link';
  * @category Matcher Predicate Factories
  */
 export function matcherTypesMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, string[]> {
 	return (typeNames: string[]): BlockLink<ValueT> => {

@@ -23,11 +23,15 @@
  *
  */
 
-import type {MatcherFunc} from '../matcher/func';
+import {Statement} from '../statement';
+import {Value} from '../value';
+import {type BlockType} from './type';
 
 /**
- * @category Rule Chains
+ * @category Statement Blocks
  */
-export interface NodeOptions {
-	matcher?: MatcherFunc<unknown, unknown>;
+export interface BlockInit<ValueT = unknown> {
+	value: Value<ValueT>;
+	blockType: BlockType;
+	parentStmt: Statement<ValueT>;
 }

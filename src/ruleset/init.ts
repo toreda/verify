@@ -29,5 +29,5 @@ import {Value} from '../value';
  * @category Rulesets
  */
 export interface RulesetInit<ValueT = unknown> {
-	value: Value<ValueT>;
+	value?: Value<ValueT>;
 }

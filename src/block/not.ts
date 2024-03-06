@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import {BlockContains} from './contains';
@@ -32,14 +32,14 @@ import {BlockHave} from './have';
 import {matcherDivisibleMk} from '../matcher/divisible/mk';
 
 /**
- * @category Rule Chains
+ * @category Statement Blocks
  */
 export class BlockNot<ValueT> extends Block<ValueT, unknown> {
 	public readonly contain: BlockContains<ValueT>;
 	public readonly have: BlockHave<ValueT>;
 	public readonly divisibleBy: Matcher<ValueT, number>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('not', root);
 
 		const modFlags: BlockFlags = {

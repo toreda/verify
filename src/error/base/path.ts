@@ -24,6 +24,6 @@
  */
 
 /**
- * @category Errors
+ * @category Error Handling
  */
 export type ErrorBasePath = 'id' | 'child' | 'arg' | string;

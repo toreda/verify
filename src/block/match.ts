@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
@@ -37,7 +37,7 @@ export class BlockMatch<ValueT> extends Block<ValueT, unknown> {
 	public readonly type: Matcher<ValueT, string>;
 	public readonly atLeastOneType: Matcher<ValueT, string[]>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('matcher', root);
 
 		this.type = matcherTypeMk<ValueT>(root, flags);

@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {BlockLength} from './length';
 
 /**
@@ -32,7 +32,7 @@ import {BlockLength} from './length';
 export class BlockAny<ValueT> {
 	public readonly length: BlockLength<ValueT>;
 
-	constructor(root: StatementRoot<ValueT>) {
+	constructor(root: BlockRoot<ValueT>) {
 		this.length = new BlockLength<ValueT>(root);
 	}
 }

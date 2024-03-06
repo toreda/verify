@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../statement/root';
+import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
 import type {BlockFlags} from '../../block/flags';
@@ -39,7 +39,7 @@ import {divisible} from '../../divisible';
  * @category Matcher Predicate Factories
  */
 export function matcherDivisibleMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (by: number) => {

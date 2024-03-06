@@ -32,7 +32,7 @@ import {isArray} from '../../is/array';
  * @param flags
  * @returns
  *
- * @category Stand-alone Validators
+ * @category Check - Collections
  */
 export function chkArrayEmpty<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
 	const fate = new Fate<ValueT[]>();

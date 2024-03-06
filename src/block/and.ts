@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {BlockContains} from './contains';
 import type {BlockFlags} from './flags';
 import {BlockHave} from './have';
@@ -46,7 +46,7 @@ export class BlockAnd<ValueT> {
 	 */
 	public readonly has: BlockHave<ValueT>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		this.is = new BlockIs<ValueT>(root, flags);
 		this.contain = new BlockContains<ValueT>(root, flags);
 		this.contains = this.contain;

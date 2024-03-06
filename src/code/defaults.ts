@@ -24,7 +24,7 @@
  */
 
 /**
- * @category Error Codes
+ * @category Error Handling
  */
 export class CodeDefaults {
 	public static BadArgFormat = 'bad_arg_format' as const;

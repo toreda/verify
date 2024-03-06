@@ -28,7 +28,7 @@
  * @param next
  * @returns
  *
- * @category
+ * @category Matcher Predicate Factories
  */
 export function isNumberMk<NextT>(next: NextT): NextT {
 	return next;

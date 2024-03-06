@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
 
@@ -31,7 +31,7 @@ import type {BlockFlags} from './flags';
  * @category Statement Blocks
  */
 export class BlockContains<ValueT> extends Block<ValueT, unknown> {
-	constructor(root: StatementRoot<ValueT>, _flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, _flags?: BlockFlags) {
 		super('contains', root);
 	}
 }

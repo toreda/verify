@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../statement/root';
+import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import {matcherEqualToMk} from '../../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../../matcher/greater/than/mk';
@@ -37,7 +37,7 @@ export class BlockAtLeast<ValueT> {
 	public readonly lessThan: Matcher<ValueT, number>;
 	public readonly greaterThan: Matcher<ValueT, number>;
 
-	constructor(root: StatementRoot<ValueT>) {
+	constructor(root: BlockRoot<ValueT>) {
 		this.lessThan = matcherLessThanMk<ValueT>(root);
 		this.greaterThan = matcherGreaterThanMk<ValueT>(root);
 		this.equalTo = matcherEqualToMk<ValueT>(root);

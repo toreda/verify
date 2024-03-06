@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
@@ -39,7 +39,7 @@ export class BlockBe<ValueT> extends Block<ValueT, unknown> {
 	public readonly greaterThan: Matcher<ValueT, number>;
 	public readonly equalTo: Matcher<ValueT, number>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('be', root);
 
 		this.lessThan = matcherLessThanMk<ValueT>(root, flags);

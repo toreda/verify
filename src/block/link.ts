@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {Block} from '../block';
 import {BlockAnd} from './and';
 import type {BlockFlags} from './flags';
@@ -38,7 +38,7 @@ import type {BlockFlags} from './flags';
 export class BlockLink<ValueT> extends Block<ValueT, unknown> {
 	public readonly and: BlockAnd<ValueT>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('link', root);
 		this.and = new BlockAnd<ValueT>(root, flags);
 	}

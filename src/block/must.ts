@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {Block} from '../block';
 import {BlockBe} from './be';
 import {BlockContains} from './contains';
@@ -40,7 +40,7 @@ export class BlockMust<ValueT> extends Block<ValueT, unknown> {
 	public readonly equal: BlockEqual<ValueT>;
 	public readonly contain: BlockContains<ValueT>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		super('must', root);
 		this.match = new BlockMatch<ValueT>(root, flags);
 		this.equal = new BlockEqual<ValueT>(root, flags);

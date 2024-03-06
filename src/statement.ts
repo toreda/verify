@@ -23,86 +23,35 @@
  *
  */
 
-import {StatementRoot} from './statement/root';
-//import {Ruleset} from './_ruleset';
-import {Fate} from '@toreda/fate';
-import {BlockContains} from './block/contains';
-import {BlockHave} from './block/have';
-import {BlockIs} from './block/is';
-import {BlockMatch} from './block/match';
-import {BlockMust} from './block/must';
-import {type Resettable} from '@toreda/types';
-import {StatementInit} from './statement/init';
+import type {ANY} from '@toreda/types';
+import {Value} from './value';
+import {MatcherBound} from './matcher/bound';
+import type {MatcherCall} from './matcher/call';
 
 /**
- * Rule chain containing one or more rules
+ * Each statement has one root block.
  *
- * @category Statements
+ * @category Statement Blocks
  */
-export class Statement<ValueT> implements Resettable {
-	private readonly root: StatementRoot<ValueT>;
-	public readonly must: BlockMust<ValueT>;
-	public readonly contains: BlockContains<ValueT>;
-	public readonly is: BlockIs<ValueT>;
-	public readonly has: BlockHave<ValueT>;
-	public readonly matches: BlockMatch<ValueT>;
+export class Statement<ValueT = unknown> {
+	public readonly value: Value<ValueT>;
+	public readonly blocks: MatcherBound<ValueT, ANY>[];
 
-	constructor(init: StatementInit<ValueT>) {
-		this.assertInit(init);
-		const chainRoot = new StatementRoot<ValueT>(init.value);
-		this.must = new BlockMust<ValueT>(chainRoot);
-		this.contains = new BlockContains<ValueT>(chainRoot);
-		this.has = new BlockHave<ValueT>(chainRoot);
-		this.is = new BlockIs<ValueT>(chainRoot);
-		this.matches = new BlockMatch<ValueT>(chainRoot);
-
-		this.root = chainRoot;
+	constructor(value: Value<ValueT>) {
+		this.value = value;
+		this.blocks = [];
 	}
 
-	private assertInit(init: StatementInit<ValueT>): asserts init is StatementInit<ValueT> {
-		if (!init) {
-			throw new Error(`Missing argument in stmt ctor: init`);
+	public addBlock<ParamT>(call: MatcherCall<ValueT, ParamT>): boolean {
+		let result = true;
+
+		try {
+			const bound = new MatcherBound<ValueT, ParamT>(call);
+			this.blocks.push(bound);
+		} catch (e) {
+			result = false;
 		}
 
-		if (!init.value) {
-			throw new Error(`Missing init property in stmt ctor: init.value`);
-		}
+		return result;
 	}
-
-	/**
-	 * Execute all matchers in this chain in the order they were added.
-	 * @param value
-	 * @returns
-	 */
-	public async execute(value?: ValueT | null): Promise<Fate<never>> {
-		const fate = new Fate<never>();
-
-		let succeeded = 0;
-		let executed = 0;
-		for (const matcher of this.root.matchers) {
-			try {
-				const result = await matcher.execute(value);
-				if (result.success()) {
-					succeeded++;
-				} else {
-					fate.setErrorCode(result.errorCode());
-				}
-			} catch (e) {
-				fate.setErrorCode(`execute:matcher:error`);
-				fate.error(e);
-			}
-
-			executed++;
-		}
-
-		// Chain execution result is success when all matchers returned
-		// successful validation results.
-		if (executed === succeeded) {
-			fate.setSuccess(true);
-		}
-
-		return fate;
-	}
-
-	public reset(): void {}
 }

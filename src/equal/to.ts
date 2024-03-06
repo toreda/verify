@@ -29,7 +29,7 @@
  * @param right
  * @returns
  *
- * @category Matchers
+ * @category Matcher Predicates
  */
 export function equalTo(left: unknown, right: unknown): boolean {
 	if (typeof left !== typeof right) {

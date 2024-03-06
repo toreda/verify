@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import {BlockContains} from './contains';
 import {BlockIs} from './is';
 
@@ -36,7 +36,7 @@ export class BlockOr<ValueT> {
 	public readonly contains: BlockContains<ValueT>;
 	public readonly is: BlockIs<ValueT>;
 
-	constructor(root: StatementRoot<ValueT>) {
+	constructor(root: BlockRoot<ValueT>) {
 		this.is = new BlockIs<ValueT>(root);
 		this.contains = new BlockContains<ValueT>(root);
 	}

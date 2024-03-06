@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../../statement/root';
+import {BlockRoot} from '../../../statement';
 import type {GreaterThanCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
@@ -32,14 +32,14 @@ import {BlockLink} from '../../../block/link';
 import {greaterThan} from '../../../greater/than';
 
 /**
- * @param root		This validation chain's root node.
+ * @param root		Root block at the start of every statement.
  * @param flags		Optional flags to applied when executing node.
  * @returns
  *
- * @category Matcher Factories
+ * @category Matcher Predicate Factories
  */
 export function matcherGreaterThanMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (right: number) => {

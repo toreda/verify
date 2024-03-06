@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../../statement/root';
+import {BlockRoot} from '../../../statement';
 import type {LessThanArgs} from '../../../less/than/args';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
@@ -39,7 +39,7 @@ import {lessThan} from '../../../less/than';
  * @category Matcher Predicate Factories
  */
 export function matcherLessThanMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (right: number): BlockLink<ValueT> => {

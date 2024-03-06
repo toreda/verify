@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../../../statement/root';
+import {BlockRoot} from '../../../statement';
 import {type EqualToCall} from './call';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
@@ -38,7 +38,7 @@ import {equalTo} from '../../../equal/to';
  * @category Matcher Factories
  */
 export function matcherEqualToMk<ValueT>(
-	root: StatementRoot<ValueT>,
+	root: BlockRoot<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, unknown> {
 	return (right: unknown) => {

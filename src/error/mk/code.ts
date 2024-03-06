@@ -36,7 +36,7 @@ import {errorCodeToken} from '../code/token';
  *
  * @param code    Error code originating in
  *
- * @category Errors
+ * @category Error Handling
  */
 export function errorMkCode<CodeT extends string, RootT extends string, PathT = string | unknown>(
 	code: CodeT,

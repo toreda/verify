@@ -23,7 +23,7 @@
  *
  */
 
-import {Statement} from '../statement';
+import {Statement} from '../block/root';
 
 /**
  * @category Statement Blocks

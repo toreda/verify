@@ -25,7 +25,7 @@
 
 import type {ArrayFunc, Iterable, Resettable} from '@toreda/types';
 
-import {Statement} from './statement';
+import {Statement} from './block/root';
 import {StatementsItor} from './statements/itor';
 
 /**

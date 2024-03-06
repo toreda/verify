@@ -26,6 +26,6 @@
 /**
  * Common error codes.
  *
- * @category Errors
+ * @category Error Handling
  */
 export type ErrorBaseCode = 'bad_format' | 'missing' | 'empty';

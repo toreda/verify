@@ -23,7 +23,7 @@
  *
  */
 
-import {StatementRoot} from '../statement/root';
+import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import type {BlockFlags} from './flags';
 import {matcherDivisibleMk} from '../matcher/divisible/mk';
@@ -45,7 +45,7 @@ export class BlockIs<ValueT> {
 	public readonly divisibleBy: Matcher<ValueT, number>;
 	public readonly type: Matcher<ValueT, string>;
 
-	constructor(root: StatementRoot<ValueT>, flags?: BlockFlags) {
+	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
 		this.empty = matcherEmptyMk<ValueT>(root, flags);
 		this.notEmpty = matcherEmptyMk<ValueT>(root, flags);
 		this.lessThan = matcherLessThanMk<ValueT>(root, flags);

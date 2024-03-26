@@ -1,22 +1,24 @@
 import {Fate} from '@toreda/fate';
 import {type RulesetInit} from './ruleset/init';
-import {Statements} from './statements';
-import {Value} from './value';
 import {Rule} from './rule';
 
 /**
  * @category Rulesets
  */
-export class Ruleset<ValueT = unknown> {
-	public readonly statements: Statements<ValueT>;
-	public readonly value: Value<ValueT>;
+export class Ruleset {
+	public readonly rules: Rule[];
 
-	constructor(init?: RulesetInit<ValueT>) {
-		this.value = init?.value ?? new Value<ValueT>();
-		this.statements = new Statements<ValueT>();
+	constructor(_init?: RulesetInit) {
+		this.rules = [];
+
+		this.bindListeners();
 	}
 
-	public add(...rules: Rule<ValueT>[]): boolean {
+	private bindListeners(): void {
+		this.execute = this.execute.bind(this);
+	}
+
+	public add(...rules: Rule[]): boolean {
 		if (!Array.isArray(rules)) {
 			return false;
 		}
@@ -31,27 +33,22 @@ export class Ruleset<ValueT = unknown> {
 		return true;
 	}
 
-	public addRule(rule: Rule<ValueT>): boolean {
+	public addRule(rule: Rule): boolean {
 		if (!rule) {
 			return false;
 		}
 
+		this.rules.push(rule);
+
 		return true;
 	}
 
-	public async execute(value?: ValueT | null): Promise<Fate<never>> {
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<never>> {
 		const result = new Fate<never>();
 
-		for (const statement of this.statements) {
-			if (statement === null) {
-				continue;
-			}
-
+		for (const rule of this.rules) {
 			try {
-				/* 				const executeResult = await statement.execute(value);
-				if (!executeResult.success()) {
-					result.setErrorCode(executeResult.errorCode());
-				} */
+				const ruleResult = await rule.execute<ValueT>(value);
 			} catch (e: unknown) {
 				result.setErrorCode('exception');
 			}
@@ -60,5 +57,7 @@ export class Ruleset<ValueT = unknown> {
 		return result;
 	}
 
-	public reset(): void {}
+	public reset(): void {
+		this.rules.length = 0;
+	}
 }

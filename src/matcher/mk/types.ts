@@ -23,63 +23,42 @@
  *
  */
 
-import type {ArrayFunc, Iterable, Resettable} from '@toreda/types';
-
-import {Statement} from './statement';
-import {StatementsItor} from './statements/itor';
+import type {Matcher} from '../../matcher';
+import type {MatcherFunc} from '../func';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
+import {Statement} from '../../statement';
 
 /**
- * @category Rule Statements
+ *
+ * @category Matcher Predicate Factories
  */
-export class Statements<ValueT = unknown>
-	implements Iterable<Statement<ValueT> | null, Statement<ValueT> | null>, Resettable
-{
-	private readonly _items: Statement<ValueT>[];
+export function matcherMkTypes(stmt: Statement, flags?: BlockFlags): Matcher<string[]> {
+	return (typeNames: string[]): BlockLink => {
+		const link = new BlockLink(stmt);
+		const fn: MatcherFunc<string[]> = async (value?: ValueT | null): Promise<boolean> => {
+			if (!Array.isArray(typeNames)) {
+				return false;
+			}
 
-	constructor() {
-		this._items = [];
-	}
+			for (const name of typeNames) {
+				if (name === 'array' && Array.isArray(value)) {
+					return true;
+				}
 
-	[Symbol.iterator](): Iterator<Statement<ValueT> | null, Statement<ValueT> | null> {
-		return new StatementsItor<ValueT>(this._items);
-	}
+				if (typeof value === name) {
+					return true;
+				}
+			}
 
-	public forEach(
-		fn: ArrayFunc<Statement<ValueT> | null, Statement<ValueT> | null>
-	): Statement<ValueT> | null {
-		for (let i = 0; i < this._items.length; i++) {
-			const item = this._items[i];
-
-			try {
-				fn(item, i, this._items);
-			} catch (e) {}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Add matcher chain to list of chains.
-	 * @param chain
-	 * @returns
-	 */
-	public add(chain: Statement<ValueT>): boolean {
-		if (!chain) {
 			return false;
-		}
+		};
 
-		this._items.push(chain);
+		stmt.addMatcher<string[]>({
+			fn: fn,
+			flags: flags
+		});
 
-		return true;
-	}
-
-	public reset(): void {
-		if (!Array.isArray(this._items)) {
-			return;
-		}
-
-		for (const item of this._items) {
-			//item.reset();
-		}
-	}
+		return link;
+	};
 }

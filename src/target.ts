@@ -6,8 +6,8 @@ import {Rule} from './rule';
 import {RuleCallable} from './rule/callable';
 import {Statement} from './statement';
 
-export const target = new Proxy(new Rule<unknown>(), {
-	get: (target: Rule<unknown>, prop: keyof RuleCallable<unknown> | keyof Rule<unknown>): any => {
+export const target = new Proxy(new Rule(), {
+	get: (target: Rule, prop: keyof RuleCallable<unknown> | keyof Rule): any => {
 		console.info('@@@@@@@@@@@@@@@@@@@@');
 		const stmt = new Statement();
 

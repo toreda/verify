@@ -23,41 +23,56 @@
  *
  */
 
-import type {LessThanArgs} from '../../../less/than/args';
 import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../../matcher/func';
-import type {BlockFlags} from '../../../block/flags';
+import type {MatcherFunc} from '../../func';
 import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
 import {Statement} from '../../../statement';
+import {type OneOfParams} from '../../../one/of/params';
+import {booleanValue} from '@toreda/strong-types';
+import {type Primitive} from '@toreda/types';
+import {type MatcherArrayFlags} from '../../array/flags';
 
 /**
- * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
+ * @description Create matcher for validat * @param root		Root node in validation chain matcher will be added to.
+ion chain which determines if chain value is less than target.
  * @returns
  *
  * @category Matcher Predicate Factories
  */
-export function matcherLessThanMk<ValueT = unknown>(
-	stmt: Statement<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
-	return (right: number): BlockLink<ValueT> => {
+export function matcherMkOneOf(stmt: Statement, flags?: MatcherArrayFlags): Matcher<OneOfParams> {
+	return (right: Primitive[]): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(stmt);
+		const link = new BlockLink(stmt);
+		const caseSensitive = booleanValue(flags?.caseSensitive, false);
 
-		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
-			value?: ValueT | null,
-			params?: LessThanArgs
-		): Promise<boolean> => {
-			return lessThan(value, params?.right);
+		const fn: MatcherFunc<OneOfParams> = async (value?: Primitive): Promise<boolean> => {
+			if (!Array.isArray(right)) {
+				return false;
+			}
+
+			if (value === undefined) {
+				return false;
+			}
+
+			for (const item of right) {
+				if (value === null && item === null) {
+					return true;
+				}
+
+				if (value === item) {
+					return true;
+				}
+			}
+
+			return false;
 		};
 
-		stmt.addMatcher<LessThanArgs>({
+		stmt.addMatcher<OneOfParams>({
 			fn: fn,
 			params: {
-				right: right
+				right: right,
+				invertResult: booleanValue(flags?.invertResult, false)
 			},
 			flags: flags
 		});

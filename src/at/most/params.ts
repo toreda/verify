@@ -23,23 +23,10 @@
  *
  */
 
-import type {Matcher} from '../../matcher';
-import {matcherEqualToMk} from '../../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../../matcher/less/than/mk';
-import {Block} from '../../block';
-
 /**
- * @category Statement Blocks
+ * @category Validators – Numbers
  */
-export class BlockAtLeast<ValueT> {
-	public readonly equalTo: Matcher<ValueT, unknown>;
-	public readonly lessThan: Matcher<ValueT, number>;
-	public readonly greaterThan: Matcher<ValueT, number>;
-
-	constructor(blocks: Block[]) {
-		this.lessThan = matcherLessThanMk<ValueT>(blocks);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(blocks);
-		this.equalTo = matcherEqualToMk<ValueT>(blocks);
-	}
+export interface AtMostParams {
+	right: number;
+	invertResult?: boolean;
 }

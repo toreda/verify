@@ -41,7 +41,6 @@ export abstract class Block<StatementT> {
 
 	public reset(): void {
 		// n/t
-
 		//this.stmt.reset();
 	}
 }

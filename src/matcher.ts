@@ -23,11 +23,11 @@
  *
  */
 
-import {BlockLink} from './block/link';
+import {Rule} from './rule';
 
 /**
  * Type signature for matcher functions.
  *
  * @category Matcher Predicates
  */
-export type Matcher<ValueT, NodeParamT> = (...params: NodeParamT[]) => BlockLink<ValueT>;
+export type Matcher<ParamT = unknown> = (...params: ParamT[]) => Rule;

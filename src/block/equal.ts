@@ -30,7 +30,7 @@ import type {BlockFlags} from './flags';
 /**
  * @category Statement Blocks
  */
-export class BlockEqual<ValueT = unknown> extends Block<Statement> {
+export class BlockEqual extends Block<Statement> {
 	constructor(stmt: Statement, _flags?: BlockFlags) {
 		super(stmt, 'equal');
 	}

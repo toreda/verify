@@ -23,14 +23,11 @@
  *
  */
 
-import type {MatcherFunc} from './func';
-import type {BlockFlags} from '../block/flags';
-
 /**
- * @category Matchers
+ *
+ *
+ * @category
  */
-export interface MatcherCall<InputT, ParamT> {
-	fn: MatcherFunc<InputT, ParamT>;
-	params?: ParamT;
-	flags?: BlockFlags;
+export interface ContainCall {
+	value: string;
 }

@@ -23,40 +23,10 @@
  *
  */
 
-import type {BetweenCall} from '../../between/call';
-import {BlockRoot} from '../../statement___';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../../matcher/func';
-import type {BlockFlags} from '../../block/flags';
-import {BlockLink} from '../../block/link';
-import {between} from '../../between';
-
 /**
- * @param root		Root Block at the start of every statement.
- * @param flags		Optional flags which transform the block or statement result.
- * @returns
- *
- * @category Matcher Predicate Factories`
+ * @category Validators – Numbers
  */
-export function matcherBetweenMk<ValueT>(
-	root: BlockRoot<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
-	return (left: number, right: number) => {
-		const link = new BlockLink<ValueT>(root, flags);
-
-		const fn: MatcherFunc<ValueT, BetweenCall> = async (value?: ValueT | null): Promise<boolean> => {
-			return between(left, value, right);
-		};
-
-		root.addMatcher<BetweenCall>({
-			fn: fn,
-			params: {
-				left: left,
-				right: right
-			}
-		});
-
-		return link;
-	};
+export interface AllOfParams {
+	right: string[] | number[];
+	invertResult?: boolean;
 }

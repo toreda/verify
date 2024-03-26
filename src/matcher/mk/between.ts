@@ -23,16 +23,37 @@
  *
  */
 
-import {BlockRoot} from '../statement___';
-import {BlockLength} from './length';
+import type {BetweenCall} from '../../between/call';
+import type {Matcher} from '../../matcher';
+import type {MatcherFunc} from '../func';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
+import {between} from '../../between';
+import {Statement} from '../../statement';
 
 /**
- * @category Statement Blocks
+ * @param root		Root Block at the start of every statement.
+ * @param flags		Optional flags which transform the block or statement result.
+ * @returns
+ *
+ * @category Matcher Predicate Factories`
  */
-export class BlockAny<ValueT> {
-	public readonly length: BlockLength<ValueT>;
+export function matcherMkBetween(stmt: Statement, flags?: BlockFlags): Matcher<number> {
+	return (left: number, right: number) => {
+		const link = new BlockLink(stmt, flags);
 
-	constructor(root: BlockRoot<ValueT>) {
-		this.length = new BlockLength<ValueT>(root);
-	}
+		const fn: MatcherFunc<number, BetweenCall> = async (value?: number | null): Promise<boolean> => {
+			return between(left, value, right);
+		};
+
+		stmt.addMatcher<number>({
+			fn: fn,
+			params: {
+				left: left,
+				right: right
+			}
+		});
+
+		return link;
+	};
 }

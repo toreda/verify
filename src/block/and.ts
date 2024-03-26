@@ -32,25 +32,25 @@ import {BlockIs} from './is';
 /**
  * @category Statement Blocks
  */
-export class BlockAnd<ValueT> {
-	public readonly contain: BlockContains<ValueT>;
+export class BlockAnd {
+	public readonly contain: BlockContains;
 	/**
 	 * Alias for `contain`. Exists for cases where the singular `contain` is
 	 * awkward or makes a statement confusing.
 	 */
-	public readonly contains: BlockContains<ValueT>;
-	public readonly is: BlockIs<ValueT>;
-	public readonly have: BlockHave<ValueT>;
+	public readonly contains: BlockContains;
+	public readonly is: BlockIs;
+	public readonly have: BlockHave;
 	/**
 	 * Alias for `has` provided for cases where statement grammar is otherwise awkward.
 	 */
-	public readonly has: BlockHave<ValueT>;
+	public readonly has: BlockHave;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
-		this.is = new BlockIs<ValueT>(stmt, flags);
-		this.contain = new BlockContains<ValueT>(stmt, flags);
+		this.is = new BlockIs(stmt, flags);
+		this.contain = new BlockContains(stmt, flags);
 		this.contains = this.contain;
-		this.have = new BlockHave<ValueT>(stmt, flags);
+		this.have = new BlockHave(stmt, flags);
 		this.has = this.have;
 	}
 }

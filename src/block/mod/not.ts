@@ -23,19 +23,24 @@
  *
  */
 
-import {Statement} from './statement___';
-import {Block} from './block';
-import {BlockBe} from './block/be';
-import {BlockContains} from './block/contains';
-import {BlockEqual} from './block/equal';
-import type {BlockFlags} from './block/flags';
-import {BlockMatch} from './block/match';
+import {Block} from '../../block';
+import type {BlockFlags} from '../flags';
+import {Statement} from '../../statement';
 
 /**
- * @category Rule Chains
+ * @category Statement Blocks
  */
-//export class Value<ValueT = unknown> extends Block<ValueT, unknown> {}
+export class BlockModNot<ParentBlockT extends Block<Statement>> extends Block<Statement> {
+	private readonly parent: ParentBlockT;
 
-export class Value<ValueT = unknown> {
+	constructor(parent: ParentBlockT, stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'not');
 
+		this.parent = parent;
+
+		const modFlags: BlockFlags = {
+			...flags,
+			invertResult: true
+		};
+	}
 }

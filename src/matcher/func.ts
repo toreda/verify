@@ -28,4 +28,7 @@
  *
  * @category Matchers
  */
-export type MatcherFunc<ValueT, ParamT> = (value?: ValueT | null, params?: ParamT) => Promise<boolean>;
+export type MatcherFunc<ValueT = unknown, ParamT = unknown> = (
+	value?: ValueT | null,
+	params?: ParamT
+) => Promise<boolean>;

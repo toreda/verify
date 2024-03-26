@@ -32,13 +32,15 @@ import {matcherParamsMk} from '../matcher/params/mk';
 /**
  * @category Matcher Predicates
  */
-export class MatcherBound<ValueT, ParamT> {
-	public readonly fn: MatcherFunc<ValueT, ParamT>;
+export class MatcherBound<InputT, ParamT> {
+	public readonly fn: MatcherFunc<InputT, ParamT>;
 	public readonly params: ParamT;
 	public readonly flags: BlockFlags;
+	public readonly callArgs: Map<string, string | number | boolean | null>;
 
-	constructor(call: MatcherCall<ValueT, ParamT>) {
+	constructor(call: MatcherCall<InputT, ParamT>) {
 		this.fn = call.fn;
+		this.callArgs = new Map<string, string | number | boolean | null>();
 		this.flags = this.mkFlags(call?.flags);
 		this.params = matcherParamsMk<ParamT>(call?.params);
 	}
@@ -74,7 +76,7 @@ export class MatcherBound<ValueT, ParamT> {
 		return result;
 	}
 
-	public async execute(value?: ValueT | null): Promise<Fate<never>> {
+	public async execute(value?: InputT | null): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 
 		try {

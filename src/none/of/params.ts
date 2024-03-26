@@ -23,14 +23,10 @@
  *
  */
 
-import type {MatcherFunc} from './func';
-import type {BlockFlags} from '../block/flags';
-
 /**
- * @category Matchers
+ * @category Validators – Numbers
  */
-export interface MatcherCall<InputT, ParamT> {
-	fn: MatcherFunc<InputT, ParamT>;
-	params?: ParamT;
-	flags?: BlockFlags;
+export interface NoneOfParams {
+	right: string[] | number[];
+	invertResult?: boolean;
 }

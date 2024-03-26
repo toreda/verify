@@ -23,19 +23,37 @@
  *
  */
 
+import {type Primitive} from '@toreda/types';
 import {Block} from '../block';
+import {type Matcher} from '../matcher';
+import {matcherMkAllOf} from '../matcher/mk/all/of';
+import {matcherMkAtLeast} from '../matcher/mk/at/least';
+import {matcherMkAtMost} from '../matcher/mk/at/most';
+import {matcherMkExactly} from '../matcher/mk/exactly';
+import {matcherMkNoneOf} from '../matcher/mk/none/of';
+import {matcherMkOneOf} from '../matcher/mk/one/of';
 import {Statement} from '../statement';
-import {BlockCharacter} from './character';
 import type {BlockFlags} from './flags';
 
 /**
  * @category Statement Blocks
  */
-export class BlockContains<ValueT = unknown> extends Block<Statement> {
-	public character: BlockCharacter<ValueT>;
+export class BlockContains extends Block<Statement> {
+	public readonly exactly: Matcher<number>;
+	public readonly atLeast: Matcher<number>;
+	public readonly atMost: Matcher<number>;
+	public readonly oneOf: Matcher<Primitive[]>;
+	public readonly noneOf: Matcher<Primitive[]>;
+	public readonly allOf: Matcher<Primitive[]>;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'contains');
-		this.character = new BlockCharacter<ValueT>(stmt, flags);
+
+		this.allOf = matcherMkAllOf(stmt, flags);
+		this.atLeast = matcherMkAtLeast(stmt, flags);
+		this.atMost = matcherMkAtMost(stmt, flags);
+		this.exactly = matcherMkExactly(stmt, flags);
+		this.noneOf = matcherMkNoneOf(stmt, flags);
+		this.oneOf = matcherMkOneOf(stmt, flags);
 	}
 }

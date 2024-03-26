@@ -23,42 +23,39 @@
  *
  */
 
-import {BlockRoot} from '../../statement___';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {BlockFlags} from '../../block/flags';
-import {BlockLink} from '../../block/link';
+import type {Matcher} from '../../../matcher';
+import type {MatcherFunc} from '../../func';
+import type {BlockFlags} from '../../../block/flags';
+import {BlockLink} from '../../../block/link';
+import {Statement} from '../../../statement';
+import {type AtLeastParams} from '../../../at/least/params';
+import {booleanValue} from '@toreda/strong-types';
+import {greaterThan} from '../../../greater/than';
+import {equalTo} from '../../../equal/to';
 
 /**
+ * Create matcher for validation chain which determines if chain value is less than target.
+ * @param root		Root node in validation chain matcher will be added to.
+ * @returns
  *
  * @category Matcher Predicate Factories
  */
-export function matcherTypesMk<ValueT>(
-	root: BlockRoot<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, string[]> {
-	return (typeNames: string[]): BlockLink<ValueT> => {
-		const link = new BlockLink<ValueT>(root);
-		const fn: MatcherFunc<ValueT, string[]> = async (value?: ValueT | null): Promise<boolean> => {
-			if (!Array.isArray(typeNames)) {
-				return false;
-			}
+export function matcherMkAtLeast(stmt: Statement, flags?: BlockFlags): Matcher<ValueT, number> {
+	return (right: number): BlockLink => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new BlockLink(stmt);
 
-			for (const name of typeNames) {
-				if (name === 'array' && Array.isArray(value)) {
-					return true;
-				}
-
-				if (typeof value === name) {
-					return true;
-				}
-			}
-
-			return false;
+		const fn: MatcherFunc<ValueT> = async (value?: ValueT | null): Promise<boolean> => {
+			return greaterThan(value, right) || equalTo(value, right);
 		};
 
-		root.addMatcher<string[]>({
+		stmt.addMatcher<AtLeastParams>({
 			fn: fn,
+			params: {
+				right: right,
+				invertResult: booleanValue(flags?.invertResult, false)
+			},
 			flags: flags
 		});
 

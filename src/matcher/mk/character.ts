@@ -23,14 +23,20 @@
  *
  */
 
-import type {MatcherFunc} from './func';
-import type {BlockFlags} from '../block/flags';
+import type {Matcher} from '../../matcher';
+import {BlockLink} from '../../block/link';
+import {Pattern} from '../../pattern';
+import {Statement} from '../../statement';
 
 /**
- * @category Matchers
+ *
+ * @param next
+ * @returns
+ *
+ * @category Matcher Predicate Factories
  */
-export interface MatcherCall<InputT, ParamT> {
-	fn: MatcherFunc<InputT, ParamT>;
-	params?: ParamT;
-	flags?: BlockFlags;
+export function matcherMkCharacter(stmt: Statement, next: BlockLink): Matcher<Pattern> {
+	return (_pattern: Pattern): BlockLink => {
+		return next;
+	};
 }

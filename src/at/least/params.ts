@@ -23,14 +23,10 @@
  *
  */
 
-import {Block} from '../block';
-import type {BlockFlags} from './flags';
-
 /**
- * @category Statement Blocks
+ * @category Validators – Numbers
  */
-export class BlockCharacter<ValueT = unknown> extends Block {
-	constructor(blocks: Block[], _flags?: BlockFlags) {
-		super(blocks, 'character');
-	}
+export interface AtLeastParams {
+	right: number;
+	invertResult?: boolean;
 }

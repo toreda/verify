@@ -34,12 +34,12 @@ import {Statement} from '../statement';
 /**
  * @category Statement Blocks
  */
-export class BlockBe<ValueT> extends Block<Statement> {
+export class BlockBe<ValueT = unknown> extends Block<Statement<ValueT>> {
 	public readonly lessThan: Matcher<ValueT, number>;
 	public readonly greaterThan: Matcher<ValueT, number>;
 	public readonly equalTo: Matcher<ValueT, number>;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
+	constructor(stmt: Statement<ValueT>, flags?: BlockFlags) {
 		super(stmt, 'be');
 
 		this.lessThan = matcherLessThanMk<ValueT>(stmt, flags);

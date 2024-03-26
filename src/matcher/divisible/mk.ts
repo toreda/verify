@@ -39,19 +39,19 @@ import {divisible} from '../../divisible';
  * @category Matcher Predicate Factories
  */
 export function matcherDivisibleMk<ValueT>(
-	parentStmt: Statement<ValueT>,
+	stmt: Statement<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (by: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(parentStmt);
+		const link = new BlockLink<ValueT>(stmt);
 
 		const fn: MatcherFunc<ValueT, number> = async (value?: ValueT | null): Promise<boolean> => {
 			return divisible(value, by);
 		};
 
-		parentStmt.addBlock<number>({
+		stmt.addBlock<number>({
 			fn: fn,
 			flags: flags
 		});

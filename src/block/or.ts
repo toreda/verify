@@ -22,9 +22,10 @@
  * 	SOFTWARE.
  *
  */
-
-import {BlockRoot} from '../statement___';
+import {Block} from '../block';
+import {Statement} from '../statement';
 import {BlockContains} from './contains';
+import {type BlockFlags} from './flags';
 import {BlockIs} from './is';
 
 /**
@@ -32,12 +33,13 @@ import {BlockIs} from './is';
  *
  * @category Statement Blocks
  */
-export class BlockOr<ValueT> {
-	public readonly contains: BlockContains<ValueT>;
-	public readonly is: BlockIs<ValueT>;
+export class BlockOr extends Block<Statement> {
+	public readonly contains: BlockContains;
+	public readonly is: BlockIs;
 
-	constructor(root: BlockRoot<ValueT>) {
-		this.is = new BlockIs<ValueT>(root);
-		this.contains = new BlockContains<ValueT>(root);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'or');
+		this.is = new BlockIs(stmt, flags);
+		this.contains = new BlockContains(stmt, flags);
 	}
 }

@@ -35,9 +35,12 @@ import {Statement} from '../../statement';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherTypeMk<ValueT>(stmt: Statement, flags?: BlockFlags): Matcher<ValueT, string> {
+export function matcherTypeMk<ValueT = unknown>(
+	stmt: Statement<ValueT>,
+	flags?: BlockFlags
+): Matcher<ValueT, string> {
 	return (typeName: string): BlockLink<ValueT> => {
-		const link = new BlockLink<ValueT>(blocks);
+		const link = new BlockLink<ValueT>(stmt);
 
 		const fn: MatcherFunc<ValueT, string> = async (value?: ValueT | null): Promise<boolean> => {
 			if (typeName === 'array') {
@@ -47,7 +50,7 @@ export function matcherTypeMk<ValueT>(stmt: Statement, flags?: BlockFlags): Matc
 			return typeof value === typeName;
 		};
 
-		root.addMatcher<string>({
+		stmt.addMatcher<string>({
 			fn: fn,
 			flags: flags
 		});

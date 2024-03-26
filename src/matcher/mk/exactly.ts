@@ -23,13 +23,14 @@
  *
  */
 
-import type {LessThanArgs} from '../../../less/than/args';
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../../matcher/func';
-import type {BlockFlags} from '../../../block/flags';
-import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
-import {Statement} from '../../../statement';
+import type {Matcher} from '../../matcher';
+import type {MatcherFunc} from '../func';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
+import {Statement} from '../../statement';
+import {type ExactlyParams} from '../../exactly/params';
+import {booleanValue} from '@toreda/strong-types';
+import {equalTo} from '../../equal/to';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -38,7 +39,7 @@ import {Statement} from '../../../statement';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherLessThanMk<ValueT = unknown>(
+export function matcherMkExactly<ValueT = unknown>(
 	stmt: Statement<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
@@ -47,16 +48,17 @@ export function matcherLessThanMk<ValueT = unknown>(
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink<ValueT>(stmt);
 
-		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
+		const fn: MatcherFunc<ValueT, ExactlyParams> = async (
 			value?: ValueT | null,
-			params?: LessThanArgs
+			_params?: ExactlyParams
 		): Promise<boolean> => {
-			return lessThan(value, params?.right);
+			return equalTo(value, right);
 		};
 
-		stmt.addMatcher<LessThanArgs>({
+		stmt.addMatcher<ExactlyParams>({
 			fn: fn,
 			params: {
+				invertResult: booleanValue(flags?.invertResult, false),
 				right: right
 			},
 			flags: flags

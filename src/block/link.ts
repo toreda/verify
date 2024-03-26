@@ -35,11 +35,11 @@ import type {BlockFlags} from './flags';
  *
  * @category Rule Chains
  */
-export class BlockLink<ValueT> extends Block<Statement> {
-	public readonly and: BlockAnd<ValueT>;
+export class BlockLink extends Block<Statement> {
+	public readonly and: BlockAnd;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'link');
-		this.and = new BlockAnd<ValueT>(stmt, flags);
+		this.and = new BlockAnd(stmt, flags);
 	}
 }

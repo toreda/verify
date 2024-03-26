@@ -23,14 +23,12 @@
  *
  */
 
-import type {MatcherFunc} from './func';
-import type {BlockFlags} from '../block/flags';
+import {type Primitive} from '@toreda/types';
 
 /**
- * @category Matchers
+ * @category Validators – Numbers
  */
-export interface MatcherCall<InputT, ParamT> {
-	fn: MatcherFunc<InputT, ParamT>;
-	params?: ParamT;
-	flags?: BlockFlags;
+export interface OneOfParams {
+	right: Primitive[];
+	invertResult?: boolean;
 }

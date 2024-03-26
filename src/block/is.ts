@@ -23,7 +23,6 @@
  *
  */
 
-import {BlockRoot} from '../statement___';
 import type {Matcher} from '../matcher';
 import type {BlockFlags} from './flags';
 import {matcherDivisibleMk} from '../matcher/divisible/mk';
@@ -32,26 +31,29 @@ import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
 import {matcherLessThanMk} from '../matcher/less/than/mk';
 import {matcherTypeMk} from '../matcher/type/mk';
+import {Statement} from '../statement';
+import {Block} from '../block';
 
 /**
  * @category Statement Blocks
  */
-export class BlockIs<ValueT> {
-	public readonly lessThan: Matcher<ValueT, number>;
-	public readonly greaterThan: Matcher<ValueT, number>;
-	public readonly equalTo: Matcher<ValueT, number>;
-	public readonly empty: Matcher<ValueT, never>;
-	public readonly notEmpty: Matcher<ValueT, never>;
-	public readonly divisibleBy: Matcher<ValueT, number>;
-	public readonly type: Matcher<ValueT, string>;
+export class BlockIs extends Block<Statement> {
+	public readonly lessThan: Matcher<number>;
+	public readonly greaterThan: Matcher<number>;
+	public readonly equalTo: Matcher<number>;
+	public readonly empty: Matcher<never>;
+	public readonly notEmpty: Matcher<never>;
+	public readonly divisibleBy: Matcher<number>;
+	public readonly type: Matcher<string>;
 
-	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
-		this.empty = matcherEmptyMk<ValueT>(root, flags);
-		this.notEmpty = matcherEmptyMk<ValueT>(root, flags);
-		this.lessThan = matcherLessThanMk<ValueT>(root, flags);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(root, flags);
-		this.equalTo = matcherEqualToMk<ValueT>(root, flags);
-		this.divisibleBy = matcherDivisibleMk<ValueT>(root, flags);
-		this.type = matcherTypeMk<ValueT>(root, flags);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'is');
+		this.empty = matcherEmptyMk(stmt, flags);
+		this.notEmpty = matcherEmptyMk(stmt, flags);
+		this.lessThan = matcherLessThanMk(stmt, flags);
+		this.greaterThan = matcherGreaterThanMk(stmt, flags);
+		this.equalTo = matcherEqualToMk(stmt, flags);
+		this.divisibleBy = matcherDivisibleMk(stmt, flags);
+		this.type = matcherTypeMk(stmt, flags);
 	}
 }

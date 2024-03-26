@@ -31,11 +31,11 @@ import {BlockLength} from './length';
 /**
  * @category Statement Blocks
  */
-export class BlockHave<ValueT> extends Block<Statement> {
-	public readonly length: BlockLength<ValueT>;
+export class BlockHave extends Block<Statement> {
+	public readonly length: BlockLength;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'have');
-		this.length = new BlockLength<ValueT>(stmt, flags);
+		this.length = new BlockLength(stmt, flags);
 	}
 }

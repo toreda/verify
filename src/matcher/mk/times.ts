@@ -25,9 +25,7 @@
 
 import type {Matcher} from '../../matcher';
 import {BlockLink} from '../../block/link';
-import {Pattern} from '../../pattern';
 import {Statement} from '../../statement';
-
 /**
  *
  * @param next
@@ -35,11 +33,9 @@ import {Statement} from '../../statement';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherCharacternMk<ValueT>(
-	stmt: Statement,
-	next: BlockLink<ValueT>
-): Matcher<ValueT, Pattern<ValueT>> {
-	return (_pattern: Pattern<ValueT>): BlockLink<ValueT> => {
+export function matcherMkExactlyTime(stmt: Statement, next: BlockLink): Matcher<any> {
+	return (value: number): BlockLink => {
+		stmt.matcherParams.set('contains.character', value);
 		return next;
 	};
 }

@@ -23,10 +23,10 @@
  *
  */
 
-import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import {BlockLink} from '../../block/link';
 import {Pattern} from '../../pattern';
+import {Statement} from '../../statement';
 
 /**
  *
@@ -36,7 +36,7 @@ import {Pattern} from '../../pattern';
  * @category Matcher Predicate Factories
  */
 export function matcherCharacternMk<ValueT>(
-	root: BlockRoot<ValueT>,
+	stmt: Statement,
 	next: BlockLink<ValueT>
 ): Matcher<ValueT, Pattern<ValueT>> {
 	return (_pattern: Pattern<ValueT>): BlockLink<ValueT> => {

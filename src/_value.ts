@@ -23,11 +23,40 @@
  *
  */
 
-import {Value} from '../_value';
+import {type Resettable} from '@toreda/types';
 
 /**
- * @category Statements
+ * @category Validators
  */
-export interface StatementInit<ValueT = unknown> {
-	value: Value<ValueT>;
+export class Value<ValueT> implements Resettable {
+	private _value: ValueT | null;
+
+	constructor(value?: ValueT | null) {
+		if (value === undefined) {
+			this._value = null;
+		} else {
+			this._value = value;
+		}
+	}
+
+	public set(value?: ValueT | null): boolean {
+		if (value === undefined) {
+			return false;
+		}
+
+		this._value = value;
+		return true;
+	}
+
+	public get(): ValueT | null {
+		if (this._value === undefined) {
+			return null;
+		}
+
+		return this._value;
+	}
+
+	public reset(): void {
+		this._value = null;
+	}
 }

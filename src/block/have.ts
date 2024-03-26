@@ -23,17 +23,19 @@
  *
  */
 
-import {BlockRoot} from '../statement';
+import {Block} from '../block';
+import {Statement} from '../statement';
 import type {BlockFlags} from './flags';
 import {BlockLength} from './length';
 
 /**
  * @category Statement Blocks
  */
-export class BlockHave<ValueT> {
+export class BlockHave<ValueT> extends Block<Statement> {
 	public readonly length: BlockLength<ValueT>;
 
-	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
-		this.length = new BlockLength<ValueT>(root, flags);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'have');
+		this.length = new BlockLength<ValueT>(stmt, flags);
 	}
 }

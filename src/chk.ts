@@ -23,7 +23,7 @@
  *
  */
 
-import {Value} from './value';
+import {Value} from './_value';
 import {Fate} from '@toreda/fate';
 import {BlockContains} from './block/contains';
 import {BlockHave} from './block/have';

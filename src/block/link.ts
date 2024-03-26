@@ -23,8 +23,8 @@
  *
  */
 
-import {BlockRoot} from '../statement';
 import {Block} from '../block';
+import {Statement} from '../statement';
 import {BlockAnd} from './and';
 import type {BlockFlags} from './flags';
 
@@ -35,11 +35,11 @@ import type {BlockFlags} from './flags';
  *
  * @category Rule Chains
  */
-export class BlockLink<ValueT> extends Block<ValueT, unknown> {
+export class BlockLink<ValueT> extends Block<Statement> {
 	public readonly and: BlockAnd<ValueT>;
 
-	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
-		super('link', root);
-		this.and = new BlockAnd<ValueT>(root, flags);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'link');
+		this.and = new BlockAnd<ValueT>(stmt, flags);
 	}
 }

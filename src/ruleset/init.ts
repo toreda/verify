@@ -23,7 +23,7 @@
  *
  */
 
-import {Value} from '../value';
+import {Value} from '../_value';
 
 /**
  * @category Rulesets

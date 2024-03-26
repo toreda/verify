@@ -25,13 +25,13 @@
 
 import type {ArrayFunc, Iterable, Resettable} from '@toreda/types';
 
-import {Statement} from './block/root';
+import {Statement} from './statement';
 import {StatementsItor} from './statements/itor';
 
 /**
  * @category Rule Statements
  */
-export class Statements<ValueT>
+export class Statements<ValueT = unknown>
 	implements Iterable<Statement<ValueT> | null, Statement<ValueT> | null>, Resettable
 {
 	private readonly _items: Statement<ValueT>[];
@@ -79,7 +79,7 @@ export class Statements<ValueT>
 		}
 
 		for (const item of this._items) {
-			item.reset();
+			//item.reset();
 		}
 	}
 }

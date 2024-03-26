@@ -25,15 +25,14 @@
 
 //import {Ruleset} from './_ruleset';
 import {Fate} from '@toreda/fate';
-import {BlockContains} from './contains';
-import {BlockHave} from './have';
-import {BlockIs} from './is';
-import {BlockMatch} from './match';
-import {BlockMust} from './must';
-import {type Resettable} from '@toreda/types';
-import {BlockInit} from './init';
-import {Statement} from '../statement';
-import {Block} from '../block';
+import {BlockContains} from './block/contains';
+import {BlockHave} from './block/have';
+import {BlockIs} from './block/is';
+import {BlockMatch} from './block/match';
+import {BlockMust} from './block/must';
+import {BlockInit} from './block/init';
+import {Block} from './block';
+import {Statement} from './statement___';
 
 //export type Statement<ValueT, ParamT = unknown> = Block<ValueT, ParamT>[];
 
@@ -43,23 +42,27 @@ import {Block} from '../block';
  * @category Statements
  */
 
-export class BlockRoot<ValueT> extends Block<ValueT> {
+export class Value2<ValueT> extends Block<ValueT> {
+	private _value: ValueT | null;
 	public readonly must: BlockMust<ValueT>;
 	public readonly contains: BlockContains<ValueT>;
 	public readonly is: BlockIs<ValueT>;
 	public readonly has: BlockHave<ValueT>;
 	public readonly matches: BlockMatch<ValueT>;
 
-	constructor(init: BlockInit<ValueT>) {
-		super(init);
-		this.assertInit(init);
-		this.must = new BlockMust<ValueT>(chainRoot);
-		this.contains = new BlockContains<ValueT>(chainRoot);
-		this.has = new BlockHave<ValueT>(chainRoot);
-		this.is = new BlockIs<ValueT>(chainRoot);
-		this.matches = new BlockMatch<ValueT>(chainRoot);
-
-
+	constructor(parent: Statement<ValueT>, value?: ValueT | null) {
+		super('root', parent);
+		//this.assertInit(init);
+		if (value === undefined) {
+			this._value = null;
+		} else {
+			this._value = value;
+		}
+		this.must = new BlockMust<ValueT>(parent);
+		this.contains = new BlockContains<ValueT>(parent);
+		this.has = new BlockHave<ValueT>(parent);
+		this.is = new BlockIs<ValueT>(parent);
+		this.matches = new BlockMatch<ValueT>(parent);
 	}
 
 	private assertInit(init: BlockInit<ValueT>): asserts init is BlockInit<ValueT> {
@@ -83,7 +86,7 @@ export class BlockRoot<ValueT> extends Block<ValueT> {
 
 		let succeeded = 0;
 		let executed = 0;
-		for (const matcher of this.root.matchers) {
+		for (const matcher of this.parent.matchers) {
 			try {
 				const result = await matcher.execute(value);
 				if (result.success()) {

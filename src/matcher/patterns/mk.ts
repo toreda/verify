@@ -23,7 +23,7 @@
  *
  */
 
-import {BlockRoot} from '../../statement';
+import {BlockRoot} from '../../statement___';
 import type {Matcher} from '../..//matcher';
 import {BlockLink} from '../../block/link';
 import {Pattern} from '../../pattern';

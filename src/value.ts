@@ -23,40 +23,19 @@
  *
  */
 
-import {type Resettable} from '@toreda/types';
+import {Statement} from './statement___';
+import {Block} from './block';
+import {BlockBe} from './block/be';
+import {BlockContains} from './block/contains';
+import {BlockEqual} from './block/equal';
+import type {BlockFlags} from './block/flags';
+import {BlockMatch} from './block/match';
 
 /**
- * @category Validators
+ * @category Rule Chains
  */
-export class Value<ValueT> implements Resettable {
-	private _value: ValueT | null;
+//export class Value<ValueT = unknown> extends Block<ValueT, unknown> {}
 
-	constructor(value?: ValueT | null) {
-		if (value === undefined) {
-			this._value = null;
-		} else {
-			this._value = value;
-		}
-	}
+export class Value<ValueT = unknown> {
 
-	public set(value?: ValueT | null): boolean {
-		if (value === undefined) {
-			return false;
-		}
-
-		this._value = value;
-		return true;
-	}
-
-	public get(): ValueT | null {
-		if (this._value === undefined) {
-			return null;
-		}
-
-		return this._value;
-	}
-
-	public reset(): void {
-		this._value = null;
-	}
 }

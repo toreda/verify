@@ -23,7 +23,7 @@
  *
  */
 
-import {BlockRoot} from '../statement';
+import {BlockRoot} from '../statement___';
 import {BlockContains} from './contains';
 import {BlockIs} from './is';
 

@@ -23,7 +23,7 @@
  *
  */
 
-import {BlockRoot} from '../statement';
+import {BlockRoot} from '../statement___';
 import {BlockLength} from './length';
 
 /**

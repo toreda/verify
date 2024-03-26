@@ -23,10 +23,10 @@
  *
  */
 
-import {BlockRoot} from '../statement';
 import {Block} from '../block';
+import {MatcherCall} from '../matcher/call';
+import {Statement} from '../statement';
 import {BlockBe} from './be';
-import {BlockContains} from './contains';
 import {BlockEqual} from './equal';
 import type {BlockFlags} from './flags';
 import {BlockMatch} from './match';
@@ -34,17 +34,24 @@ import {BlockMatch} from './match';
 /**
  * @category Rule Chains
  */
-export class BlockMust<ValueT> extends Block<ValueT, unknown> {
+export class BlockMust<ValueT = unknown> extends Block<Statement> {
 	public readonly be: BlockBe<ValueT>;
 	public readonly match: BlockMatch<ValueT>;
 	public readonly equal: BlockEqual<ValueT>;
-	public readonly contain: BlockContains<ValueT>;
+	//public readonly contain: BlockContains<ValueT>;
+	public readonly contain: MatcherCall<ValueT, unknown>;
 
-	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
-		super('must', root);
-		this.match = new BlockMatch<ValueT>(root, flags);
-		this.equal = new BlockEqual<ValueT>(root, flags);
-		this.be = new BlockBe<ValueT>(root, flags);
-		this.contain = new BlockContains<ValueT>(root, flags);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'must');
+		this.match = new BlockMatch<ValueT>(stmt, flags);
+		this.equal = new BlockEqual<ValueT>(stmt, flags);
+		this.be = new BlockBe<ValueT>(stmt, flags);
+
+
+		this.contain = () => {
+			return '';
+		};
+		//this.contain = new BlockContains<ValueT>(blocks, flags);
+		//this.contain = matcherCharacternMk(stmt, next);
 	}
 }

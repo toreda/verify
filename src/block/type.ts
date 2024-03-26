@@ -28,4 +28,16 @@
  *
  * @category Statement Blocks
  */
-export type BlockType = 'be' | 'contains' | 'equal' | 'link' | 'match' | 'matcher' | 'must' | 'not';
+export type BlockType =
+	| 'be'
+	| 'contains'
+	| 'character'
+	| 'equal'
+	| 'have'
+	| 'link'
+	| 'match'
+	| 'matcher'
+	| 'must'
+	| 'not'
+	| 'root'
+	| 'stub';

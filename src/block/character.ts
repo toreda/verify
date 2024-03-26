@@ -23,11 +23,14 @@
  *
  */
 
-import {Value} from '../_value';
+import {Block} from '../block';
+import type {BlockFlags} from './flags';
 
 /**
- * @category Statements
+ * @category Statement Blocks
  */
-export interface StatementInit<ValueT = unknown> {
-	value: Value<ValueT>;
+export class BlockCharacter<ValueT = unknown> extends Block {
+	constructor(blocks: Block[], _flags?: BlockFlags) {
+		super(blocks, 'character');
+	}
 }

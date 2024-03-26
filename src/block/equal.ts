@@ -23,15 +23,15 @@
  *
  */
 
-import {BlockRoot} from '../statement';
+import {Statement} from '..';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
 
 /**
  * @category Statement Blocks
  */
-export class BlockEqual<ValueT> extends Block<ValueT, unknown> {
-	constructor(root: BlockRoot<ValueT>, _flags?: BlockFlags) {
-		super('equal', root);
+export class BlockEqual<ValueT = unknown> extends Block<Statement> {
+	constructor(stmt: Statement, _flags?: BlockFlags) {
+		super(stmt, 'equal');
 	}
 }

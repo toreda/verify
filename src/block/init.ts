@@ -23,8 +23,8 @@
  *
  */
 
-import {Statement} from '../statement';
-import {Value} from '../value';
+import {Statement} from '../statement___';
+import {Value} from '../_value';
 import {type BlockType} from './type';
 
 /**

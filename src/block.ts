@@ -23,25 +23,25 @@
  *
  */
 
-import {Statement} from './statement';
 import type {BlockType} from './block/type';
-import {BlockInit} from './block/init';
 
 /**
  * Base node extended by all nodes in a Rule Chain.
  *
  * @category Statement Blocks
  */
-export abstract class Block<ValueT = unknown, ParamT = unknown>{
+export abstract class Block<StatementT> {
 	public readonly blockType: BlockType;
-	private readonly parentStmt: Statement<ValueT>;
+	private readonly stmt: StatementT;
 
-	constructor(init: BlockInit<ValueT>) {
-		this.blockType = init.blockType;
-		this.parentStmt = init.parentStmt;
+	constructor(stmt: StatementT, blockType: BlockType) {
+		this.blockType = blockType;
+		this.stmt = stmt;
 	}
 
 	public reset(): void {
 		// n/t
+
+		//this.stmt.reset();
 	}
 }

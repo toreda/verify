@@ -23,11 +23,11 @@
  *
  */
 
-import {BlockRoot} from '../../statement';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../func';
 import type {BlockFlags} from '../../block/flags';
 import {BlockLink} from '../../block/link';
+import {Statement} from '../../statement';
 
 /**
  *
@@ -35,9 +35,9 @@ import {BlockLink} from '../../block/link';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherTypeMk<ValueT>(root: BlockRoot<ValueT>, flags?: BlockFlags): Matcher<ValueT, string> {
+export function matcherTypeMk<ValueT>(stmt: Statement, flags?: BlockFlags): Matcher<ValueT, string> {
 	return (typeName: string): BlockLink<ValueT> => {
-		const link = new BlockLink<ValueT>(root);
+		const link = new BlockLink<ValueT>(blocks);
 
 		const fn: MatcherFunc<ValueT, string> = async (value?: ValueT | null): Promise<boolean> => {
 			if (typeName === 'array') {

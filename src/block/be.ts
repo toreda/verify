@@ -23,27 +23,27 @@
  *
  */
 
-import {BlockRoot} from '../statement';
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
 import {matcherLessThanMk} from '../matcher/less/than/mk';
+import {Statement} from '../statement';
 
 /**
  * @category Statement Blocks
  */
-export class BlockBe<ValueT> extends Block<ValueT, unknown> {
+export class BlockBe<ValueT> extends Block<Statement> {
 	public readonly lessThan: Matcher<ValueT, number>;
 	public readonly greaterThan: Matcher<ValueT, number>;
 	public readonly equalTo: Matcher<ValueT, number>;
 
-	constructor(root: BlockRoot<ValueT>, flags?: BlockFlags) {
-		super('be', root);
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'be');
 
-		this.lessThan = matcherLessThanMk<ValueT>(root, flags);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(root, flags);
-		this.equalTo = matcherEqualToMk<ValueT>(root, flags);
+		this.lessThan = matcherLessThanMk<ValueT>(stmt, flags);
+		this.greaterThan = matcherGreaterThanMk<ValueT>(stmt, flags);
+		this.equalTo = matcherEqualToMk<ValueT>(stmt, flags);
 	}
 }

@@ -23,7 +23,7 @@
  *
  */
 
-import {BlockRoot} from '../statement';
+import {BlockRoot} from '../statement___';
 import type {Matcher} from '../matcher';
 import type {BlockFlags} from './flags';
 import {matcherDivisibleMk} from '../matcher/divisible/mk';

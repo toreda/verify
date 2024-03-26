@@ -1,16 +1,18 @@
 import {Ruleset} from '../src/ruleset';
-import {Statement} from '../src/statement';
+import {target} from '../src/target';
 
 (async (): Promise<void> => {
 	const ruleset = new Ruleset<string>();
 
-	const statement = new Statement<string>({
-		value: ''
-	});
+	//const statement = new Statement<string>(value);
+	// ruleset.value().must
 
-	//ruleset.statements.add(statement.has.length.equalTo(1));
+	//ruleset.statements.add(value.must.length.equalTo(1));
 
-	const result = await ruleset.execute('22');
+	//const result = await statement.execute('22');
 
-	console.debug(`RESULT: ${result.data}`);
+	ruleset.add(target.must.contain.character('something'));
+
+	const result = await ruleset.execute('aaaa');
+	//console.debug(`RESULT: ${result.data}`);
 })();

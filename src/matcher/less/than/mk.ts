@@ -23,13 +23,13 @@
  *
  */
 
-import {BlockRoot} from '../../../statement';
 import type {LessThanArgs} from '../../../less/than/args';
 import type {Matcher} from '../../../matcher';
 import type {MatcherFunc} from '../../../matcher/func';
 import type {BlockFlags} from '../../../block/flags';
 import {BlockLink} from '../../../block/link';
 import {lessThan} from '../../../less/than';
+import {Statement} from '../../../statement';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -38,14 +38,11 @@ import {lessThan} from '../../../less/than';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherLessThanMk<ValueT>(
-	root: BlockRoot<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
+export function matcherLessThanMk<ValueT>(stmt: Statement, flags?: BlockFlags): Matcher<ValueT, number> {
 	return (right: number): BlockLink<ValueT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(root);
+		const link = new BlockLink<ValueT>(stmt);
 
 		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
 			value?: ValueT | null,
@@ -54,7 +51,7 @@ export function matcherLessThanMk<ValueT>(
 			return lessThan(value, params?.right);
 		};
 
-		root.addMatcher<LessThanArgs>({
+		stmt.addMatcher<LessThanArgs>({
 			fn: fn,
 			params: {
 				right: right

@@ -23,15 +23,19 @@
  *
  */
 
-import {BlockRoot} from '../statement';
 import {Block} from '../block';
+import {Statement} from '../statement';
+import {BlockCharacter} from './character';
 import type {BlockFlags} from './flags';
 
 /**
  * @category Statement Blocks
  */
-export class BlockContains<ValueT> extends Block<ValueT, unknown> {
-	constructor(root: BlockRoot<ValueT>, _flags?: BlockFlags) {
-		super('contains', root);
+export class BlockContains<ValueT = unknown> extends Block<Statement> {
+	public character: BlockCharacter<ValueT>;
+
+	constructor(stmt: Statement, flags?: BlockFlags) {
+		super(stmt, 'contains');
+		this.character = new BlockCharacter<ValueT>(stmt, flags);
 	}
 }

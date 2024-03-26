@@ -23,7 +23,7 @@
  *
  */
 
-import {BlockRoot} from '../../statement';
+import {Statement} from '../../statement___';
 import type {Matcher} from '../../matcher';
 import type {MatcherFunc} from '../../matcher/func';
 import type {BlockFlags} from '../../block/flags';
@@ -39,19 +39,19 @@ import {divisible} from '../../divisible';
  * @category Matcher Predicate Factories
  */
 export function matcherDivisibleMk<ValueT>(
-	root: BlockRoot<ValueT>,
+	parentStmt: Statement<ValueT>,
 	flags?: BlockFlags
 ): Matcher<ValueT, number> {
 	return (by: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(root);
+		const link = new BlockLink<ValueT>(parentStmt);
 
 		const fn: MatcherFunc<ValueT, number> = async (value?: ValueT | null): Promise<boolean> => {
 			return divisible(value, by);
 		};
 
-		root.addMatcher<number>({
+		parentStmt.addBlock<number>({
 			fn: fn,
 			flags: flags
 		});

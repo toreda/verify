@@ -30,8 +30,7 @@ import {type Predicate} from '../../../predicate';
 import {type BlockInit} from '../../../block/init';
 
 /**
- * @param root		Root block at the start of every statement.
- * @param flags		Optional flags to applied when executing node.
+ * @param init
  * @returns
  *
  * @category Matcher Predicate Factories

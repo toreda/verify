@@ -30,7 +30,7 @@ import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
+ * @param init
  * @returns
  *
  * @category Matcher Predicate Factories

@@ -23,6 +23,7 @@
  *
  */
 
+import {type BlockModType} from './block/mod/type';
 import type {BlockType} from './block/type';
 
 /**
@@ -33,11 +34,11 @@ import type {BlockType} from './block/type';
 export abstract class Block<StatementT> {
 	public readonly blockType: BlockType;
 	public readonly stmt: StatementT;
+	public readonly modType: BlockModType;
 
-	constructor(stmt: StatementT, blockType: BlockType) {
+	constructor(stmt: StatementT, blockType: BlockType, modType?: BlockModType) {
 		this.blockType = blockType;
 		this.stmt = stmt;
+		this.modType = modType !== undefined ? modType : 'none';
 	}
-
-	public reset(): void {}
 }

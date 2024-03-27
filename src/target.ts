@@ -23,8 +23,11 @@
  *
  */
 
+import {BlockContains} from './block/contains';
 import {BlockHave} from './block/have';
 import {type BlockInit} from './block/init';
+import {BlockIs} from './block/is';
+import {BlockMatch} from './block/match';
 import {BlockMust} from './block/must';
 import {Rule} from './rule';
 import {Statement} from './statement';
@@ -37,18 +40,21 @@ export const target = new Proxy(new Rule(), {
 			stmt: stmt
 		};
 		switch (prop) {
+			case 'contains':
+				target.add(stmt);
+				return new BlockContains(init);
 			case 'must':
 				target.add(stmt);
 				return new BlockMust(init);
-			/* 			case 'matches':
-				target.add(stmt);
-				return new BlockMatch(stmt); */
 			case 'has':
 				target.add(stmt);
 				return new BlockHave(init);
+			case 'matches':
+				target.add(stmt);
+				return new BlockMatch(init);
 			case 'is':
 				target.add(stmt);
-				return new BlockMust(init);
+				return new BlockIs(init);
 			default:
 				return target[prop];
 		}

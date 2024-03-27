@@ -34,7 +34,7 @@ import {errorMkCode} from '../../error/mk/code';
  * Uses default rules when not provided.
  * @param id
  * @param value
- * @param rules
+ * @param flags
  * @returns
  *
  * @category Check - Core

@@ -29,15 +29,19 @@ import {BlockIs} from './block/is';
 import {BlockMust} from './block/must';
 import {Statement} from './statement';
 import {BlockInit} from './block/init';
+import {BlockMatch} from './block/match';
+import {BlockContains} from './block/contains';
 
 /**
  * @category Rules
  */
 export class Rule {
 	public readonly statements: Statement[];
+	public readonly contains: BlockContains;
 	public readonly must: BlockMust;
 	public readonly is: BlockIs;
 	public readonly has: BlockHave;
+	public readonly matches: BlockMatch;
 
 	constructor() {
 		const stmt = new Statement();
@@ -46,7 +50,9 @@ export class Rule {
 		};
 		this.must = new BlockMust(init);
 		this.is = new BlockIs(init);
+		this.matches = new BlockMatch(init);
 		this.has = new BlockHave(init);
+		this.contains = new BlockContains(init);
 		this.statements = [];
 		this.bindListeners();
 	}

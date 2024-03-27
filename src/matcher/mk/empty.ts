@@ -30,10 +30,9 @@ import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
 
 /**
+ * @param			init
  *
- * @param flags		Optional flags
- *
- * @category Matcher Predicate Factories
+ * @category 		Matcher Predicate Factories
  */
 export function matcherMkEmpty(init: BlockInit): MatcherFactory<unknown | unknown[], BlockLink> {
 	return () => {

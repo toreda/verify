@@ -29,8 +29,6 @@ import {isArray} from '../../is/array';
 /**
  * Determine whether value is an array and if so, whether it's empty.
  * @param value
- * @param flags
- * @returns
  *
  * @category Check - Collections
  */

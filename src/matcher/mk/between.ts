@@ -30,11 +30,9 @@ import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
 
 /**
- * @param root		Root Block at the start of every statement.
- * @param flags		Optional flags which transform the block or statement result.
- * @returns
+ * @param init
  *
- * @category Matcher Predicate Factories`
+ * @category 		Matcher Predicate Factories
  */
 export function matcherMkBetween(init: BlockInit): MatcherFactory<number, BlockLink> {
 	return (left: number, right: number) => {

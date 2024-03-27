@@ -31,8 +31,7 @@ import {type MatcherFactory} from '../factory';
 
 /**
  * Factory function producing `divisible` matcher predicate functions used in ruleset chains.
- * @param 		root	Root node in chain.
- * @param 		flags	Optional flags applied to this node.
+ * @param init
  * @returns
  *
  * @category Matcher Predicate Factories

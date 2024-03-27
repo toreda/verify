@@ -7,7 +7,9 @@ import {target} from '../src/target';
 	ruleset.add(
 		target.must.be.equalTo(12),
 		target.must.be.greaterThan(10),
-		target.must.contain.oneOf([10, 11, 13])
+		target.must.contain.oneOf([10, 11, 13]),
+		target.is.greaterThan(9),
+		target.is.greaterThan(11)
 	);
 
 	console.debug(`Rules: ${ruleset.rules.length}`);

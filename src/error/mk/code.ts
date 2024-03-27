@@ -29,13 +29,10 @@ import {errorCodeToken} from '../code/token';
 
 /**
  * Create error code with error path details.
- * @param entity    Root of the error entity identified by this error code.
- *                		Example: 'fridge' is the root For code 'fridge::door::light|burned_out'
- * @param path    	One or more path components identifying the error origin in entity.
- *						Example: 'door::light' is the path in code 'fridge::door::light|burned_out'
- *
- * @param code    Error code originating in
- *
+ * @param code
+ * @param root
+ * @param path
+ * @param opts
  * @category Error Handling
  */
 export function errorMkCode<CodeT extends string, RootT extends string, PathT = string | unknown>(

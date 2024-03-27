@@ -25,10 +25,8 @@
 
 /**
  * Determine if value is a built-in JavaScript bigint type.
- * @param caller
- * @returns
  *
- * @category		Validators – Numbers
+ * @category			Validators – Numbers
  */
 export function isBigInt(value: unknown): value is bigint {
 	return typeof value === 'bigint';

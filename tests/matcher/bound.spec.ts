@@ -1,19 +1,19 @@
 import {MatcherBound} from '../../src/matcher/bound';
-import {MatcherFunc} from '../../src/matcher/func';
+import {Predicate} from '../../src/predicate';
 
 const EMPTY_STRING = '';
 
 describe('MatcherBound', () => {
-	let instance: MatcherBound<string, boolean>;
-	let matcherFn: MatcherFunc<string, boolean>;
+	let instance: MatcherBound<string>;
+	let predicate: Predicate<string>;
 
 	beforeAll(() => {
-		matcherFn = async (value?: string | null): Promise<boolean> => {
+		predicate = async (value?: string | null): Promise<boolean> => {
 			return value === 'STRING';
 		};
 
-		instance = new MatcherBound<string, boolean>({
-			fn: matcherFn
+		instance = new MatcherBound<string>({
+			fn: predicate
 		});
 	});
 
@@ -23,34 +23,33 @@ describe('MatcherBound', () => {
 
 	describe('Constructor', () => {
 		it(`should set fn property to the provided call.fn arg`, () => {
-			const fn = jest.fn().mockImplementation(() => {
+			const func = jest.fn().mockImplementation(() => {
 				return true;
 			});
 
 			const custom = new MatcherBound({
-				fn: fn
+				fn: func
 			});
 
-			expect(custom.fn).toStrictEqual(fn);
+			expect(custom.predicate).toStrictEqual(func);
 		});
 
-		it(`should set params property to the provided call.fn arg`, () => {
-			const fn = jest.fn().mockImplementation(() => {
+		it(`should set flags property to the provided call.fn arg`, () => {
+			const func = jest.fn().mockImplementation(() => {
 				return true;
 			});
 
-			const params = {
+			const flags = {
 				a: 'aaaa',
 				b: 4719714,
 				c: 88819187
 			};
 
 			const custom = new MatcherBound({
-				fn: fn,
-				params: params
+				fn: func
 			});
 
-			expect(custom.params).toStrictEqual(params);
+			expect(custom.flags).toStrictEqual(flags);
 		});
 	});
 
@@ -142,7 +141,7 @@ describe('MatcherBound', () => {
 				});
 				const custom = new MatcherBound({
 					fn: fn,
-					params: {}
+					flags: {}
 				});
 
 				const result = await custom.execute('aaa');
@@ -150,18 +149,19 @@ describe('MatcherBound', () => {
 				expect(result.errorCode()).toBe('exception');
 			});
 
-			it(`should fail with 'validation_fail' error code when matcher returns false`, async () => {
-				const fn = jest.fn().mockImplementation(() => {
+			it(`should return false when matcher suceeds but returns false`, async () => {
+				const func = jest.fn().mockImplementation(() => {
 					return false;
 				});
 				const custom = new MatcherBound({
-					fn: fn,
-					params: {}
+					fn: func,
+					flags: {}
 				});
 
 				const result = await custom.execute('aaa');
-				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe('validation_fail');
+				expect(result.ok()).toBe(true);
+				expect(result.data).toBe(false);
+				expect(result.errorCode()).toBe(EMPTY_STRING);
 			});
 
 			it(`should succeed' when matcher returns true`, async () => {
@@ -170,7 +170,7 @@ describe('MatcherBound', () => {
 				});
 				const custom = new MatcherBound({
 					fn: fn,
-					params: {}
+					flags: {}
 				});
 
 				const result = await custom.execute('aaa');

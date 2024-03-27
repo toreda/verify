@@ -31,12 +31,8 @@ import {Statement} from '../../statement';
  * @category Statement Blocks
  */
 export class BlockModNot<ParentBlockT extends Block<Statement>> extends Block<Statement> {
-	private readonly parent: ParentBlockT;
-
 	constructor(parent: ParentBlockT, stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'not');
-
-		this.parent = parent;
 
 		const modFlags: BlockFlags = {
 			...flags,

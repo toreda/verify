@@ -26,7 +26,7 @@
 /**
  * Identifies the type and role of each validation chain node.
  *
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export type BlockType =
 	| 'be'

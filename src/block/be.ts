@@ -23,27 +23,37 @@
  *
  */
 
-import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
-import {matcherEqualToMk} from '../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/mk/less/than';
+import {matcherMkEqual} from '../matcher/mk/equal';
+import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
+import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
+import {type MatcherFactory} from '../matcher/factory';
+import {BlockLink} from './link';
 
 /**
  * @category Statement Blocks
  */
-export class BlockBe<ValueT = unknown> extends Block<Statement<ValueT>> {
-	public readonly lessThan: Matcher<ValueT, number>;
-	public readonly greaterThan: Matcher<ValueT, number>;
-	public readonly equalTo: Matcher<ValueT, number>;
+export class BlockBe extends Block<Statement> {
+	public readonly lessThan: MatcherFactory<number, BlockLink>;
+	public readonly greaterThan: MatcherFactory<number, BlockLink>;
+	public readonly equalTo: MatcherFactory<number, BlockLink>;
 
-	constructor(stmt: Statement<ValueT>, flags?: BlockFlags) {
+	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'be');
 
-		this.lessThan = matcherLessThanMk<ValueT>(stmt, flags);
-		this.greaterThan = matcherGreaterThanMk<ValueT>(stmt, flags);
-		this.equalTo = matcherEqualToMk<ValueT>(stmt, flags);
+		this.lessThan = matcherMkLessThan({
+			stmt: stmt,
+			flags: flags
+		});
+		this.greaterThan = matcherMkGreaterThan({
+			stmt: stmt,
+			flags: flags
+		});
+		this.equalTo = matcherMkEqual({
+			stmt: stmt,
+			flags: flags
+		});
 	}
 }

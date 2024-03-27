@@ -23,37 +23,59 @@
  *
  */
 
-import type {Matcher} from '../matcher';
 import type {BlockFlags} from './flags';
-import {matcherDivisibleMk} from '../matcher/mk/divisible';
+import {matcherMkDivisible} from '../matcher/mk/divisible';
 import {matcherEmptyMk} from '../matcher/empty/mk';
-import {matcherEqualToMk} from '../matcher/equal/to/mk';
-import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/mk/less/than';
-import {matcherTypeMk} from '../matcher/mk/type';
 import {Statement} from '../statement';
 import {Block} from '../block';
+import {MatcherFactory} from '../matcher/factory';
+import {BlockLink} from './link';
+import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
+import {matcherMkLessThan} from '../matcher/mk/less/than';
+import {matcherMkEqual} from '../matcher/mk/equal';
+import {matcherMkType} from '../matcher/mk/type';
 
 /**
  * @category Statement Blocks
  */
 export class BlockIs extends Block<Statement> {
-	public readonly lessThan: Matcher<number>;
-	public readonly greaterThan: Matcher<number>;
-	public readonly equalTo: Matcher<number>;
-	public readonly empty: Matcher<never>;
-	public readonly notEmpty: Matcher<never>;
-	public readonly divisibleBy: Matcher<number>;
-	public readonly type: Matcher<string>;
+	public readonly lessThan: MatcherFactory<number, BlockLink>;
+	public readonly greaterThan: MatcherFactory<number, BlockLink>;
+	public readonly equalTo: MatcherFactory<number, BlockLink>;
+	public readonly empty: MatcherFactory<never, BlockLink>;
+	public readonly notEmpty: MatcherFactory<never, BlockLink>;
+	public readonly divisibleBy: MatcherFactory<number, BlockLink>;
+	public readonly type: MatcherFactory<string, BlockLink>;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'is');
-		this.empty = matcherEmptyMk(stmt, flags);
-		this.notEmpty = matcherEmptyMk(stmt, flags);
-		this.lessThan = matcherLessThanMk(stmt, flags);
-		this.greaterThan = matcherGreaterThanMk(stmt, flags);
-		this.equalTo = matcherEqualToMk(stmt, flags);
-		this.divisibleBy = matcherDivisibleMk(stmt, flags);
-		this.type = matcherTypeMk(stmt, flags);
+		this.empty = matcherEmptyMk({
+			stmt: stmt,
+			flags: flags
+		});
+		this.notEmpty = matcherEmptyMk({
+			stmt: stmt,
+			flags: flags
+		});
+		this.lessThan = matcherMkLessThan({
+			stmt: stmt,
+			flags: flags
+		});
+		this.greaterThan = matcherMkGreaterThan({
+			stmt: stmt,
+			flags: flags
+		});
+		this.equalTo = matcherMkEqual({
+			stmt: stmt,
+			flags: flags
+		});
+		this.divisibleBy = matcherMkDivisible({
+			stmt: stmt,
+			flags: flags
+		});
+		this.type = matcherMkType({
+			stmt: stmt,
+			flags: flags
+		});
 	}
 }

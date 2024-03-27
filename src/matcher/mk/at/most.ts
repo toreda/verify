@@ -28,6 +28,7 @@ import {lessThan} from '../../../less/than';
 import {equalTo} from '../../../equal/to';
 import {type MatcherInit} from '../../init';
 import {type Predicate} from '../../../predicate';
+import {type MatcherFactory} from '../../factory';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.

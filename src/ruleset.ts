@@ -1,6 +1,8 @@
 import {Fate} from '@toreda/fate';
 import {type RulesetInit} from './ruleset/init';
 import {Rule} from './rule';
+import {Block} from './block';
+import {Statement} from './statement';
 
 /**
  * @category Rulesets
@@ -18,17 +20,26 @@ export class Ruleset {
 		this.execute = this.execute.bind(this);
 	}
 
-	public add(...rules: Rule[]): boolean {
-		if (!Array.isArray(rules)) {
+	public add(...blocks: Block<Statement>[]): boolean {
+		if (!Array.isArray(blocks)) {
 			return false;
 		}
 
-		for (const rule of rules) {
-			const result = this.addRule(rule);
+		const rule = new Rule();
+
+		for (const block of blocks) {
+			const result = this.addStatement(block.stmt);
 			if (!result) {
 				return false;
 			}
 		}
+
+		this.addRule(rule);
+		return true;
+	}
+
+	public addStatement(stmt: Statement): boolean {
+		console.info('stmt: @@@');
 
 		return true;
 	}

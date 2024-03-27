@@ -32,7 +32,7 @@ import type {BlockType} from './block/type';
  */
 export abstract class Block<StatementT> {
 	public readonly blockType: BlockType;
-	private readonly stmt: StatementT;
+	public readonly stmt: StatementT;
 
 	constructor(stmt: StatementT, blockType: BlockType) {
 		this.blockType = blockType;

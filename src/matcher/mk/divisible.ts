@@ -23,12 +23,11 @@
  *
  */
 
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {BlockFlags} from '../../block/flags';
 import {BlockLink} from '../../block/link';
 import {divisible} from '../../divisible';
-import {Statement} from '../../statement';
+import {type Predicate} from '../../predicate';
+import {type MatcherFactory} from '../factory';
+import {type MatcherInit} from '../init';
 
 /**
  * Factory function producing `divisible` matcher predicate functions used in ruleset chains.
@@ -38,19 +37,19 @@ import {Statement} from '../../statement';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkDivisible(stmt: Statement, flags?: BlockFlags): Matcher<number> {
+export function matcherMkDivisible(init: MatcherInit): MatcherFactory<number, BlockLink> {
 	return (by: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(stmt);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<number> = async (value?: number | null): Promise<boolean> => {
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return divisible(value, by);
 		};
 
-		stmt.addMatcher<number>({
-			fn: fn,
-			flags: flags
+		init.stmt.addMatcher<number>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

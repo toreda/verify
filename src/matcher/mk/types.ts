@@ -23,20 +23,20 @@
  *
  */
 
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {BlockFlags} from '../../block/flags';
 import {BlockLink} from '../../block/link';
-import {Statement} from '../../statement';
+import {MatcherInit} from '../init';
+import {MatcherFactory} from '../factory';
+import {Predicate} from '../../predicate';
 
 /**
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkTypes(stmt: Statement, flags?: BlockFlags): Matcher<string[]> {
+export function matcherMkTypes(init: MatcherInit): MatcherFactory<string[], BlockLink> {
 	return (typeNames: string[]): BlockLink => {
-		const link = new BlockLink(stmt);
-		const fn: MatcherFunc<string[]> = async (value?: ValueT | null): Promise<boolean> => {
+		const link = new BlockLink(init.stmt);
+
+		const func: Predicate<string> = async (value?: string | null): Promise<boolean> => {
 			if (!Array.isArray(typeNames)) {
 				return false;
 			}
@@ -54,9 +54,8 @@ export function matcherMkTypes(stmt: Statement, flags?: BlockFlags): Matcher<str
 			return false;
 		};
 
-		stmt.addMatcher<string[]>({
-			fn: fn,
-			flags: flags
+		init.stmt.addMatcher<string>({
+			fn: func
 		});
 
 		return link;

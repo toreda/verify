@@ -23,15 +23,35 @@
  *
  */
 
-import {Statement} from '..';
-import {Block} from '../block';
-import type {BlockFlags} from './flags';
+import {BlockLink} from '../../../block/link';
+import {greaterThan} from '../../../greater/than';
+import {type MatcherInit} from '../../init';
+import {type MatcherFactory} from '../../factory';
+import {type Predicate} from '../../../predicate';
 
 /**
- * @category Statement Blocks
+ * @param root		Root block at the start of every statement.
+ * @param flags		Optional flags to applied when executing node.
+ * @returns
+ *
+ * @category Matcher Predicate Factories
  */
-export class BlockEqual extends Block<Statement> {
-	constructor(stmt: Statement, _flags?: BlockFlags) {
-		super(stmt, 'equal');
-	}
+
+export function matcherMkGreaterThan(init: MatcherInit): MatcherFactory<number, BlockLink> {
+	return (right: number) => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new BlockLink(init.stmt);
+
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+			return greaterThan(value, right);
+		};
+
+		init.stmt.addMatcher<number, number>({
+			fn: func,
+			flags: init.flags
+		});
+
+		return link;
+	};
 }

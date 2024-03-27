@@ -25,20 +25,20 @@
 
 import {Fate} from '@toreda/fate';
 import type {MatcherCall} from './call';
-import type {MatcherFunc} from './func';
 import type {BlockFlags} from '../block/flags';
 import {Primitive} from '@toreda/types';
+import {type Predicate} from '../predicate';
 
 /**
  * @category Matcher Predicates
  */
 export class MatcherBound<InputT> {
-	public readonly fn: MatcherFunc<InputT, ParamT>;
+	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
 	public readonly callArgs: Map<string, Primitive>;
 
-	constructor(call: MatcherCall<InputT, ParamT>) {
-		this.fn = call.fn;
+	constructor(call: MatcherCall<InputT>) {
+		this.predicate = call.fn;
 		this.callArgs = new Map<string, Primitive>();
 		this.flags = this.mkFlags(call?.flags);
 		//this.params = matcherMkParams<ParamT>(call?.params);
@@ -75,19 +75,21 @@ export class MatcherBound<InputT> {
 		return result;
 	}
 
-	public async execute(value?: InputT | null): Promise<Fate<never>> {
-		const fate = new Fate<never>();
+	public async execute(value?: InputT | null): Promise<Fate<boolean>> {
+		const fate = new Fate<boolean>();
 
 		try {
-			const fnResult = await this.fn(value, this.params);
+			const fnResult = await this.predicate(value);
+			console.debug(`predicate result: ${fnResult}`);
 			const result = this.applyResultModifiers(fnResult);
+			console.debug(`predicate result (mods applied): ${result}`);
 
-			if (result === true) {
-				fate.success(true);
-			} else {
-				fate.setErrorCode(`validation_fail`);
-			}
-		} catch (e) {
+			fate.data = result;
+			fate.setSuccess(true);
+		} catch (e: unknown) {
+			fate.data = false;
+			const msg = e instanceof Error ? e.message : 'nonerr_type';
+			console.error(`matcher.execute exception: ${msg}`);
 			fate.error(e);
 			fate.setErrorCode('exception');
 		}

@@ -24,11 +24,11 @@
  */
 
 import {Block} from '../block';
-import type {BlockFlags} from './flags';
 import {matcherMkType} from '../matcher/mk/type';
 import {matcherMkTypes} from '../matcher/mk/types';
 import {Statement} from '../statement';
-import {MatcherFactory} from '../matcher/factory';
+import {type MatcherFactory} from '../matcher/factory';
+import {type BlockInit} from './init';
 
 /**
  * @category Statement Blocks
@@ -37,13 +37,10 @@ export class BlockMatch extends Block<Statement> {
 	public readonly type: MatcherFactory<string, Block<Statement>>;
 	public readonly atLeastOneType: MatcherFactory<string[], Block<Statement>>;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'matcher');
+	constructor(init: BlockInit) {
+		super(init.stmt, 'matcher');
 
-		this.type = matcherMkType(stmt, flags);
-		this.atLeastOneType = matcherMkTypes({
-			stmt: stmt,
-			flags: flags
-		});
+		this.type = matcherMkType(init);
+		this.atLeastOneType = matcherMkTypes(init);
 	}
 }

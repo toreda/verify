@@ -1,5 +1,4 @@
 import {Fate} from '@toreda/fate';
-import {type RulesetInit} from './ruleset/init';
 import {Rule} from './rule';
 import {Block} from './block';
 import {Statement} from './statement';
@@ -10,7 +9,7 @@ import {Statement} from './statement';
 export class Ruleset {
 	public readonly rules: Rule[];
 
-	constructor(_init?: RulesetInit) {
+	constructor() {
 		this.rules = [];
 
 		this.bindListeners();
@@ -28,19 +27,10 @@ export class Ruleset {
 		const rule = new Rule();
 
 		for (const block of blocks) {
-			const result = this.addStatement(block.stmt);
-			if (!result) {
-				return false;
-			}
+			rule.add(block.stmt);
 		}
 
 		this.addRule(rule);
-		return true;
-	}
-
-	public addStatement(stmt: Statement): boolean {
-		console.info('stmt: @@@');
-
 		return true;
 	}
 
@@ -57,12 +47,30 @@ export class Ruleset {
 	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<never>> {
 		const result = new Fate<never>();
 
+		let successful = 0;
+		const ruleCount = this.rules.length;
+
 		for (const rule of this.rules) {
 			try {
 				const ruleResult = await rule.execute<ValueT>(value);
+
+				if (ruleResult.ok()) {
+					successful++;
+				}
 			} catch (e: unknown) {
+				const msg = e instanceof Error ? e.message : 'unknown_err_type';
+				console.error(`Ruleset execute exception: ${msg}.`);
 				result.setErrorCode('exception');
 			}
+		}
+
+		const failed = ruleCount - successful;
+		if (successful === ruleCount) {
+			console.debug(`${successful} of ${ruleCount} rules passed.`);
+			result.setSuccess(true);
+		} else {
+			console.error(`${failed} of ${ruleCount} rules failed.`);
+			result.setErrorCode(`rules_failed:${failed} of ${ruleCount}`);
 		}
 
 		return result;

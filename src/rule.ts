@@ -28,6 +28,7 @@ import {BlockHave} from './block/have';
 import {BlockIs} from './block/is';
 import {BlockMust} from './block/must';
 import {Statement} from './statement';
+import {BlockInit} from './block/init';
 
 /**
  * @category Rules
@@ -40,9 +41,12 @@ export class Rule {
 
 	constructor() {
 		const stmt = new Statement();
-		this.must = new BlockMust(stmt);
-		this.is = new BlockIs(stmt);
-		this.has = new BlockHave(stmt);
+		const init: BlockInit = {
+			stmt: stmt
+		};
+		this.must = new BlockMust(init);
+		this.is = new BlockIs(init);
+		this.has = new BlockHave(init);
 		this.statements = [];
 		this.bindListeners();
 	}
@@ -60,17 +64,48 @@ export class Rule {
 		this.statements.push(stmt);
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<never>> {
-		const mainResult = new Fate<never>();
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<boolean>> {
+		const result = new Fate<boolean>();
+		let successful = 0;
+		const stmtCount = this.statements.length;
 
 		try {
 			for (const stmt of this.statements) {
-				const stmtResult = await stmt.execute<ValueT>(value);
+				try {
+					const subResult = await stmt.execute<ValueT>(value);
+					if (!subResult.ok()) {
+						result.setErrorCode(`stmt_exception:${subResult.errorCode()}`);
+						break;
+					}
+
+					if (subResult.data === true) {
+						successful++;
+					}
+				} catch (e: unknown) {
+					const msg = e instanceof Error ? e.message : 'unknown_err_type';
+					console.error(`Ruleset execute exception: ${msg}.`);
+					result.setErrorCode('exception');
+				}
 			}
 		} catch (e: unknown) {
-			mainResult.setErrorCode('exception');
+			const msg = e instanceof Error ? e.message : 'unknown_err_type';
+			console.error(`Ruleset execute exception: ${msg}.`);
+			result.setErrorCode('exception');
 		}
 
-		return mainResult;
+		if (!result.errorCode()) {
+			result.setSuccess(true);
+		}
+
+		const failed = stmtCount - successful;
+		if (successful === stmtCount) {
+			console.debug(`${successful} of ${stmtCount} statements passed.`);
+			result.data = true;
+		} else {
+			result.data = false;
+			console.error(`${failed} of ${stmtCount} statements did not pass.`);
+		}
+
+		return result;
 	}
 }

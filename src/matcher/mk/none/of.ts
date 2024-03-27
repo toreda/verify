@@ -24,10 +24,10 @@
  */
 
 import {BlockLink} from '../../../block/link';
-import {MatcherInit} from '../../init';
-import {MatcherFactory} from '../../factory';
-import {Primitive} from '@toreda/types';
-import {Predicate} from '../../../predicate';
+import {type MatcherFactory} from '../../factory';
+import {type Primitive} from '@toreda/types';
+import {type Predicate} from '../../../predicate';
+import {type BlockInit} from '../../../block/init';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -36,11 +36,11 @@ import {Predicate} from '../../../predicate';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkNoneOf(init: MatcherInit): MatcherFactory<Primitive[], BlockLink> {
+export function matcherMkNoneOf(init: BlockInit): MatcherFactory<Primitive[], BlockLink> {
 	return (right: Primitive[]): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<unknown> = async (value?: unknown | null): Promise<boolean> => {
 			if (!Array.isArray(right)) {

@@ -26,20 +26,20 @@
 import {Block} from '../block';
 import {Statement} from '../statement';
 import {BlockAnd} from './and';
-import type {BlockFlags} from './flags';
+import {type BlockInit} from './init';
 
 /**
  * Connects 2 or more otherwise independent predicate statements into one statement
  * where all matcher predicates must return true for the entire statement to be true.
  * @example `has.length(1).and.is.type('string')
  *
- * @category Rule Chains
+ * @category Rule Blocks
  */
 export class BlockLink extends Block<Statement> {
 	public readonly and: BlockAnd;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'link');
-		this.and = new BlockAnd(stmt, flags);
+	constructor(init: BlockInit) {
+		super(init.stmt, 'link');
+		this.and = new BlockAnd(init);
 	}
 }

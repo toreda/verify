@@ -26,9 +26,9 @@
 import {BlockLink} from '../../../block/link';
 import {lessThan} from '../../../less/than';
 import {equalTo} from '../../../equal/to';
-import {type MatcherInit} from '../../init';
 import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
+import {type BlockInit} from '../../../block/init';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -37,11 +37,11 @@ import {type MatcherFactory} from '../../factory';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkAtMost(init: MatcherInit): MatcherFactory<number, BlockLink> {
+export function matcherMkAtMost(init: BlockInit): MatcherFactory<number, BlockLink> {
 	return (right: number): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return lessThan(value, right) || equalTo(value, right);

@@ -23,11 +23,11 @@
  *
  */
 
+import {type BlockInit} from '../../block/init';
 import {BlockLink} from '../../block/link';
 import {equalTo} from '../../equal/to';
-import {MatcherInit} from '../init';
-import {Predicate} from '../../predicate';
-import {MatcherFactory} from '../factory';
+import {type Predicate} from '../../predicate';
+import {type MatcherFactory} from '../factory';
 
 /**
  * Expects a validation chain root node and returns an equalTo matcher node.
@@ -35,11 +35,11 @@ import {MatcherFactory} from '../factory';
  *
  * @category Matcher Factories
  */
-export function matcherMkEqual(init: MatcherInit): MatcherFactory<unknown, BlockLink> {
+export function matcherMkEqual(init: BlockInit): MatcherFactory<unknown, BlockLink> {
 	return (right: unknown) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<unknown> = async (value?: unknown | null): Promise<boolean> => {
 			return equalTo(value, right);

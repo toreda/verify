@@ -23,10 +23,20 @@
  *
  */
 
-import type {Matcher} from '../matcher';
-import type {Pattern} from '../pattern';
+import {type BlockInit} from '../../block/init';
+import {BlockLink} from '../../block/link';
+import {type MatcherFactory} from '../factory';
 
 /**
- * @category Matchers
+ *
+ * @param next
+ * @returns
+ *
+ * @category Matcher Predicate Factories
  */
-export type MatcherCharacter<NextT, ValueT> = Matcher<NextT, Pattern<ValueT>>;
+export function matcherMkExactlyTime(init: BlockInit): MatcherFactory<number, BlockLink> {
+	return (value: number): BlockLink => {
+		init.stmt.matcherParams.set('contains.character', value);
+		return next;
+	};
+}

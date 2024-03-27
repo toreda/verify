@@ -24,37 +24,28 @@
  */
 
 import {Block} from '../block';
-import type {BlockFlags} from './flags';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
-import {MatcherFactory} from '../matcher/factory';
+import {type MatcherFactory} from '../matcher/factory';
 import {BlockLink} from './link';
+import {type BlockInit} from './init';
 
 /**
  * Contains matcher predicates for length properties.
  *
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export class BlockLength extends Block<Statement> {
 	public readonly lessThan: MatcherFactory<number, BlockLink>;
 	public readonly greaterThan: MatcherFactory<number, BlockLink>;
 	public readonly equalTo: MatcherFactory<number, BlockLink>;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'length');
-		this.lessThan = matcherMkLessThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.greaterThan = matcherMkGreaterThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.equalTo = matcherMkEqual({
-			stmt: stmt,
-			flags: flags
-		});
+	constructor(init: BlockInit) {
+		super(init.stmt, 'length');
+		this.lessThan = matcherMkLessThan(init);
+		this.greaterThan = matcherMkGreaterThan(init);
+		this.equalTo = matcherMkEqual(init);
 	}
 }

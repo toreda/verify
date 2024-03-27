@@ -25,17 +25,17 @@
 
 import {Block} from '../block';
 import {Statement} from '../statement';
-import type {BlockFlags} from './flags';
+import {BlockInit} from './init';
 import {BlockLength} from './length';
 
 /**
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export class BlockHave extends Block<Statement> {
 	public readonly length: BlockLength;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'have');
-		this.length = new BlockLength(stmt, flags);
+	constructor(init: BlockInit) {
+		super(init.stmt, 'have');
+		this.length = new BlockLength(init);
 	}
 }

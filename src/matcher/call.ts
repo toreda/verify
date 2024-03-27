@@ -23,14 +23,13 @@
  *
  */
 
-import type {MatcherFunc} from './func';
 import type {BlockFlags} from '../block/flags';
+import {Predicate} from '../predicate';
 
 /**
  * @category Matchers
  */
-export interface MatcherCall<InputT = unknown, ParamT = unknown> {
-	fn: MatcherFunc<InputT, ParamT>;
-	params?: ParamT;
+export interface MatcherCall<InputT = unknown> {
+	fn: Predicate<InputT>;
 	flags?: BlockFlags;
 }

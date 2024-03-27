@@ -23,15 +23,13 @@
  *
  */
 
-import {Statement} from '../statement___';
-import {Value} from '../_value';
-import {type BlockType} from './type';
+import {Statement} from '../statement';
+import {type BlockFlags} from './flags';
 
 /**
- * @category Statement Blocks
+ * @category Rule Blocks
  */
-export interface BlockInit<ValueT = unknown> {
-	value: Value<ValueT>;
-	blockType: BlockType;
-	parentStmt: Statement<ValueT>;
+export interface BlockInit {
+	stmt: Statement;
+	flags?: BlockFlags;
 }

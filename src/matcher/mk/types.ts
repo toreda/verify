@@ -24,17 +24,17 @@
  */
 
 import {BlockLink} from '../../block/link';
-import {MatcherInit} from '../init';
-import {MatcherFactory} from '../factory';
-import {Predicate} from '../../predicate';
+import {type MatcherFactory} from '../factory';
+import {type Predicate} from '../../predicate';
+import {type BlockInit} from '../../block/init';
 
 /**
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkTypes(init: MatcherInit): MatcherFactory<string[], BlockLink> {
+export function matcherMkTypes(init: BlockInit): MatcherFactory<string[], BlockLink> {
 	return (typeNames: string[]): BlockLink => {
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<string> = async (value?: string | null): Promise<boolean> => {
 			if (!Array.isArray(typeNames)) {

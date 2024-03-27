@@ -23,10 +23,9 @@
  *
  */
 
-import {Statement} from '../statement';
 import {BlockContains} from './contains';
-import type {BlockFlags} from './flags';
 import {BlockHave} from './have';
+import {type BlockInit} from './init';
 import {BlockIs} from './is';
 
 /**
@@ -46,11 +45,11 @@ export class BlockAnd {
 	 */
 	public readonly has: BlockHave;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		this.is = new BlockIs(stmt, flags);
-		this.contain = new BlockContains(stmt, flags);
+	constructor(init: BlockInit) {
+		this.is = new BlockIs(init);
+		this.contain = new BlockContains(init);
 		this.contains = this.contain;
-		this.have = new BlockHave(stmt, flags);
+		this.have = new BlockHave(init);
 		this.has = this.have;
 	}
 }

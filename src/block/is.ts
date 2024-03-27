@@ -23,9 +23,8 @@
  *
  */
 
-import type {BlockFlags} from './flags';
 import {matcherMkDivisible} from '../matcher/mk/divisible';
-import {matcherEmptyMk} from '../matcher/empty/mk';
+import {matcherMkEmpty} from '../matcher/mk/empty';
 import {Statement} from '../statement';
 import {Block} from '../block';
 import {MatcherFactory} from '../matcher/factory';
@@ -34,6 +33,7 @@ import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkType} from '../matcher/mk/type';
+import {type BlockInit} from './init';
 
 /**
  * @category Statement Blocks
@@ -47,35 +47,14 @@ export class BlockIs extends Block<Statement> {
 	public readonly divisibleBy: MatcherFactory<number, BlockLink>;
 	public readonly type: MatcherFactory<string, BlockLink>;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'is');
-		this.empty = matcherEmptyMk({
-			stmt: stmt,
-			flags: flags
-		});
-		this.notEmpty = matcherEmptyMk({
-			stmt: stmt,
-			flags: flags
-		});
-		this.lessThan = matcherMkLessThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.greaterThan = matcherMkGreaterThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.equalTo = matcherMkEqual({
-			stmt: stmt,
-			flags: flags
-		});
-		this.divisibleBy = matcherMkDivisible({
-			stmt: stmt,
-			flags: flags
-		});
-		this.type = matcherMkType({
-			stmt: stmt,
-			flags: flags
-		});
+	constructor(init: BlockInit) {
+		super(init.stmt, 'is');
+		this.empty = matcherMkEmpty(init);
+		this.notEmpty = matcherMkEmpty(init);
+		this.lessThan = matcherMkLessThan(init);
+		this.greaterThan = matcherMkGreaterThan(init);
+		this.equalTo = matcherMkEqual(init);
+		this.divisibleBy = matcherMkDivisible(init);
+		this.type = matcherMkType(init);
 	}
 }

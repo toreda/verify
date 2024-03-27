@@ -23,18 +23,18 @@
  *
  */
 
-import {Primitive} from '@toreda/types';
+import {type Primitive} from '@toreda/types';
 import {Block} from '../block';
-import {MatcherFactory} from '../matcher/factory';
+import {type MatcherFactory} from '../matcher/factory';
 import {Statement} from '../statement';
 import {BlockBe} from './be';
 import {BlockContains} from './contains';
-import type {BlockFlags} from './flags';
 import {BlockMatch} from './match';
 import {matcherMkEqual} from '../matcher/mk/equal';
+import {type BlockInit} from './init';
 
 /**
- * @category Rule Chains
+ * @category Rule Blocks
  */
 export class BlockMust extends Block<Statement> {
 	public readonly be: BlockBe;
@@ -42,14 +42,11 @@ export class BlockMust extends Block<Statement> {
 	public readonly equal: MatcherFactory<Primitive, Block<Statement>>;
 	public readonly contain: BlockContains;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'must');
-		this.match = new BlockMatch(stmt, flags);
-		this.equal = matcherMkEqual({
-			stmt: stmt,
-			flags: flags
-		});
-		this.be = new BlockBe(stmt, flags);
-		this.contain = new BlockContains(stmt, flags);
+	constructor(init: BlockInit) {
+		super(init.stmt, 'must');
+		this.match = new BlockMatch(init);
+		this.equal = matcherMkEqual(init);
+		this.be = new BlockBe(init);
+		this.contain = new BlockContains(init);
 	}
 }

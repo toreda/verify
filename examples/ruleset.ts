@@ -4,7 +4,11 @@ import {target} from '../src/target';
 (async (): Promise<void> => {
 	const ruleset = new Ruleset();
 
-	ruleset.add(target.must.contain.oneOf(['aaa']), target.must.be.equalTo(12), target.must.equal(14));
+	ruleset.add(
+		target.must.be.equalTo(12),
+		target.must.be.greaterThan(10),
+		target.must.contain.oneOf([10, 11, 13])
+	);
 
 	console.debug(`Rules: ${ruleset.rules.length}`);
 
@@ -20,6 +24,6 @@ import {target} from '../src/target';
 	}
 
 	console.debug(`execute:`);
-	const result = await ruleset.execute('aaaa');
-	console.debug(`RESULT: ${result.data}`);
+	const result = await ruleset.execute(12);
+	console.debug(`Ruleset result: ${result.ok()}`);
 })();

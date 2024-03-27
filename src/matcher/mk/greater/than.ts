@@ -25,9 +25,9 @@
 
 import {BlockLink} from '../../../block/link';
 import {greaterThan} from '../../../greater/than';
-import {type MatcherInit} from '../../init';
 import {type MatcherFactory} from '../../factory';
 import {type Predicate} from '../../../predicate';
+import {type BlockInit} from '../../../block/init';
 
 /**
  * @param root		Root block at the start of every statement.
@@ -37,11 +37,11 @@ import {type Predicate} from '../../../predicate';
  * @category Matcher Predicate Factories
  */
 
-export function matcherMkGreaterThan(init: MatcherInit): MatcherFactory<number, BlockLink> {
+export function matcherMkGreaterThan(init: BlockInit): MatcherFactory<number, BlockLink> {
 	return (right: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return greaterThan(value, right);

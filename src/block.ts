@@ -28,7 +28,7 @@ import type {BlockType} from './block/type';
 /**
  * Base node extended by all nodes in a Rule Chain.
  *
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export abstract class Block<StatementT> {
 	public readonly blockType: BlockType;
@@ -39,8 +39,5 @@ export abstract class Block<StatementT> {
 		this.stmt = stmt;
 	}
 
-	public reset(): void {
-		// n/t
-		//this.stmt.reset();
-	}
+	public reset(): void {}
 }

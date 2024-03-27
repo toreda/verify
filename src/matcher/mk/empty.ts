@@ -23,11 +23,35 @@
  *
  */
 
-import {Value} from '../_value';
+import {BlockLink} from '../../block/link';
+import {empty} from '../../empty';
+import {type MatcherFactory} from '../factory';
+import {type Predicate} from '../../predicate';
+import {type BlockInit} from '../../block/init';
 
 /**
- * @category Statements
+ *
+ * @param flags		Optional flags
+ *
+ * @category Matcher Predicate Factories
  */
-export interface StatementInit<ValueT = unknown> {
-	value: Value<ValueT>;
+export function matcherMkEmpty(init: BlockInit): MatcherFactory<unknown | unknown[], BlockLink> {
+	return () => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new BlockLink(init);
+
+		const func: Predicate<unknown | unknown[]> = async (
+			value?: unknown | unknown[] | null
+		): Promise<boolean> => {
+			return empty(value);
+		};
+
+		init.stmt.addMatcher<never>({
+			fn: func,
+			flags: init.flags
+		});
+
+		return link;
+	};
 }

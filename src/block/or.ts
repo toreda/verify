@@ -25,21 +25,21 @@
 import {Block} from '../block';
 import {Statement} from '../statement';
 import {BlockContains} from './contains';
-import {type BlockFlags} from './flags';
+import {type BlockInit} from './init';
 import {BlockIs} from './is';
 
 /**
  * Links two or more validation chain statements to form a boolean expression.
  *
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export class BlockOr extends Block<Statement> {
 	public readonly contains: BlockContains;
 	public readonly is: BlockIs;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'or');
-		this.is = new BlockIs(stmt, flags);
-		this.contains = new BlockContains(stmt, flags);
+	constructor(init: BlockInit) {
+		super(init.stmt, 'or');
+		this.is = new BlockIs(init);
+		this.contains = new BlockContains(init);
 	}
 }

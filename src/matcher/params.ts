@@ -23,7 +23,7 @@
  *
  */
 
-import {Primitive} from '@toreda/types';
+import {type Primitive} from '@toreda/types';
 
 /**
  * @category Validators – Numbers

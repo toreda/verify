@@ -24,13 +24,13 @@
  */
 
 import {Block} from '../block';
-import type {BlockFlags} from './flags';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
 import {type MatcherFactory} from '../matcher/factory';
 import {BlockLink} from './link';
+import {type BlockInit} from './init';
 
 /**
  * @category Statement Blocks
@@ -40,20 +40,11 @@ export class BlockBe extends Block<Statement> {
 	public readonly greaterThan: MatcherFactory<number, BlockLink>;
 	public readonly equalTo: MatcherFactory<number, BlockLink>;
 
-	constructor(stmt: Statement, flags?: BlockFlags) {
-		super(stmt, 'be');
+	constructor(init: BlockInit) {
+		super(init.stmt, 'be');
 
-		this.lessThan = matcherMkLessThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.greaterThan = matcherMkGreaterThan({
-			stmt: stmt,
-			flags: flags
-		});
-		this.equalTo = matcherMkEqual({
-			stmt: stmt,
-			flags: flags
-		});
+		this.lessThan = matcherMkLessThan(init);
+		this.greaterThan = matcherMkGreaterThan(init);
+		this.equalTo = matcherMkEqual(init);
 	}
 }

@@ -27,7 +27,7 @@ import {BlockLink} from '../../block/link';
 import {between} from '../../between';
 import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
-import {type MatcherInit} from '../init';
+import {type BlockInit} from '../../block/init';
 
 /**
  * @param root		Root Block at the start of every statement.
@@ -36,9 +36,9 @@ import {type MatcherInit} from '../init';
  *
  * @category Matcher Predicate Factories`
  */
-export function matcherMkBetween(init: MatcherInit): MatcherFactory<number, BlockLink> {
+export function matcherMkBetween(init: BlockInit): MatcherFactory<number, BlockLink> {
 	return (left: number, right: number) => {
-		const link = new BlockLink(init.stmt);
+		const link = new BlockLink(init);
 
 		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return between(left, value, right);

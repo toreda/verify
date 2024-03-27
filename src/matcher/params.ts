@@ -23,10 +23,20 @@
  *
  */
 
+import {Primitive} from '@toreda/types';
+
 /**
  * @category Validators – Numbers
  */
-export interface MatcherParams<ParamT> {
-	right: ParamT;
-	invertResult?: boolean;
-}
+/* export interface MatcherParams<BoundaryKeyT = string, BoundaryT = Primitive> {
+	[k: BoundaryKeyT]: BoundaryT;
+	right?: ParamT | null;
+	left?: ParamT | null;
+	collection?: ParamT[];
+	[k: string]: unknown;
+} */
+
+export type MatcherParams<BoundaryKeyT extends string, BoundaryT = Primitive> = Record<
+	BoundaryKeyT,
+	BoundaryT
+>;

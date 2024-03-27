@@ -23,12 +23,14 @@
  *
  */
 
+import {type MatcherParams} from './params';
+
 /**
  * Generic type signature used by all Matchers within validation chain nodes.
  *
  * @category Matchers
  */
-export type MatcherFunc<ValueT = unknown, ParamT = unknown> = (
-	value?: ValueT | null,
-	params?: ParamT
+export type MatcherFunc<InputT, BoundaryKeyT extends string, BoundaryT = unknown> = (
+	value?: InputT | null,
+	params?: MatcherParams<BoundaryKeyT, BoundaryT>
 ) => Promise<boolean>;

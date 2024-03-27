@@ -23,42 +23,33 @@
  *
  */
 
-import type {LessThanArgs} from '../../../less/than/args';
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../../matcher/func';
-import type {BlockFlags} from '../../../block/flags';
-import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
-import {Statement} from '../../../statement';
+import type {Matcher} from '../../matcher';
+import type {MatcherFunc} from '../func';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
+import {divisible} from '../../divisible';
+import {Statement} from '../../statement';
 
 /**
- * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
+ * Factory function producing `divisible` matcher predicate functions used in ruleset chains.
+ * @param 		root	Root node in chain.
+ * @param 		flags	Optional flags applied to this node.
  * @returns
  *
  * @category Matcher Predicate Factories
  */
-export function matcherLessThanMk<ValueT = unknown>(
-	stmt: Statement<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
-	return (right: number): BlockLink<ValueT> => {
+export function matcherMkDivisible(stmt: Statement, flags?: BlockFlags): Matcher<number> {
+	return (by: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(stmt);
+		const link = new BlockLink(stmt);
 
-		const fn: MatcherFunc<ValueT, LessThanArgs> = async (
-			value?: ValueT | null,
-			params?: LessThanArgs
-		): Promise<boolean> => {
-			return lessThan(value, params?.right);
+		const fn: MatcherFunc<number> = async (value?: number | null): Promise<boolean> => {
+			return divisible(value, by);
 		};
 
-		stmt.addMatcher<LessThanArgs>({
+		stmt.addMatcher<number>({
 			fn: fn,
-			params: {
-				right: right
-			},
 			flags: flags
 		});
 

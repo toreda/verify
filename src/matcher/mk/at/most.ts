@@ -22,14 +22,12 @@
  * 	SOFTWARE.
  *
  */
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../func';
-import type {BlockFlags} from '../../../block/flags';
+
 import {BlockLink} from '../../../block/link';
-import {Statement} from '../../../statement';
-import {type AtMostParams} from '../../../at/most/params';
 import {lessThan} from '../../../less/than';
 import {equalTo} from '../../../equal/to';
+import {type MatcherInit} from '../../init';
+import {type Predicate} from '../../../predicate';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -38,28 +36,19 @@ import {equalTo} from '../../../equal/to';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkAtMost<ValueT = unknown>(
-	stmt: Statement<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
-	return (right: number): BlockLink<ValueT> => {
+export function matcherMkAtMost(init: MatcherInit): MatcherFactory<number, BlockLink> {
+	return (right: number): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(stmt);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<ValueT, AtMostParams> = async (
-			value?: ValueT | null,
-			_params?: AtMostParams
-		): Promise<boolean> => {
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return lessThan(value, right) || equalTo(value, right);
 		};
 
-		stmt.addMatcher<AtMostParams>({
-			fn: fn,
-			params: {
-				right: right
-			},
-			flags: flags
+		init.stmt.addMatcher<number>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

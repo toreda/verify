@@ -28,7 +28,7 @@ import {Block} from '../block';
 import type {BlockFlags} from './flags';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/less/than/mk';
+import {matcherLessThanMk} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
 
 /**

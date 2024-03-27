@@ -26,7 +26,7 @@
 /**
  * @category Validators – Numbers
  */
-export interface LessThanArgs {
+export interface LessThanParams {
 	right: number;
 	invertResult?: boolean;
 }

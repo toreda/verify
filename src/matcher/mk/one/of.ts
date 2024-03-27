@@ -23,14 +23,11 @@
  *
  */
 
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../func';
 import {BlockLink} from '../../../block/link';
-import {Statement} from '../../../statement';
-import {type OneOfParams} from '../../../one/of/params';
-import {booleanValue} from '@toreda/strong-types';
 import {type Primitive} from '@toreda/types';
-import {type MatcherArrayFlags} from '../../array/flags';
+import {type MatcherInit} from '../../init';
+import {type Predicate} from '../../../predicate';
+import {type MatcherFactory} from '../../factory';
 
 /**
  * @description Create matcher for validat * @param root		Root node in validation chain matcher will be added to.
@@ -39,14 +36,13 @@ ion chain which determines if chain value is less than target.
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkOneOf(stmt: Statement, flags?: MatcherArrayFlags): Matcher<OneOfParams> {
+export function matcherMkOneOf(init: MatcherInit): MatcherFactory<Primitive[], BlockLink> {
 	return (right: Primitive[]): BlockLink => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(stmt);
-		const caseSensitive = booleanValue(flags?.caseSensitive, false);
+		// Link object MUST BE created during matcher func invocation. Moving it to
+		///surrounding closure will cause infinite recursion & stack overflow.
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<OneOfParams> = async (value?: Primitive): Promise<boolean> => {
+		const func: Predicate<Primitive> = async (value?: Primitive | null): Promise<boolean> => {
 			if (!Array.isArray(right)) {
 				return false;
 			}
@@ -68,13 +64,9 @@ export function matcherMkOneOf(stmt: Statement, flags?: MatcherArrayFlags): Matc
 			return false;
 		};
 
-		stmt.addMatcher<OneOfParams>({
-			fn: fn,
-			params: {
-				right: right,
-				invertResult: booleanValue(flags?.invertResult, false)
-			},
-			flags: flags
+		init.stmt.addMatcher<Primitive, Primitive[]>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

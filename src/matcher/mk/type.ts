@@ -23,37 +23,35 @@
  *
  */
 
-import {Fate} from '@toreda/fate';
-import type {PatternChainId} from './chain/id';
-import {PatternNode} from './node';
+import type {BlockFlags} from '../../block/flags';
+import {BlockLink} from '../../block/link';
+import {Statement} from '../../statement';
+import {type MatcherFactory} from '../factory';
+import {type Predicate} from '../../predicate';
 
 /**
- * @category Patterns
+ *
+ * @returns
+ *
+ * @category Matcher Predicate Factories
  */
-export class PatternChain<ValueT> {
-	public readonly chainId: PatternChainId;
-	public readonly nodes: PatternNode<ValueT>[];
+export function matcherMkType(stmt: Statement, flags?: BlockFlags): MatcherFactory<string, BlockLink> {
+	return (typeName: string): BlockLink => {
+		const link = new BlockLink(stmt);
 
-	constructor(chainId: PatternChainId, nodes?: PatternNode<ValueT>[]) {
-		this.chainId = chainId;
-		this.nodes = Array.isArray(nodes) ? nodes : [];
-	}
-
-	public async validate(value?: ValueT | null): Promise<Fate<never>> {
-		const fate = new Fate<never>();
-
-		for (const node of this.nodes) {
-			try {
-				const result = await node.execute(value);
-
-				if (!result.success()) {
-					fate.setErrorCode(result.errorCode());
-				}
-			} catch (e) {
-				fate.error(e);
-				fate.errorCode('exception');
+		const fn: Predicate<string> = async (value?: string | null): Promise<boolean> => {
+			if (typeName === 'array') {
+				return Array.isArray(value);
 			}
-		}
-		return fate.setDone(true);
-	}
+
+			return typeof value === typeName;
+		};
+
+		stmt.addMatcher<string, string>({
+			fn: fn,
+			flags: flags
+		});
+
+		return link;
+	};
 }

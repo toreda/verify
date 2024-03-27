@@ -23,43 +23,13 @@
  *
  */
 
-import {Statements} from './statements';
-import {Value} from './_value';
-import {Fate} from '@toreda/fate';
+import {type BlockFlags} from '../block/flags';
+import {Statement} from '../statement';
 
 /**
- * Generic type `ValueT` root node found in every validation rule chain. `ValueT` is the expected
- * type that will be validated passed down to each node in the chain.
- *
- * @category Rulesets
+ * @category Matcher Predicate Factories
  */
-export class _Ruleset<ValueT> {
-	public readonly value: Value<ValueT>;
-	public readonly chains: Statements<ValueT>;
-
-	constructor() {
-		this.value = new Value<ValueT>();
-		this.chains = new Statements<ValueT>();
-	}
-
-	public async execute(value?: ValueT | null): Promise<Fate<never>> {
-		const result = new Fate<never>();
-
-		for (const chain of this.chains) {
-			if (chain === null) {
-				continue;
-			}
-
-			try {
-				const chainResult = await chain.execute(value);
-				if (!chainResult.success()) {
-					result.setErrorCode(chainResult.errorCode());
-				}
-			} catch (e) {
-				result.setErrorCode('exception');
-			}
-		}
-
-		return result;
-	}
+export interface MatcherInit {
+	stmt: Statement;
+	flags?: BlockFlags;
 }

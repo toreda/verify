@@ -23,13 +23,11 @@
  *
  */
 
-import type {BetweenCall} from '../../between/call';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import type {BlockFlags} from '../../block/flags';
 import {BlockLink} from '../../block/link';
 import {between} from '../../between';
-import {Statement} from '../../statement';
+import {type MatcherFactory} from '../factory';
+import {type Predicate} from '../../predicate';
+import {type MatcherInit} from '../init';
 
 /**
  * @param root		Root Block at the start of every statement.
@@ -38,20 +36,17 @@ import {Statement} from '../../statement';
  *
  * @category Matcher Predicate Factories`
  */
-export function matcherMkBetween(stmt: Statement, flags?: BlockFlags): Matcher<number> {
+export function matcherMkBetween(init: MatcherInit): MatcherFactory<number, BlockLink> {
 	return (left: number, right: number) => {
-		const link = new BlockLink(stmt, flags);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<number, BetweenCall> = async (value?: number | null): Promise<boolean> => {
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return between(left, value, right);
 		};
 
-		stmt.addMatcher<number>({
-			fn: fn,
-			params: {
-				left: left,
-				right: right
-			}
+		init.stmt.addMatcher<number>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

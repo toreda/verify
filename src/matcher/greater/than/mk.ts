@@ -23,13 +23,11 @@
  *
  */
 
-import {BlockRoot} from '../../../statement___';
-import type {GreaterThanCall} from './call';
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../../matcher/func';
-import type {BlockFlags} from '../../../block/flags';
 import {BlockLink} from '../../../block/link';
 import {greaterThan} from '../../../greater/than';
+import {type MatcherInit} from '../../init';
+import {type MatcherFactory} from '../../factory';
+import {type Predicate} from '../../../predicate';
 
 /**
  * @param root		Root block at the start of every statement.
@@ -38,28 +36,20 @@ import {greaterThan} from '../../../greater/than';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherGreaterThanMk<ValueT>(
-	root: BlockRoot<ValueT>,
-	flags?: BlockFlags
-): Matcher<ValueT, number> {
+
+export function matcherGreaterThanMk(init: MatcherInit): MatcherFactory<number, BlockLink> {
 	return (right: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(root);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<ValueT, GreaterThanCall> = async (
-			value?: ValueT | null,
-			params?: GreaterThanCall
-		): Promise<boolean> => {
-			return greaterThan(value, params?.right);
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+			return greaterThan(value, right);
 		};
 
-		root.addMatcher<GreaterThanCall>({
-			fn: fn,
-			params: {
-				right: right
-			},
-			flags: flags
+		init.stmt.addMatcher<number, number>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

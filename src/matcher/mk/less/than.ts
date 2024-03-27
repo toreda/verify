@@ -23,17 +23,34 @@
  *
  */
 
+import {BlockLink} from '../../../block/link';
+import {lessThan} from '../../../less/than';
+import {Predicate} from '../../../predicate';
+import {type MatcherFactory} from '../../factory';
+import {type MatcherInit} from '../../init';
+
 /**
- *
- * @param args
+ * Create matcher for validation chain which determines if chain value is less than target.
+ * @param root		Root node in validation chain matcher will be added to.
  * @returns
  *
  * @category Matcher Predicate Factories
  */
-export function matcherParamsMk<ParamT>(params?: ParamT | null): ParamT {
-	if (!params) {
-		return {} as ParamT;
-	}
+export function matcherMkLessThan(init: MatcherInit): MatcherFactory<number, BlockLink> {
+	return (right: number): BlockLink => {
+		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
+		// will cause infinite recursion & stack overflow.
+		const link = new BlockLink(init.stmt);
 
-	return params;
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+			return lessThan(value, right);
+		};
+
+		init.stmt.addMatcher<number, number>({
+			fn: func,
+			flags: init.flags
+		});
+
+		return link;
+	};
 }

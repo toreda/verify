@@ -23,14 +23,11 @@
  *
  */
 
-import type {LessThanArgs} from '../../../less/than/args';
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../func';
 import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
-import {Statement} from '../../../statement';
-import {type NoneOfParams} from '../../../none/of/params';
-import {type MatcherArrayFlags} from '../../array/flags';
+import {MatcherInit} from '../../init';
+import {MatcherFactory} from '../../factory';
+import {Primitive} from '@toreda/types';
+import {Predicate} from '../../../predicate';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -39,28 +36,29 @@ import {type MatcherArrayFlags} from '../../array/flags';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkNoneOf<ValueT = unknown>(
-	stmt: Statement<ValueT>,
-	flags?: MatcherArrayFlags
-): Matcher<ValueT, string[] | number[]> {
-	return (right: string[] | number[]): BlockLink<ValueT> => {
+export function matcherMkNoneOf(init: MatcherInit): MatcherFactory<Primitive[], BlockLink> {
+	return (right: Primitive[]): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(stmt);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<ValueT, NoneOfParams> = async (
-			value?: ValueT | null,
-			params?: NoneOfParams
-		): Promise<boolean> => {
-			return lessThan(value, params?.right);
+		const func: Predicate<unknown> = async (value?: unknown | null): Promise<boolean> => {
+			if (!Array.isArray(right)) {
+				return false;
+			}
+
+			for (const item of right) {
+				if (value === item) {
+					return false;
+				}
+			}
+
+			return true;
 		};
 
-		stmt.addMatcher<NoneOfParams>({
-			fn: fn,
-			params: {
-				right: right
-			},
-			flags: flags
+		init.stmt.addMatcher<Primitive, Primitive[]>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

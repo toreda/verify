@@ -23,12 +23,7 @@
  *
  */
 
-/**
- *
- * @returns
- *
- * @category Pattern Validation
- */
-export function patternMk(): unknown {
-	return null;
+import {MatcherFunc} from './func';
+
+export interface MatcherContext<InputT> {
 }

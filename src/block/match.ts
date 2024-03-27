@@ -26,7 +26,7 @@
 import type {Matcher} from '../matcher';
 import {Block} from '../block';
 import type {BlockFlags} from './flags';
-import {matcherTypeMk} from '../matcher/type/mk';
+import {matcherTypeMk} from '../matcher/mk/type';
 import {matcherTypesMk} from '../matcher/mk/types';
 import {Statement} from '../statement';
 

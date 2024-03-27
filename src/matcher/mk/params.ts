@@ -23,9 +23,19 @@
  *
  */
 
+import {MatcherParams} from '../params';
+
 /**
- * Expressive type describing that a value uniquely identifies a Pattern object.
  *
- * @category Patterns
+ * @param args
+ * @returns
+ *
+ * @category Matcher Predicate Factories
  */
-export type PatternId = string;
+export function matcherMkParams<ParamT>(params?: ParamT | null): MatcherParams<ParamT> {
+	if (!params) {
+		return {};
+	}
+
+	return params;
+}

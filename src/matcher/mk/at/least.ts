@@ -23,15 +23,12 @@
  *
  */
 
-import type {Matcher} from '../../../matcher';
-import type {MatcherFunc} from '../../func';
-import type {BlockFlags} from '../../../block/flags';
 import {BlockLink} from '../../../block/link';
-import {Statement} from '../../../statement';
-import {type AtLeastParams} from '../../../at/least/params';
-import {booleanValue} from '@toreda/strong-types';
 import {greaterThan} from '../../../greater/than';
 import {equalTo} from '../../../equal/to';
+import {type MatcherInit} from '../../init';
+import {type MatcherFactory} from '../../factory';
+import {type Predicate} from '../../../predicate';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -40,23 +37,19 @@ import {equalTo} from '../../../equal/to';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkAtLeast(stmt: Statement, flags?: BlockFlags): Matcher<ValueT, number> {
+export function matcherMkAtLeast(init: MatcherInit): MatcherFactory<number, BlockLink> {
 	return (right: number): BlockLink => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(stmt);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<ValueT> = async (value?: ValueT | null): Promise<boolean> => {
+		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
 			return greaterThan(value, right) || equalTo(value, right);
 		};
 
-		stmt.addMatcher<AtLeastParams>({
-			fn: fn,
-			params: {
-				right: right,
-				invertResult: booleanValue(flags?.invertResult, false)
-			},
-			flags: flags
+		init.stmt.addMatcher<number, number>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

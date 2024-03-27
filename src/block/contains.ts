@@ -34,26 +34,46 @@ import {matcherMkNoneOf} from '../matcher/mk/none/of';
 import {matcherMkOneOf} from '../matcher/mk/one/of';
 import {Statement} from '../statement';
 import type {BlockFlags} from './flags';
+import {MatcherFactory} from '../matcher/factory';
+import {BlockLink} from './link';
 
 /**
  * @category Statement Blocks
  */
 export class BlockContains extends Block<Statement> {
-	public readonly exactly: Matcher<number>;
-	public readonly atLeast: Matcher<number>;
-	public readonly atMost: Matcher<number>;
-	public readonly oneOf: Matcher<Primitive[]>;
-	public readonly noneOf: Matcher<Primitive[]>;
-	public readonly allOf: Matcher<Primitive[]>;
+	public readonly exactly: MatcherFactory<number, BlockLink>;
+	public readonly atLeast: MatcherFactory<number, BlockLink>;
+	public readonly atMost: MatcherFactory<number, BlockLink>;
+	public readonly oneOf: MatcherFactory<Primitive[], BlockLink>;
+	public readonly noneOf: MatcherFactory<Primitive[], BlockLink>;
+	public readonly allOf: MatcherFactory<Primitive[], BlockLink>;
 
 	constructor(stmt: Statement, flags?: BlockFlags) {
 		super(stmt, 'contains');
 
-		this.allOf = matcherMkAllOf(stmt, flags);
-		this.atLeast = matcherMkAtLeast(stmt, flags);
-		this.atMost = matcherMkAtMost(stmt, flags);
-		this.exactly = matcherMkExactly(stmt, flags);
-		this.noneOf = matcherMkNoneOf(stmt, flags);
-		this.oneOf = matcherMkOneOf(stmt, flags);
+		this.allOf = matcherMkAllOf({
+			stmt: stmt,
+			flags: flags
+		});
+		this.atLeast = matcherMkAtLeast({
+			stmt: stmt,
+			flags: flags
+		});
+		this.atMost = matcherMkAtMost({
+			stmt: stmt,
+			flags: flags
+		});
+		this.exactly = matcherMkExactly({
+			stmt: stmt,
+			flags: flags
+		});
+		this.noneOf = matcherMkNoneOf({
+			stmt: stmt,
+			flags: flags
+		});
+		this.oneOf = matcherMkOneOf({
+			stmt: stmt,
+			flags: flags
+		});
 	}
 }

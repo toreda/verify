@@ -1,12 +1,15 @@
 import {Fate} from '@toreda/fate';
 import {Block} from './block';
 import {MatcherBound} from './matcher/bound';
-import {MatcherCall} from './matcher/call';
-import {MatcherParamId} from './matcher/param/id';
+import {type MatcherCall} from './matcher/call';
+import {type MatcherParamId} from './matcher/param/id';
 
+/**
+ * @category Statement Blocks
+ */
 export class Statement {
 	public readonly blocks: Block<Statement>[];
-	public readonly matchers: MatcherBound<any, any>[];
+	public readonly matchers: MatcherBound<any>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
 
 	constructor() {
@@ -15,8 +18,8 @@ export class Statement {
 		this.matcherParams = new Map<MatcherParamId, unknown>();
 	}
 
-	public addMatcher<InputT = unknown, ParamT = unknown>(matcher: MatcherCall<InputT, ParamT>): void {
-		const bound = new MatcherBound<InputT, ParamT>(matcher);
+	public addMatcher<InputT = unknown, BoundaryT = unknown>(matcher: MatcherCall<InputT, BoundaryT>): void {
+		const bound = new MatcherBound<InputT>(matcher);
 		this.matchers.push(bound);
 	}
 

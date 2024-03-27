@@ -27,22 +27,21 @@ import {Fate} from '@toreda/fate';
 import type {MatcherCall} from './call';
 import type {MatcherFunc} from './func';
 import type {BlockFlags} from '../block/flags';
-import {matcherParamsMk} from '../matcher/params/mk';
+import {Primitive} from '@toreda/types';
 
 /**
  * @category Matcher Predicates
  */
-export class MatcherBound<InputT, ParamT> {
+export class MatcherBound<InputT> {
 	public readonly fn: MatcherFunc<InputT, ParamT>;
-	public readonly params: ParamT;
 	public readonly flags: BlockFlags;
-	public readonly callArgs: Map<string, string | number | boolean | null>;
+	public readonly callArgs: Map<string, Primitive>;
 
 	constructor(call: MatcherCall<InputT, ParamT>) {
 		this.fn = call.fn;
-		this.callArgs = new Map<string, string | number | boolean | null>();
+		this.callArgs = new Map<string, Primitive>();
 		this.flags = this.mkFlags(call?.flags);
-		this.params = matcherParamsMk<ParamT>(call?.params);
+		//this.params = matcherMkParams<ParamT>(call?.params);
 	}
 
 	/**

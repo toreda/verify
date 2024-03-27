@@ -23,12 +23,11 @@
  *
  */
 
-import {BlockRoot} from '../../statement___';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../../matcher/func';
-import type {BlockFlags} from '../../block/flags';
 import {BlockLink} from '../../block/link';
 import {empty} from '../../empty';
+import {type MatcherFactory} from '../factory';
+import {type MatcherInit} from '../init';
+import {type Predicate} from '../../predicate';
 
 /**
  *
@@ -36,19 +35,21 @@ import {empty} from '../../empty';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherEmptyMk<ValueT>(root: BlockRoot<ValueT>, flags?: BlockFlags): Matcher<ValueT, never> {
+export function matcherEmptyMk(init: MatcherInit): MatcherFactory<unknown | unknown[], BlockLink> {
 	return () => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<ValueT>(root);
+		const link = new BlockLink(init.stmt);
 
-		const fn: MatcherFunc<ValueT, never> = async (value?: ValueT | null): Promise<boolean> => {
-			return empty<ValueT>(value);
+		const func: Predicate<unknown | unknown[]> = async (
+			value?: unknown | unknown[] | null
+		): Promise<boolean> => {
+			return empty(value);
 		};
 
-		root.addMatcher<never>({
-			fn: fn,
-			flags: flags
+		init.stmt.addMatcher<never>({
+			fn: func,
+			flags: init.flags
 		});
 
 		return link;

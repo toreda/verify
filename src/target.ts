@@ -1,13 +1,10 @@
-import {BlockContains} from './block/contains';
 import {BlockHave} from './block/have';
-import {BlockMatch} from './block/match';
 import {BlockMust} from './block/must';
 import {Rule} from './rule';
-import {RuleCallable} from './rule/callable';
 import {Statement} from './statement';
 
 export const target = new Proxy(new Rule(), {
-	get: (target: Rule, prop: keyof RuleCallable<unknown> | keyof Rule): any => {
+	get: (target: Rule, prop: keyof Rule | keyof Rule): any => {
 		console.info('@@@@@@@@@@@@@@@@@@@@');
 		const stmt = new Statement();
 
@@ -15,18 +12,15 @@ export const target = new Proxy(new Rule(), {
 			case 'must':
 				target.add(stmt);
 				return new BlockMust(stmt);
-			case 'matches':
+			/* 			case 'matches':
 				target.add(stmt);
-				return new BlockMatch(stmt);
+				return new BlockMatch(stmt); */
 			case 'has':
 				target.add(stmt);
 				return new BlockHave(stmt);
 			case 'is':
 				target.add(stmt);
 				return new BlockMust(stmt);
-			case 'contains':
-				target.add(stmt);
-				return new BlockContains(stmt);
 			default:
 				return target[prop];
 		}

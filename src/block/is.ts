@@ -25,12 +25,12 @@
 
 import type {Matcher} from '../matcher';
 import type {BlockFlags} from './flags';
-import {matcherDivisibleMk} from '../matcher/divisible/mk';
+import {matcherDivisibleMk} from '../matcher/mk/divisible';
 import {matcherEmptyMk} from '../matcher/empty/mk';
 import {matcherEqualToMk} from '../matcher/equal/to/mk';
 import {matcherGreaterThanMk} from '../matcher/greater/than/mk';
-import {matcherLessThanMk} from '../matcher/less/than/mk';
-import {matcherTypeMk} from '../matcher/type/mk';
+import {matcherLessThanMk} from '../matcher/mk/less/than';
+import {matcherTypeMk} from '../matcher/mk/type';
 import {Statement} from '../statement';
 import {Block} from '../block';
 

@@ -23,31 +23,6 @@
  *
  */
 
-import {BlockRoot} from '../../statement___';
-import type {Matcher} from '../../matcher';
-import type {MatcherFunc} from '../func';
-import {BlockLink} from '../../block/link';
-import {Pattern} from '../../pattern';
+import {Rule} from '../rule';
 
-/**
- * Creates a pattern matcher node for target validation chain.
- * @param root		Root node for the validation chain matcher will be used in.
- * @returns
- *
- * @category Matcher Predicate Factories
- */
-export function matcherPatternMk<ValueT>(root: BlockRoot<ValueT>): Matcher<ValueT, Pattern<ValueT>> {
-	return (_pattern: Pattern<ValueT>): BlockLink<ValueT> => {
-		const link = new BlockLink<ValueT>(root);
-
-		const fn: MatcherFunc<ValueT, unknown> = async (_value?: ValueT | null): Promise<boolean> => {
-			return false;
-		};
-
-		root.addMatcher<unknown>({
-			fn: fn
-		});
-
-		return link;
-	};
-}
+export type MatcherFactory<BoundaryT = unknown, ReturnT = Rule> = (...boundaries: BoundaryT[]) => ReturnT;

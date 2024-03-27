@@ -29,7 +29,7 @@ import type {BlockFlags} from '../block/flags';
 /**
  * @category Matchers
  */
-export interface MatcherCall<InputT, ParamT> {
+export interface MatcherCall<InputT = unknown, ParamT = unknown> {
 	fn: MatcherFunc<InputT, ParamT>;
 	params?: ParamT;
 	flags?: BlockFlags;

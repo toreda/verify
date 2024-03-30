@@ -28,11 +28,13 @@ import {Block} from './block';
 import {MatcherBound} from './matcher/bound';
 import {type MatcherCall} from './matcher/call';
 import {type MatcherParamId} from './matcher/param/id';
+import {type Executable} from './executable';
+import {ExecutionContext} from './execution/context';
 
 /**
  * @category Statement Blocks
  */
-export class Statement {
+export class Statement implements Executable {
 	public readonly blocks: Block<Statement>[];
 	public readonly matchers: MatcherBound<any>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
@@ -48,8 +50,8 @@ export class Statement {
 		this.matchers.push(bound);
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<boolean>> {
-		const mainResult = new Fate<boolean>();
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
+		const mainResult = new Fate<ExecutionContext>();
 		let successful = 0;
 		const total = this.matchers.length;
 

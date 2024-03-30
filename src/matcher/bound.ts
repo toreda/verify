@@ -28,6 +28,7 @@ import type {MatcherCall} from './call';
 import type {BlockFlags} from '../block/flags';
 import {Primitive} from '@toreda/types';
 import {type Predicate} from '../predicate';
+import {booleanValue} from '@toreda/strong-types';
 
 /**
  * @category Matcher Predicates
@@ -51,15 +52,9 @@ export class MatcherBound<InputT> {
 	 * @returns
 	 */
 	public mkFlags(input?: Partial<BlockFlags>): BlockFlags {
-		const flags: BlockFlags = {
-			invertResult: false
+		return {
+			invertResult: booleanValue(input?.invertResult, false)
 		};
-
-		if (typeof input?.invertResult === 'boolean') {
-			flags.invertResult = input.invertResult;
-		}
-
-		return flags;
 	}
 
 	/**

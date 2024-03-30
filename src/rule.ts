@@ -28,9 +28,11 @@ import {BlockHave} from './block/have';
 import {BlockIs} from './block/is';
 import {BlockMust} from './block/must';
 import {Statement} from './statement';
-import {BlockInit} from './block/init';
+import {type BlockInit} from './block/init';
 import {BlockMatch} from './block/match';
 import {BlockContains} from './block/contains';
+import {ExecutionContext} from './execution/context';
+import {executor} from './executor';
 
 /**
  * @category Rules
@@ -62,6 +64,12 @@ export class Rule {
 		this.execute = this.execute.bind(this);
 	}
 
+	/**
+	 * Add statement to rule which are tested when `rule.execute(...)` is invoked. All rule
+	 * statements must pass for the rule to pass.
+	 * @param stmt
+	 * @returns
+	 */
 	public add(stmt: Statement): void {
 		if (!stmt) {
 			return;
@@ -70,7 +78,13 @@ export class Rule {
 		this.statements.push(stmt);
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<boolean>> {
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
+		return executor<ValueT, Statement>({
+			collection: this.statements,
+			value: value
+		});
+	}
+	/* 	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<boolean>> {
 		const result = new Fate<boolean>();
 		let successful = 0;
 		const stmtCount = this.statements.length;
@@ -113,5 +127,5 @@ export class Rule {
 		}
 
 		return result;
-	}
+	} */
 }

@@ -2,6 +2,8 @@ import {Fate} from '@toreda/fate';
 import {Rule} from './rule';
 import {Block} from './block';
 import {Statement} from './statement';
+import {type ExecutionContext} from './execution/context';
+import {executor} from './executor';
 
 /**
  * @category Rulesets
@@ -44,36 +46,12 @@ export class Ruleset {
 		return true;
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<never>> {
-		const result = new Fate<never>();
-
-		let successful = 0;
-		const ruleCount = this.rules.length;
-
-		for (const rule of this.rules) {
-			try {
-				const ruleResult = await rule.execute<ValueT>(value);
-
-				if (ruleResult.ok()) {
-					successful++;
-				}
-			} catch (e: unknown) {
-				const msg = e instanceof Error ? e.message : 'unknown_err_type';
-				console.error(`Ruleset execute exception: ${msg}.`);
-				result.setErrorCode('exception');
-			}
-		}
-
-		const failed = ruleCount - successful;
-		if (successful === ruleCount) {
-			console.debug(`${successful} of ${ruleCount} rules passed.`);
-			result.setSuccess(true);
-		} else {
-			console.error(`${failed} of ${ruleCount} rules failed.`);
-			result.setErrorCode(`rules_failed:${failed} of ${ruleCount}`);
-		}
-
-		return result;
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
+		return await executor<ValueT, Rule>({
+			name: 'rules',
+			collection: this.rules,
+			value: value
+		});
 	}
 
 	public reset(): void {

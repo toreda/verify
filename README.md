@@ -111,20 +111,8 @@ const result = Array.isArray(value) && value.length === 0;
 
 &nbsp;
 
-# Install
+# Package
 `@toreda/chk` is available as an [NPM package](https://www.npmjs.com/package/@toreda/chk).
-
-&nbsp;
-
-**Install with yarn:**
-```bash
-yarn add @toreda/chk
-```
-
-**or Install with NPM:**
-```bash
-npm install @toreda/chk
-```
 
 &nbsp;
 

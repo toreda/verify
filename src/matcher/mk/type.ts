@@ -45,7 +45,7 @@ export function matcherMkType(init: BlockInit): MatcherFactory<string, BlockLink
 			return typeof value === typeName;
 		};
 
-		init.stmt.addMatcher<string, string>({
+		init.stmt.addMatcher<string>({
 			fn: fn,
 			flags: init.flags
 		});

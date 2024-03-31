@@ -56,7 +56,7 @@ export function matcherMkNoneOf(init: BlockInit): MatcherFactory<Primitive[], Bl
 			return true;
 		};
 
-		init.stmt.addMatcher<Primitive, Primitive[]>({
+		init.stmt.addMatcher<Primitive>({
 			fn: func,
 			flags: init.flags
 		});

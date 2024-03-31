@@ -47,7 +47,7 @@ export function matcherMkAtLeast(init: BlockInit): MatcherFactory<number, BlockL
 			return greaterThan(value, right) || equalTo(value, right);
 		};
 
-		init.stmt.addMatcher<number, number>({
+		init.stmt.addMatcher<number>({
 			fn: func,
 			flags: init.flags
 		});

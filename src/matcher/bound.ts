@@ -26,14 +26,19 @@
 import {Fate} from '@toreda/fate';
 import type {MatcherCall} from './call';
 import type {BlockFlags} from '../block/flags';
-import {Primitive} from '@toreda/types';
+import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../predicate';
-import {booleanValue} from '@toreda/strong-types';
+import {type Id, booleanValue} from '@toreda/strong-types';
+import {type Executable} from '../executable';
+import {type ExecutionContext} from '../execution/context';
+import {executorMkContext} from '../executor/mk/context';
+import {matcherMkId} from './mk/id';
 
 /**
  * @category Matcher Predicates
  */
-export class MatcherBound<InputT> {
+export class MatcherBound<InputT> implements Executable {
+	public readonly id: Id;
 	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
 	public readonly callArgs: Map<string, Primitive>;
@@ -42,6 +47,7 @@ export class MatcherBound<InputT> {
 		this.predicate = call.fn;
 		this.callArgs = new Map<string, Primitive>();
 		this.flags = this.mkFlags(call?.flags);
+		this.id = matcherMkId();
 		//this.params = matcherMkParams<ParamT>(call?.params);
 	}
 
@@ -62,7 +68,7 @@ export class MatcherBound<InputT> {
 	 * @param result
 	 * @returns
 	 */
-	public applyResultModifiers(result: boolean): boolean {
+	public applyMods(result: boolean): boolean {
 		if (this.flags.invertResult === true) {
 			return !result;
 		}
@@ -70,23 +76,29 @@ export class MatcherBound<InputT> {
 		return result;
 	}
 
-	public async execute(value?: InputT | null): Promise<Fate<boolean>> {
-		const fate = new Fate<boolean>();
+	public async execute<ValueT = unknown>(value?: InputT | null): Promise<Fate<ExecutionContext>> {
+		const ctx = executorMkContext({
+			name: 'predicate'
+		});
+
+		const fate = new Fate<ExecutionContext>({
+			data: ctx
+		});
 
 		try {
 			const fnResult = await this.predicate(value);
 			console.debug(`predicate result: ${fnResult}`);
-			const result = this.applyResultModifiers(fnResult);
+			const result = this.applyMods(fnResult);
 			console.debug(`predicate result (mods applied): ${result}`);
+			ctx.outcome = 'pass';
 
-			fate.data = result;
 			fate.setSuccess(true);
 		} catch (e: unknown) {
-			fate.data = false;
 			const msg = e instanceof Error ? e.message : 'nonerr_type';
 			console.error(`matcher.execute exception: ${msg}`);
 			fate.error(e);
 			fate.setErrorCode('exception');
+			ctx.outcome = 'error';
 		}
 
 		return fate;

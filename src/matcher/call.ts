@@ -24,7 +24,7 @@
  */
 
 import type {BlockFlags} from '../block/flags';
-import {Predicate} from '../predicate';
+import {type Predicate} from '../predicate';
 
 /**
  * @category Matchers

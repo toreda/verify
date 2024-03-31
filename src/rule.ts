@@ -31,8 +31,9 @@ import {Statement} from './statement';
 import {type BlockInit} from './block/init';
 import {BlockMatch} from './block/match';
 import {BlockContains} from './block/contains';
-import {ExecutionContext} from './execution/context';
+import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
+import {RuleConfig} from './rule/config';
 
 /**
  * @category Rules
@@ -44,12 +45,15 @@ export class Rule {
 	public readonly is: BlockIs;
 	public readonly has: BlockHave;
 	public readonly matches: BlockMatch;
+	private readonly cfg: RuleConfig;
 
 	constructor() {
 		const stmt = new Statement();
 		const init: BlockInit = {
 			stmt: stmt
 		};
+
+		this.cfg = new RuleConfig();
 		this.must = new BlockMust(init);
 		this.is = new BlockIs(init);
 		this.matches = new BlockMatch(init);
@@ -81,51 +85,8 @@ export class Rule {
 	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
 		return executor<ValueT, Statement>({
 			collection: this.statements,
+			name: 'rule',
 			value: value
 		});
 	}
-	/* 	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<boolean>> {
-		const result = new Fate<boolean>();
-		let successful = 0;
-		const stmtCount = this.statements.length;
-
-		try {
-			for (const stmt of this.statements) {
-				try {
-					const subResult = await stmt.execute<ValueT>(value);
-					if (!subResult.ok()) {
-						result.setErrorCode(`stmt_exception:${subResult.errorCode()}`);
-						break;
-					}
-
-					if (subResult.data === true) {
-						successful++;
-					}
-				} catch (e: unknown) {
-					const msg = e instanceof Error ? e.message : 'unknown_err_type';
-					console.error(`Ruleset execute exception: ${msg}.`);
-					result.setErrorCode('exception');
-				}
-			}
-		} catch (e: unknown) {
-			const msg = e instanceof Error ? e.message : 'unknown_err_type';
-			console.error(`Ruleset execute exception: ${msg}.`);
-			result.setErrorCode('exception');
-		}
-
-		if (!result.errorCode()) {
-			result.setSuccess(true);
-		}
-
-		const failed = stmtCount - successful;
-		if (successful === stmtCount) {
-			console.debug(`${successful} of ${stmtCount} statements passed.`);
-			result.data = true;
-		} else {
-			result.data = false;
-			console.error(`${failed} of ${stmtCount} statements did not pass.`);
-		}
-
-		return result;
-	} */
 }

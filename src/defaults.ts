@@ -39,4 +39,8 @@ export default class Defaults {
 	public static Chk = {
 		VarLabel: 'value' as const
 	} as const;
+	public static Executor = {
+		MaxFails: 0 as const,
+		MaxErrors: 0 as const
+	} as const;
 }

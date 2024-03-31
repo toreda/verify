@@ -29,7 +29,9 @@ import {MatcherBound} from './matcher/bound';
 import {type MatcherCall} from './matcher/call';
 import {type MatcherParamId} from './matcher/param/id';
 import {type Executable} from './executable';
-import {ExecutionContext} from './execution/context';
+import {type ExecutionContext} from './execution/context';
+import {executor} from './executor';
+import {executorMkContext} from './executor/mk/context';
 
 /**
  * @category Statement Blocks
@@ -45,17 +47,24 @@ export class Statement implements Executable {
 		this.matcherParams = new Map<MatcherParamId, unknown>();
 	}
 
-	public addMatcher<InputT = unknown, BoundaryT = unknown>(matcher: MatcherCall<InputT>): void {
+	public addMatcher<InputT = unknown>(matcher: MatcherCall<InputT>): void {
 		const bound = new MatcherBound<InputT>(matcher);
 		this.matchers.push(bound);
 	}
 
 	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
-		const mainResult = new Fate<ExecutionContext>();
-		let successful = 0;
-		const total = this.matchers.length;
+		const ctx = executorMkContext();
+		const fate = new Fate<ExecutionContext>({
+			data: ctx
+		});
 
-		try {
+		return await executor<ValueT, MatcherBound<ValueT>>({
+			name: 'statements',
+			collection: this.matchers,
+			value: value
+		});
+
+		/* 		try {
 			for (const matcher of this.matchers) {
 				const subResult = await matcher.execute(value);
 
@@ -82,7 +91,7 @@ export class Statement implements Executable {
 			mainResult.data = successful === total;
 		}
 
-		return mainResult;
+		return mainResult; */
 	}
 
 	public reset(): void {

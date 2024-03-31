@@ -23,35 +23,29 @@
  *
  */
 
-import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
-import {type Primitive} from '@toreda/types';
-import {type MatcherFactory} from '../../factory';
-import {type Predicate} from '../../../predicate';
-import {type BlockInit} from '../../../block/init';
+import {stringValue} from '@toreda/strong-types';
+import {type ExecutionContext} from '../../execution/context';
+import {type ExecutorParams} from '../params';
 
 /**
- * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
- * @returns
+ * Creates and initialize an ExecutionContext object with default values.
+ * @param params
  *
- * @category Matcher Predicate Factories
+ * @category Executor
  */
-export function matcherMkAllOf(init: BlockInit): MatcherFactory<Primitive[], BlockLink> {
-	return (right: Primitive[]): BlockLink => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
-
-		const func: Predicate<Primitive> = async (value?: Primitive | null): Promise<boolean> => {
-			return lessThan(value, right);
-		};
-
-		init.stmt.addMatcher<Primitive>({
-			fn: func,
-			flags: init.flags
-		});
-
-		return link;
+export function executorMkContext(params?: Partial<ExecutorParams>): ExecutionContext {
+	return {
+		name: stringValue(params?.name, '_default_'),
+		results: [],
+		outcome: 'fail',
+		summary: {
+			counts: {
+				error: 0,
+				fail: 0,
+				pass: 0,
+				skip: 0,
+				total: 0
+			}
+		}
 	};
 }

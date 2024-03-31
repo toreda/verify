@@ -94,31 +94,31 @@ describe('MatcherBound', () => {
 			});
 		});
 
-		describe('applyResultModifiers', () => {
+		describe('applyMods', () => {
 			it(`should return false when result is false and invertResult is also false`, () => {
 				instance.flags.invertResult = false;
-				const result = instance.applyResultModifiers(false);
+				const result = instance.applyMods(false);
 
 				expect(result).toBe(false);
 			});
 
 			it(`should return true when result is true and invertResult is also false`, () => {
 				instance.flags.invertResult = true;
-				const result = instance.applyResultModifiers(false);
+				const result = instance.applyMods(false);
 
 				expect(result).toBe(true);
 			});
 
 			it(`should return false when result is true but invertResult is true`, () => {
 				instance.flags.invertResult = true;
-				const result = instance.applyResultModifiers(true);
+				const result = instance.applyMods(true);
 
 				expect(result).toBe(false);
 			});
 
 			it(`should return true when result is false but invertResult is true`, () => {
 				instance.flags.invertResult = true;
-				const result = instance.applyResultModifiers(false);
+				const result = instance.applyMods(false);
 
 				expect(result).toBe(true);
 			});

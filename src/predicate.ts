@@ -23,4 +23,7 @@
  *
  */
 
+/**
+ * @category Matcher Predicates
+ */
 export type Predicate<InputT = unknown> = (value?: InputT | null) => Promise<boolean>;

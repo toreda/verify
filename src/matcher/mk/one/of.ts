@@ -64,7 +64,7 @@ export function matcherMkOneOf(init: BlockInit): MatcherFactory<Primitive[], Blo
 			return false;
 		};
 
-		init.stmt.addMatcher<Primitive, Primitive[]>({
+		init.stmt.addMatcher<Primitive>({
 			fn: func,
 			flags: init.flags
 		});

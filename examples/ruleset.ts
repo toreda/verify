@@ -27,5 +27,6 @@ import {target} from '../src/target';
 
 	console.debug(`execute:`);
 	const result = await ruleset.execute(12);
+	const ctx = result.data;
 	console.debug(`Ruleset result: ${result.ok()}`);
 })();

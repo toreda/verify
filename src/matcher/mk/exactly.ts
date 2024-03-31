@@ -46,7 +46,7 @@ export function matcherMkExactly(init: BlockInit): MatcherFactory<number, BlockL
 			return equalTo(value, right);
 		};
 
-		init.stmt.addMatcher<number, number>({
+		init.stmt.addMatcher<number>({
 			fn: func,
 			flags: init.flags
 		});

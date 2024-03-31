@@ -46,7 +46,7 @@ export function matcherMkGreaterThan(init: BlockInit): MatcherFactory<number, Bl
 			return greaterThan(value, right);
 		};
 
-		init.stmt.addMatcher<number, number>({
+		init.stmt.addMatcher<number>({
 			fn: func,
 			flags: init.flags
 		});

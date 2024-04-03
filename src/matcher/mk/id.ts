@@ -24,7 +24,7 @@
  */
 
 import {type Id, idMake} from '@toreda/strong-types';
-import {MatcherFlags} from '../flags';
+import {type MatcherData} from '../data';
 
 /**
  *
@@ -33,11 +33,11 @@ import {MatcherFlags} from '../flags';
  *
  * @category Matchers
  */
-export function matcherMkId<MatcherT = unknown>(flags?: MatcherFlags): Id {
+export function matcherMkId<ValueT = unknown>(matcherId: number, data: MatcherData<ValueT>): Id {
 	const id = idMake('');
 
-	const invert = flags?.invertResult === true ? '^' : '';
-	id(`_${invert}`);
+	const invert = data.flags?.invertResult === true ? '^' : '';
+	id(`${matcherId}_${data.name}_${invert}`);
 
 	return id;
 }

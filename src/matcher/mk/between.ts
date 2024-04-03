@@ -44,6 +44,7 @@ export function matcherMkBetween(init: BlockInit): MatcherFactory<number, BlockL
 
 		init.stmt.addMatcher<number>({
 			fn: func,
+			name: 'lower>x>upper',
 			flags: init.flags
 		});
 

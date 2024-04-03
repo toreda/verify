@@ -25,4 +25,7 @@
 
 import {Rule} from '../rule';
 
+/**
+ * @category Matcher Factories
+ */
 export type MatcherFactory<BoundaryT = unknown, ReturnT = Rule> = (...boundaries: BoundaryT[]) => ReturnT;

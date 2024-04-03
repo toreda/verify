@@ -49,6 +49,7 @@ export function matcherMkAtMost(init: BlockInit): MatcherFactory<number, BlockLi
 
 		init.stmt.addMatcher<number>({
 			fn: func,
+			name: '<',
 			flags: init.flags
 		});
 

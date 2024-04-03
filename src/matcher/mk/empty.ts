@@ -48,6 +48,7 @@ export function matcherMkEmpty(init: BlockInit): MatcherFactory<unknown | unknow
 
 		init.stmt.addMatcher<never>({
 			fn: func,
+			name: 'empty',
 			flags: init.flags
 		});
 

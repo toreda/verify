@@ -49,6 +49,7 @@ export function matcherMkAllOf(init: BlockInit): MatcherFactory<Primitive[], Blo
 
 		init.stmt.addMatcher<Primitive>({
 			fn: func,
+			name: 'allOf',
 			flags: init.flags
 		});
 

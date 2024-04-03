@@ -29,7 +29,8 @@ import {type Predicate} from '../predicate';
 /**
  * @category Matchers
  */
-export interface MatcherCall<InputT = unknown> {
+export interface MatcherData<InputT = unknown> {
+	name: string;
 	fn: Predicate<InputT>;
 	flags?: BlockFlags;
 }

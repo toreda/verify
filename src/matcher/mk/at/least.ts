@@ -49,6 +49,7 @@ export function matcherMkAtLeast(init: BlockInit): MatcherFactory<number, BlockL
 
 		init.stmt.addMatcher<number>({
 			fn: func,
+			name: 'atLeast',
 			flags: init.flags
 		});
 

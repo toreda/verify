@@ -26,17 +26,22 @@
 import {Fate} from '@toreda/fate';
 import {Block} from './block';
 import {MatcherBound} from './matcher/bound';
-import {type MatcherCall} from './matcher/call';
 import {type MatcherParamId} from './matcher/param/id';
 import {type Executable} from './executable';
 import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
-import {executorMkContext} from './executor/mk/context';
+import {type MatcherData} from './matcher/data';
+import {type Int, intMake} from '@toreda/strong-types';
+import {errorMkCode} from './error/mk/code';
 
 /**
+ * Contains a set of matchers 
+ *
+ *
  * @category Statement Blocks
  */
 export class Statement implements Executable {
+	private readonly nextMatcherId: Int;
 	public readonly blocks: Block<Statement>[];
 	public readonly matchers: MatcherBound<any>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
@@ -44,58 +49,75 @@ export class Statement implements Executable {
 	constructor() {
 		this.blocks = [];
 		this.matchers = [];
+		this.nextMatcherId = intMake(0);
 		this.matcherParams = new Map<MatcherParamId, unknown>();
 	}
 
-	public addMatcher<InputT = unknown>(matcher: MatcherCall<InputT>): void {
-		const bound = new MatcherBound<InputT>(matcher);
-		this.matchers.push(bound);
+	/**
+	 * Get statement's next available matcher position ID and
+	 * the current position ID.
+	 */
+	public nextMatcherSlotId(): number {
+		const value = this.nextMatcherId();
+		this.nextMatcherId.increment();
+
+		return value;
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
-		const ctx = executorMkContext();
-		const fate = new Fate<ExecutionContext>({
-			data: ctx
+	/**
+	 * Add matcher to statement that's executed everytime statement.execute is
+	 * invoked. Does not check for duplicates. Returns fate with boolean value
+	 * indicating whether the matcher was successfully added.
+	 * @param data		Matcher data to add
+	 */
+	public addMatcher<InputT = unknown>(data: MatcherData<InputT>): Fate<boolean> {
+		const fate = new Fate<boolean>({
+			data: false
 		});
 
+		if (!data) {
+			return fate.setErrorCode(errorMkCode('missing_argument', 'statement', 'arg:data'));
+		}
+
+		if (data.name === undefined || data.name === null) {
+			return fate.setErrorCode(errorMkCode('missing_property', 'statement', 'arg:data.name'));
+		}
+
+		if (!data.fn) {
+			return fate.setErrorCode(errorMkCode('missing_argument', 'statement', 'arg:data.fn'));
+		}
+
+		if (typeof data.name !== 'string') {
+			return fate.setErrorCode(errorMkCode('nonstring_property', 'statement', 'arg:data.name'));
+		}
+
+		if (typeof data.fn !== 'function') {
+			return fate.setErrorCode(errorMkCode('nonfunction_property', 'statement', 'arg:data.fn'));
+		}
+
+		const bound = new MatcherBound<InputT>(this.nextMatcherSlotId(), data);
+		this.matchers.push(bound);
+
+		fate.data = true;
+		return fate.setSuccess(true);
+	}
+
+	/**
+	 * Test value against statement matchers.
+	 * @param value		Value to be tested by statement.
+	 */
+	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
 		return await executor<ValueT, MatcherBound<ValueT>>({
 			name: 'statements',
 			collection: this.matchers,
 			value: value
 		});
-
-		/* 		try {
-			for (const matcher of this.matchers) {
-				const subResult = await matcher.execute(value);
-
-				// Matchers return codes when the matching function was interrupted or
-				// could not finish evaluating.
-				if (!subResult.ok()) {
-					console.error(`value did not pass value: ${value} // ${subResult.errorCode()}`);
-					mainResult.setErrorCode(subResult.errorCode());
-					break;
-				}
-
-				if (subResult.data === true) {
-					successful++;
-				}
-			}
-		} catch (e: unknown) {
-			const msg = e instanceof Error ? e.message : 'nonerr_type';
-			console.error(`stmt.execute exception: ${msg}`);
-			mainResult.setErrorCode('exception');
-		}
-
-		if (!mainResult.errorCode()) {
-			mainResult.setSuccess(true);
-			mainResult.data = successful === total;
-		}
-
-		return mainResult; */
 	}
 
 	public reset(): void {
+		this.nextMatcherId.reset();
 		this.matchers.length = 0;
+		this.matcherParams.clear();
 		this.blocks.length = 0;
 	}
 }

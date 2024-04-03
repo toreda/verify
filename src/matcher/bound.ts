@@ -24,7 +24,6 @@
  */
 
 import {Fate} from '@toreda/fate';
-import type {MatcherCall} from './call';
 import type {BlockFlags} from '../block/flags';
 import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../predicate';
@@ -33,6 +32,7 @@ import {type Executable} from '../executable';
 import {type ExecutionContext} from '../execution/context';
 import {executorMkContext} from '../executor/mk/context';
 import {matcherMkId} from './mk/id';
+import {type MatcherData} from './data';
 
 /**
  * @category Matcher Predicates
@@ -41,14 +41,13 @@ export class MatcherBound<InputT> implements Executable {
 	public readonly id: Id;
 	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
-	public readonly callArgs: Map<string, Primitive>;
+	public readonly stored: Map<string, Primitive>;
 
-	constructor(call: MatcherCall<InputT>) {
-		this.predicate = call.fn;
-		this.callArgs = new Map<string, Primitive>();
-		this.flags = this.mkFlags(call?.flags);
-		this.id = matcherMkId();
-		//this.params = matcherMkParams<ParamT>(call?.params);
+	constructor(matcherId: number, data: MatcherData<InputT>) {
+		this.predicate = data.fn;
+		this.stored = new Map<string, Primitive>();
+		this.flags = this.mkFlags(data?.flags);
+		this.id = matcherMkId<InputT>(matcherId, data);
 	}
 
 	/**

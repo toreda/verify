@@ -23,35 +23,25 @@
  *
  */
 
-import {type BlockInit} from '../../block/init';
-import {BlockLink} from '../../block/link';
-import {equalTo} from '../../equal/to';
-import {type Predicate} from '../../predicate';
-import {type MatcherFactory} from '../factory';
+import {type BlockFlags} from '../../block/flags';
 
 /**
- * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
- * @returns
  *
- * @category Matcher Predicate Factories
+ * @param value
+ * @param flags
+ *
+ * @category Matchers
  */
-export function matcherMkExactly(init: BlockInit): MatcherFactory<number, BlockLink> {
-	return (right: number): BlockLink => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+export async function matcherTransformOutput<ValueT = unknown, OutputT = boolean>(
+	value: ValueT | null,
+	output: OutputT,
+	flags?: BlockFlags
+): Promise<OutputT> {
+	// Flags indicate how to transform output (if at all). When no flags are provided,
+	// pass thru the original output and do not transform.
+	if (!flags) {
+		return output;
+	}
 
-		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
-			return equalTo(value, right);
-		};
-
-		init.stmt.addMatcher<number>({
-			fn: func,
-			name: '=',
-			flags: init.flags
-		});
-
-		return link;
-	};
+	return output;
 }

@@ -47,6 +47,7 @@ export function matcherMkEqual(init: BlockInit): MatcherFactory<unknown, BlockLi
 
 		init.stmt.addMatcher<unknown>({
 			fn: func,
+			name: '===',
 			flags: init.flags
 		});
 

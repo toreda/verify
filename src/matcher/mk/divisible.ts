@@ -48,6 +48,7 @@ export function matcherMkDivisible(init: BlockInit): MatcherFactory<number, Bloc
 
 		init.stmt.addMatcher<number>({
 			fn: func,
+			name: 'divisibleBy',
 			flags: init.flags
 		});
 

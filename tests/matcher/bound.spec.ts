@@ -13,7 +13,8 @@ describe('MatcherBound', () => {
 		};
 
 		instance = new MatcherBound<string>({
-			fn: predicate
+			fn: predicate,
+			name: 'matcher'
 		});
 	});
 
@@ -28,7 +29,8 @@ describe('MatcherBound', () => {
 			});
 
 			const custom = new MatcherBound({
-				fn: func
+				fn: func,
+				name: 'matcher'
 			});
 
 			expect(custom.predicate).toStrictEqual(func);
@@ -46,7 +48,8 @@ describe('MatcherBound', () => {
 			};
 
 			const custom = new MatcherBound({
-				fn: func
+				fn: func,
+				name: 'matcher'
 			});
 
 			expect(custom.flags).toStrictEqual(flags);
@@ -141,6 +144,7 @@ describe('MatcherBound', () => {
 				});
 				const custom = new MatcherBound({
 					fn: fn,
+					name: 'matcher',
 					flags: {}
 				});
 
@@ -155,6 +159,7 @@ describe('MatcherBound', () => {
 				});
 				const custom = new MatcherBound({
 					fn: func,
+					name: 'matcher',
 					flags: {}
 				});
 
@@ -170,6 +175,7 @@ describe('MatcherBound', () => {
 				});
 				const custom = new MatcherBound({
 					fn: fn,
+					name: 'matcher',
 					flags: {}
 				});
 

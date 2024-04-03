@@ -58,7 +58,8 @@ export function matcherMkNoneOf(init: BlockInit): MatcherFactory<Primitive[], Bl
 
 		init.stmt.addMatcher<Primitive>({
 			fn: func,
-			flags: init.flags
+			flags: init.flags,
+			name: 'notIn'
 		});
 
 		return link;

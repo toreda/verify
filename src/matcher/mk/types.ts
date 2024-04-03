@@ -55,7 +55,8 @@ export function matcherMkTypes(init: BlockInit): MatcherFactory<string[], BlockL
 		};
 
 		init.stmt.addMatcher<string>({
-			fn: func
+			fn: func,
+			name: 'typeof value in types'
 		});
 
 		return link;

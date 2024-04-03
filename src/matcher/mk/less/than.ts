@@ -47,6 +47,7 @@ export function matcherMkLessThan(init: BlockInit): MatcherFactory<number, Block
 
 		init.stmt.addMatcher<number>({
 			fn: func,
+			name: '<',
 			flags: init.flags
 		});
 

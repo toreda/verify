@@ -66,6 +66,7 @@ export function matcherMkOneOf(init: BlockInit): MatcherFactory<Primitive[], Blo
 
 		init.stmt.addMatcher<Primitive>({
 			fn: func,
+			name: 'value_in_array',
 			flags: init.flags
 		});
 

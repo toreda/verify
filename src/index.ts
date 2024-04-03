@@ -59,7 +59,7 @@ export {isStringNotEmpty} from './is/string/not/empty';
 export {lessThan} from './less/than';
 export {Matcher} from './matcher';
 export {MatcherBound} from './matcher/bound';
-export {MatcherCall} from './matcher/call';
+export {MatcherData} from './matcher/data';
 export {MatcherFactory} from './matcher/factory';
 export {matcherMkBetween} from './matcher/mk/between';
 export {matcherMkDivisible} from './matcher/mk/divisible';

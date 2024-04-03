@@ -37,15 +37,15 @@ import {type BlockInit} from './init';
  *
  * @category Rule Blocks
  */
-export class BlockLength extends Block<Statement> {
-	public readonly lessThan: MatcherFactory<number, BlockLink>;
-	public readonly greaterThan: MatcherFactory<number, BlockLink>;
-	public readonly equalTo: MatcherFactory<number, BlockLink>;
+export class BlockLength<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly greaterThan: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly equalTo: MatcherFactory<number, BlockLink<InputT>>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'length');
-		this.lessThan = matcherMkLessThan(init);
-		this.greaterThan = matcherMkGreaterThan(init);
-		this.equalTo = matcherMkEqual(init);
+		this.lessThan = matcherMkLessThan<InputT>(init);
+		this.greaterThan = matcherMkGreaterThan<InputT>(init);
+		this.equalTo = matcherMkEqual<InputT>(init);
 	}
 }

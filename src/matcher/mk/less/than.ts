@@ -35,17 +35,19 @@ import {type MatcherFactory} from '../../factory';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkLessThan(init: BlockInit): MatcherFactory<number, BlockLink> {
-	return (right: number): BlockLink => {
+export function matcherMkLessThan<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<number, BlockLink<InputT>> {
+	return (right: number): BlockLink<InputT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+		const link = new BlockLink<InputT>(init);
 
-		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return lessThan(value, right);
 		};
 
-		init.stmt.addMatcher<number>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: '<',
 			flags: init.flags

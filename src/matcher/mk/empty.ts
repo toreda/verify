@@ -34,19 +34,21 @@ import {type BlockInit} from '../../block/init';
  *
  * @category 		Matcher Predicate Factories
  */
-export function matcherMkEmpty(init: BlockInit): MatcherFactory<unknown | unknown[], BlockLink> {
+export function matcherMkEmpty<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<unknown | unknown[], BlockLink<InputT>> {
 	return () => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+		const link = new BlockLink<InputT>(init);
 
-		const func: Predicate<unknown | unknown[]> = async (
-			value?: unknown | unknown[] | null
+		const func: Predicate<InputT | InputT[]> = async (
+			value?: InputT | InputT[] | null
 		): Promise<boolean> => {
 			return empty(value);
 		};
 
-		init.stmt.addMatcher<never>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: 'empty',
 			flags: init.flags

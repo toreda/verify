@@ -2,7 +2,7 @@ import {Ruleset} from '../src/ruleset';
 import {target} from '../src/target';
 
 (async (): Promise<void> => {
-	const ruleset = new Ruleset();
+	const ruleset = new Ruleset<number>();
 
 	ruleset.add(
 		target.must.be.equalTo(12),

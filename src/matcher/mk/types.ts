@@ -32,11 +32,13 @@ import {type BlockInit} from '../../block/init';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkTypes(init: BlockInit): MatcherFactory<string[], BlockLink> {
-	return (typeNames: string[]): BlockLink => {
-		const link = new BlockLink(init);
+export function matcherMkTypes<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<string[], BlockLink<InputT>> {
+	return (typeNames: string[]): BlockLink<InputT> => {
+		const link = new BlockLink<InputT>(init);
 
-		const func: Predicate<string> = async (value?: string | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			if (!Array.isArray(typeNames)) {
 				return false;
 			}
@@ -54,7 +56,7 @@ export function matcherMkTypes(init: BlockInit): MatcherFactory<string[], BlockL
 			return false;
 		};
 
-		init.stmt.addMatcher<string>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: 'typeof value in types'
 		});

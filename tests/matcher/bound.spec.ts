@@ -12,7 +12,7 @@ describe('MatcherBound', () => {
 			return value === 'STRING';
 		};
 
-		instance = new MatcherBound<string>({
+		instance = new MatcherBound<string>(8, {
 			fn: predicate,
 			name: 'matcher'
 		});
@@ -28,7 +28,7 @@ describe('MatcherBound', () => {
 				return true;
 			});
 
-			const custom = new MatcherBound({
+			const custom = new MatcherBound(9, {
 				fn: func,
 				name: 'matcher'
 			});
@@ -47,7 +47,7 @@ describe('MatcherBound', () => {
 				c: 88819187
 			};
 
-			const custom = new MatcherBound({
+			const custom = new MatcherBound(10, {
 				fn: func,
 				name: 'matcher'
 			});
@@ -142,7 +142,7 @@ describe('MatcherBound', () => {
 				const fn = jest.fn().mockImplementation(() => {
 					throw new Error('mock fn throw');
 				});
-				const custom = new MatcherBound({
+				const custom = new MatcherBound(11, {
 					fn: fn,
 					name: 'matcher',
 					flags: {}
@@ -157,7 +157,7 @@ describe('MatcherBound', () => {
 				const func = jest.fn().mockImplementation(() => {
 					return false;
 				});
-				const custom = new MatcherBound({
+				const custom = new MatcherBound(12, {
 					fn: func,
 					name: 'matcher',
 					flags: {}
@@ -173,7 +173,7 @@ describe('MatcherBound', () => {
 				const fn = jest.fn().mockImplementation(() => {
 					return true;
 				});
-				const custom = new MatcherBound({
+				const custom = new MatcherBound(13, {
 					fn: fn,
 					name: 'matcher',
 					flags: {}

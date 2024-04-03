@@ -31,6 +31,6 @@ import {type ExecutionContext} from './execution/context';
  *
  * @category Executor
  */
-export interface Executable {
-	execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>>;
+export interface Executable<ValueT = unknown> {
+	execute(value?: ValueT | null): Promise<Fate<ExecutionContext>>;
 }

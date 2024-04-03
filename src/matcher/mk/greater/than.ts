@@ -36,17 +36,19 @@ import {type BlockInit} from '../../../block/init';
  * @category Matcher Predicate Factories
  */
 
-export function matcherMkGreaterThan(init: BlockInit): MatcherFactory<number, BlockLink> {
+export function matcherMkGreaterThan<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<number, BlockLink<InputT>> {
 	return (right: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink(init);
 
-		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return greaterThan(value, right);
 		};
 
-		init.stmt.addMatcher<number>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: '>',
 			flags: init.flags

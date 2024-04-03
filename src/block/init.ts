@@ -29,7 +29,7 @@ import {type BlockFlags} from './flags';
 /**
  * @category Rule Blocks
  */
-export interface BlockInit {
-	stmt: Statement;
+export interface BlockInit<InputT = unknown> {
+	stmt: Statement<InputT>;
 	flags?: BlockFlags;
 }

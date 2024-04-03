@@ -75,7 +75,7 @@ export class MatcherBound<InputT> implements Executable {
 		return result;
 	}
 
-	public async execute<ValueT = unknown>(value?: InputT | null): Promise<Fate<ExecutionContext>> {
+	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
 		const ctx = executorMkContext({
 			name: 'predicate'
 		});

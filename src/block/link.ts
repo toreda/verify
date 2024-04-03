@@ -35,11 +35,11 @@ import {type BlockInit} from './init';
  *
  * @category Rule Blocks
  */
-export class BlockLink extends Block<Statement> {
-	public readonly and: BlockAnd;
+export class BlockLink<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly and: BlockAnd<InputT>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'link');
-		this.and = new BlockAnd(init);
+		this.and = new BlockAnd<InputT>(init);
 	}
 }

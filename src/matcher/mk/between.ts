@@ -34,15 +34,17 @@ import {type BlockInit} from '../../block/init';
  *
  * @category 		Matcher Predicate Factories
  */
-export function matcherMkBetween(init: BlockInit): MatcherFactory<number, BlockLink> {
+export function matcherMkBetween<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<number, BlockLink<InputT>> {
 	return (left: number, right: number) => {
 		const link = new BlockLink(init);
 
-		const func: Predicate<number> = async (value?: number | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return between(left, value, right);
 		};
 
-		init.stmt.addMatcher<number>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: 'lower>x>upper',
 			flags: init.flags

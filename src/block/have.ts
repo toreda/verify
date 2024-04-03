@@ -31,11 +31,11 @@ import {BlockLength} from './length';
 /**
  * @category Rule Blocks
  */
-export class BlockHave extends Block<Statement> {
-	public readonly length: BlockLength;
+export class BlockHave<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly length: BlockLength<InputT>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'have');
-		this.length = new BlockLength(init);
+		this.length = new BlockLength<InputT>(init);
 	}
 }

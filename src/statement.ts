@@ -35,15 +35,16 @@ import {type Int, intMake} from '@toreda/strong-types';
 import {errorMkCode} from './error/mk/code';
 
 /**
- * Contains a set of matchers 
- *
+ * Holds one or more matchers that each perform validation
+ * upon calling `statement.execute(...)`. All matchers must
+ * pass for statement execution to pass.
  *
  * @category Statement Blocks
  */
-export class Statement implements Executable {
+export class Statement<InputT = unknown> implements Executable {
 	private readonly nextMatcherId: Int;
 	public readonly blocks: Block<Statement>[];
-	public readonly matchers: MatcherBound<any>[];
+	public readonly matchers: MatcherBound<InputT>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
 
 	constructor() {
@@ -70,7 +71,7 @@ export class Statement implements Executable {
 	 * indicating whether the matcher was successfully added.
 	 * @param data		Matcher data to add
 	 */
-	public addMatcher<InputT = unknown>(data: MatcherData<InputT>): Fate<boolean> {
+	public addMatcher(data: MatcherData<InputT>): Fate<boolean> {
 		const fate = new Fate<boolean>({
 			data: false
 		});
@@ -106,8 +107,8 @@ export class Statement implements Executable {
 	 * Test value against statement matchers.
 	 * @param value		Value to be tested by statement.
 	 */
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
-		return await executor<ValueT, MatcherBound<ValueT>>({
+	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
+		return await executor<InputT, MatcherBound<InputT>>({
 			name: 'statements',
 			collection: this.matchers,
 			value: value

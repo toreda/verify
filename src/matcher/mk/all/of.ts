@@ -32,22 +32,23 @@ import {type BlockInit} from '../../../block/init';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
- * @param root		Root node in validation chain matcher will be added to.
  * @returns
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkAllOf(init: BlockInit): MatcherFactory<Primitive[], BlockLink> {
-	return (right: Primitive[]): BlockLink => {
+export function matcherMkAllOf<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<Primitive[], BlockLink<InputT>> {
+	return (right: Primitive[]): BlockLink<InputT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+		const link = new BlockLink<InputT>(init);
 
-		const func: Predicate<Primitive> = async (value?: Primitive | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return lessThan(value, right);
 		};
 
-		init.stmt.addMatcher<Primitive>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: 'allOf',
 			flags: init.flags

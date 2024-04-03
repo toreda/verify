@@ -38,23 +38,23 @@ import {type BlockInit} from './init';
 /**
  * @category Statement Blocks
  */
-export class BlockIs extends Block<Statement> {
-	public readonly lessThan: MatcherFactory<number, BlockLink>;
-	public readonly greaterThan: MatcherFactory<number, BlockLink>;
-	public readonly equalTo: MatcherFactory<number, BlockLink>;
-	public readonly empty: MatcherFactory<never, BlockLink>;
-	public readonly notEmpty: MatcherFactory<never, BlockLink>;
-	public readonly divisibleBy: MatcherFactory<number, BlockLink>;
-	public readonly type: MatcherFactory<string, BlockLink>;
+export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly greaterThan: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly equalTo: MatcherFactory<InputT, BlockLink<InputT>>;
+	public readonly empty: MatcherFactory<InputT, BlockLink<InputT>>;
+	public readonly notEmpty: MatcherFactory<InputT, BlockLink<InputT>>;
+	public readonly divisibleBy: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly type: MatcherFactory<string, BlockLink<InputT>>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'is');
-		this.empty = matcherMkEmpty(init);
-		this.notEmpty = matcherMkEmpty(init);
-		this.lessThan = matcherMkLessThan(init);
-		this.greaterThan = matcherMkGreaterThan(init);
-		this.equalTo = matcherMkEqual(init);
-		this.divisibleBy = matcherMkDivisible(init);
-		this.type = matcherMkType(init);
+		this.empty = matcherMkEmpty<InputT>(init);
+		this.notEmpty = matcherMkEmpty<InputT>(init);
+		this.lessThan = matcherMkLessThan<InputT>(init);
+		this.greaterThan = matcherMkGreaterThan<InputT>(init);
+		this.equalTo = matcherMkEqual<InputT>(init);
+		this.divisibleBy = matcherMkDivisible<InputT>(init);
+		this.type = matcherMkType<InputT>(init);
 	}
 }

@@ -36,13 +36,15 @@ import {type BlockInit} from '../../../block/init';
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkNoneOf(init: BlockInit): MatcherFactory<Primitive[], BlockLink> {
-	return (right: Primitive[]): BlockLink => {
+export function matcherMkNoneOf<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<Primitive[], BlockLink<InputT>> {
+	return (right: Primitive[]): BlockLink<InputT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+		const link = new BlockLink<InputT>(init);
 
-		const func: Predicate<unknown> = async (value?: unknown | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			if (!Array.isArray(right)) {
 				return false;
 			}
@@ -56,7 +58,7 @@ export function matcherMkNoneOf(init: BlockInit): MatcherFactory<Primitive[], Bl
 			return true;
 		};
 
-		init.stmt.addMatcher<Primitive>({
+		init.stmt.addMatcher({
 			fn: func,
 			flags: init.flags,
 			name: 'notIn'

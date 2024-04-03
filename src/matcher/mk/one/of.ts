@@ -36,13 +36,15 @@ ion chain which determines if chain value is less than target.
  *
  * @category Matcher Predicate Factories
  */
-export function matcherMkOneOf(init: BlockInit): MatcherFactory<Primitive[], BlockLink> {
-	return (right: Primitive[]): BlockLink => {
+export function matcherMkOneOf<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<Primitive[], BlockLink<InputT>> {
+	return (right: Primitive[]): BlockLink<InputT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it to
 		///surrounding closure will cause infinite recursion & stack overflow.
 		const link = new BlockLink(init);
 
-		const func: Predicate<Primitive> = async (value?: Primitive | null): Promise<boolean> => {
+		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			if (!Array.isArray(right)) {
 				return false;
 			}
@@ -64,7 +66,7 @@ export function matcherMkOneOf(init: BlockInit): MatcherFactory<Primitive[], Blo
 			return false;
 		};
 
-		init.stmt.addMatcher<Primitive>({
+		init.stmt.addMatcher({
 			fn: func,
 			name: 'value_in_array',
 			flags: init.flags

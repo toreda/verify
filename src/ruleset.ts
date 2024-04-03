@@ -4,11 +4,12 @@ import {Block} from './block';
 import {Statement} from './statement';
 import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
+import {type Executable} from './executable';
 
 /**
  * @category Rulesets
  */
-export class Ruleset {
+export class Ruleset<InputT = unknown> implements Executable {
 	public readonly rules: Rule[];
 
 	constructor() {
@@ -46,8 +47,8 @@ export class Ruleset {
 		return true;
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
-		return await executor<ValueT, Rule>({
+	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
+		return await executor<InputT, Rule>({
 			name: 'rules',
 			collection: this.rules,
 			value: value

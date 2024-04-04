@@ -89,7 +89,7 @@ export async function executor<ValueT, CollectionT extends Executable>(
 		} else {
 			ctx.outcome = 'pass';
 		}
-
+		// No exceptions during execution. Fate return status is separate from executor outcome.
 		fate.setSuccess(true);
 	} catch (e: unknown) {
 		const msg = e instanceof Error ? e.message : 'nonerror_type';

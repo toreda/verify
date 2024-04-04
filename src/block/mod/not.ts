@@ -30,8 +30,10 @@ import {Statement} from '../../statement';
 /**
  * @category Statement Blocks
  */
-export class BlockModNot<ParentBlockT extends Block<Statement>> extends Block<Statement> {
-	constructor(parent: ParentBlockT, stmt: Statement, flags?: BlockFlags) {
+export class BlockModNot<InputT, ParentBlockT extends Block<Statement<InputT>>> extends Block<
+	Statement<InputT>
+> {
+	constructor(parent: ParentBlockT, stmt: Statement<InputT>, flags?: BlockFlags) {
 		super(stmt, 'not');
 
 		const modFlags: BlockFlags = {

@@ -1,15 +1,15 @@
 import {Ruleset} from '../src/ruleset';
-import {target} from '../src/target';
+import {value} from '../src/value';
 
 (async (): Promise<void> => {
 	const ruleset = new Ruleset<number>();
 
 	ruleset.add(
-		target.must.be.equalTo(12),
-		target.must.be.greaterThan(10),
-		target.must.contain.oneOf([10, 11, 13]),
-		target.is.greaterThan(9),
-		target.is.greaterThan(11)
+		value.must.be.equalTo(12),
+		value.must.be.greaterThan(10),
+		value.must.contain.oneOf([10, 11, 13]),
+		value.is.greaterThan(9),
+		value.is.greaterThan(11)
 	);
 
 	console.debug(`Rules: ${ruleset.rules.length}`);
@@ -26,7 +26,8 @@ import {target} from '../src/target';
 	}
 
 	console.debug(`execute:`);
-	const result = await ruleset.execute(12);
+	const result = await ruleset.execute(15);
 	const ctx = result.data;
 	console.debug(`Ruleset result: ${result.ok()}`);
+	console.debug(`\tOutcome: ${ctx?.outcome}`);
 })();

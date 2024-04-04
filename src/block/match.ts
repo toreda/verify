@@ -33,14 +33,14 @@ import {type BlockInit} from './init';
 /**
  * @category Statement Blocks
  */
-export class BlockMatch extends Block<Statement> {
-	public readonly type: MatcherFactory<string, Block<Statement>>;
-	public readonly atLeastOneType: MatcherFactory<string[], Block<Statement>>;
+export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly type: MatcherFactory<string, Block<Statement<InputT>>>;
+	public readonly atLeastOneType: MatcherFactory<string[], Block<Statement<InputT>>>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'matcher');
 
-		this.type = matcherMkType(init);
-		this.atLeastOneType = matcherMkTypes(init);
+		this.type = matcherMkType<InputT>(init);
+		this.atLeastOneType = matcherMkTypes<InputT>(init);
 	}
 }

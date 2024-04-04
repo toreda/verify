@@ -38,13 +38,13 @@ import {RuleConfig} from './rule/config';
 /**
  * @category Rules
  */
-export class Rule {
-	public readonly statements: Statement[];
-	public readonly contains: BlockContains;
-	public readonly must: BlockMust;
-	public readonly is: BlockIs;
-	public readonly has: BlockHave;
-	public readonly matches: BlockMatch;
+export class Rule<InputT = unknown> {
+	public readonly statements: Statement<InputT>[];
+	public readonly contains: BlockContains<InputT>;
+	public readonly must: BlockMust<InputT>;
+	public readonly is: BlockIs<InputT>;
+	public readonly has: BlockHave<InputT>;
+	public readonly matches: BlockMatch<InputT>;
 	private readonly cfg: RuleConfig;
 
 	constructor() {
@@ -82,8 +82,8 @@ export class Rule {
 		this.statements.push(stmt);
 	}
 
-	public async execute<ValueT = unknown>(value?: ValueT | null): Promise<Fate<ExecutionContext>> {
-		return executor<ValueT, Statement>({
+	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
+		return executor<InputT, Statement<InputT>>({
 			collection: this.statements,
 			name: 'rule',
 			value: value

@@ -23,10 +23,45 @@
  *
  */
 
-/**
- * @category Validators – Numbers
- */
-export interface AllOfParams {
-	right: string[] | number[];
-	invertResult?: boolean;
-}
+import {BlockContains} from './block/contains';
+import {BlockHave} from './block/have';
+import {type BlockInit} from './block/init';
+import {BlockIs} from './block/is';
+import {BlockMatch} from './block/match';
+import {BlockMust} from './block/must';
+import {Rule} from './rule';
+import {Statement} from './statement';
+
+export const value = new Proxy(new Rule(), {
+	get: (target: Rule, prop: keyof Rule | keyof Rule): any => {
+		const stmt = new Statement();
+		const init: BlockInit = {
+			stmt: stmt
+		};
+
+		/**
+		 * IMPORTANT: Properties not listed here will are not accessible using the
+		 * rule object property accessor (e.g. rule.contaians).
+		 * When adding
+		 */
+		switch (prop) {
+			case 'contains':
+				target.add(stmt);
+				return new BlockContains(init);
+			case 'must':
+				target.add(stmt);
+				return new BlockMust(init);
+			case 'has':
+				target.add(stmt);
+				return new BlockHave(init);
+			case 'matches':
+				target.add(stmt);
+				return new BlockMatch(init);
+			case 'is':
+				target.add(stmt);
+				return new BlockIs(init);
+			default:
+				return target[prop];
+		}
+	}
+});

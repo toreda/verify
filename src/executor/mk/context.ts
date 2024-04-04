@@ -28,7 +28,8 @@ import {type ExecutionContext} from '../../execution/context';
 import {type ExecutorParams} from '../params';
 
 /**
- * Creates and initialize an ExecutionContext object with default values.
+ * Creates an ExecutionContext and initialize properties provided values, or default
+ * when none provided.
  * @param params
  *
  * @category Executor

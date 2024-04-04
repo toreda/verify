@@ -37,19 +37,19 @@ import {BlockModNot} from './mod/not';
 /**
  * @category Rule Blocks
  */
-export class BlockMust extends Block<Statement> {
-	public readonly be: BlockBe;
-	public readonly match: BlockMatch;
-	public readonly equal: MatcherFactory<Primitive, Block<Statement>>;
-	public readonly contain: BlockContains;
-	public readonly not: BlockModNot<BlockMust>;
+export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly be: BlockBe<InputT>;
+	public readonly match: BlockMatch<InputT>;
+	public readonly equal: MatcherFactory<Primitive, Block<Statement<InputT>>>;
+	public readonly contain: BlockContains<InputT>;
+	public readonly not: BlockModNot<InputT, BlockMust<InputT>>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'must');
-		this.match = new BlockMatch(init);
-		this.equal = matcherMkEqual(init);
-		this.be = new BlockBe(init);
-		this.contain = new BlockContains(init);
-		this.not = new BlockModNot<BlockMust>(this, init.stmt);
+		this.match = new BlockMatch<InputT>(init);
+		this.equal = matcherMkEqual<InputT>(init);
+		this.be = new BlockBe<InputT>(init);
+		this.contain = new BlockContains<InputT>(init);
+		this.not = new BlockModNot<InputT, BlockMust<InputT>>(this, init.stmt);
 	}
 }

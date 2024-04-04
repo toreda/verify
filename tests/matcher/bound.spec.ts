@@ -1,3 +1,4 @@
+import {BlockFlags} from '../../src';
 import {MatcherBound} from '../../src/matcher/bound';
 import {Predicate} from '../../src/predicate';
 
@@ -36,23 +37,26 @@ describe('MatcherBound', () => {
 			expect(custom.predicate).toStrictEqual(func);
 		});
 
-		it(`should set flags property to the provided call.fn arg`, () => {
+		it(`should set only supported flags`, () => {
 			const func = jest.fn().mockImplementation(() => {
 				return true;
 			});
 
-			const flags = {
+			const flags: BlockFlags = {
 				a: 'aaaa',
 				b: 4719714,
-				c: 88819187
+				c: 88819187,
+				invertResult: true
 			};
 
 			const custom = new MatcherBound(10, {
 				fn: func,
-				name: 'matcher'
+				name: 'matcher',
+				flags: flags
 			});
 
-			expect(custom.flags).toStrictEqual(flags);
+			expect(custom.flags).toHaveProperty('invertResult');
+			expect(custom.flags.invertResult).toBe(true);
 		});
 	});
 
@@ -153,7 +157,7 @@ describe('MatcherBound', () => {
 				expect(result.errorCode()).toBe('exception');
 			});
 
-			it(`should return false when matcher suceeds but returns false`, async () => {
+			it(`should return false when matcher fails`, async () => {
 				const func = jest.fn().mockImplementation(() => {
 					return false;
 				});
@@ -165,11 +169,11 @@ describe('MatcherBound', () => {
 
 				const result = await custom.execute('aaa');
 				expect(result.ok()).toBe(true);
-				expect(result.data).toBe(false);
+				expect(result.data?.outcome).toBe('fail');
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 			});
 
-			it(`should succeed' when matcher returns true`, async () => {
+			it(`should succeed when matcher returns true`, async () => {
 				const fn = jest.fn().mockImplementation(() => {
 					return true;
 				});
@@ -180,7 +184,7 @@ describe('MatcherBound', () => {
 				});
 
 				const result = await custom.execute('aaa');
-				expect(result.success()).toBe(true);
+				expect(result.ok()).toBe(true);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 			});
 		});

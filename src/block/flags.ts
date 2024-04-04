@@ -23,6 +23,8 @@
  *
  */
 
+import {type Primitive} from '@toreda/types';
+
 /**
  * Optional flags provided used when creating a block.
  *
@@ -33,4 +35,5 @@ export interface BlockFlags {
 	 * Invert the node's matcher predicate result before it's returned.
 	 */
 	invertResult?: boolean;
+	[k: string]: Primitive;
 }

@@ -51,10 +51,13 @@ describe('equalTo', () => {
 			expect(equalTo('{}', {})).toBe(false);
 		});
 
-		it(`should return false when either value is null`, () => {
+		it(`should return false when only one value is null`, () => {
 			expect(equalTo(null, 'null')).toBe(false);
-			expect(equalTo(null, null)).toBe(false);
 			expect(equalTo('null', null)).toBe(false);
+		});
+
+		it(`should return true when both values are null`, () => {
+			expect(equalTo(null, null)).toBe(true);
 		});
 
 		it(`should return false when either value is undefined`, () => {

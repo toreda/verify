@@ -39,6 +39,10 @@ export function empty<ValueT>(value?: ValueT | null): boolean {
 		return false;
 	}
 
+	if (typeof value === 'boolean' || typeof value === 'number') {
+		return false;
+	}
+
 	if (Array.isArray(value)) {
 		return value.length === 0;
 	}

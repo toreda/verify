@@ -32,8 +32,34 @@
  * @category Matcher Predicates
  */
 export function equalTo(left: unknown, right: unknown): boolean {
+	if (left === null && right === null) {
+		return true;
+	}
+
+	if (Number.isNaN(left) && Number.isNaN(right)) {
+		return true;
+	}
+
 	if (typeof left !== typeof right) {
 		return false;
+	}
+
+	if (Array.isArray(left) && Array.isArray(right)) {
+		if (left.length === 0 && right.length === 0) {
+			return true;
+		}
+
+		if (left.length !== right.length) {
+			return false;
+		}
+
+		for (let i = 0; i < left.length - 1; i++) {
+			if (left[i] !== right[i]) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	const type = typeof left;

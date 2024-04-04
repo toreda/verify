@@ -86,9 +86,9 @@ export class MatcherBound<InputT = unknown> implements Executable {
 
 		try {
 			const fnResult = await this.predicate(value);
-			console.debug(`predicate result: ${fnResult}`);
+			//console.debug(`predicate result: ${fnResult}`);
 			const result = this.applyMods(fnResult);
-			console.debug(`predicate result (mods applied): ${result}`);
+			//console.debug(`predicate result (mods applied): ${result}`);
 			ctx.outcome = result === true ? 'pass' : 'fail';
 
 			fate.setSuccess(true);

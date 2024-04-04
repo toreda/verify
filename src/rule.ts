@@ -34,11 +34,12 @@ import {BlockContains} from './block/contains';
 import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
 import {RuleConfig} from './rule/config';
+import {type Resettable} from '@toreda/types';
 
 /**
  * @category Rules
  */
-export class Rule<InputT = unknown> {
+export class Rule<InputT = unknown> implements Resettable {
 	/**
 	 * IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
@@ -57,7 +58,7 @@ export class Rule<InputT = unknown> {
 			stmt: stmt
 		};
 
-		this.cfg = new RuleConfig<InputT>();
+		this.cfg = new RuleConfig();
 		this.must = new BlockMust<InputT>(init);
 		this.is = new BlockIs<InputT>(init);
 		this.matches = new BlockMatch<InputT>(init);
@@ -94,5 +95,9 @@ export class Rule<InputT = unknown> {
 			name: 'rule',
 			value: value
 		});
+	}
+
+	public reset(): void {
+		this.statements.length = 0;
 	}
 }

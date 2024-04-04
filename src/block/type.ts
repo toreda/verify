@@ -24,7 +24,7 @@
  */
 
 /**
- * Identifies the type and role of each validation chain node.
+ * Identifies rule block role and type.
  *
  * @category Rule Blocks
  */

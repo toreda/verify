@@ -27,13 +27,21 @@ import {type BlockModType} from './block/mod/type';
 import type {BlockType} from './block/type';
 
 /**
- * Base node extended by all nodes in a Rule Chain.
- *
+ * @description Base type extended by all rule system blocks.
+ * @typeParam StatementT - Type for statement holding or that will hold this block.
  * @category Rule Blocks
  */
-export abstract class Block<StatementT> {
+export abstract class Block<StatementT = unknown> {
+	/**
+	 * @description Block's role type in statements.
+	 */
 	public readonly blockType: BlockType;
 	public readonly stmt: StatementT;
+	/**
+	 * @description Modifier type applied to block output (if any).
+	 * @defaultValue false
+	 * @remarks "not" blocks invert block output.
+	 */
 	public readonly modType: BlockModType;
 
 	constructor(stmt: StatementT, blockType: BlockType, modType?: BlockModType) {

@@ -5,7 +5,6 @@ export {BlockBe} from './block/be';
 export {BlockContains} from './block/contains';
 export {BlockFlags} from './block/flags';
 export {BlockHave} from './block/have';
-export {BlockId} from './block/id';
 export {BlockInit} from './block/init';
 export {BlockIs} from './block/is';
 export {BlockLength} from './block/length';

@@ -26,7 +26,7 @@
 /**
  * @category Error Handling
  */
-export type Code =
+export type Code<CustomT = string> =
 	| 'bad_arg_format'
 	| 'bad_config'
 	| 'bad_content'
@@ -42,8 +42,10 @@ export type Code =
 	| 'error'
 	| 'exception'
 	| 'missing_arg'
+	| 'missing_argument'
 	| 'missing_config'
 	| 'missing_id'
+	| 'missing_property'
 	| 'missing_value'
 	| 'missing'
 	| 'not_authorized'
@@ -55,4 +57,5 @@ export type Code =
 	| 'unsupported_config'
 	| 'unsupported_type'
 	| 'unsupported_value'
-	| 'unsupported_version';
+	| 'unsupported_version'
+	| CustomT;

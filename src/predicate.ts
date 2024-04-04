@@ -24,6 +24,9 @@
  */
 
 /**
+ * Type signature for predicate functions for matchers.
+ * @typeParam InputT - Expected argument type.
+ *
  * @category Matcher Predicates
  */
 export type Predicate<InputT = unknown> = (value?: InputT | null) => Promise<boolean>;

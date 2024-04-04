@@ -29,9 +29,29 @@
  * @category Executor
  */
 export interface ExecutionCounts {
+	/**
+	 * @description 'error' outcomes are returned when execution interrupted or did not
+	 * start due to an exception or serious error.
+	 */
 	error: number;
+	/**
+	 * @description `fail` outcomes occur when a provided value fails validation in
+	 * one more matchers.
+	 */
 	fail: number;
+	/**
+	 * @description Provided value passed validation in all matchers.
+	 */
 	pass: number;
+	/**
+	 * @description `skip` occurs when all available matchers skip execution due to
+	 * reaching rule criteria such as reaching a threshold, time limit, or some
+	 * exclusive "this test or this test but not both" situations. `skip` is not an
+	 * implied `pass` or `fail`, just an indication that matchers opted out.
+	 */
 	skip: number;
+	/**
+	 * @description Total number of all outcomes during execution.
+	 */
 	total: number;
 }

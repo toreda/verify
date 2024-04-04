@@ -24,6 +24,9 @@
  */
 
 /**
+ * @name Block Modifier Type
+ * @description Modifier applied to block result output.
+ *
  * @category Rule Blocks
  */
 export type BlockModType = 'not' | 'none';

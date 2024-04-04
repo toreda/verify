@@ -32,7 +32,7 @@ import {isNumberFinite} from './is/number/finite';
  * @param right
  * @returns
  *
- * @category		Validator Predicates – Number
+ * @category		Matcher Predicates – Number
  */
 export async function between<ValueT>(left: number, value: ValueT, right: number): Promise<boolean> {
 	if (!isNumberFinite(left) || !isNumberFinite(value) || !isNumberFinite(right)) {

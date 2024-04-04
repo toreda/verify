@@ -37,9 +37,23 @@ import {BlockLink} from './link';
 import {type BlockInit} from './init';
 
 /**
- * @category Statement Blocks
+ * Matchers following the `contain` or `contains` block in rule statements.
+ *
+ * @category Rule Blocks
+ *
+ * @example
+ * ```ts
+ * value.must.contain.atLeast('a');
+ * ```
+ *
+ * ```ts
+ * value.must.contain.oneOf(['a', 'b']);
+ * ```
  */
 export class BlockContains<InputT = unknown> extends Block<Statement<InputT>> {
+	/**
+	 * Matches when input is an exact match.
+	 */
 	public readonly exactly: MatcherFactory<number, BlockLink<InputT>>;
 	public readonly atLeast: MatcherFactory<number, BlockLink<InputT>>;
 	public readonly atMost: MatcherFactory<number, BlockLink<InputT>>;

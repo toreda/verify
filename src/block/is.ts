@@ -36,7 +36,19 @@ import {matcherMkType} from '../matcher/mk/type';
 import {type BlockInit} from './init';
 
 /**
- * @category Statement Blocks
+ * Matchers following 'is' in rule statements.
+ *
+ * @category Rule Blocks
+ * @example
+ * ```ts
+ * value.is.lessThan(10)
+ * ```
+ * ```ts
+ * value.is.greaterThan(10)
+ * ```
+ * ```ts
+ * value.is.equalTo(0)
+ * ```
  */
 export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;

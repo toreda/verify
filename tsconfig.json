@@ -3,6 +3,7 @@
 	"include": ["**/src/**/*", "tests/**/*"],
 	"filesGlob": ["./src/*.ts", "./src/**/*.ts", "!./node_modules/**"],
 	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
 		"allowUnreachableCode": false,
 		"alwaysStrict": true,
 		"declaration": true,
@@ -28,8 +29,10 @@
 	"ts-node": {
 		"swc": true,
 		"compilerOptions": {
-			"noEmit": true,
-			"skipLibCheck": true
+			"allowSyntheticDefaultImports": true,
+			"sourceMap": false,
+			"noLib": true,
+			"noEmit": true
 		}
 	}
 }

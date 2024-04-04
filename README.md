@@ -117,7 +117,12 @@ const result = Array.isArray(value) && value.length === 0;
 &nbsp;
 
 # Source Code
-`@toreda/chk` is an open source package provided under the MIT License. Download, clone, or check the complete project source [here on Github](https://www.npmjs.com/package/@toreda/chk). We welcome bug reports, comments, and pull requests.
+`@toreda/chk` source is available [here on Github](https://www.npmjs.com/package/@toreda/chk).
+
+
+&nbsp;
+# Contributions
+We welcome bug reports, comments, and pull requests.
 
 &nbsp;
 # Legal

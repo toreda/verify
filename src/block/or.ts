@@ -33,13 +33,13 @@ import {BlockIs} from './is';
  *
  * @category Rule Blocks
  */
-export class BlockOr extends Block<Statement> {
-	public readonly contains: BlockContains;
-	public readonly is: BlockIs;
+export class BlockOr<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly contains: BlockContains<InputT>;
+	public readonly is: BlockIs<InputT>;
 
-	constructor(init: BlockInit) {
+	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'or');
-		this.is = new BlockIs(init);
-		this.contains = new BlockContains(init);
+		this.is = new BlockIs<InputT>(init);
+		this.contains = new BlockContains<InputT>(init);
 	}
 }

@@ -23,4 +23,9 @@
  *
  */
 
+/**
+ * @description Possible outcomes returned by rulesets, statements, and other systems.
+ *
+ * @category Core
+ */
 export type Outcome = 'pass' | 'fail' | 'error' | 'skip';

@@ -33,7 +33,19 @@ import {BlockLink} from './link';
 import {type BlockInit} from './init';
 
 /**
- * @category Statement Blocks
+ * Matchers following 'be' in rule statements.
+ *
+ * @category Rule Blocks
+ * @example
+ * ```ts
+ * value.must.be.lessThan(10)
+ * ```
+ * ```ts
+ * value.must.be.greaterThan(10)
+ * ```
+ * ```ts
+ * value.must.be.equalTo(0)
+ * ```
  */
 export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;

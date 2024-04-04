@@ -39,6 +39,10 @@ import {RuleConfig} from './rule/config';
  * @category Rules
  */
 export class Rule<InputT = unknown> {
+	/**
+	 * IMPORTANT: New properties intended using rule syntax MUST be added to
+	 * the switch statement in `value.ts`.
+	 */
 	public readonly statements: Statement<InputT>[];
 	public readonly contains: BlockContains<InputT>;
 	public readonly must: BlockMust<InputT>;
@@ -48,17 +52,17 @@ export class Rule<InputT = unknown> {
 	private readonly cfg: RuleConfig;
 
 	constructor() {
-		const stmt = new Statement();
-		const init: BlockInit = {
+		const stmt = new Statement<InputT>();
+		const init: BlockInit<InputT> = {
 			stmt: stmt
 		};
 
-		this.cfg = new RuleConfig();
-		this.must = new BlockMust(init);
-		this.is = new BlockIs(init);
-		this.matches = new BlockMatch(init);
-		this.has = new BlockHave(init);
-		this.contains = new BlockContains(init);
+		this.cfg = new RuleConfig<InputT>();
+		this.must = new BlockMust<InputT>(init);
+		this.is = new BlockIs<InputT>(init);
+		this.matches = new BlockMatch<InputT>(init);
+		this.has = new BlockHave<InputT>(init);
+		this.contains = new BlockContains<InputT>(init);
 		this.statements = [];
 		this.bindListeners();
 	}
@@ -74,12 +78,14 @@ export class Rule<InputT = unknown> {
 	 * @param stmt
 	 * @returns
 	 */
-	public add(stmt: Statement): void {
+	public add(stmt: Statement<InputT>): Rule<InputT> {
 		if (!stmt) {
-			return;
+			return this;
 		}
 
 		this.statements.push(stmt);
+
+		return this;
 	}
 
 	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {

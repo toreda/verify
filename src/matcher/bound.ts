@@ -37,7 +37,7 @@ import {type MatcherData} from './data';
 /**
  * @category Matcher Predicates
  */
-export class MatcherBound<InputT> implements Executable {
+export class MatcherBound<InputT = unknown> implements Executable {
 	public readonly id: Id;
 	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
@@ -76,7 +76,7 @@ export class MatcherBound<InputT> implements Executable {
 	}
 
 	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
-		const ctx = executorMkContext({
+		const ctx = executorMkContext<InputT>({
 			name: 'predicate'
 		});
 
@@ -89,7 +89,7 @@ export class MatcherBound<InputT> implements Executable {
 			console.debug(`predicate result: ${fnResult}`);
 			const result = this.applyMods(fnResult);
 			console.debug(`predicate result (mods applied): ${result}`);
-			ctx.outcome = 'pass';
+			ctx.outcome = result === true ? 'pass' : 'fail';
 
 			fate.setSuccess(true);
 		} catch (e: unknown) {

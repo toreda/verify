@@ -43,7 +43,7 @@ import {errorMkCode} from './error/mk/code';
  */
 export class Statement<InputT = unknown> implements Executable {
 	private readonly nextMatcherId: Int;
-	public readonly blocks: Block<Statement>[];
+	public readonly blocks: Block<Statement<InputT>>[];
 	public readonly matchers: MatcherBound<InputT>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
 
@@ -109,7 +109,7 @@ export class Statement<InputT = unknown> implements Executable {
 	 */
 	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
 		return await executor<InputT, MatcherBound<InputT>>({
-			name: 'statements',
+			name: 'matchers',
 			collection: this.matchers,
 			value: value
 		});

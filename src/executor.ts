@@ -37,10 +37,10 @@ import Defaults from './defaults';
  *
  * @category Executor
  */
-export async function executor<ValueT, CollectionT extends Executable>(
-	params: ExecutorParams<ValueT, CollectionT>
+export async function executor<InputT, CollectionT extends Executable<InputT>>(
+	params: ExecutorParams<InputT, CollectionT>
 ): Promise<Fate<ExecutionContext>> {
-	const ctx = executorMkContext({
+	const ctx = executorMkContext<InputT>({
 		name: params.name
 	});
 
@@ -53,11 +53,16 @@ export async function executor<ValueT, CollectionT extends Executable>(
 	}
 
 	try {
-		const ctx = fate.data;
 		ctx.summary.counts.total = params.collection.length;
 
 		for (const item of params.collection) {
 			const subResult = await item.execute(params.value);
+
+			// Error
+			if (!subResult.ok()) {
+				ctx.summary.counts.error++;
+				continue;
+			}
 
 			if (subResult.data) {
 				fate.data?.results.push(subResult.data);
@@ -70,11 +75,20 @@ export async function executor<ValueT, CollectionT extends Executable>(
 				case 'pass':
 					ctx.summary.counts.pass++;
 					break;
+				// Serious error encountered, but was able to return without an uncaught
+				// exception.
 				case 'error':
 					ctx.summary.counts.error++;
 					break;
+				// Execution skipped due to some reason other than errors.
 				case 'skip':
 					ctx.summary.counts.skip++;
+					break;
+				// Default fail if nothing else matches outcome returned. The returned
+				// outcome should match one of the supported cases. If not, something
+				// went wrong.
+				default:
+					ctx.summary.counts.fail++;
 					break;
 			}
 		}

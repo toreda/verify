@@ -28,13 +28,15 @@ import {type ExecutionContext} from '../../execution/context';
 import {type ExecutorParams} from '../params';
 
 /**
- * Creates an ExecutionContext and initialize properties provided values, or default
- * when none provided.
+ * Creates ExecutionContext and initialize with provided values, or default when
+ * none provided.
  * @param params
  *
  * @category Executor
  */
-export function executorMkContext(params?: Partial<ExecutorParams>): ExecutionContext {
+export function executorMkContext<InputT = unknown>(
+	params?: Partial<ExecutorParams<InputT>>
+): ExecutionContext {
 	return {
 		name: stringValue(params?.name, '_default_'),
 		results: [],

@@ -35,6 +35,7 @@ import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
 import {RuleConfig} from './rule/config';
 import {type Resettable} from '@toreda/types';
+import {BlockWithNot, blockWithNot} from './block/with/not';
 
 /**
  * @category Rules
@@ -46,7 +47,7 @@ export class Rule<InputT = unknown> implements Resettable {
 	 */
 	public readonly statements: Statement<InputT>[];
 	public readonly contains: BlockContains<InputT>;
-	public readonly must: BlockMust<InputT>;
+	public readonly must: BlockWithNot<InputT, BlockMust<InputT>>;
 	public readonly is: BlockIs<InputT>;
 	public readonly has: BlockHave<InputT>;
 	public readonly matches: BlockMatch<InputT>;
@@ -59,7 +60,7 @@ export class Rule<InputT = unknown> implements Resettable {
 		};
 
 		this.cfg = new RuleConfig();
-		this.must = new BlockMust<InputT>(init);
+		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust, init);
 		this.is = new BlockIs<InputT>(init);
 		this.matches = new BlockMatch<InputT>(init);
 		this.has = new BlockHave<InputT>(init);

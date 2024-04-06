@@ -22,20 +22,39 @@
  * 	SOFTWARE.
  *
  */
+interface ModNot<BlockT> {
+	not: BlockT;
+}
 
-import {type Primitive} from '@toreda/types';
+import {Constructor} from '@toreda/types';
+import {Block} from '../../block';
+import {Statement} from '../../statement';
+import {type BlockInit} from '../init';
+import {BlockFlags} from '../flags';
 
 /**
- * Optional flags provided used when creating a block.
- *
- * @category Statement Blocks
+ * @category Block Modifiers
  */
-export interface BlockFlags {
-	/**
-	 * Invert the node's matcher predicate result before it's returned.
-	 */
-	invertResult?: boolean;
-	op?: string;
-	[k: string]: Primitive;
-	injectNot?: boolean;
+
+/**
+ *
+ * @param block
+ * @param init
+ *
+ * @category Block Modifiers
+ */
+export function blockWithMod<InputT, BlockT extends Block<Statement<InputT>>, ModKey extends string, ReturnT>(
+	CTOR: Constructor<BlockT>,
+	init: BlockInit<InputT>,
+	modFlags: BlockFlags,
+	modKey: ModKey
+): BlockWithMod<InputT, BlockT, ModKey> {
+	const o = new CTOR(init);
+	const initMod = {
+		...init
+	};
+
+	initMod.flags = modFlags;
+
+	return Object.defineProperty(o, modKey, new CTOR(initMod));
 }

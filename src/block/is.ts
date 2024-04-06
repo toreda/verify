@@ -34,6 +34,7 @@ import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkType} from '../matcher/mk/type';
 import {type BlockInit} from './init';
+import {matcherMkBetween} from '../matcher/mk/between';
 
 /**
  * Matchers following 'is' in rule statements.
@@ -49,8 +50,17 @@ import {type BlockInit} from './init';
  * ```ts
  * value.is.equalTo(0)
  * ```
+ *
+ * ```ts
+ * value.is.type('array')
+ * ```
+ *
+ * ```ts
+ * value.is.type('string')
+ * ```
  */
 export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
+	public readonly between: MatcherFactory<number, BlockLink<InputT>>;
 	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;
 	public readonly greaterThan: MatcherFactory<number, BlockLink<InputT>>;
 	public readonly equalTo: MatcherFactory<InputT, BlockLink<InputT>>;
@@ -61,12 +71,14 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'is');
-		this.empty = matcherMkEmpty<InputT>(init);
-		this.notEmpty = matcherMkEmpty<InputT>(init);
-		this.lessThan = matcherMkLessThan<InputT>(init);
-		this.greaterThan = matcherMkGreaterThan<InputT>(init);
-		this.equalTo = matcherMkEqual<InputT>(init);
+
+		this.between = matcherMkBetween<InputT>(init);
 		this.divisibleBy = matcherMkDivisible<InputT>(init);
+		this.empty = matcherMkEmpty<InputT>(init);
+		this.equalTo = matcherMkEqual<InputT>(init);
+		this.greaterThan = matcherMkGreaterThan<InputT>(init);
+		this.lessThan = matcherMkLessThan<InputT>(init);
+		this.notEmpty = matcherMkEmpty<InputT>(init);
 		this.type = matcherMkType<InputT>(init);
 	}
 }

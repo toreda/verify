@@ -32,7 +32,6 @@ import {BlockContains} from './contains';
 import {BlockMatch} from './match';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {type BlockInit} from './init';
-import {BlockModNot} from './mod/not';
 
 /**
  * @category Rule Blocks
@@ -42,7 +41,6 @@ export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly match: BlockMatch<InputT>;
 	public readonly equal: MatcherFactory<Primitive, Block<Statement<InputT>>>;
 	public readonly contain: BlockContains<InputT>;
-	public readonly not: BlockModNot<InputT, BlockMust<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'must');
@@ -50,6 +48,5 @@ export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
 		this.equal = matcherMkEqual<InputT>(init);
 		this.be = new BlockBe<InputT>(init);
 		this.contain = new BlockContains<InputT>(init);
-		this.not = new BlockModNot<InputT, BlockMust<InputT>>(this, init.stmt);
 	}
 }

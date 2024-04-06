@@ -23,22 +23,32 @@
  *
  */
 
+import {Constructor} from '@toreda/types';
 import {Block} from '../../block';
-import type {BlockFlags} from '../flags';
 import {Statement} from '../../statement';
+import {type BlockInit} from '../init';
+import {blockWithMod} from './mod';
+import {BlockFlags} from '../flags';
 
 /**
- * @category Statement Blocks
+ * @category Block Modifiers
  */
-export class BlockModNot<InputT, ParentBlockT extends Block<Statement<InputT>>> extends Block<
-	Statement<InputT>
-> {
-	constructor(parent: ParentBlockT, stmt: Statement<InputT>, flags?: BlockFlags) {
-		super(stmt, 'not');
-
-		const modFlags: BlockFlags = {
-			...flags,
-			invertResult: true
-		};
+export type BlockWithNot<InputT, BlockT extends Block<Statement<InputT>>> = BlockT & {not: BlockT};
+/**
+ * @category Block Modifiers
+ */
+export function blockWithNot<InputT, BlockT extends Block<Statement<InputT>>>(
+	block: Constructor<BlockT>,
+	init: BlockInit<InputT>
+): BlockWithNot<InputT, BlockT> {
+	if (!init.flags) {
+		init.flags = {};
 	}
+
+	const flags: BlockFlags = {
+		...init.flags,
+		invertResult: true
+	};
+
+	return blockWithMod<InputT, BlockT, ReturnT>(block, init, flags, 'not');
 }

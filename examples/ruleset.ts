@@ -9,7 +9,8 @@ import {value} from '../src/value';
 		value.must.be.greaterThan(10),
 		value.must.contain.oneOf([10, 11, 13]),
 		value.is.greaterThan(9),
-		value.is.greaterThan(11)
+		value.is.greaterThan(11),
+		value.must.not.be.equalTo(10)
 	);
 
 	console.debug(`Rules: ${ruleset.rules.length}`);

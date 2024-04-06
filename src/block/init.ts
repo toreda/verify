@@ -30,6 +30,12 @@ import {type BlockFlags} from './flags';
  * @category Rule Blocks
  */
 export interface BlockInit<InputT = unknown> {
+	/**
+	 * @description Statement holding all connected blocks.
+	 */
 	stmt: Statement<InputT>;
+	/**
+	 * @description Optional flags that alter block behavior.
+	 */
 	flags?: BlockFlags;
 }

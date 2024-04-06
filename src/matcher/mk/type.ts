@@ -27,6 +27,7 @@ import {BlockLink} from '../../block/link';
 import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
+import {isInt} from '../../is/int';
 /**
  *
  * @returns
@@ -40,8 +41,25 @@ export function matcherMkType<InputT = unknown>(
 		const link = new BlockLink<InputT>(init);
 
 		const fn: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
+			// Only type name strings are supported here. Everything else is auto fail.
+			if (typeof typeName !== 'string') {
+				return false;
+			}
+
 			if (typeName === 'array') {
 				return Array.isArray(value);
+			}
+
+			if (value === null && typeName === 'null') {
+				return true;
+			}
+
+			if (typeName === 'int') {
+				return isInt(value);
+			}
+
+			if (value === undefined && typeName === 'undefined') {
+				return true;
 			}
 
 			return typeof value === typeName;
@@ -49,7 +67,7 @@ export function matcherMkType<InputT = unknown>(
 
 		init.stmt.addMatcher({
 			fn: fn,
-			name: 'typeof',
+			name: 'istype',
 			flags: init.flags
 		});
 

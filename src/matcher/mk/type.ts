@@ -36,7 +36,7 @@ import {isInt} from '../../is/int';
  */
 export function matcherMkType<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<string, BlockLink<InputT>> {
+): MatcherFactory<InputT, string, BlockLink<InputT>> {
 	return (typeName: string): BlockLink<InputT> => {
 		const link = new BlockLink<InputT>(init);
 

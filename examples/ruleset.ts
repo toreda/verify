@@ -1,9 +1,8 @@
 import {Ruleset} from '../src/ruleset';
-import {value} from '../src/value';
 
 (async (): Promise<void> => {
 	const ruleset = new Ruleset<number>();
-
+	const value = ruleset.makeValue();
 	ruleset.add(
 		value.must.be.equalTo(12),
 		value.must.be.greaterThan(10),

@@ -38,7 +38,7 @@ import {type BlockInit} from '../../../block/init';
 
 export function matcherMkGreaterThan<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<number, BlockLink<InputT>> {
+): MatcherFactory<InputT, number, BlockLink<InputT>> {
 	return (right: number) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.

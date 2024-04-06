@@ -34,7 +34,7 @@ import {type BlockInit} from '../../block/init';
  */
 export function matcherMkTypes<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<string[], BlockLink<InputT>> {
+): MatcherFactory<InputT, string[], BlockLink<InputT>> {
 	return (typeNames: string[]): BlockLink<InputT> => {
 		const link = new BlockLink<InputT>(init);
 

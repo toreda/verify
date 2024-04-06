@@ -22,19 +22,17 @@
  * 	SOFTWARE.
  *
  */
-interface ModNot<BlockT> {
-	not: BlockT;
-}
 
-import {Constructor} from '@toreda/types';
+import {type Constructor} from '@toreda/types';
 import {Block} from '../../block';
 import {Statement} from '../../statement';
 import {type BlockInit} from '../init';
-import {BlockFlags} from '../flags';
+import {type BlockFlags} from '../flags';
 
 /**
  * @category Block Modifiers
  */
+export type BlockWithMod<BlockT, ModKeyT extends string> = BlockT & Record<ModKeyT, BlockT>;
 
 /**
  *
@@ -43,18 +41,23 @@ import {BlockFlags} from '../flags';
  *
  * @category Block Modifiers
  */
-export function blockWithMod<InputT, BlockT extends Block<Statement<InputT>>, ModKey extends string, ReturnT>(
+export function blockWithMod<InputT, BlockT extends Block<Statement<InputT>>, ModKeyT extends string>(
 	CTOR: Constructor<BlockT>,
 	init: BlockInit<InputT>,
 	modFlags: BlockFlags,
-	modKey: ModKey
-): BlockWithMod<InputT, BlockT, ModKey> {
+	modKey: ModKeyT
+): BlockWithMod<BlockT, ModKeyT> {
 	const o = new CTOR(init);
-	const initMod = {
-		...init
+
+	const initMod: BlockInit<InputT> = {
+		...init,
+		flags: modFlags
 	};
 
-	initMod.flags = modFlags;
-
-	return Object.defineProperty(o, modKey, new CTOR(initMod));
+	return Object.assign(
+		{
+			[modKey]: new CTOR(initMod)
+		},
+		o
+	) as BlockWithMod<BlockT, ModKeyT>;
 }

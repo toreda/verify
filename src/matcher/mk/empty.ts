@@ -36,7 +36,7 @@ import {type BlockInit} from '../../block/init';
  */
 export function matcherMkEmpty<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<unknown | unknown[], BlockLink<InputT>> {
+): MatcherFactory<InputT, unknown | unknown[], BlockLink<InputT>> {
 	return () => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.

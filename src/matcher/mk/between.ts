@@ -36,7 +36,7 @@ import {type BlockInit} from '../../block/init';
  */
 export function matcherMkBetween<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<number, BlockLink<InputT>> {
+): MatcherFactory<InputT, number, BlockLink<InputT>> {
 	return (left: number, right: number) => {
 		const link = new BlockLink(init);
 

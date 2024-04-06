@@ -54,12 +54,12 @@ export class BlockContains<InputT = unknown> extends Block<Statement<InputT>> {
 	/**
 	 * Matches when input is an exact match.
 	 */
-	public readonly exactly: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly atLeast: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly atMost: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly oneOf: MatcherFactory<Primitive[], BlockLink<InputT>>;
-	public readonly noneOf: MatcherFactory<Primitive[], BlockLink<InputT>>;
-	public readonly allOf: MatcherFactory<Primitive[], BlockLink<InputT>>;
+	public readonly exactly: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly atLeast: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly atMost: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly oneOf: MatcherFactory<InputT, Primitive[], BlockLink<InputT>>;
+	public readonly noneOf: MatcherFactory<InputT, Primitive[], BlockLink<InputT>>;
+	public readonly allOf: MatcherFactory<InputT, Primitive[], BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'contains');

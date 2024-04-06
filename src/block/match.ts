@@ -31,11 +31,11 @@ import {type MatcherFactory} from '../matcher/factory';
 import {type BlockInit} from './init';
 
 /**
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {
-	public readonly type: MatcherFactory<string, Block<Statement<InputT>>>;
-	public readonly atLeastOneType: MatcherFactory<string[], Block<Statement<InputT>>>;
+	public readonly type: MatcherFactory<InputT, string, Block<Statement<InputT>>>;
+	public readonly atLeastOneType: MatcherFactory<InputT, string[], Block<Statement<InputT>>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'matcher');

@@ -30,4 +30,4 @@ import {Rule} from './rule';
  *
  * @category Matcher Predicates
  */
-export type Matcher<ParamT = unknown> = (...params: ParamT[]) => Rule;
+export type Matcher<InputT, ParamT = unknown> = (...params: ParamT[]) => Rule<InputT>;

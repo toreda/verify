@@ -48,9 +48,9 @@ import {type BlockInit} from './init';
  * ```
  */
 export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
-	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly greaterThan: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly equalTo: MatcherFactory<number, BlockLink<InputT>>;
+	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly greaterThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly equalTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'be');

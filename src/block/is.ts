@@ -27,7 +27,7 @@ import {matcherMkDivisible} from '../matcher/mk/divisible';
 import {matcherMkEmpty} from '../matcher/mk/empty';
 import {Statement} from '../statement';
 import {Block} from '../block';
-import {MatcherFactory} from '../matcher/factory';
+import {type MatcherFactory} from '../matcher/factory';
 import {BlockLink} from './link';
 import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
@@ -35,6 +35,7 @@ import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkType} from '../matcher/mk/type';
 import {type BlockInit} from './init';
 import {matcherMkBetween} from '../matcher/mk/between';
+import {type Primitive} from '@toreda/types';
 
 /**
  * Matchers following 'is' in rule statements.
@@ -60,14 +61,13 @@ import {matcherMkBetween} from '../matcher/mk/between';
  * ```
  */
 export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
-	public readonly between: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly lessThan: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly greaterThan: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly equalTo: MatcherFactory<InputT, BlockLink<InputT>>;
-	public readonly empty: MatcherFactory<InputT, BlockLink<InputT>>;
-	public readonly notEmpty: MatcherFactory<InputT, BlockLink<InputT>>;
-	public readonly divisibleBy: MatcherFactory<number, BlockLink<InputT>>;
-	public readonly type: MatcherFactory<string, BlockLink<InputT>>;
+	public readonly between: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly greaterThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly equalTo: MatcherFactory<InputT, Primitive | Primitive[], BlockLink<InputT>>;
+	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
+	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'is');
@@ -78,7 +78,6 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 		this.equalTo = matcherMkEqual<InputT>(init);
 		this.greaterThan = matcherMkGreaterThan<InputT>(init);
 		this.lessThan = matcherMkLessThan<InputT>(init);
-		this.notEmpty = matcherMkEmpty<InputT>(init);
 		this.type = matcherMkType<InputT>(init);
 	}
 }

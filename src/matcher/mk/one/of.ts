@@ -38,7 +38,7 @@ ion chain which determines if chain value is less than target.
  */
 export function matcherMkOneOf<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<Primitive[], BlockLink<InputT>> {
+): MatcherFactory<InputT, Primitive[], BlockLink<InputT>> {
 	return (right: Primitive[]): BlockLink<InputT> => {
 		// Link object MUST BE created during matcher func invocation. Moving it to
 		///surrounding closure will cause infinite recursion & stack overflow.

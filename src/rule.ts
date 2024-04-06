@@ -40,14 +40,14 @@ import {BlockWithNot, blockWithNot} from './block/with/not';
 /**
  * @category Rules
  */
-export class Rule<InputT = unknown> implements Resettable {
+export class Rule<InputT> implements Resettable {
 	/**
 	 * IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
 	 */
 	public readonly statements: Statement<InputT>[];
 	public readonly contains: BlockContains<InputT>;
-	public readonly must: BlockWithNot<InputT, BlockMust<InputT>>;
+	public readonly must: BlockWithNot<BlockMust<InputT>>;
 	public readonly is: BlockIs<InputT>;
 	public readonly has: BlockHave<InputT>;
 	public readonly matches: BlockMatch<InputT>;
@@ -60,7 +60,7 @@ export class Rule<InputT = unknown> implements Resettable {
 		};
 
 		this.cfg = new RuleConfig();
-		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust, init);
+		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
 		this.is = new BlockIs<InputT>(init);
 		this.matches = new BlockMatch<InputT>(init);
 		this.has = new BlockHave<InputT>(init);

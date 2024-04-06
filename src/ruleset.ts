@@ -30,6 +30,13 @@ import {Statement} from './statement';
 import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
 import {type Executable} from './executable';
+import {BlockInit} from './block/init';
+import {BlockContains} from './block/contains';
+import {BlockMust} from './block/must';
+import {BlockHave} from './block/have';
+import {BlockMatch} from './block/match';
+import {BlockIs} from './block/is';
+import {blockWithNot} from './block/with/not';
 
 /**
  * @category Rulesets
@@ -47,12 +54,12 @@ export class Ruleset<InputT = unknown> implements Executable {
 		this.execute = this.execute.bind(this);
 	}
 
-	public add(...blocks: Block<Statement>[]): boolean {
+	public add(...blocks: Block<Statement<InputT>>[]): boolean {
 		if (!Array.isArray(blocks)) {
 			return false;
 		}
 
-		const rule = new Rule();
+		const rule = new Rule<InputT>();
 
 		for (const block of blocks) {
 			rule.add(block.stmt);
@@ -62,7 +69,7 @@ export class Ruleset<InputT = unknown> implements Executable {
 		return true;
 	}
 
-	public addRule(rule: Rule): boolean {
+	public addRule(rule: Rule<InputT>): boolean {
 		if (!rule) {
 			return false;
 		}
@@ -70,6 +77,42 @@ export class Ruleset<InputT = unknown> implements Executable {
 		this.rules.push(rule);
 
 		return true;
+	}
+
+	public makeValue(): Rule<InputT> {
+		return new Proxy(new Rule<InputT>(), {
+			get: (target: Rule<InputT>, prop: keyof Rule<InputT> | keyof Rule<InputT>): any => {
+				const stmt = new Statement<InputT>();
+				const init: BlockInit<InputT> = {
+					stmt: stmt
+				};
+
+				/**
+				 * IMPORTANT: Properties not listed here will are not accessible using the
+				 * rule object property accessor (e.g. rule.contaians).
+				 * When adding
+				 */
+				switch (prop) {
+					case 'contains':
+						target.add(stmt);
+						return blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, init);
+					case 'must':
+						target.add(stmt);
+						return blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
+					case 'has':
+						target.add(stmt);
+						return blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, init);
+					case 'matches':
+						target.add(stmt);
+						return blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, init);
+					case 'is':
+						target.add(stmt);
+						return blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, init);
+					default:
+						return target[prop];
+				}
+			}
+		});
 	}
 
 	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {

@@ -39,7 +39,7 @@ import {type BlockInit} from './init';
 export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly be: BlockBe<InputT>;
 	public readonly match: BlockMatch<InputT>;
-	public readonly equal: MatcherFactory<Primitive, Block<Statement<InputT>>>;
+	public readonly equal: MatcherFactory<InputT, Primitive, Block<Statement<InputT>>>;
 	public readonly contain: BlockContains<InputT>;
 
 	constructor(init: BlockInit<InputT>) {

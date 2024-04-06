@@ -27,7 +27,8 @@ Configurable validator for string-based ID values. Accepts a number of boundary 
 ## `chkUrl`
 Configurable validator for URL values.
 
-&nbsp;
+&nbsp;clear
+
 
 # Rule Validators
 Rule validators check for a single condition using one or more function arguments and return a strict `boolean` value `true` or `false`.

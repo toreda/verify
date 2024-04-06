@@ -35,11 +35,13 @@ import {type MatcherFactory} from '../factory';
  *
  * @category Matcher Factories
  */
-export function matcherMkEqual<InputT>(init: BlockInit<InputT>): MatcherFactory<unknown, BlockLink<InputT>> {
+export function matcherMkEqual<InputT = unknown>(
+	init: BlockInit<InputT>
+): MatcherFactory<InputT, unknown, BlockLink<InputT>> {
 	return (right: unknown) => {
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink(init);
+		const link = new BlockLink<InputT>(init);
 
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return equalTo(value, right);

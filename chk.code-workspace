@@ -20,7 +20,9 @@
 		},
 		"javascript.preferences.importModuleSpecifier": "relative",
 		"javascript.preferences.importModuleSpecifierEnding": "minimal",
-		"typescript.preferences.importModuleSpecifier": "relative"
+		"typescript.preferences.importModuleSpecifier": "relative",
+		"javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+		"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
 	},
 	"extensions": {
 		"recommendations": [

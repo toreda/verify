@@ -1,6 +1,9 @@
-import {value} from '../../src/value';
 import {MatcherGroup} from '../_util/matchers';
 import {matcherGroupTests} from '../_util/matchers';
+import {Ruleset} from '../../src/ruleset';
+
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
 
 const EMPTY_STRING = '';
 const MATCHER_GROUPS: MatcherGroup[] = [

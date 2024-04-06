@@ -35,22 +35,24 @@ import {type ExecutionContext} from './execution/context';
 import {executor} from './executor';
 import {RuleConfig} from './rule/config';
 import {type Resettable} from '@toreda/types';
-import {BlockWithNot, blockWithNot} from './block/with/not';
+import {type BlockWithNot, blockWithNot} from './block/with/not';
+import {BlockDoes} from './block/does';
 
 /**
- * @category Rules
+ * @category Rule Blocks
  */
 export class Rule<InputT> implements Resettable {
 	/**
-	 * IMPORTANT: New properties intended using rule syntax MUST be added to
+	 * @description IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
 	 */
 	public readonly statements: Statement<InputT>[];
-	public readonly contains: BlockContains<InputT>;
+	public readonly does: BlockWithNot<BlockDoes<InputT>>;
+	public readonly contains: BlockWithNot<BlockContains<InputT>>;
 	public readonly must: BlockWithNot<BlockMust<InputT>>;
-	public readonly is: BlockIs<InputT>;
-	public readonly has: BlockHave<InputT>;
-	public readonly matches: BlockMatch<InputT>;
+	public readonly is: BlockWithNot<BlockIs<InputT>>;
+	public readonly has: BlockWithNot<BlockHave<InputT>>;
+	public readonly matches: BlockWithNot<BlockMatch<InputT>>;
 	private readonly cfg: RuleConfig;
 
 	constructor() {
@@ -60,12 +62,14 @@ export class Rule<InputT> implements Resettable {
 		};
 
 		this.cfg = new RuleConfig();
+		this.does = blockWithNot<InputT, BlockDoes<InputT>>(BlockDoes<InputT>, init);
 		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
-		this.is = new BlockIs<InputT>(init);
-		this.matches = new BlockMatch<InputT>(init);
-		this.has = new BlockHave<InputT>(init);
-		this.contains = new BlockContains<InputT>(init);
+		this.is = blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, init);
+		this.matches = blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, init);
+		this.has = blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, init);
+		this.contains = blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, init);
 		this.statements = [];
+
 		this.bindListeners();
 	}
 

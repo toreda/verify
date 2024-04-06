@@ -36,6 +36,8 @@ import {matcherMkType} from '../matcher/mk/type';
 import {type BlockInit} from './init';
 import {matcherMkBetween} from '../matcher/mk/between';
 import {type Primitive} from '@toreda/types';
+import {matcherMkIterable} from '../matcher/mk/iterable';
+import {matcherMkTruthy} from '../matcher/mk/truthy';
 
 /**
  * Matchers following 'is' in rule statements.
@@ -68,6 +70,8 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
 	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
+	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;
+	public readonly truthy: MatcherFactory<InputT, never, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'is');
@@ -79,5 +83,7 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 		this.greaterThan = matcherMkGreaterThan<InputT>(init);
 		this.lessThan = matcherMkLessThan<InputT>(init);
 		this.type = matcherMkType<InputT>(init);
+		this.iterable = matcherMkIterable<InputT>(init);
+		this.truthy = matcherMkTruthy<InputT>(init);
 	}
 }

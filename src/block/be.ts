@@ -31,6 +31,11 @@ import {Statement} from '../statement';
 import {type MatcherFactory} from '../matcher/factory';
 import {BlockLink} from './link';
 import {type BlockInit} from './init';
+import {matcherMkType} from '../matcher/mk/type';
+import {matcherMkTruthy} from '../matcher/mk/truthy';
+import {matcherMkIterable} from '../matcher/mk/iterable';
+import {BlockAn} from './an';
+import {BlockA} from './a';
 
 /**
  * Matchers following 'be' in rule statements.
@@ -41,22 +46,45 @@ import {type BlockInit} from './init';
  * value.must.be.lessThan(10)
  * ```
  * ```ts
+ * // Strictly greater than 10
  * value.must.be.greaterThan(10)
  * ```
  * ```ts
+ * // Strict equal 0
  * value.must.be.equalTo(0)
+ * ```
+ * ```ts
+ * // Only array types allowed.
+ * value.must.be.an.array()
+ * ```
+ * ```ts
+ * value.must.be.truthy();
+ * ```
+ *
+ * ```ts
+ * value.must.be.an int();
  * ```
  */
 export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly greaterThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly equalTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
+	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;
+	public readonly truthy: MatcherFactory<InputT, never, BlockLink<InputT>>;
+	public readonly an: BlockAn<InputT>;
+	public readonly a: BlockA<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'be');
-
+		this.an = new BlockAn<InputT>(init);
+		this.a = new BlockA<InputT>(init);
 		this.lessThan = matcherMkLessThan<InputT>(init);
 		this.greaterThan = matcherMkGreaterThan<InputT>(init);
 		this.equalTo = matcherMkEqual<InputT>(init);
+		this.type = matcherMkType<InputT>(init);
+		this.iterable = matcherMkIterable<InputT>(init);
+
+		this.truthy = matcherMkTruthy<InputT>(init);
 	}
 }

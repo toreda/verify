@@ -29,18 +29,19 @@
  * @category Rule Blocks
  */
 export type BlockType =
+	| 'and'
 	| 'be'
-	| 'contains'
 	| 'character'
-	| 'length'
+	| 'contains'
 	| 'equal'
-	| 'or'
 	| 'have'
 	| 'is'
+	| 'length'
 	| 'link'
 	| 'match'
 	| 'matcher'
 	| 'must'
 	| 'not'
+	| 'or'
 	| 'root'
 	| 'stub';

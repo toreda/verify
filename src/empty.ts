@@ -24,15 +24,20 @@
  */
 
 /**
- * Determines if value is considered 'empty' based on type. Arrays are empty with 0
- * elements. strings are empty with 0 length and when trimming a string produces a
- * 0 length string. Objects are empty when equivalent to `{}` where the object has
- * no keys defined. Unsupported types like numbers, booleans, symbols, etc which have
- * no 'empty' equivalent always return `false`.
+ * Determines if value is considered 'empty' based on type.
  * @param value
  * @returns
  *
  * @category Validator
+ * @remark
+ * Arrays are empty with 0 elements. strings are empty with 0 length and when trimming
+ * a string produces a 0 length string. Objects are empty when equivalent to `{}` where
+ * the object has no keys defined. Unsupported types like numbers, booleans, symbols, etc
+ * which have no 'empty' equivalent always return `false`.
+ *
+ * @example empty<string>('') -> true
+ * @example empty<string[]>([]) -> true
+ * @example empty<string>('word') -> false
  */
 export function empty<ValueT>(value?: ValueT | null): boolean {
 	if (value === undefined || value === null) {

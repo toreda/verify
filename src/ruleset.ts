@@ -79,9 +79,12 @@ export class Ruleset<InputT = unknown> implements Executable {
 		return true;
 	}
 
-	public makeValue(): Rule<InputT> {
+	/**
+	 * Get value object used to create new rules.
+	 */
+	public value(): Rule<InputT> {
 		return new Proxy(new Rule<InputT>(), {
-			get: (target: Rule<InputT>, prop: keyof Rule<InputT> | keyof Rule<InputT>): any => {
+			get: (target: Rule<InputT>, prop: keyof Rule<InputT>): any => {
 				const stmt = new Statement<InputT>();
 				const init: BlockInit<InputT> = {
 					stmt: stmt
@@ -126,6 +129,9 @@ export class Ruleset<InputT = unknown> implements Executable {
 		});
 	}
 
+	/**
+	 * Reset internal properties and children to their starting states.
+	 */
 	public reset(): void {
 		this.rules.length = 0;
 	}

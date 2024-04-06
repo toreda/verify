@@ -23,15 +23,17 @@
  *
  */
 
+import {Block} from '../block';
+import {Statement} from '../statement';
 import {BlockContains} from './contains';
 import {BlockHave} from './have';
 import {type BlockInit} from './init';
 import {BlockIs} from './is';
 
 /**
- * @category Statement Blocks
+ * @category Rule Blocks
  */
-export class BlockAnd<InputT = unknown> {
+export class BlockAnd<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly contain: BlockContains<InputT>;
 	/**
 	 * Alias for `contain`. Exists for cases where the singular `contain` is
@@ -46,6 +48,7 @@ export class BlockAnd<InputT = unknown> {
 	public readonly has: BlockHave<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
+		super(init.stmt, 'and');
 		this.is = new BlockIs<InputT>(init);
 		this.contain = new BlockContains<InputT>(init);
 		this.contains = this.contain;

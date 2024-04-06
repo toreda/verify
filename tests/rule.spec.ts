@@ -19,10 +19,10 @@ const STMT_METHODS = [
 ];
 
 describe('Rule', () => {
-	let instance: Rule;
+	let instance: Rule<string>;
 
 	beforeAll(() => {
-		instance = new Rule();
+		instance = new Rule<string>();
 	});
 
 	beforeEach(() => {});

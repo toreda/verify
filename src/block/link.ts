@@ -27,6 +27,8 @@ import {Block} from '../block';
 import {Statement} from '../statement';
 import {BlockAnd} from './and';
 import {type BlockInit} from './init';
+import {BlockOr} from './or';
+import {type BlockWithNot, blockWithNot} from './with/not';
 
 /**
  * Connects 2 or more otherwise independent predicate statements into one statement
@@ -36,10 +38,12 @@ import {type BlockInit} from './init';
  * @category Rule Blocks
  */
 export class BlockLink<InputT = unknown> extends Block<Statement<InputT>> {
-	public readonly and: BlockAnd<InputT>;
+	public readonly and: BlockWithNot<BlockAnd<InputT>>;
+	public readonly or: BlockWithNot<BlockOr<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(init.stmt, 'link');
-		this.and = new BlockAnd<InputT>(init);
+		this.and = blockWithNot<InputT, BlockAnd<InputT>>(BlockAnd<InputT>, init);
+		this.or = blockWithNot<InputT, BlockOr<InputT>>(BlockOr<InputT>, init);
 	}
 }

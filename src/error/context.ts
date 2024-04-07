@@ -36,7 +36,7 @@ export class ErrorContext<RootT extends string, PathT extends string> {
 	public readonly path: PathT[];
 
 	constructor(root: RootT, ...path: PathT[]) {
-		if (root === undefined) {
+		if (root === undefined || root == null) {
 			this.root = Defaults.ErrorCode.Root;
 		} else {
 			this.root = root;

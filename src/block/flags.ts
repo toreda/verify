@@ -37,5 +37,4 @@ export interface BlockFlags {
 	invertResult?: boolean;
 	op?: string;
 	[k: string]: Primitive;
-	injectNot?: boolean;
 }

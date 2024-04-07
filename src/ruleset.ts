@@ -69,6 +69,11 @@ export class Ruleset<InputT = unknown> implements Executable {
 		return true;
 	}
 
+	/**
+	 * Add rule to statements executed
+	 * @param rule
+	 * @returns
+	 */
 	public addRule(rule: Rule<InputT>): boolean {
 		if (!rule) {
 			return false;

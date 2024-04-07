@@ -1,49 +1,48 @@
-import {ChkVarLabel} from '../../../src/chk/var/label';
+import {verifierLabel} from '../../../src/verifier/label';
 import Defaults from '../../../src/defaults';
-import {chkVarLabel} from '../../../src/chk/var/label';
 
 const EMPTY_STRING = '';
 
-describe('chkVarLabel', () => {
+describe('verifierLabel', () => {
 	it(`should return the default value when label arg is undefined`, () => {
-		const result = chkVarLabel(undefined);
+		const result = verifierLabel(undefined);
 
-		expect(result).toBe(Defaults.Chk.VarLabel);
+		expect(result).toBe(Defaults.VarLabel);
 	});
 
 	it(`should return the default value when label arg is null`, () => {
-		const result = chkVarLabel(null);
+		const result = verifierLabel(null);
 
-		expect(result).toBe(Defaults.Chk.VarLabel);
+		expect(result).toBe(Defaults.VarLabel);
 	});
 
 	it(`should return the default value when label arg is null`, () => {
-		const result = chkVarLabel(null);
+		const result = verifierLabel(null);
 
-		expect(result).toBe(Defaults.Chk.VarLabel);
+		expect(result).toBe(Defaults.VarLabel);
 	});
 
 	it(`should return the default value when label arg is an empty string`, () => {
-		const result = chkVarLabel(EMPTY_STRING as any);
+		const result = verifierLabel(EMPTY_STRING as any);
 
-		expect(result).toBe(Defaults.Chk.VarLabel);
+		expect(result).toBe(Defaults.VarLabel);
 	});
 
 	it(`should return 'value' when label arg is 'value'`, () => {
-		const result = chkVarLabel('value');
+		const result = verifierLabel('value');
 
 		expect(result).toBe('value');
 	});
 
 	it(`should return 'arg' when label arg is 'arg'`, () => {
-		const result = chkVarLabel('arg');
+		const result = verifierLabel('arg');
 
 		expect(result).toBe('arg');
 	});
 
 	it(`should return default value when label arg is not a valid Var Label value`, () => {
-		const result = chkVarLabel('somethingelse' as any);
+		const result = verifierLabel('somethingelse' as any);
 
-		expect(result).toBe(Defaults.Chk.VarLabel);
+		expect(result).toBe(Defaults.VarLabel);
 	});
 });

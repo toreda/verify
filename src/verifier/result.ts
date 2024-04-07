@@ -17,41 +17,48 @@
  *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * 	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHEWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTRHER DEALINGS IN THE
  * 	SOFTWARE.
  *
  */
 
-import type {ChkFlags} from './flags';
-import {Fate} from '@toreda/fate';
+import {type VerifierParams} from './params';
+import {type Outcome} from '../outcome';
+import {type VerifierSummary} from './summary';
+import {stringValue} from '@toreda/strong-types';
 
 /**
  *
- * @param value
- * @param flags
- * @returns
- *
- * @category Stand-alone Validators
+ * @category Verifier
  */
-export function chkArray<ValueT>(value?: unknown | unknown[], flags?: ChkFlags): Fate<ValueT[]> {
-	const fate = new Fate<ValueT[]>();
+export interface VerifierResult {
+	summary: VerifierSummary;
+	name: string;
+	results: VerifierResult[];
+	outcome: Outcome;
+}
 
-	if (value === undefined || value === null) {
-		return fate.setErrorCode('missing');
-	}
-
-	if (!Array.isArray(value)) {
-		return fate.setErrorCode('bad_format');
-	}
-
-	const empty = value.length === 0;
-
-	// Empty arrays are valid by default unless flags.allow.empty is explicitly true.
-	if (empty && flags?.allow?.empty === false) {
-		return fate.setErrorCode('empty');
-	}
-
-	fate.data = value;
-	return fate.setSuccess(true);
+/**
+ * Creates VerifyResult and initialize with provided values, or default when
+ * none provided.
+ * @param params
+ *
+ * @category Verifier
+ */
+export function verifierResult<InputT = unknown>(params?: Partial<VerifierParams<InputT>>): VerifierResult {
+	return {
+		name: stringValue(params?.name, '_default_'),
+		results: [],
+		outcome: 'fail',
+		summary: {
+			counts: {
+				error: 0,
+				fail: 0,
+				pass: 0,
+				skip: 0,
+				total: 0
+			}
+		}
+	};
 }

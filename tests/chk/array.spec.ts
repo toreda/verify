@@ -1,31 +1,31 @@
-import {chkArray} from '../../src/chk/array';
+import {verifyArray} from '../../src/verify/array';
 const EMPTY_ARRAY: string[] = [];
 const EMPTY_STRING = '';
 
-describe('chkArray', () => {
+describe('verifyArray', () => {
 	it(`should fail when value arg is undefined`, () => {
-		const result = chkArray();
+		const result = verifyArray();
 
 		expect(result.errorCode()).toBe('missing');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should fail when value arg is null`, () => {
-		const result = chkArray(null);
+		const result = verifyArray(null);
 
 		expect(result.errorCode()).toBe('missing');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should fail when value is a truthy non-array`, () => {
-		const result = chkArray(111 as any);
+		const result = verifyArray(111 as any);
 
 		expect(result.errorCode()).toBe('bad_format');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should succeed when value is an empty array with no flags provided`, () => {
-		const result = chkArray(EMPTY_ARRAY);
+		const result = verifyArray(EMPTY_ARRAY);
 
 		expect(result.errorCode()).toBe(EMPTY_STRING);
 		expect(result.success()).toBe(true);
@@ -33,7 +33,7 @@ describe('chkArray', () => {
 
 	it(`should return input as fate payload when successful`, () => {
 		const value: string[] = [];
-		const result = chkArray<string>(value);
+		const result = verifyArray<string>(value);
 
 		expect(result.data).toStrictEqual(value);
 		expect(result.success()).toBe(true);

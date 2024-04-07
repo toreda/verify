@@ -27,21 +27,22 @@ import {Fate} from '@toreda/fate';
 import {Rule} from './rule';
 import {Block} from './block';
 import {Statement} from './statement';
-import {type ExecutionContext} from './execution/context';
-import {executor} from './executor';
-import {type Executable} from './executable';
-import {BlockInit} from './block/init';
+import {type VerifierResult} from './verifier/result';
+import {verify} from './verify';
+import {type Verifier} from './verifier';
+import {type BlockInit} from './block/init';
 import {BlockContains} from './block/contains';
 import {BlockMust} from './block/must';
 import {BlockHave} from './block/have';
 import {BlockMatch} from './block/match';
 import {BlockIs} from './block/is';
 import {blockWithNot} from './block/with/not';
+import {type VerifierFlags} from './verifier/flags';
 
 /**
  * @category Rulesets
  */
-export class Ruleset<InputT = unknown> implements Executable {
+export class Ruleset<InputT = unknown> implements Verifier {
 	public readonly rules: Rule<InputT>[];
 
 	constructor() {
@@ -51,7 +52,7 @@ export class Ruleset<InputT = unknown> implements Executable {
 	}
 
 	private bindListeners(): void {
-		this.execute = this.execute.bind(this);
+		this.verify = this.verify.bind(this);
 	}
 
 	public add(...blocks: Block<Statement<InputT>>[]): boolean {
@@ -70,7 +71,7 @@ export class Ruleset<InputT = unknown> implements Executable {
 	}
 
 	/**
-	 * Add rule to statements executed
+	 * Add rule to statements verify
 	 * @param rule
 	 * @returns
 	 */
@@ -123,14 +124,12 @@ export class Ruleset<InputT = unknown> implements Executable {
 		});
 	}
 
-	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
-		return await executor<InputT, Rule<InputT>>({
+	public async verify(value: InputT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>> {
+		return await verify<InputT, Rule<InputT>>({
 			name: 'rules',
 			collection: this.rules,
 			value: value,
-			flags: {
-				maxFails: 0
-			}
+			flags: flags
 		});
 	}
 

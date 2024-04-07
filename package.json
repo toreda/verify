@@ -1,15 +1,15 @@
 {
-	"name": "@toreda/chk",
+	"name": "vrfy",
 	"version": "0.6.0",
 	"main": "./dist/index.js",
-	"repository": "https://github.com/toreda/chk",
+	"repository": "https://github.com/toreda/vrfy",
 	"author": "Toreda, Inc.",
 	"license": "MIT",
 	"description": "Automated validation. Eliminate edge cases with less code.",
 	"public": true,
 	"prettier": "@toreda/prettier-config",
 	"devDependencies": {
-		"@swc/core": "^1.4.2",
+		"@swc/core": "^1.4.12",
 		"@swc/jest": "^0.2.36",
 		"@toreda/build-tools": "^0.8.0",
 		"@toreda/eslint-config": "^2.2.0",
@@ -21,7 +21,7 @@
 		"@toreda/types": "^2.16.0",
 		"@types/babel__traverse": "^7.20.5",
 		"@types/big.js": "^6.2.2",
-		"@types/gulp": "^4.0.10",
+		"@types/gulp": "^4.0.17",
 		"@types/jest": "^29.5.12",
 		"@types/node": "^20.12.4",
 		"@typescript-eslint/eslint-plugin": "^7.5.0",
@@ -39,7 +39,7 @@
 		"prettier": "^3.2.5",
 		"ts-node": "^10.9.2",
 		"typedoc": "^0.25.12",
-		"typescript": "^5.3.3"
+		"typescript": "^5.4.4"
 	},
 	"resolutions": {
 		"chokidar": "^3.0.0",
@@ -49,7 +49,8 @@
 	"peerDependencies": {
 		"@toreda/fate": "^0.7.0",
 		"@toreda/time": "^0.1.7",
-		"@toreda/types": "^2.16.0"
+		"@toreda/types": "^2.16.0",
+		"big.js": "^6.2.1"
 	},
 	"dependencies": {},
 	"scripts": {

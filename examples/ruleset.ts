@@ -33,8 +33,8 @@ import {Ruleset} from '../src/ruleset';
 		}
 	}
 
-	console.debug(`execute:`);
-	const result = await ruleset.execute(15);
+	console.debug(`verify:`);
+	const result = await ruleset.verify(15);
 	const ctx = result.data;
 	console.debug(`Ruleset result: ${result.ok()}`);
 	console.debug(`\tOutcome: ${ctx?.outcome}`);

@@ -23,11 +23,14 @@
  *
  */
 
+import {Fate} from '@toreda/fate';
+import {type VerifierResult} from './verifier/result';
+
 /**
- * Arguments needed when invoking greaterThan matcher nodes.
+ * Interface for objects providing the verification API.
  *
- * @category Matchers
+ * @category Verifier
  */
-export interface GreaterThanCall {
-	right: number;
+export interface Verifier<ValueT = unknown> {
+	verify(value: ValueT | null): Promise<Fate<VerifierResult>>;
 }

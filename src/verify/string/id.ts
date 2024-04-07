@@ -23,11 +23,11 @@
  *
  */
 
-import type {ChkFlags} from '../flags';
 import {Codes} from '../../codes';
 import {Fate} from '@toreda/fate';
-import {chkVarLabel} from '../var/label';
+import {verifierLabel} from '../../verifier/label';
 import {errorMkCode} from '../../error/mk/code';
+import {type VerifierFlags} from '../../verifier/flags';
 
 /**
  * Check if value is a valid id string according to the optional validation rules when provided.
@@ -39,7 +39,7 @@ import {errorMkCode} from '../../error/mk/code';
  *
  * @category Check - Core
  */
-export function chkStringId(id: string, value: unknown, flags?: ChkFlags): Fate<string> {
+export function verifyStringId(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
 	const fate = new Fate<string>();
 
 	let pathAppend: string[] = [];
@@ -58,7 +58,7 @@ export function chkStringId(id: string, value: unknown, flags?: ChkFlags): Fate<
 	}
 
 	const errorRoot = typeof flags?.error?.root === 'string' ? flags?.error?.root : id;
-	const label = chkVarLabel(flags?.varLabel);
+	const label = verifierLabel(flags?.varLabel);
 
 	if (id === null || id === undefined) {
 		return fate.setErrorCode(

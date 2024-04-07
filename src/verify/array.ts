@@ -23,37 +23,33 @@
  *
  */
 
-import type {ChkFlags} from './flags';
-import {Codes} from '../codes';
+import type {VerifierFlags} from '../verifier/flags';
 import {Fate} from '@toreda/fate';
 
 /**
  *
  * @param value
+ * @param flags
  * @returns
  *
- * @category Urls
+ * @category Stand-alone Validators
  */
-export function chkUrl(value?: unknown, flags?: ChkFlags): Fate<string> {
-	const fate = new Fate<string>();
-
-	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
-	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
+export function verifyArray<ValueT>(value?: unknown | unknown[], flags?: VerifierFlags): Fate<ValueT[]> {
+	const fate = new Fate<ValueT[]>();
 
 	if (value === undefined || value === null) {
-		return fate.setErrorCode(Codes.missing());
+		return fate.setErrorCode('missing');
 	}
 
-	if (typeof value !== 'string') {
-		return fate.setErrorCode(Codes.badFormat());
+	if (!Array.isArray(value)) {
+		return fate.setErrorCode('bad_format');
 	}
 
-	if (value.length > maxLen) {
-		return fate.setErrorCode(Codes.tooLong());
-	}
+	const empty = value.length === 0;
 
-	if (value.length < minLen) {
-		return fate.setErrorCode(Codes.tooShort());
+	// Empty arrays are valid by default unless flags.allow.empty is explicitly true.
+	if (empty && flags?.allow?.empty === false) {
+		return fate.setErrorCode('empty');
 	}
 
 	fate.data = value;

@@ -23,32 +23,28 @@
  *
  */
 
-import {stringValue} from '@toreda/strong-types';
-import {type ExecutionContext} from '../../execution/context';
-import {type ExecutorParams} from '../params';
+import Defaults from '../defaults';
 
 /**
- * Creates ExecutionContext and initialize with provided values, or default when
- * none provided.
- * @param params
- *
- * @category Executor
+ * @category Rule Chains
  */
-export function executorMkContext<InputT = unknown>(
-	params?: Partial<ExecutorParams<InputT>>
-): ExecutionContext {
-	return {
-		name: stringValue(params?.name, '_default_'),
-		results: [],
-		outcome: 'fail',
-		summary: {
-			counts: {
-				error: 0,
-				fail: 0,
-				pass: 0,
-				skip: 0,
-				total: 0
-			}
-		}
-	};
+export type VerifierLabel = 'value' | 'arg';
+
+/**
+ *
+ * @param label
+ * @returns
+ *
+ * @category Rule Chains
+ */
+export function verifierLabel(label?: VerifierLabel | string | null): VerifierLabel {
+	if (!label) {
+		return Defaults.VarLabel;
+	}
+
+	if (label !== 'arg' && label !== 'value') {
+		return Defaults.VarLabel;
+	}
+
+	return label;
 }

@@ -24,13 +24,25 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {type ExecutionContext} from './execution/context';
+import {isBigInt} from '../../is/big/int';
 
 /**
- * Implemented by executor classes.
+ * Deteremine if provided value is a valid BigInt.
+ * @param value
  *
- * @category Executor
+ * @category Validation
  */
-export interface Executable<ValueT = unknown> {
-	execute(value?: ValueT | null): Promise<Fate<ExecutionContext>>;
+export function verifyBigInt(value?: unknown): Fate<bigint> {
+	const fate = new Fate<bigint>();
+
+	if (value === undefined || value === null) {
+		return fate.setErrorCode('missing');
+	}
+
+	if (!isBigInt(value)) {
+		return fate.setErrorCode('bad_value_type');
+	}
+
+	fate.data = value;
+	return fate.setSuccess(true);
 }

@@ -1,4 +1,4 @@
-import {chkBoolean} from '../../src/chk/boolean';
+import {verifyBoolean} from '../../src/verify/boolean';
 
 const EMPTY_STRING = '';
 
@@ -17,16 +17,16 @@ const NON_BOOLS = {
 		{value: EMPTY_STRING, label: 'empty string'}
 	]
 };
-describe('chkBoolean', () => {
+describe('verifyBoolean', () => {
 	it(`should fail when value arg is undefined`, () => {
-		const result = chkBoolean(undefined as any);
+		const result = verifyBoolean(undefined as any);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe('missing');
 	});
 
 	it(`should fail when value arg is null`, () => {
-		const result = chkBoolean(null as any);
+		const result = verifyBoolean(null as any);
 
 		expect(result.success()).toBe(false);
 		expect(result.errorCode()).toBe('missing');
@@ -36,7 +36,7 @@ describe('chkBoolean', () => {
 		const value = nonBool.value;
 		const label = typeof nonBool.label === 'string' ? nonBool.label : `${value}`;
 		it(`should fail when value arg is a truthy non-boolean value ${label}.`, () => {
-			const result = chkBoolean(value as any);
+			const result = verifyBoolean(value as any);
 
 			expect(result.success()).toBe(false);
 			expect(result.errorCode()).toBe('bad_value_type');
@@ -47,7 +47,7 @@ describe('chkBoolean', () => {
 		const value = nonBool.value;
 		const label = typeof nonBool.label === 'string' ? nonBool.label : `${value}`;
 		it(`should fail when value arg is a falsy non-boolean value ${label}.`, () => {
-			const result = chkBoolean(value as any);
+			const result = verifyBoolean(value as any);
 
 			expect(result.success()).toBe(false);
 			expect(result.errorCode()).toBe('bad_value_type');
@@ -55,14 +55,14 @@ describe('chkBoolean', () => {
 	}
 
 	it(`should succeed when value is boolean literal 'true'`, () => {
-		const result = chkBoolean(true);
+		const result = verifyBoolean(true);
 
 		expect(result.success()).toBe(true);
 		expect(result.errorCode()).toBe('');
 	});
 
 	it(`should return true value when value is boolean literal 'false'`, () => {
-		const result = chkBoolean(true);
+		const result = verifyBoolean(true);
 
 		expect(result.success()).toBe(true);
 		expect(result.errorCode()).toBe('');
@@ -70,14 +70,14 @@ describe('chkBoolean', () => {
 	});
 
 	it(`should succeed when value is boolean literal 'false'`, () => {
-		const result = chkBoolean(false);
+		const result = verifyBoolean(false);
 
 		expect(result.success()).toBe(true);
 		expect(result.errorCode()).toBe('');
 	});
 
 	it(`should return false value when value is boolean literal 'false'`, () => {
-		const result = chkBoolean(false);
+		const result = verifyBoolean(false);
 
 		expect(result.success()).toBe(true);
 		expect(result.errorCode()).toBe('');

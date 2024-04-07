@@ -26,6 +26,6 @@
 /**
  * @description Possible outcomes returned by rulesets, statements, and other systems.
  *
- * @category Core
+ * @category Verifier
  */
 export type Outcome = 'pass' | 'fail' | 'error' | 'skip';

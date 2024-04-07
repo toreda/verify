@@ -25,26 +25,27 @@
 
 import {Fate} from '@toreda/fate';
 import {Block} from './block';
-import {MatcherBound} from './matcher/bound';
+import {MatcherCallable} from './matcher/callable';
 import {type MatcherParamId} from './matcher/param/id';
-import {type Executable} from './executable';
-import {type ExecutionContext} from './execution/context';
-import {executor} from './executor';
+import {type Verifier} from './verifier';
+import {type VerifierResult} from './verifier/result';
+import {verify} from './verify';
 import {type MatcherData} from './matcher/data';
 import {type Int, intMake} from '@toreda/strong-types';
 import {errorMkCode} from './error/mk/code';
+import {type VerifierFlags} from './verifier/flags';
 
 /**
  * Holds one or more matchers that each perform validation
- * upon calling `statement.execute(...)`. All matchers must
+ * upon calling `statement.verify(...)`. All matchers must
  * pass for statement execution to pass.
  *
  * @category Statement Blocks
  */
-export class Statement<InputT = unknown> implements Executable {
+export class Statement<InputT = unknown> implements Verifier {
 	private readonly nextMatcherId: Int;
 	public readonly blocks: Block<Statement<InputT>>[];
-	public readonly matchers: MatcherBound<InputT>[];
+	public readonly matchers: MatcherCallable<InputT>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
 
 	constructor() {
@@ -66,7 +67,7 @@ export class Statement<InputT = unknown> implements Executable {
 	}
 
 	/**
-	 * Add matcher to statement that's executed everytime statement.execute is
+	 * Add matcher to statement that's verifyd everytime statement.verify is
 	 * invoked. Does not check for duplicates. Returns fate with boolean value
 	 * indicating whether the matcher was successfully added.
 	 * @param data		Matcher data to add
@@ -96,7 +97,7 @@ export class Statement<InputT = unknown> implements Executable {
 			return fate.setErrorCode(errorMkCode('nonfunction_property', 'statement', 'arg:data.fn'));
 		}
 
-		const bound = new MatcherBound<InputT>(this.nextMatcherSlotId(), data);
+		const bound = new MatcherCallable<InputT>(this.nextMatcherSlotId(), data);
 		this.matchers.push(bound);
 
 		fate.data = true;
@@ -107,11 +108,12 @@ export class Statement<InputT = unknown> implements Executable {
 	 * Test value against statement matchers.
 	 * @param value		Value to be tested by statement.
 	 */
-	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
-		return await executor<InputT, MatcherBound<InputT>>({
+	public async verify(value: InputT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>> {
+		return await verify<InputT, MatcherCallable<InputT>>({
 			name: 'matchers',
 			collection: this.matchers,
-			value: value
+			value: value,
+			flags: flags
 		});
 	}
 

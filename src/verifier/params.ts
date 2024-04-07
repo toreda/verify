@@ -23,12 +23,26 @@
  *
  */
 
+import {type VerifierFlags} from './flags';
+
 /**
- * Call arguments used by EqualTo validator functions.
- *
- * @category Validator Functions
+ * @category Verifier
  */
-export interface EqualToCall {
-	left?: unknown;
-	right?: unknown;
+export interface VerifierParams<ValueT = unknown, CollectionT = unknown> {
+	/**
+	 * Generic type value to be tested by executor.
+	 */
+	value: ValueT | null;
+	/**
+	 * Name of this executor or the collection name it's responsible for testing.
+	 * Used in matcher IDs and nodes to help identify why a value fails validation
+	 * when there are many rules, statements, or nested executors.
+	 */
+	name: string;
+	collection: CollectionT[];
+	/**
+	 * Flags that change executor behavior, such test fails before failure. Each level
+	 * in nested executor calls can define its own executor options.
+	 */
+	flags?: VerifierFlags;
 }

@@ -31,17 +31,18 @@ import {Statement} from './statement';
 import {type BlockInit} from './block/init';
 import {BlockMatch} from './block/match';
 import {BlockContains} from './block/contains';
-import {type ExecutionContext} from './execution/context';
-import {executor} from './executor';
-import {RuleConfig} from './rule/config';
+import {type VerifierResult} from './verifier/result';
+import {verify} from './verify';
 import {type Resettable} from '@toreda/types';
 import {type BlockWithNot, blockWithNot} from './block/with/not';
 import {BlockDoes} from './block/does';
+import {type Verifier} from './verifier';
+import {type VerifierFlags} from './verifier/flags';
 
 /**
  * @category Rule Blocks
  */
-export class Rule<InputT> implements Resettable {
+export class Rule<InputT> implements Resettable, Verifier {
 	/**
 	 * @description IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
@@ -53,7 +54,6 @@ export class Rule<InputT> implements Resettable {
 	public readonly is: BlockWithNot<BlockIs<InputT>>;
 	public readonly has: BlockWithNot<BlockHave<InputT>>;
 	public readonly matches: BlockWithNot<BlockMatch<InputT>>;
-	private readonly cfg: RuleConfig;
 
 	constructor() {
 		const stmt = new Statement<InputT>();
@@ -61,7 +61,6 @@ export class Rule<InputT> implements Resettable {
 			stmt: stmt
 		};
 
-		this.cfg = new RuleConfig();
 		this.does = blockWithNot<InputT, BlockDoes<InputT>>(BlockDoes<InputT>, init);
 		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
 		this.is = blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, init);
@@ -75,11 +74,11 @@ export class Rule<InputT> implements Resettable {
 
 	private bindListeners(): void {
 		this.add = this.add.bind(this);
-		this.execute = this.execute.bind(this);
+		this.verify = this.verify.bind(this);
 	}
 
 	/**
-	 * Add statement to rule which are tested when `rule.execute(...)` is invoked. All rule
+	 * Add statement to rule which are tested when `rule.verify(...)` is invoked. All rule
 	 * statements must pass for the rule to pass.
 	 * @param stmt
 	 * @returns
@@ -94,11 +93,12 @@ export class Rule<InputT> implements Resettable {
 		return this;
 	}
 
-	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
-		return executor<InputT, Statement<InputT>>({
+	public async verify(value: InputT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>> {
+		return verify<InputT, Statement<InputT>>({
 			collection: this.statements,
 			name: 'rule',
-			value: value
+			value: value,
+			flags: flags
 		});
 	}
 

@@ -1,11 +1,11 @@
 import {BlockFlags} from '../../src';
-import {MatcherBound} from '../../src/matcher/bound';
+import {MatcherCallable} from '../../src/matcher/callable';
 import {Predicate} from '../../src/predicate';
 
 const EMPTY_STRING = '';
 
-describe('MatcherBound', () => {
-	let instance: MatcherBound<string>;
+describe('MatcherCallable', () => {
+	let instance: MatcherCallable<string>;
 	let predicate: Predicate<string>;
 
 	beforeAll(() => {
@@ -13,7 +13,7 @@ describe('MatcherBound', () => {
 			return value === 'STRING';
 		};
 
-		instance = new MatcherBound<string>(8, {
+		instance = new MatcherCallable<string>(8, {
 			fn: predicate,
 			name: 'matcher'
 		});
@@ -29,7 +29,7 @@ describe('MatcherBound', () => {
 				return true;
 			});
 
-			const custom = new MatcherBound(9, {
+			const custom = new MatcherCallable(9, {
 				fn: func,
 				name: 'matcher'
 			});
@@ -49,7 +49,7 @@ describe('MatcherBound', () => {
 				invertResult: true
 			};
 
-			const custom = new MatcherBound(10, {
+			const custom = new MatcherCallable(10, {
 				fn: func,
 				name: 'matcher',
 				flags: flags
@@ -131,12 +131,12 @@ describe('MatcherBound', () => {
 			});
 		});
 
-		describe('execute', () => {
-			it(`should execute stored matcher function using provided value arg`, async () => {
-				const spy = jest.spyOn(instance, 'execute');
+		describe('verify', () => {
+			it(`should verify stored matcher function using provided value arg`, async () => {
+				const spy = jest.spyOn(instance, 'verify');
 				expect(spy).not.toHaveBeenCalled();
 				const value = 'aaa1';
-				await instance.execute(value);
+				await instance.verify(value);
 
 				expect(spy).toHaveBeenCalledTimes(1);
 				spy.mockRestore();
@@ -146,13 +146,13 @@ describe('MatcherBound', () => {
 				const fn = jest.fn().mockImplementation(() => {
 					throw new Error('mock fn throw');
 				});
-				const custom = new MatcherBound(11, {
+				const custom = new MatcherCallable(11, {
 					fn: fn,
 					name: 'matcher',
 					flags: {}
 				});
 
-				const result = await custom.execute('aaa');
+				const result = await custom.verify('aaa');
 				expect(result.success()).toBe(false);
 				expect(result.errorCode()).toBe('exception');
 			});
@@ -161,13 +161,13 @@ describe('MatcherBound', () => {
 				const func = jest.fn().mockImplementation(() => {
 					return false;
 				});
-				const custom = new MatcherBound(12, {
+				const custom = new MatcherCallable(12, {
 					fn: func,
 					name: 'matcher',
 					flags: {}
 				});
 
-				const result = await custom.execute('aaa');
+				const result = await custom.verify('aaa');
 				expect(result.ok()).toBe(true);
 				expect(result.data?.outcome).toBe('fail');
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -177,13 +177,13 @@ describe('MatcherBound', () => {
 				const fn = jest.fn().mockImplementation(() => {
 					return true;
 				});
-				const custom = new MatcherBound(13, {
+				const custom = new MatcherCallable(13, {
 					fn: fn,
 					name: 'matcher',
 					flags: {}
 				});
 
-				const result = await custom.execute('aaa');
+				const result = await custom.verify('aaa');
 				expect(result.ok()).toBe(true);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 			});

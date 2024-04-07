@@ -48,7 +48,7 @@ export function matcherGroupTests(groups: MatcherGroup[]): void {
 				it(`should ${testCase.outcome}: ${action}`, async () => {
 					ruleset.add(testCase.block);
 
-					const result = await ruleset.execute(testCase.input);
+					const result = await ruleset.verify(testCase.input);
 
 					const expectedFateResult =
 						typeof testCase.fateResult === 'boolean' ? testCase.fateResult : true;

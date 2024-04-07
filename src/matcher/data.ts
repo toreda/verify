@@ -27,10 +27,27 @@ import type {BlockFlags} from '../block/flags';
 import {type Predicate} from '../predicate';
 
 /**
+ * Data used to create a callable matcher.
  * @category Matchers
  */
 export interface MatcherData<InputT = unknown> {
+	/**
+	 * @name Matcher Call Name
+	 * @description Name used in creation of a unique ID for bound matcher. There are
+	 * no character or length limitations. Short, readable, and unique names are
+	 * ideal because the ID is used in debugging and stack traces.
+	 */
 	name: string;
+	/**
+	 * @name Matcher Predicate Function
+	 * @description Predicate function that expects one or more arguments of generic type
+	 * InputT and returns a boolean indicating whether it's valid.
+	 */
 	fn: Predicate<InputT>;
+	/**
+	 * @name Matcher Call Flags
+	 * @description Optional flags passed to a matcher during binding to change
+	 * its behavior.
+	 */
 	flags?: BlockFlags;
 }

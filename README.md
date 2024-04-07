@@ -1,24 +1,24 @@
 ![Toreda](https://content.toreda.com/logo/toreda-logo.png)
 
-[![CI](https://img.shields.io/github/actions/workflow/status/toreda/chk/main.yml?branch=master&style=for-the-badge)](https://github.com/toreda/chk/actions) [![Coverage](https://img.shields.io/sonar/coverage/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=toreda_cache) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge) [![GitHub issues](https://img.shields.io/github/issues/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/issues)
+[![CI](https://img.shields.io/github/actions/workflow/status/toreda/vrfy/main.yml?branch=master&style=for-the-badge)](https://github.com/toreda/chk/actions) [![Coverage](https://img.shields.io/sonar/coverage/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=toreda_cache) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge) [![GitHub issues](https://img.shields.io/github/issues/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/issues)
 
 
-[![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/toreda/chk/master?style=for-the-badge)](https://github.com/toreda/chk/releases/latest)
+[![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/toreda/chk/master?style=for-the-badge)](https://github.com/toreda/vrfy/releases/latest)
 [![GitHub Release Date](https://img.shields.io/github/release-date/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/releases/latest)
 
 [![license](https://img.shields.io/github/license/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/blob/master/LICENSE)
 
-# `@toreda/chk` - Pronounced *Check* [ chek ]
+# `vrfy` - Autoverify
 Eliminate more edge cases with less code. Automates common type checks and validation checks.
 
 &nbsp;
 
 # Checks
-## `chkArray`
+## `vrfyArray`
 Check that `value` is a valid array.
-## `chkArrayEmpty`
+## `vrfyArrayEmpty`
 Check that `value` is a valid array and empty.
-## `chkBigInt`
+## `vrfyBigInt`
 Check that `value` is a `BigInt` type, is an integer, and is finite.
 ## `chkBoolean`
 Check that `value` has a boolean value `true` or `false`. Does not use type coercion.

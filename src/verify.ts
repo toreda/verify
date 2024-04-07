@@ -24,10 +24,9 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {type ExecutorParams} from './executor/params';
-import {type ExecutionContext} from './execution/context';
-import {type Executable} from './executable';
-import {executorMkContext} from './executor/mk/context';
+import {type VerifierParams} from './verifier/params';
+import {verifierResult, type VerifierResult} from './verifier/result';
+import {type Verifier} from './verifier';
 import {numberValue} from '@toreda/strong-types';
 import Defaults from './defaults';
 
@@ -35,16 +34,16 @@ import Defaults from './defaults';
  *
  * @param params
  *
- * @category Executor
+ * @category Verifier
  */
-export async function executor<InputT, CollectionT extends Executable<InputT>>(
-	params: ExecutorParams<InputT, CollectionT>
-): Promise<Fate<ExecutionContext>> {
-	const ctx = executorMkContext<InputT>({
+export async function verify<InputT, CollectionT extends Verifier<InputT>>(
+	params: VerifierParams<InputT, CollectionT>
+): Promise<Fate<VerifierResult>> {
+	const ctx = verifierResult<InputT>({
 		name: params.name
 	});
 
-	const fate = new Fate<ExecutionContext>({
+	const fate = new Fate<VerifierResult>({
 		data: ctx
 	});
 
@@ -56,7 +55,7 @@ export async function executor<InputT, CollectionT extends Executable<InputT>>(
 		ctx.summary.counts.total = params.collection.length;
 
 		for (const item of params.collection) {
-			const subResult = await item.execute(params.value);
+			const subResult = await item.verify(params.value);
 
 			// Error
 			if (!subResult.ok()) {
@@ -103,7 +102,7 @@ export async function executor<InputT, CollectionT extends Executable<InputT>>(
 		} else {
 			ctx.outcome = 'pass';
 		}
-		// No exceptions during execution. Fate return status is separate from executor outcome.
+		// No exceptions during verifier. Fate return status is separate from executor outcome.
 		fate.setSuccess(true);
 	} catch (e: unknown) {
 		const msg = e instanceof Error ? e.message : 'nonerror_type';

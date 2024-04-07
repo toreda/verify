@@ -23,10 +23,27 @@
  *
  */
 
+import {Fate} from '@toreda/fate';
+import {isBoolean} from '../is/boolean';
+
 /**
- * @category Executor
+ * Determine if target value is a valid boolean.
+ * @param value
+ * @returns
+ *
+ * @category Stand-alone Validators
  */
-export interface ExecutorFlags {
-	maxFails?: number;
-	maxErrors?: number;
+export function verifyBoolean(value?: unknown): Fate<boolean> {
+	const fate = new Fate<boolean>();
+
+	if (value === null || value === undefined) {
+		return fate.setErrorCode('missing');
+	}
+
+	if (!isBoolean(value)) {
+		return fate.setErrorCode('bad_value_type');
+	}
+
+	fate.data = value;
+	return fate.setSuccess(true);
 }

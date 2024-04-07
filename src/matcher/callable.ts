@@ -28,16 +28,16 @@ import type {BlockFlags} from '../block/flags';
 import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../predicate';
 import {type Id, booleanValue} from '@toreda/strong-types';
-import {type Executable} from '../executable';
-import {type ExecutionContext} from '../execution/context';
-import {executorMkContext} from '../executor/mk/context';
+import {type Verifier} from '../verifier';
+import {type VerifierResult} from '../verifier/result';
+import {verifierResult} from '../verifier/result';
 import {matcherMkId} from './mk/id';
 import {type MatcherData} from './data';
 
 /**
  * @category Matcher Predicates
  */
-export class MatcherBound<InputT = unknown> implements Executable {
+export class MatcherCallable<InputT = unknown> implements Verifier {
 	public readonly id: Id;
 	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
@@ -75,12 +75,12 @@ export class MatcherBound<InputT = unknown> implements Executable {
 		return result;
 	}
 
-	public async execute(value?: InputT | null): Promise<Fate<ExecutionContext>> {
-		const ctx = executorMkContext<InputT>({
+	public async verify(value?: InputT | null): Promise<Fate<VerifierResult>> {
+		const ctx = verifierResult<InputT>({
 			name: 'predicate'
 		});
 
-		const fate = new Fate<ExecutionContext>({
+		const fate = new Fate<VerifierResult>({
 			data: ctx
 		});
 
@@ -94,7 +94,7 @@ export class MatcherBound<InputT = unknown> implements Executable {
 			fate.setSuccess(true);
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : 'nonerr_type';
-			console.error(`matcher.execute exception: ${msg}`);
+			console.error(`matcher.verify exception: ${msg}`);
 			fate.error(e);
 			fate.setErrorCode('exception');
 			ctx.outcome = 'error';

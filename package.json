@@ -1,8 +1,8 @@
 {
-	"name": "vrfy",
+	"name": "@toreda/verify",
 	"version": "0.6.0",
 	"main": "./dist/index.js",
-	"repository": "https://github.com/toreda/vrfy",
+	"repository": "https://github.com/toreda/verify",
 	"author": "Toreda, Inc.",
 	"license": "MIT",
 	"description": "Automated validation. Eliminate edge cases with less code.",

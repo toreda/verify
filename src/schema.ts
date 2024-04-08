@@ -145,7 +145,7 @@ export class Schema<DataT, InputT, OutputT> {
 		}
 	}
 
-	public async parse(
+	public async verify(
 		data: SchemaData<DataT>,
 		factory: SchemaOutputTransformer<DataT, OutputT>,
 		base: Log
@@ -154,24 +154,24 @@ export class Schema<DataT, InputT, OutputT> {
 
 		if (!base) {
 			console.error(`Missing argument: base`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'base'));
+			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'base'));
 		}
 
-		const log = base.makeLog(`schema:${this.schemaName}.parse`);
+		const log = base.makeLog(`schema:${this.schemaName}.verify`);
 
 		if (!data) {
 			log.error(`Missing argument: data`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'data'));
+			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'data'));
 		}
 
 		if (!factory) {
 			log.error(`Missing argument: factory`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.parse', 'factory'));
+			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'factory'));
 		}
 
 		if (typeof factory !== 'function') {
 			log.error(`Non-function argument: factory`);
-			return fate.setErrorCode(schemaError('nonfunction_argument', 'schema.parse', 'factory'));
+			return fate.setErrorCode(schemaError('nonfunction_argument', 'schema.verify', 'factory'));
 		}
 
 		const total = this.fields.size;
@@ -202,15 +202,15 @@ export class Schema<DataT, InputT, OutputT> {
 				}
 			} catch (e: unknown) {
 				const msg = e instanceof Error ? e.message : 'unknown_err_type';
-				fate.setErrorCode(schemaError('exception', 'schema.parse', `error: ${msg}.`));
+				fate.setErrorCode(schemaError('exception', 'schema.verify', `error: ${msg}.`));
 				log.error(`Exception parsing schema: ${msg}.`);
 			}
 		} else {
-			log.error(`schema_field_mismatch: schema.parse - expected '${total}' but got ${processed}`);
+			log.error(`schema_field_mismatch: schema.verify - expected '${total}' but got ${processed}`);
 			fate.setErrorCode(
 				schemaError(
 					`schema_field_mismatch`,
-					'schema.parse',
+					'schema.verify',
 					`expected:${total}`,
 					`processed:${processed}`
 				)

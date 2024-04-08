@@ -25,41 +25,43 @@
 
 import {Fate} from '@toreda/fate';
 import {schemaError} from './error';
-import type {SchemaParseInit} from './parse/init';
+import type {SchemaVerifyInit} from './verify/init';
 import {type SchemaData} from './data';
 
 /**
  * @category Schemas
  */
-export async function schemaParse<DataT, InputT extends SchemaData<DataT>, OutputT extends SchemaData<DataT>>(
-	init: SchemaParseInit<DataT, InputT, OutputT>
-): Promise<Fate<OutputT | null>> {
+export async function schemaVerify<
+	DataT,
+	InputT extends SchemaData<DataT>,
+	OutputT extends SchemaData<DataT>
+>(init: SchemaVerifyInit<DataT, InputT, OutputT>): Promise<Fate<OutputT | null>> {
 	const fate = new Fate<OutputT | null>();
-	const log = init.base.makeLog('schemaParse');
+	const log = init.base.makeLog('schemaVerify');
 
 	if (!init) {
-		return fate.setErrorCode(schemaError('missing_init', 'schemaParse', 'init'));
+		return fate.setErrorCode(schemaError('missing_init', 'schemaVerify', 'init'));
 	}
 
 	if (init.data === null || typeof init.data === 'undefined') {
-		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.data'));
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaVerify', 'init.data'));
 	}
 
 	if (Object.keys(init.data).length === 0) {
-		return fate.setErrorCode(schemaError('empty_data_object', 'schemaParse', 'init.data'));
+		return fate.setErrorCode(schemaError('empty_data_object', 'schemaVerify', 'init.data'));
 	}
 
 	if (init.schema === null || typeof init.schema === 'undefined') {
-		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.schema'));
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaVerify', 'init.schema'));
 	}
 
 	if (init.transformer === null || typeof init.transformer === 'undefined') {
-		return fate.setErrorCode(schemaError('missing_init_property', 'schemaParse', 'init.transformer'));
+		return fate.setErrorCode(schemaError('missing_init_property', 'schemaVerify', 'init.transformer'));
 	}
 
 	if (typeof init.transformer !== 'function') {
-		return fate.setErrorCode(schemaError('nonfunction_transformer', 'schemaParse', 'init.transformer'));
+		return fate.setErrorCode(schemaError('nonfunction_transformer', 'schemaVerify', 'init.transformer'));
 	}
 
-	return init.schema.parse(init.data, init.transformer, log);
+	return init.schema.verify(init.data, init.transformer, log);
 }

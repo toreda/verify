@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {schemaParse} from '../parse';
+import {schemaParse} from '../verify';
 import {type SchemaParseInit} from './init';
 import {schemaPrimitiveTransformer} from '../primitive/transformer';
 import {type SchemaData} from '../data';

@@ -30,11 +30,15 @@ import {type SchemaData} from '../data';
 import {type SchemaOutputTransformer} from '../output/transformer';
 
 /**
- * Parameters needed for each `schema.parse(...)` call.
+ * Parameters needed for each `schema.verify(...)` call.
  *
  * @category Schemas
  */
-export interface SchemaParseInit<DataT, InputT extends SchemaData<DataT>, OutputT extends SchemaData<DataT>> {
+export interface SchemaVerifyInit<
+	DataT,
+	InputT extends SchemaData<DataT>,
+	OutputT extends SchemaData<DataT>
+> {
 	data?: SchemaData<DataT> | null;
 	schema: Schema<DataT, InputT, OutputT>;
 	options?: SchemaOptions;

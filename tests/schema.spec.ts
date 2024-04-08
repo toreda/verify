@@ -2,8 +2,8 @@ import {Levels, Log} from '@toreda/log';
 import {schemaError} from '../src/schema/error';
 import {Schema} from '../src/schema';
 import {stringValue} from '@toreda/strong-types';
-import {type SchemaParseInit} from '../src/schema/parse/init';
-import {schemaParse} from '../src/schema/parse';
+import {type SchemaVerifyInit} from '../src/schema/verify/init';
+import {schemaVerify} from '../src/schema/verify';
 import {type SchemaData} from '../src/schema/data';
 import {type Primitive} from '@toreda/types';
 import {type SchemaOutputTransformer} from '../src/schema/output/transformer';
@@ -41,10 +41,10 @@ class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 	}
 }
 
-describe('schemaParse', () => {
+describe('schemaVerify', () => {
 	let sampleData: SampleData;
 	let sampleSchema: SampleSchema;
-	let init: SchemaParseInit<Primitive, SampleData, SampleData>;
+	let init: SchemaVerifyInit<Primitive, SampleData, SampleData>;
 	let base: Log;
 	let basicTransformer: SchemaOutputTransformer<Primitive, SampleData>;
 
@@ -97,7 +97,7 @@ describe('schemaParse', () => {
 
 	describe('Parsing', () => {
 		it(`should fail with code when provided data is an empty object`, async () => {
-			const result = await schemaParse<Primitive, SampleData, SampleData>({
+			const result = await schemaVerify<Primitive, SampleData, SampleData>({
 				data: EMPTY_OBJECT as any,
 				schema: sampleSchema,
 				base: base,
@@ -110,7 +110,7 @@ describe('schemaParse', () => {
 		it(`should fail with code when a data field is undefined`, async () => {
 			sampleData.int1 = undefined as any;
 
-			const result = await schemaParse<Primitive, SampleData, SampleData>({
+			const result = await schemaVerify<Primitive, SampleData, SampleData>({
 				data: sampleData,
 				schema: sampleSchema,
 				transformer: basicTransformer,
@@ -125,7 +125,7 @@ describe('schemaParse', () => {
 			sampleData.int1 = 70714;
 			sampleData.str1 = '149714';
 
-			const result = await schemaParse<Primitive, SampleData, SampleData>({
+			const result = await schemaVerify<Primitive, SampleData, SampleData>({
 				data: sampleData,
 				schema: sampleSchema,
 				base: base,
@@ -147,7 +147,7 @@ describe('schemaParse', () => {
 					}
 
 					field.types = 'aaaaa' as any;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: customSchema,
 						base: base,
@@ -166,7 +166,7 @@ describe('schemaParse', () => {
 					const expectedOutput = '9712497141';
 
 					sampleData.str1 = expectedOutput;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
@@ -181,7 +181,7 @@ describe('schemaParse', () => {
 					const expectedOutput = '';
 
 					sampleData.str1 = expectedOutput;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
@@ -208,7 +208,7 @@ describe('schemaParse', () => {
 					}
 
 					field.nullable = false;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: customSchema,
 						base: base,
@@ -229,7 +229,7 @@ describe('schemaParse', () => {
 					}
 
 					field.nullable = true;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: customSchema,
 						base: base,
@@ -245,7 +245,7 @@ describe('schemaParse', () => {
 					const expectedOutput = true;
 
 					sampleData.bool1 = expectedOutput;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
@@ -261,7 +261,7 @@ describe('schemaParse', () => {
 					const expectedOutput = false;
 
 					sampleData.bool1 = expectedOutput;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
@@ -282,7 +282,7 @@ describe('schemaParse', () => {
 					}
 					sampleData.bool1 = 1 as any;
 
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: sampleSchema,
 						base: base,
@@ -304,7 +304,7 @@ describe('schemaParse', () => {
 
 					field.nullable = false;
 
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: customSchema,
 						base: base,
@@ -328,7 +328,7 @@ describe('schemaParse', () => {
 					}
 
 					field.nullable = true;
-					const result = await schemaParse<Primitive, SampleData, SampleData>({
+					const result = await schemaVerify<Primitive, SampleData, SampleData>({
 						data: sampleData,
 						schema: customSchema,
 						base: base,
@@ -342,12 +342,12 @@ describe('schemaParse', () => {
 		});
 	});
 
-	describe('parse', () => {
+	describe('verify', () => {
 		it(`should fail when data arg is undefined`, async () => {
 			const customSchema = new SampleSchema();
-			const result = await customSchema.parse(undefined as any, basicTransformer, base);
+			const result = await customSchema.verify(undefined as any, basicTransformer, base);
 
-			expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+			expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
 			expect(result.success()).toBe(false);
 		});
 	});
@@ -801,47 +801,47 @@ describe('schemaParse', () => {
 	});
 
 	describe('Schema', () => {
-		describe('parse', () => {
+		describe('verify', () => {
 			it(`should fail with code when data arg is undefined`, async () => {
-				const result = await sampleSchema.parse(undefined as any, basicTransformer, base);
+				const result = await sampleSchema.verify(undefined as any, basicTransformer, base);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
 			});
 
 			it(`should fail with code when data arg is null`, async () => {
-				const result = await sampleSchema.parse(null as any, basicTransformer, base);
+				const result = await sampleSchema.verify(null as any, basicTransformer, base);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'data'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
 			});
 
 			it(`should fail with code when factory arg is undefined`, async () => {
-				const result = await sampleSchema.parse(sampleData, undefined as any, base);
+				const result = await sampleSchema.verify(sampleData, undefined as any, base);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'factory'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'factory'));
 			});
 
 			it(`should fail with code when factory arg is null`, async () => {
-				const result = await sampleSchema.parse(sampleData, null as any, base);
+				const result = await sampleSchema.verify(sampleData, null as any, base);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'factory'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'factory'));
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
-				const result = await sampleSchema.parse(sampleData, basicTransformer, undefined as any);
+				const result = await sampleSchema.verify(sampleData, basicTransformer, undefined as any);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'base'));
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
-				const result = await sampleSchema.parse(sampleData, basicTransformer, undefined as any);
+				const result = await sampleSchema.verify(sampleData, basicTransformer, undefined as any);
 
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.parse', 'base'));
+				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'base'));
 			});
 		});
 	});

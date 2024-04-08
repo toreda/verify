@@ -1,4 +1,4 @@
-import {verifyArray} from '../../src/verify/array';
+import {verifyArray} from '../../src/verify/verify';
 const EMPTY_ARRAY: string[] = [];
 const EMPTY_STRING = '';
 

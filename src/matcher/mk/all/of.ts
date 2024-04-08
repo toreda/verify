@@ -32,7 +32,6 @@ import {type BlockInit} from '../../../block/init';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
- * @returns
  *
  * @category Matcher Predicate Factories
  */

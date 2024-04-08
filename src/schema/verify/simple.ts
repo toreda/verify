@@ -24,8 +24,8 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {schemaParse} from '../verify';
-import {type SchemaParseInit} from './init';
+import {schemaVerify} from '../verify';
+import {type SchemaVerifyInit} from './init';
 import {schemaPrimitiveTransformer} from '../primitive/transformer';
 import {type SchemaData} from '../data';
 import {type Primitive} from '@toreda/types';
@@ -38,9 +38,9 @@ import {type Primitive} from '@toreda/types';
  * @category Schemas
  */
 export async function schemaParseSimple(
-	init: SchemaParseInit<Primitive, SchemaData<Primitive>, SchemaData<Primitive>>
+	init: SchemaVerifyInit<Primitive, SchemaData<Primitive>, SchemaData<Primitive>>
 ): Promise<Fate<SchemaData<Primitive> | null>> {
-	return schemaParse({
+	return schemaVerify({
 		base: init.base,
 		data: init.data,
 		transformer: schemaPrimitiveTransformer,

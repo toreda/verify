@@ -30,7 +30,7 @@ import {isNumberFinite} from '../is/number/finite';
  * @param 		value
  * @returns
  *
- * @category 	Validators – Numbers
+ * @category 	Predicates – Numbers
  */
 export function powOf(value: unknown, exponent: number): boolean {
 	if (!isNumberFinite(value) || !isNumberFinite(exponent)) {

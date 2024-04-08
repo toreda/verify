@@ -1,4 +1,4 @@
-import {verifyStringId} from '../../../src/verify/string/id';
+import {verifyStringId} from '../../../src/string/id/verify';
 import {errorMkCode} from '../../../src/error/mk/code';
 const EMPTY_STRING = '';
 const VAR_LABEL = 'arg';

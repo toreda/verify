@@ -23,39 +23,31 @@
  *
  */
 
-import type {VerifierFlags} from '../verifier/flags';
-import {Codes} from '../codes';
 import {Fate} from '@toreda/fate';
+import {isArray} from '../../is/array';
 
 /**
- *
+ * Determine whether value is an array and if so, whether it's empty.
  * @param value
- * @returns
  *
- * @category Urls
+ * @category Check - Collections
  */
-export function verifyUrl(value?: unknown, flags?: VerifierFlags): Fate<string> {
-	const fate = new Fate<string>();
-
-	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
-	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
+export function emptyArrayVerify<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
+	const fate = new Fate<ValueT[]>();
 
 	if (value === undefined || value === null) {
-		return fate.setErrorCode(Codes.missing());
+		return fate.setErrorCode('missing');
 	}
 
-	if (typeof value !== 'string') {
-		return fate.setErrorCode(Codes.badFormat());
+	if (!isArray(value)) {
+		return fate.setErrorCode('bad_format');
 	}
 
-	if (value.length > maxLen) {
-		return fate.setErrorCode(Codes.tooLong());
+	const arr = value as ValueT[];
+	if (arr.length > 0) {
+		return fate.setErrorCode('not_empty');
 	}
 
-	if (value.length < minLen) {
-		return fate.setErrorCode(Codes.tooShort());
-	}
-
-	fate.data = value;
+	fate.data = arr;
 	return fate.setSuccess(true);
 }

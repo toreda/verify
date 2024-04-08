@@ -24,6 +24,8 @@
  */
 
 /**
+ * Options provided to a schema verifier at runtime that change verifier behavior.
+ *
  * @category Schemas
  */
 export interface SchemaOptions {

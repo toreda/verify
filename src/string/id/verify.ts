@@ -37,9 +37,9 @@ import {type VerifierFlags} from '../../verifier/flags';
  * @param flags
  * @returns
  *
- * @category Check - Core
+ * @category Strings
  */
-export function verifyStringId(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
+export function stringIdVerify(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
 	const fate = new Fate<string>();
 
 	let pathAppend: string[] = [];

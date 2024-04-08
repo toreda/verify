@@ -24,30 +24,25 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {isArray} from '../../is/array';
+import {isBigInt} from '../../is/big/int';
 
 /**
- * Determine whether value is an array and if so, whether it's empty.
+ * Deteremine if provided value is a valid BigInt.
  * @param value
  *
- * @category Check - Collections
+ * @category Validation
  */
-export function verifyArrayEmpty<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
-	const fate = new Fate<ValueT[]>();
+export function bigIntVerify(value?: unknown): Fate<bigint> {
+	const fate = new Fate<bigint>();
 
 	if (value === undefined || value === null) {
 		return fate.setErrorCode('missing');
 	}
 
-	if (!isArray(value)) {
-		return fate.setErrorCode('bad_format');
+	if (!isBigInt(value)) {
+		return fate.setErrorCode('bad_value_type');
 	}
 
-	const arr = value as ValueT[];
-	if (arr.length > 0) {
-		return fate.setErrorCode('not_empty');
-	}
-
-	fate.data = arr;
+	fate.data = value;
 	return fate.setSuccess(true);
 }

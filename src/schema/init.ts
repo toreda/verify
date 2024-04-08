@@ -27,10 +27,24 @@ import type {SchemaField} from './field';
 import type {SchemaOptions} from './options';
 
 /**
+ * @name Schema Init
+ * @description Parameters needed to create a specific schema object.
+ *
  * @category Schemas
  */
 export interface SchemaInit<InputT> {
+	/**
+	 * @name Schema Name
+	 */
 	name: string;
+	/**
+	 * @name Schema Fields
+	 * @description Details for each field that should be verified.
+	 */
 	fields: SchemaField<InputT>[];
+	/**
+	 * @name Schema Options
+	 * @description (optional) Flags & options that change verifier behavior.
+	 */
 	options?: SchemaOptions;
 }

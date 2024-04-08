@@ -1,4 +1,4 @@
-import {verifyBoolean} from '../../src/verify/boolean';
+import {verifyBoolean} from '../../src/boolean/verify';
 
 const EMPTY_STRING = '';
 

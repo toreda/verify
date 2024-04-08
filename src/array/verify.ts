@@ -23,13 +23,35 @@
  *
  */
 
+import type {VerifierFlags} from '../verifier/flags';
+import {Fate} from '@toreda/fate';
+
 /**
  *
- * @param next
+ * @param value
+ * @param flags
  * @returns
  *
- * @category Matcher Predicate Factories
+ * @category Stand-alone Validators
  */
-export function isNumberMk<NextT>(next: NextT): NextT {
-	return next;
+export function arrayVerify<ValueT>(value?: unknown | unknown[], flags?: VerifierFlags): Fate<ValueT[]> {
+	const fate = new Fate<ValueT[]>();
+
+	if (value === undefined || value === null) {
+		return fate.setErrorCode('missing');
+	}
+
+	if (!Array.isArray(value)) {
+		return fate.setErrorCode('bad_format');
+	}
+
+	const empty = value.length === 0;
+
+	// Empty arrays are valid by default unless flags.allow.empty is explicitly true.
+	if (empty && flags?.allow?.empty === false) {
+		return fate.setErrorCode('empty');
+	}
+
+	fate.data = value;
+	return fate.setSuccess(true);
 }

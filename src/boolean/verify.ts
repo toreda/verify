@@ -24,22 +24,22 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {isBigInt} from '../../is/big/int';
+import {isBoolean} from '../is/boolean';
 
 /**
- * Deteremine if provided value is a valid BigInt.
+ * Determine if target value is a valid boolean.
  * @param value
  *
- * @category Validation
+ * @category Booleans
  */
-export function verifyBigInt(value?: unknown): Fate<bigint> {
-	const fate = new Fate<bigint>();
+export function booleanVerify(value?: unknown): Fate<boolean> {
+	const fate = new Fate<boolean>();
 
-	if (value === undefined || value === null) {
+	if (value === null || value === undefined) {
 		return fate.setErrorCode('missing');
 	}
 
-	if (!isBigInt(value)) {
+	if (!isBoolean(value)) {
 		return fate.setErrorCode('bad_value_type');
 	}
 

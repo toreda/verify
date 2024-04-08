@@ -23,25 +23,37 @@
  *
  */
 
+import type {VerifierFlags} from '../verifier/flags';
+import {Codes} from '../codes';
 import {Fate} from '@toreda/fate';
-import {isBoolean} from '../is/boolean';
 
 /**
- * Determine if target value is a valid boolean.
+ *
  * @param value
  * @returns
  *
- * @category Stand-alone Validators
+ * @category Urls
  */
-export function verifyBoolean(value?: unknown): Fate<boolean> {
-	const fate = new Fate<boolean>();
+export function urlVerify(value?: unknown, flags?: VerifierFlags): Fate<string> {
+	const fate = new Fate<string>();
 
-	if (value === null || value === undefined) {
-		return fate.setErrorCode('missing');
+	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
+	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
+
+	if (value === undefined || value === null) {
+		return fate.setErrorCode(Codes.missing());
 	}
 
-	if (!isBoolean(value)) {
-		return fate.setErrorCode('bad_value_type');
+	if (typeof value !== 'string') {
+		return fate.setErrorCode(Codes.badFormat());
+	}
+
+	if (value.length > maxLen) {
+		return fate.setErrorCode(Codes.tooLong());
+	}
+
+	if (value.length < minLen) {
+		return fate.setErrorCode(Codes.tooShort());
 	}
 
 	fate.data = value;

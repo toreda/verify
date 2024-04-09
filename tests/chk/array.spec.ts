@@ -1,31 +1,31 @@
-import {verifyArray} from '../../src/verify/verify';
+import {arrayVerify} from '../../src/array/verify';
 const EMPTY_ARRAY: string[] = [];
 const EMPTY_STRING = '';
 
-describe('verifyArray', () => {
+describe('arrayVerify', () => {
 	it(`should fail when value arg is undefined`, () => {
-		const result = verifyArray();
+		const result = arrayVerify();
 
 		expect(result.errorCode()).toBe('missing');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should fail when value arg is null`, () => {
-		const result = verifyArray(null);
+		const result = arrayVerify(null);
 
 		expect(result.errorCode()).toBe('missing');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should fail when value is a truthy non-array`, () => {
-		const result = verifyArray(111 as any);
+		const result = arrayVerify(111 as any);
 
 		expect(result.errorCode()).toBe('bad_format');
 		expect(result.success()).toBe(false);
 	});
 
 	it(`should succeed when value is an empty array with no flags provided`, () => {
-		const result = verifyArray(EMPTY_ARRAY);
+		const result = arrayVerify(EMPTY_ARRAY);
 
 		expect(result.errorCode()).toBe(EMPTY_STRING);
 		expect(result.success()).toBe(true);
@@ -33,7 +33,7 @@ describe('verifyArray', () => {
 
 	it(`should return input as fate payload when successful`, () => {
 		const value: string[] = [];
-		const result = verifyArray<string>(value);
+		const result = arrayVerify<string>(value);
 
 		expect(result.data).toStrictEqual(value);
 		expect(result.success()).toBe(true);

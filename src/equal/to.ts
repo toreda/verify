@@ -27,7 +27,6 @@
  * Determine if left and right are strictly equal without type coercion.
  * @param left
  * @param right
- * @returns
  *
  * @category Matcher Predicates
  */

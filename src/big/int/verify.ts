@@ -30,7 +30,7 @@ import {isBigInt} from '../../is/big/int';
  * Deteremine if provided value is a valid BigInt.
  * @param value
  *
- * @category Validation
+ * @category Numbers
  */
 export function bigIntVerify(value?: unknown): Fate<bigint> {
 	const fate = new Fate<bigint>();

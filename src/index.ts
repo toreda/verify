@@ -79,7 +79,6 @@ export {Outcome} from './outcome';
 export {powOf} from './pow/of';
 export {Predicate} from './predicate';
 export {Rule} from './rule';
-export {RuleLimits} from './rule/limits';
 export {Ruleset} from './ruleset';
 export {Schema} from './schema';
 export {SchemaConfig} from './schema/config';

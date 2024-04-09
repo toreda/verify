@@ -31,11 +31,13 @@ import {type BlockWithMod, blockWithMod} from './mod';
 import {type BlockFlags} from '../flags';
 
 /**
+ * Block wrapped with a `not` (negation) modifier.
  * @category Block Modifiers
  */
 export type BlockWithNot<BlockT> = BlockWithMod<BlockT, 'not'>;
 
 /**
+ * Create a `not` modifier wrapped rule block.
  * @category Block Modifiers
  */
 export function blockWithNot<InputT, BlockT extends Block<Statement<InputT>>>(
@@ -46,6 +48,8 @@ export function blockWithNot<InputT, BlockT extends Block<Statement<InputT>>>(
 		init.flags = {};
 	}
 
+	// Only modifies the `invertResult` flag.
+	// Leaves other flags unmodified.
 	const flags: BlockFlags = {
 		...init.flags,
 		invertResult: true

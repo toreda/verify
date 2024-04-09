@@ -30,14 +30,18 @@ import {type BlockInit} from '../init';
 import {type BlockFlags} from '../flags';
 
 /**
+ * Interface for modifiers which wrap a `BlockT` and inject `ModKeyT` property.
+ *
  * @category Block Modifiers
  */
 export type BlockWithMod<BlockT, ModKeyT extends string> = BlockT & Record<ModKeyT, BlockT>;
 
 /**
- *
- * @param block
+ * Creates modifier that changes flags for subsequent blocks, altering block behavior or output.
+ * @param CTOR
  * @param init
+ * @param modFlags
+ * @param modKey
  *
  * @category Block Modifiers
  */

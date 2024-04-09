@@ -36,6 +36,17 @@ import {matcherMkHaveProperty} from '../matcher/mk/have/property';
 import {matcherMkHavePropertyWithType} from '../matcher/mk/have/property/with/type';
 
 /**
+ * @name Must (Block)
+ * @description Adds `must` property to rule statements for grammar purposes.
+ * @remark
+ * Immediately follows: `value`, `and`, `or` blocks in a statement.
+ * @example
+ * ```ts
+ * value.must.be.greaterThan(10);
+ * ```
+ * ```ts
+ * value.must.be.iterable().and.must.be.equalTo(['a']);
+ * ```
  * @category Rule Blocks
  */
 export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {

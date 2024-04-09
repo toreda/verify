@@ -28,7 +28,7 @@
  * @param value
  * @returns
  *
- * @category		Validators – Strings
+ * @category		Strings
  */
 export function isStringNotEmpty(value: unknown): value is string {
 	if (typeof value !== 'string') {

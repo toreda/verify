@@ -92,8 +92,8 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 			}
 		}
 
-		const maxFails = numberValue(params?.flags?.maxFails, Defaults.Executor.MaxFails);
-		const maxErrors = numberValue(params?.flags?.maxErrors, Defaults.Executor.MaxErrors);
+		const maxFails = numberValue(params?.flags?.maxFails, Defaults.Verifier.MaxFails);
+		const maxErrors = numberValue(params?.flags?.maxErrors, Defaults.Verifier.MaxErrors);
 
 		if (ctx.summary.counts.error > maxErrors) {
 			ctx.outcome = 'error';

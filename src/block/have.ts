@@ -25,7 +25,7 @@
 
 import {Block} from '../block';
 import {Statement} from '../statement';
-import {BlockInit} from './init';
+import {type BlockInit} from './init';
 import {BlockLength} from './length';
 
 /**

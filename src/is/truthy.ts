@@ -28,7 +28,7 @@
  * @param value
  * @returns
  *
- * @category Validators
+ * @category Verifiers
  */
 export function isTruthy(value: unknown): boolean {
 	return !!value;

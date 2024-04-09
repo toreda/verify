@@ -26,7 +26,9 @@
 import {type VerifierLabel} from './label';
 
 /**
- * @category Executor
+ * Optional flags that alter or toggle verifier behaviors.
+ *
+ * @category Verifier
  */
 export interface VerifierFlags {
 	/**

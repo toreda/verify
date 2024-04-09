@@ -36,11 +36,11 @@ import {errorMkCode} from './error/mk/code';
 import {type VerifierFlags} from './verifier/flags';
 
 /**
- * Holds one or more matchers that each perform validation
- * upon calling `statement.verify(...)`. All matchers must
+ * Holds matcher predicate functions that actually perform
+ * some custom validation code. All matchers must
  * pass for statement execution to pass.
  *
- * @category Statement Blocks
+ * @category Rule Blocks
  */
 export class Statement<InputT = unknown> implements Verifier {
 	private readonly nextMatcherId: Int;
@@ -117,6 +117,11 @@ export class Statement<InputT = unknown> implements Verifier {
 		});
 	}
 
+	/**
+	 * Reset properties to their initial states. Used in serverless
+	 * environments where variables are affected by caching, and
+	 * in optizing unit tests.
+	 */
 	public reset(): void {
 		this.nextMatcherId.reset();
 		this.matchers.length = 0;

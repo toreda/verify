@@ -24,9 +24,9 @@
  */
 
 /**
- * Execution result counts.
+ * Quick summary counts of each sub-verification.
  *
- * @category Executor
+ * @category Verifier
  */
 export interface VerifierCounts {
 	/**

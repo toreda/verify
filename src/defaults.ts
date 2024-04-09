@@ -38,7 +38,7 @@ export default class Defaults {
 	} as const;
 
 	public static VarLabel = 'value' as const;
-	public static Executor = {
+	public static Verifier = {
 		MaxFails: 0 as const,
 		MaxErrors: 0 as const
 	} as const;

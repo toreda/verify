@@ -24,7 +24,7 @@
  */
 
 /**
- * @category Validators – Numbers
+ * @category Numbers
  */
 export interface LessThanParams {
 	right: number;

@@ -1,12 +1,12 @@
 ![Toreda](https://content.toreda.com/logo/toreda-logo.png)
 
-[![CI](https://img.shields.io/github/actions/workflow/status/toreda/verify/main.yml?branch=master&style=for-the-badge)](https://github.com/toreda/chk/actions) [![Coverage](https://img.shields.io/sonar/coverage/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=toreda_cache) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge) [![GitHub issues](https://img.shields.io/github/issues/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/issues)
+[![CI](https://img.shields.io/github/actions/workflow/status/toreda/verify/main.yml?branch=master&style=for-the-badge)](https://github.com/toreda/verify/actions) [![Coverage](https://img.shields.io/sonar/coverage/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)](https://sonarcloud.io/dashboard?id=toreda_cache) ![Sonar Quality Gate](https://img.shields.io/sonar/quality_gate/toreda_cache?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge) [![GitHub issues](https://img.shields.io/github/issues/toreda/verify?style=for-the-badge)](https://github.com/toreda/verify/issues)
 
 
-[![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/toreda/chk/master?style=for-the-badge)](https://github.com/toreda/verify/releases/latest)
-[![GitHub Release Date](https://img.shields.io/github/release-date/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/releases/latest)
+[![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/toreda/verify/master?style=for-the-badge)](https://github.com/toreda/verify/releases/latest)
+[![GitHub Release Date](https://img.shields.io/github/release-date/toreda/verify?style=for-the-badge)](https://github.com/toreda/verify/releases/latest)
 
-[![license](https://img.shields.io/github/license/toreda/chk?style=for-the-badge)](https://github.com/toreda/chk/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/toreda/verify?style=for-the-badge)](https://github.com/toreda/verify/blob/master/LICENSE)
 
 # `verify` - Autoverify
 Eliminate more edge cases with less code. Automates common type checks and validation checks.
@@ -20,11 +20,11 @@ Check that `value` is a valid array.
 Check that `value` is a valid array and empty.
 ## `verifyBigInt`
 Check that `value` is a `BigInt` type, is an integer, and is finite.
-## `chkBoolean`
+## `verifyBoolean`
 Check that `value` has a boolean value `true` or `false`. Does not use type coercion.
-## `chkStringId`
+## `verifyStringId`
 Configurable validator for string-based ID values. Accepts a number of boundary condition parameters including min/max length, allow empty, allow nulls, auto-trim, etc.
-## `chkUrl`
+## `verifyUrl`
 Configurable validator for URL values.
 
 &nbsp;clear
@@ -63,7 +63,7 @@ const result = powOf(100, 10);
 
 &nbsp;
 ## Collections
-### `isArrayEmpty`
+### `isEmptyArray`
 Determine if `value` is an array and if so, whether it's empty. Does not throw. Returns `false` in all cases where `value` is not an array.
 
 &nbsp;
@@ -77,31 +77,31 @@ Determine if `value` is an array and if so, whether it's empty. Does not throw. 
 const value: string[] = [];
 
 // Result is TRUE.
-const result = isArrayEmpty(value);
+const result = isEmptyArray(value);
 ```
 
 ```typescript
 const value: string[] = ['one'];
 
 // Result is FALSE.
-const result = isArrayEmpty(value);
+const result = isEmptyArray(value);
 ```
 
 ```typescript
 const value = 'one';
 
 // Result is FALSE.
-const result = isArrayEmpty(value);
+const result = isEmptyArray(value);
 ```
 
 ```typescript
 // Result is FALSE.
-const result = isArrayEmpty(null);
+const result = isEmptyArray(null);
 ```
 
 ```typescript
 // Result is FALSE.
-const result = isArrayEmpty({});
+const result = isEmptyArray({});
 ```
 
 ### TypeScript Equivalent
@@ -113,12 +113,12 @@ const result = Array.isArray(value) && value.length === 0;
 &nbsp;
 
 # Package
-`@toreda/chk` is available as an [NPM package](https://www.npmjs.com/package/@toreda/chk).
+`@toreda/verify` is available as an [NPM package](https://www.npmjs.com/package/@toreda/verify).
 
 &nbsp;
 
 # Source Code
-`@toreda/chk` source is available [here on Github](https://www.npmjs.com/package/@toreda/chk).
+`@toreda/verify` source is available [here on Github](https://www.npmjs.com/package/@toreda/verify).
 
 
 &nbsp;

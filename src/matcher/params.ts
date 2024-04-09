@@ -26,7 +26,7 @@
 import {type Primitive} from '@toreda/types';
 
 /**
- * @category Validators – Numbers
+ * @category Numbers
  */
 export type MatcherParams<BoundaryKeyT extends string, BoundaryT = Primitive> = Record<
 	BoundaryKeyT,

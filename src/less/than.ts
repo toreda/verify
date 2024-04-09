@@ -31,7 +31,7 @@ import {isNumberFinite} from '../is/number/finite';
  * @param right
  * @returns
  *
- * @category Validators – Numbers
+ * @category Numbers
  */
 export function lessThan(value: unknown, right: unknown): boolean {
 	if (!isNumberFinite(value) || !isNumberFinite(right)) {

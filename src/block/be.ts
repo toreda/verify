@@ -66,8 +66,31 @@ import {BlockA} from './a';
  * ```
  */
 export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
+	/**
+	 * Checks whether value is strictly less than input.
+	 * @example
+	 *
+	 * ```ts
+	 * value.must.be.lessThan(100)
+	 * ```
+	 */
 	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	/**
+	 * Checks whether value is strictly greater than input.
+	 * @example
+	 * ```ts
+	 * value.must.be.greaterThan(0)
+	 * ```
+	 */
 	public readonly greaterThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	/**
+	 * Checks whether value is strictly equal to input including type and value without
+	 * type coercion. Equivalent to `===`, but works with a variety of types.
+	 * @example
+	 * ```ts
+	 * value.must.be.equalTo(99)
+	 * ```
+	 */
 	public readonly equalTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
 	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;

@@ -28,7 +28,7 @@
  * @param value
  * @returns
  *
- * @category Validator
+ * @category General
  * @remark
  * Arrays are empty with 0 elements. strings are empty with 0 length and when trimming
  * a string produces a 0 length string. Objects are empty when equivalent to `{}` where

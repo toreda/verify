@@ -70,7 +70,16 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
 	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
+	/**
+	 * Determine if `value` supports iteration, but does check for a specific iterable type.
+	 */
 	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;
+	/**
+	 * Determine if value is truthy.
+	 * @remark
+	 * `pass`	`value` is truthy.
+	 * `fail`	`value` is not truthy.
+	 */
 	public readonly truthy: MatcherFactory<InputT, never, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {

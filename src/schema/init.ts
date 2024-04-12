@@ -25,6 +25,7 @@
 
 import type {SchemaField} from './field';
 import type {SchemaOptions} from './options';
+import {SchemaOutputTransformer} from './output/transformer';
 
 /**
  * @name Schema Init
@@ -32,7 +33,7 @@ import type {SchemaOptions} from './options';
  *
  * @category Schemas
  */
-export interface SchemaInit<InputT> {
+export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	/**
 	 * @name Schema Name
 	 */
@@ -47,4 +48,5 @@ export interface SchemaInit<InputT> {
 	 * @description (optional) Flags & options that change verifier behavior.
 	 */
 	options?: SchemaOptions;
+	factory?: SchemaOutputTransformer<DataT, OutputT>;
 }

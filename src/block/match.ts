@@ -31,6 +31,13 @@ import {type MatcherFactory} from '../matcher/factory';
 import {type BlockInit} from './init';
 
 /**
+ * @name Match (Block)
+ * @description Adds `match` keyword to rule statements.
+ * @example
+ * ```ts
+ * value.must.match.type('string')
+ * ```
+ *
  * @category Rule Blocks
  */
 export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {

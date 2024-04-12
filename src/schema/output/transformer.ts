@@ -31,7 +31,7 @@ import {Log} from '@toreda/log';
  *
  * @category Schemas
  */
-export type SchemaOutputTransformer<DataT, OutputT> = (
-	data: Map<string, DataT>,
+export type SchemaOutputTransformer<DataT, VerifiedT> = (
+	mapped: Map<string, DataT>,
 	base: Log
-) => Promise<Fate<OutputT | null>>;
+) => Promise<Fate<VerifiedT | null>>;

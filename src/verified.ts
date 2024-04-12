@@ -23,25 +23,9 @@
  *
  */
 
-import {Schema} from '../../schema';
-import type {SchemaOptions} from '../options';
-import {Log} from '@toreda/log';
-import {type SchemaData} from '../data';
-import {type SchemaOutputTransformer} from '../output/transformer';
-
 /**
- * Parameters needed for each `schema.verify(...)` call.
- *
  * @category Schemas
  */
-export interface SchemaVerifyInit<
-	DataT,
-	InputT extends SchemaData<DataT>,
-	OutputT extends SchemaData<DataT>
-> {
-	data?: SchemaData<DataT> | null;
-	schema: Schema<DataT, InputT, OutputT>;
-	options?: SchemaOptions;
-	transformer: SchemaOutputTransformer<DataT, OutputT>;
-	base: Log;
+export interface Verified {
+	[k: string]: unknown;
 }

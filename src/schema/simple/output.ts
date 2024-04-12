@@ -26,8 +26,7 @@
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
 import {schemaError} from '../error';
-import {type SchemaData} from '../data';
-import {type Primitive} from '@toreda/types';
+import {type Verified} from '../../verified';
 
 /**
  * Default transformer that expects a map of string -> primitive values and produces
@@ -38,15 +37,15 @@ import {type Primitive} from '@toreda/types';
  *
  * @category Schemas
  */
-export async function schemaPrimitiveTransformer(
-	data: Map<string, Primitive>,
+export async function schemaSimpleOutput<DataT, VerifiedT>(
+	input: Map<string, DataT>,
 	base: Log
-): Promise<Fate<SchemaData<Primitive> | null>> {
+): Promise<Fate<VerifiedT | null>> {
 	const log = base.makeLog('schemaPrimitiveTransformer');
-	const fate = new Fate<SchemaData<Primitive> | null>();
+	const fate = new Fate<VerifiedT | null>();
 
-	if (!data) {
-		log.error(`Missing argument: data`);
+	if (!input) {
+		log.error(`Missing argument: mapped`);
 		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveTransformer', 'data'));
 	}
 
@@ -56,10 +55,13 @@ export async function schemaPrimitiveTransformer(
 	}
 
 	try {
-		const o: SchemaData<Primitive> = {};
-		for (const [id, field] of data) {
-			o[id] = field;
+		const verified: Verified = {};
+
+		for (const [id, field] of input) {
+			verified[id] = field;
 		}
+
+		fate.data = verified as VerifiedT;
 
 		fate.setSuccess(true);
 	} catch (e: unknown) {

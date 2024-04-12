@@ -23,27 +23,20 @@
  *
  */
 
-import {Fate} from '@toreda/fate';
-import {schemaVerify} from '../verify';
-import {type SchemaVerifyInit} from './init';
-import {schemaPrimitiveTransformer} from '../primitive/transformer';
-import {type SchemaData} from '../data';
-import {type Primitive} from '@toreda/types';
+import {isNumberFinite} from './number/finite';
 
-/**
- * Default parser for simple schemas only containing string keys and primitive values.
- * @param init
- * @returns
- *
- * @category Schemas
- */
-export async function schemaParseSimple(
-	init: SchemaVerifyInit<Primitive, SchemaData<Primitive>, SchemaData<Primitive>>
-): Promise<Fate<SchemaData<Primitive> | null>> {
-	return schemaVerify({
-		base: init.base,
-		data: init.data,
-		transformer: schemaPrimitiveTransformer,
-		schema: init.schema
-	});
+export function isUInt(value?: unknown): boolean {
+	if (typeof value !== 'number') {
+		return false;
+	}
+
+	if (!isNumberFinite(value)) {
+		return false;
+	}
+
+	if (value < 0) {
+		return false;
+	}
+
+	return Math.floor(value) === value;
 }

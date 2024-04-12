@@ -47,6 +47,9 @@ import {matcherMkHavePropertyWithType} from '../matcher/mk/have/property/with/ty
  * ```ts
  * value.must.be.iterable().and.must.be.equalTo(['a']);
  * ```
+ * ```ts
+ * value.must.contain.oneOf(['a', 'b', 'c']);
+ * ```
  * @category Rule Blocks
  */
 export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {

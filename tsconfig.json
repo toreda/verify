@@ -9,7 +9,7 @@
 		"declaration": true,
 		"esModuleInterop": true,
 		"isolatedModules": false,
-		"lib": ["es6", "ES2015"],
+		"lib": ["es6", "ES2015", "ESNext"],
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"noImplicitUseStrict": false,
@@ -23,14 +23,13 @@
 		"strictBindCallApply": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
-		"target": "es2015",
+		"target": "ESNext",
 		"traceResolution": false
 	},
 	"ts-node": {
 		"swc": true,
 		"compilerOptions": {
 			"allowSyntheticDefaultImports": true,
-			"sourceMap": false,
 			"noLib": true,
 			"noEmit": true
 		}

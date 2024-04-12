@@ -30,6 +30,20 @@
  *					`false`	value is not an array, or has is an array with 1 or
  *							more elements.
  *
+ * @example
+ * ```ts
+ * const value: string[] = [];
+ *
+ * // Result is TRUE.
+ * const result = isArrayEmpty(value);
+ * ```
+ * ```typescript
+ * const value = 'one';
+ *
+ * // Result is FALSE.
+ * const result = isArrayEmpty(value);
+ * ```
+ *
  * @category		Validators – Collections
  */
 export function isArrayEmpty(value: unknown | unknown[]): value is Array<unknown> {

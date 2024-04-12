@@ -27,7 +27,7 @@ import {Fate} from '@toreda/fate';
 import {isBoolean} from '../is/boolean';
 
 /**
- * Determine if target value is a valid boolean.
+ * @description Verifies that `value` is a boolean without type coercion.
  * @param value
  *
  * @category Booleans

@@ -27,7 +27,6 @@
  *
  * @param value
  * @param type
- * @returns
  *
  * @category		Matcher Predicates – Types
  */

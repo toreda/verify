@@ -30,7 +30,7 @@ import {isArray} from '../../is/array';
  * Determine whether value is an array and if so, whether it's empty.
  * @param value
  *
- * @category Check - Collections
+ * @category Collections
  */
 export function emptyArrayVerify<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
 	const fate = new Fate<ValueT[]>();

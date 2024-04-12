@@ -31,14 +31,23 @@ import {BlockOr} from './or';
 import {type BlockWithNot, blockWithNot} from './with/not';
 
 /**
- * Connects 2 or more otherwise independent predicate statements into one statement
+ * @name Link (Block)
+ * @description Connects 2 or more otherwise independent predicate statements into one statement
  * where all matcher predicates must return true for the entire statement to be true.
  * @example `has.length(1).and.is.type('string')
  *
  * @category Rule Blocks
  */
 export class BlockLink<InputT = unknown> extends Block<Statement<InputT>> {
+	/**
+	 * Injects `and` into a statement. Requires both the matcher before and immediately
+	 * after the `and` to pass for the statement to `pass`.
+	 */
 	public readonly and: BlockWithNot<BlockAnd<InputT>>;
+	/**
+	 * Injects `or` into a statement. Statement passes when the matcher before or
+	 * immediately after the `or` `pass`.
+	 */
 	public readonly or: BlockWithNot<BlockOr<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {

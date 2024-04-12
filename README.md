@@ -27,12 +27,10 @@ Configurable validator for string-based ID values. Accepts a number of boundary 
 ## `verifyUrl`
 Configurable validator for URL values.
 
-&nbsp;clear
-
+&nbsp;
 
 # Rule Validators
 Rule validators check for a single condition using one or more function arguments and return a strict `boolean` value `true` or `false`.
-
 
 
 ## Maths
@@ -41,7 +39,7 @@ Determine if `value` is a power of `exponent`.
 
 &nbsp;
 
-**Useful validating:**
+**Use cases**
   * User uploaded image dimensions.
   * Texture sizes with size requirements, e.g. the power of 2 rule.
   * Cases where inputs may have non-number or non-finite values.
@@ -63,45 +61,28 @@ const result = powOf(100, 10);
 
 &nbsp;
 ## Collections
-### `isEmptyArray`
+### `isArrayEmpty`
 Determine if `value` is an array and if so, whether it's empty. Does not throw. Returns `false` in all cases where `value` is not an array.
 
 &nbsp;
-
-**Useful when:**
-* value is not an array or may not be an array.
-
-
-&nbsp;
-```typescript
-const value: string[] = [];
-
-// Result is TRUE.
-const result = isEmptyArray(value);
-```
 
 ```typescript
 const value: string[] = ['one'];
 
 // Result is FALSE.
-const result = isEmptyArray(value);
+const result = isArrayEmpty(value);
 ```
 
-```typescript
-const value = 'one';
 
-// Result is FALSE.
-const result = isEmptyArray(value);
-```
 
 ```typescript
 // Result is FALSE.
-const result = isEmptyArray(null);
+const result = isArrayEmpty(null);
 ```
 
 ```typescript
 // Result is FALSE.
-const result = isEmptyArray({});
+const result = isArrayEmpty({});
 ```
 
 ### TypeScript Equivalent
@@ -118,7 +99,7 @@ const result = Array.isArray(value) && value.length === 0;
 &nbsp;
 
 # Source Code
-`@toreda/verify` source is available [here on Github](https://www.npmjs.com/package/@toreda/verify).
+`@toreda/verify` source is available [here on Github](https://github.com/toreda/verify).
 
 
 &nbsp;
@@ -132,7 +113,7 @@ We welcome bug reports, comments, and pull requests.
 [MIT](LICENSE) &copy; Toreda, Inc.
 
 ## Copyright
-Copyright &copy; 2023 Toreda, Inc. All Rights Reserved.
+Copyright &copy; 2019 - 2024 Toreda, Inc. All Rights Reserved.
 
 &nbsp;
 

@@ -1,7 +1,8 @@
 {
 	"name": "@toreda/verify",
-	"version": "0.6.0",
+	"version": "0.7.2",
 	"main": "./dist/index.js",
+	"typings": "./dist/index.d.ts",
 	"repository": "https://github.com/toreda/verify",
 	"author": "Toreda, Inc.",
 	"license": "MIT",

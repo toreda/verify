@@ -30,6 +30,7 @@ export type SchemaFieldType =
 	| 'bigint'
 	| 'boolean'
 	| 'double'
+	| 'dbl'
 	| 'float'
 	| 'json-serailized'
 	| 'int'

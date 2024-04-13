@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2024-04-12
+### Added
+* Added `isUInt` type to package in place of importing from `@toreda/strong-types`.
+* `schemaSimpleOutput` returns basic `string` key -> `Primitive` maps from schema input data and is now the default factory for Schemas unless `factory` is provided in schema init.
+
+### Changed
+* Removed `schemaVerify` flow. Schema verification now flows through the `Schema` object and using `schema.verify(...)`.
+
 ## [0.7.1] - 2024-04-10
 ## Fixed
 * Added missing `typings` property to `package.json`.

@@ -1,11 +1,7 @@
 import {isUInt} from '../../src/is/uint';
-
-interface TestCase {
-	label?: string;
-	value: unknown;
-
-	result: boolean;
-}
+import {type TestCase} from '../_lib/test/case';
+const EMPTY_ARRAY: unknown[] = [];
+const EMPTY_OBJECT: unknown[] = [];
 
 const TEST_CASES: TestCase[] = [
 	{
@@ -26,6 +22,10 @@ const TEST_CASES: TestCase[] = [
 	},
 	{
 		value: 0.001,
+		result: false
+	},
+	{
+		value: -0.001,
 		result: false
 	},
 	{
@@ -59,6 +59,16 @@ const TEST_CASES: TestCase[] = [
 	{
 		label: 'min safe int',
 		value: Number.MIN_SAFE_INTEGER,
+		result: false
+	},
+	{
+		label: 'empty object',
+		value: EMPTY_OBJECT,
+		result: false
+	},
+	{
+		label: 'empty array',
+		value: EMPTY_ARRAY,
 		result: false
 	}
 ];

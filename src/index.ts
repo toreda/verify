@@ -88,7 +88,7 @@ export {SchemaData} from './schema/data';
 export {schemaError} from './schema/error';
 export {SchemaErrorCode} from './schema/error/code';
 export {SchemaErrorEntity} from './schema/error/entity';
-export {SchemaField} from './schema/field';
+export {SchemaField} from './schema/field/data';
 export {SchemaFieldType} from './schema/field/type';
 export {SchemaInit} from './schema/init';
 export {SchemaOptions} from './schema/options';

@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import type {SchemaField} from './schema/field';
+import {SchemaField} from './schema/field';
 import {schemaError} from './schema/error';
 import type {SchemaFieldType} from './schema/field/type';
 import {Log} from '@toreda/log';
@@ -38,6 +38,7 @@ import {schemaSimpleOutput} from './schema/simple/output';
 import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
+import {type SchemaFieldData} from './schema/field/data';
 
 /**
  * @category Schemas
@@ -55,15 +56,15 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		this.factory = init.factory ? init.factory : schemaSimpleOutput;
 	}
 
-	private makeFields(fields: SchemaField<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
+	private makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
 		const result = new Map<keyof InputT, SchemaField<InputT>>();
 
 		if (!Array.isArray(fields)) {
 			return result;
 		}
 
-		for (const field of fields) {
-			result.set(field.name, field);
+		for (const data of fields) {
+			result.set(data.name, new SchemaField<InputT>(data));
 		}
 
 		return result;
@@ -72,48 +73,41 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public async verifyField(name: string, field: SchemaField<InputT>, value: unknown): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 		if (!field) {
-			return fate.setErrorCode(schemaError(`missing_record_field`, this.schemaName, name));
+			return fate.setErrorCode(
+				schemaError(`missing_field`, `${this.schemaName}.verifyField`, `${name}`)
+			);
 		}
 
 		if (typeof value === 'undefined') {
-			return fate.setErrorCode(schemaError('missing_field_value', this.schemaName, name));
+			return fate.setErrorCode(
+				schemaError('missing_field_value', `${this.schemaName}.verifyField`, `${name}`)
+			);
 		}
 
-		if (value === null) {
-			if (field?.nullable === true) {
-				return fate.setSuccess(true);
-			} else {
-				return fate.setErrorCode(schemaError('null_field_value_disallowed', this.schemaName, name));
-			}
-		}
-
-		const valid = await this.verifyValues(field.types, value);
-		if (!valid.success()) {
-			return fate.setErrorCode(schemaError(valid.errorCode(), 'verifyField', name));
+		const valid = await this.verifyFieldType(field.types, value);
+		if (!valid.ok()) {
+			return fate.setErrorCode(schemaError(valid.errorCode(), `${this.schemaName}.verifyField`, name));
 		}
 
 		return fate.setSuccess(true);
 	}
 
-	public async verifyValues(
-		types: SchemaFieldType | SchemaFieldType[],
-		value: unknown
-	): Promise<Fate<never>> {
+	public async verifyFieldType(types: SchemaFieldType[], value: unknown): Promise<Fate<never>> {
 		const fate = new Fate<never>();
 
-		if (Array.isArray(types)) {
-			let matches = 0;
-			for (const type of types) {
-				const result = await this.verifyValue(type, value);
-				if (result.success()) {
-					matches++;
-				}
-			}
-
-			return fate.setSuccess(matches > 0);
-		} else {
-			return this.verifyValue(types, value);
+		if (!types.includes('null') && value === null) {
+			return fate.setErrorCode('null_value_disallowed');
 		}
+
+		let matches = 0;
+		for (const type of types) {
+			const result = await this.verifyValue(type, value);
+			if (result.ok()) {
+				matches++;
+			}
+		}
+
+		return fate.setSuccess(matches > 0);
 	}
 
 	public async verifyValue(type: SchemaFieldType, value: unknown): Promise<Fate<never>> {
@@ -152,26 +146,32 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT | null>> {
 		const fate = new Fate<VerifiedT | null>();
 
+		const fnPath = `${this.schemaName}.verify`;
+
 		if (!base) {
 			console.error(`Missing argument: base`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'base'));
+			return fate.setErrorCode(schemaError('missing_argument', fnPath, 'base'));
 		}
 
-		const log = base.makeLog(`schema:${this.schemaName}.verify`);
+		const log = base.makeLog(`schema:${fnPath}`);
 
-		if (!data) {
+		if (data === undefined || data === null) {
 			log.error(`Missing argument: data`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'data'));
+			return fate.setErrorCode(schemaError('missing_schema_data', fnPath));
+		}
+
+		if (Object.keys(data)?.length === 0) {
+			return fate.setErrorCode(schemaError('empty_schema_object', fnPath));
 		}
 
 		if (!this.factory) {
 			log.error(`Missing argument: factory`);
-			return fate.setErrorCode(schemaError('missing_argument', 'schema.verify', 'factory'));
+			return fate.setErrorCode(schemaError('missing_argument', fnPath, 'factory'));
 		}
 
 		if (typeof this.factory !== 'function') {
 			log.error(`Non-function argument: factory`);
-			return fate.setErrorCode(schemaError('nonfunction_argument', 'schema.verify', 'factory'));
+			return fate.setErrorCode(schemaError('nonfunction_argument', fnPath, 'factory'));
 		}
 
 		const total = this.fields.size;
@@ -181,7 +181,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const valid = await this.verifyField(name, field, data[name]);
+			const valid = await this.verifyField(field.name, field, data[name]);
 
 			if (!valid.success()) {
 				return fate.setErrorCode(valid.errorCode());

@@ -23,7 +23,7 @@
  *
  */
 
-import type {SchemaField} from './field';
+import type {SchemaField} from './field/data';
 import type {SchemaOptions} from './options';
 import {SchemaOutputTransformer} from './output/transformer';
 

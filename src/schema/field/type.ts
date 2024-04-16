@@ -27,16 +27,24 @@
  * @category Schemas
  */
 export type SchemaFieldType =
+	| 'array'
+	| 'custom'
 	| 'bigint'
 	| 'boolean'
+	| 'datetime'
 	| 'double'
 	| 'dbl'
 	| 'float'
-	| 'json-serailized'
+	| 'json'
+	| 'iterable'
+	| 'json-serialized'
 	| 'int'
+	| 'schema'
 	| 'null'
 	| 'number'
+	| 'real'
 	| 'string'
 	| 'uint'
 	| 'undefined'
-	| 'url';
+	| 'url'
+	| 'time';

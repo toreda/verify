@@ -23,29 +23,13 @@
  *
  */
 
-import {type SchemaFieldData} from './field/data';
-import {type SchemaFieldType} from './field/type';
+import type {SchemaFieldType} from './type';
 
 /**
  * @category Schemas
  */
-export class SchemaField<InputT = unknown> {
-	public readonly name: string;
-	public readonly key: keyof InputT;
-	public readonly types: SchemaFieldType[];
-	public readonly defaultValue: unknown;
-
-	constructor(data: SchemaFieldData<InputT>) {
-		this.key = data.name;
-		this.name = data.name.toString();
-		if (Array.isArray(data.types)) {
-			this.types = data.types;
-		} else if (typeof data.types === 'string') {
-			this.types = [data.types];
-		} else {
-			this.types = [];
-		}
-
-		this.defaultValue = typeof data.defaultValue !== 'undefined' ? data.defaultValue : undefined;
-	}
+export interface SchemaFieldData<InputT> {
+	name: keyof InputT;
+	types: SchemaFieldType | SchemaFieldType[];
+	defaultValue?: unknown;
 }

@@ -21,15 +21,15 @@ class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 			fields: [
 				{
 					name: 'str1',
-					types: 'string'
+					types: ['string']
 				},
 				{
 					name: 'int1',
-					types: 'number'
+					types: ['number']
 				},
 				{
 					name: 'bool1',
-					types: 'boolean'
+					types: ['boolean', 'null']
 				}
 			],
 			options: {}
@@ -95,11 +95,16 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					field.types = 'aaaaa' as any;
+					field.types.length = 0;
+					const fieldType = 'aaaaa' as any;
+					field.types.push(fieldType);
 					const result = await customSchema.verify(sampleData, base);
-
 					expect(result.errorCode()).toBe(
-						schemaError('unsupported_type:aaaaa', 'verifyField:int1')
+						schemaError(
+							`unsupported_type:${fieldType()}`,
+							`${schema.schemaName}.verifyField`,
+							field.name
+						)
 					);
 					expect(result.ok()).toBe(false);
 				});
@@ -126,38 +131,17 @@ describe('schemaVerify', () => {
 					expect(result.ok()).toBe(true);
 				});
 
-				it(`should fail when value is null and nullable is disabled`, async () => {
-					sampleData.str1 = null as any;
-
-					const customSchema = new SampleSchema();
-					customSchema.fields.set('str1', {
-						name: 'str1',
-						nullable: false,
-						types: 'string'
-					});
-
-					const field = customSchema.fields.get('str1');
-					if (!field) {
-						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
-					}
-
-					field.nullable = false;
-					const result = await customSchema.verify(sampleData, base);
-
-					expect(result.ok()).toBe(false);
-				});
-
-				it(`should succeed when value is a null and nullable is enabled`, async () => {
+				it(`should succeed when value is a null and null values are allowed`, async () => {
 					sampleData.str1 = null as any;
 
 					const customSchema = new SampleSchema();
 					const field = customSchema.fields.get('str1');
+					field?.types.push('null');
 
 					if (!field) {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					field.nullable = true;
 					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.ok()).toBe(true);
@@ -170,7 +154,7 @@ describe('schemaVerify', () => {
 
 					sampleData.bool1 = expectedOutput;
 					const field = schema.fields.get('bool1');
-					field!.nullable = true;
+					field?.types.push('null');
 					const result = await schema.verify(sampleData, base);
 
 					expect(result.data).not.toBeNull();
@@ -201,7 +185,7 @@ describe('schemaVerify', () => {
 					expect(result.ok()).toBe(false);
 				});
 
-				it(`should fail when value is null and nullable is disabled`, async () => {
+				it(`should fail when value is null and null is disallowed`, async () => {
 					sampleData.bool1 = null as any;
 
 					const customSchema = new SampleSchema();
@@ -211,27 +195,28 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					field.nullable = false;
+					field.types.length = 0;
+					field.types.push('boolean');
 
 					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(
-						schemaError('null_field_value_disallowed', 'SampleSchema:bool1')
+						schemaError('null_value_disallowed', `${schema.schemaName}.verifyField:${field.name}`)
 					);
 					expect(result.ok()).toBe(false);
 				});
 
-				it(`should succeed when value is null and nullable is enabled`, async () => {
+				it(`should succeed when value is null and null allowed`, async () => {
 					sampleData.bool1 = null as any;
 
 					const customSchema = new SampleSchema();
 					const field = customSchema.fields.get('bool1');
+					field?.types.push('null');
 
 					if (!field) {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					field.nullable = true;
 					const result = await schema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -246,7 +231,9 @@ describe('schemaVerify', () => {
 			const customSchema = new SampleSchema();
 			const result = await customSchema.verify(undefined as any, base);
 
-			expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
+			expect(result.errorCode()).toBe(
+				schemaError('missing_schema_data', `${schema.schemaName}.verify`)
+			);
 			expect(result.ok()).toBe(false);
 		});
 	});
@@ -261,17 +248,15 @@ describe('schemaVerify', () => {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
 
-			field.nullable = false;
-			field.name = '__field_name__';
-			const result = await customSchema.verifyField(typeof field.name, undefined as any, null);
+			const result = await customSchema.verifyField(field.name, undefined as any, null);
 
 			expect(result.errorCode()).toBe(
-				schemaError('missing_record_field', customSchema.schemaName, typeof field.name)
+				schemaError('missing_field', `${customSchema.schemaName}.verifyField`, field.name)
 			);
 			expect(result.ok()).toBe(false);
 		});
 
-		it(`should fail when value is null and nullable is disabled`, async () => {
+		it(`should fail when value is null and null type is not allowed`, async () => {
 			sampleData.bool1 = null as any;
 
 			const customSchema = new SampleSchema();
@@ -280,9 +265,8 @@ describe('schemaVerify', () => {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
 
-			field.nullable = false;
-			field.name = '__field_name__';
-			const result = await customSchema.verifyField(typeof field.name, field, null);
+			field.types.push('null');
+			const result = await customSchema.verifyField(field.name, field, null);
 
 			expect(result.errorCode()).toBe(
 				schemaError('null_field_value_disallowed', customSchema.schemaName, typeof field.name)
@@ -290,7 +274,7 @@ describe('schemaVerify', () => {
 			expect(result.ok()).toBe(false);
 		});
 
-		it(`should succeed when value is a null and nullable is enabled`, async () => {
+		it(`should succeed when value is a null and null is allowed`, async () => {
 			sampleData.bool1 = null as any;
 
 			const customSchema = new SampleSchema();
@@ -299,7 +283,7 @@ describe('schemaVerify', () => {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
 
-			field.nullable = true;
+			field.types?.push('null');
 			const fieldName = stringValue(field?.name, '__field_name__');
 			const result = await customSchema.verifyField(fieldName, field!, null);
 
@@ -582,7 +566,7 @@ describe('schemaVerify', () => {
 		});
 
 		describe('null', () => {
-			it(`should return true when type is 'null' with value is null`, async () => {
+			it(`should return true when value is null and null is allowed`, async () => {
 				const result = await schema.verifyValue('null', null);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -746,49 +730,63 @@ describe('schemaVerify', () => {
 				const result = await schema.verify(undefined as any, base);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
+				expect(result.errorCode()).toBe(
+					schemaError('missing_schema_data', `${schema.schemaName}.verify`)
+				);
 			});
 
 			it(`should fail with code when data arg is null`, async () => {
 				const result = await schema.verify(null as any, base);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'data'));
+				expect(result.errorCode()).toBe(
+					schemaError('missing_schema_data', `${schema.schemaName}.verify`)
+				);
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
 				const result = await schema.verify(sampleData, undefined as any);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'base'));
+				expect(result.errorCode()).toBe(
+					schemaError('missing_argument', `${schema.schemaName}.verify`, 'base')
+				);
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
 				const result = await schema.verify(sampleData, undefined as any);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe(schemaError('missing_argument', 'schema.verify', 'base'));
+				expect(result.errorCode()).toBe(
+					schemaError('missing_argument', `${schema.schemaName}.verify`, 'base')
+				);
 			});
 
 			it(`should fail with code when input is undefined`, async () => {
 				const result = await schema.verify(undefined as any, base);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe('schemas:schema.verify:data|missing_argument');
+				expect(result.errorCode()).toBe(
+					schemaError('missing_schema_data', `${schema.schemaName}.verify`)
+				);
 			});
 
 			it(`should fail with code when input is null`, async () => {
 				const result = await schema.verify(null as any, base);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe('schemas:schema.verify:data|missing_argument');
+				expect(result.errorCode()).toBe(
+					schemaError('missing_schema_data', `${schema.schemaName}.verify`)
+				);
 			});
 
 			it(`should fail with code when input is an empty object`, async () => {
 				const result = await schema.verify(EMPTY_OBJECT, base);
 
 				expect(result.ok()).toBe(false);
-				expect(result.errorCode()).toBe('schemas:SampleSchema:str1|missing_field_value');
+				expect(result.errorCode()).toBe(
+					schemaError('empty_schema_object', `${schema.schemaName}.verify`)
+				);
 			});
 
 			it(`should return true when all properties match the schema`, async () => {

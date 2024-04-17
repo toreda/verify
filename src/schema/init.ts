@@ -23,9 +23,9 @@
  *
  */
 
-import type {SchemaField} from './field/data';
+import {type SchemaFieldData} from './field/data';
 import type {SchemaOptions} from './options';
-import {SchemaOutputTransformer} from './output/transformer';
+import {type SchemaOutputTransformer} from './output/transformer';
 
 /**
  * @name Schema Init
@@ -42,7 +42,7 @@ export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	 * @name Schema Fields
 	 * @description Details for each field that should be verified.
 	 */
-	fields: SchemaField<InputT>[];
+	fields: SchemaFieldData<InputT>[];
 	/**
 	 * @name Schema Options
 	 * @description (optional) Flags & options that change verifier behavior.

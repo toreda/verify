@@ -101,7 +101,7 @@ describe('schemaVerify', () => {
 					const result = await customSchema.verify(sampleData, base);
 					expect(result.errorCode()).toBe(
 						schemaError(
-							`unsupported_type:${fieldType()}`,
+							`unsupported_type:${fieldType}`,
 							`${schema.schemaName}.verifyField`,
 							field.name
 						)
@@ -201,7 +201,7 @@ describe('schemaVerify', () => {
 					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(
-						schemaError('null_value_disallowed', `${schema.schemaName}.verifyField:${field.name}`)
+						schemaError('null_value_disallowed', `${schema.schemaName}.verifyField`, field.name)
 					);
 					expect(result.ok()).toBe(false);
 				});
@@ -265,11 +265,12 @@ describe('schemaVerify', () => {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
 
-			field.types.push('null');
+			field.types.length = 0;
+			field.types.push('boolean');
 			const result = await customSchema.verifyField(field.name, field, null);
 
 			expect(result.errorCode()).toBe(
-				schemaError('null_field_value_disallowed', customSchema.schemaName, typeof field.name)
+				schemaError('null_value_disallowed', `${customSchema.schemaName}.verifyField`, field.name)
 			);
 			expect(result.ok()).toBe(false);
 		});
@@ -298,6 +299,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('boolean', true);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -305,36 +307,41 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('boolean', false);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'boolean' and value is 0`, async () => {
 				const result = await schema.verifyValue('boolean', 0 as any);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'boolean' and value is 1`, async () => {
 				const result = await schema.verifyValue('boolean', 1 as any);
-
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'boolean' and value is an empty object`, async () => {
 				const result = await schema.verifyValue('boolean', {} as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'boolean' and value is null`, async () => {
 				const result = await schema.verifyValue('boolean', null as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'boolean' and value is undefined`, async () => {
 				const result = await schema.verifyValue('boolean', undefined as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -343,6 +350,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('string', EMPTY_STRING);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -350,6 +358,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('string', 'a');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -357,43 +366,50 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('string', '19714-9194714');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is undefined`, async () => {
 				const result = await schema.verifyValue('string', undefined as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is null`, async () => {
 				const result = await schema.verifyValue('string', null as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is 0`, async () => {
 				const result = await schema.verifyValue('string', 0 as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is 1`, async () => {
 				const result = await schema.verifyValue('string', 1 as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is an empty array`, async () => {
 				const result = await schema.verifyValue('string', [] as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'string' and value is an empty object`, async () => {
 				const result = await schema.verifyValue('string', {} as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -402,6 +418,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('bigint', BigInt('0'));
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -409,6 +426,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('bigint', BigInt('1'));
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -416,6 +434,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('bigint', BigInt('9007199254740991'));
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -423,43 +442,50 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('bigint', BigInt('0o377777777777777777'));
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is undefined`, async () => {
 				const result = await schema.verifyValue('bigint', undefined as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is null`, async () => {
 				const result = await schema.verifyValue('bigint', null as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is 0`, async () => {
 				const result = await schema.verifyValue('bigint', 0 as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is 1`, async () => {
 				const result = await schema.verifyValue('bigint', 1 as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is an empty array`, async () => {
 				const result = await schema.verifyValue('bigint', [] as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'bigint' and value is an empty object`, async () => {
 				const result = await schema.verifyValue('bigint', {} as any);
 
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -468,6 +494,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('undefined', undefined);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -475,49 +502,56 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('undefined', null);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value 'undefined'`, async () => {
 				const result = await schema.verifyValue('undefined', 'undefined');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value 'null'`, async () => {
 				const result = await schema.verifyValue('undefined', 'null');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value is 0`, async () => {
 				const result = await schema.verifyValue('undefined', 0);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value is EMPTY_STRING`, async () => {
 				const result = await schema.verifyValue('undefined', EMPTY_STRING);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value is true`, async () => {
 				const result = await schema.verifyValue('undefined', true);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'undefined' with value is false`, async () => {
 				const result = await schema.verifyValue('undefined', false);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -526,6 +560,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('uint', 0);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -533,6 +568,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('uint', 1);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -540,6 +576,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('uint', 100);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -547,6 +584,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('uint', Number.MAX_SAFE_INTEGER);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -554,14 +592,16 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('uint', -1);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'uint' and value is 1.1`, async () => {
 				const result = await schema.verifyValue('uint', 1.1);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -570,6 +610,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('null', null);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -577,42 +618,49 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('undefined', 'null');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'null' with value is undefined`, async () => {
 				const result = await schema.verifyValue('null', undefined);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'null' with value is 0`, async () => {
 				const result = await schema.verifyValue('null', 0);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'null' with value is EMPTY_STRING`, async () => {
 				const result = await schema.verifyValue('null', EMPTY_STRING);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'null' with value is true`, async () => {
 				const result = await schema.verifyValue('null', true);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'null' with value is false`, async () => {
 				const result = await schema.verifyValue('null', false);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 
@@ -621,6 +669,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', -10);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -628,6 +677,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', -0);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -635,6 +685,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', 0);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -642,6 +693,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', 1);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -649,6 +701,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.MAX_SAFE_INTEGER);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -656,6 +709,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.MIN_SAFE_INTEGER);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -663,6 +717,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.MIN_VALUE);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -670,6 +725,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.MAX_VALUE);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -677,6 +733,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.EPSILON);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
@@ -684,42 +741,48 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue('number', Number.NaN);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'number' with string value '0'`, async () => {
 				const result = await schema.verifyValue('number', '0');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'number' with string value '0.00000000'`, async () => {
 				const result = await schema.verifyValue('number', '0.00000000');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'number' with string value '1'`, async () => {
 				const result = await schema.verifyValue('number', '1');
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'number' with positive infinite value`, async () => {
 				const result = await schema.verifyValue('number', Number.POSITIVE_INFINITY);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return false when type is 'number' with negative infinite value`, async () => {
 				const result = await schema.verifyValue('number', Number.NEGATIVE_INFINITY);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(false);
+				expect(result.data).toBe(false);
+				expect(result.ok()).toBe(true);
 			});
 		});
 	});
@@ -797,10 +860,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should return false when a schema property is missing`, async () => {
+				sampleData.bool1 = undefined as any;
 				const result = await schema.verify(sampleData, base);
 
-				expect(result.ok()).toBe(true);
-				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.ok()).toBe(false);
 			});
 		});
 	});

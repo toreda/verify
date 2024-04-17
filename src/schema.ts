@@ -78,7 +78,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			);
 		}
 
-		if (typeof value === 'undefined') {
+		if (value === undefined) {
 			return fate.setErrorCode(
 				schemaError('missing_field_value', `${this.schemaName}.verifyField`, `${name}`)
 			);
@@ -102,44 +102,72 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		let matches = 0;
 		for (const type of types) {
 			const result = await this.verifyValue(type, value);
-			if (result.ok()) {
+			if (!result.ok()) {
+				return fate.setErrorCode(result.errorCode());
+			}
+
+			if (result.data === true) {
 				matches++;
 			}
 		}
 
-		return fate.setSuccess(matches > 0);
+		if (matches > 0) {
+			return fate.setSuccess(true);
+		} else {
+			return fate.setErrorCode(`field_type_mismatch:${typeof value}`);
+		}
 	}
 
-	public async verifyValue(type: SchemaFieldType, value: unknown): Promise<Fate<never>> {
-		const fate = new Fate<never>();
+	public async verifyValue(type: SchemaFieldType, value: unknown): Promise<Fate<boolean>> {
+		const fate = new Fate<boolean>();
 
 		switch (type) {
 			case 'null':
-				return fate.setSuccess(value === null);
+				fate.data = value === null;
+				break;
 			case 'bigint':
-				return fate.setSuccess(typeof value === 'bigint');
+				fate.data = typeof value === 'bigint';
+				break;
 			case 'boolean':
-				return fate.setSuccess(isBoolean(value));
+				fate.data = isBoolean(value);
+				break;
 			case 'double':
-				return fate.setSuccess(isDbl(value as number));
+				fate.data = isDbl(value as number);
+				break;
 			case 'dbl':
-				return fate.setSuccess(isDbl(value as number));
+				fate.data = isDbl(value as number);
+				break;
 			case 'float':
-				return fate.setSuccess(isFloat(value as number));
+				fate.data = isFloat(value as number);
+				break;
 			case 'int':
-				return fate.setSuccess(isInt(value));
+				fate.data = isInt(value);
+				break;
 			case 'number':
-				return fate.setSuccess(typeof value === 'number' && isFinite(value));
+				fate.data = typeof value === 'number' && isFinite(value);
+				break;
 			case 'string':
-				return fate.setSuccess(isString(value));
+				fate.data = isString(value);
+				break;
 			case 'undefined':
-				return fate.setSuccess(value === undefined);
+				fate.data = value === undefined;
+				break;
 			case 'uint':
-				return fate.setSuccess(isUInt(value));
+				fate.data = isUInt(value);
+				break;
 			case 'url':
-				return fate.setSuccess(isUrl(value as string));
+				fate.data = isUrl(value as string);
+				break;
 			default:
-				return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+				fate.data = false;
+				fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+				break;
+		}
+
+		if (!fate.errorCode()) {
+			return fate.setSuccess(true);
+		} else {
+			return fate;
 		}
 	}
 
@@ -181,9 +209,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const valid = await this.verifyField(field.name, field, data[name]);
+			const valid = await this.verifyField(field.name.toString(), field, data[name]);
 
-			if (!valid.success()) {
+			if (!valid.ok()) {
 				return fate.setErrorCode(valid.errorCode());
 			}
 

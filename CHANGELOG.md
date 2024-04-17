@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2024-04-17
+
+### Changed
+* `SchemaField` from the previous version became `SchemaFieldData` and is the same except for `nullable` being removed. `SchemaField` is now a class instantiated using `SchemaFieldData`.
+
+### Removed
+* Unused helpers for schema type checks removed.
+* `nullable` removed from `SchemaField` in favor of adding `'null'` to field types.
+
 ## [0.8.0] - 2024-04-12
 ### Added
 * Added `isUInt` type to package in place of importing from `@toreda/strong-types`.
@@ -73,8 +82,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0]
 * *No notes available for release.*
 
-[Unreleased]: https://github.com/toreda/chk/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/toreda/chk/compare/v0.9.0...HEAD
 
+[0.9.0]: https://github.com/toreda/chk/compare/v0.6.0...v0.9.0
 [0.6.0]: https://github.com/toreda/chk/compare/v0.5.4...v0.6.0
 [0.5.4]: https://github.com/toreda/chk/compare/v0.5.3...v0.5.4
 [0.5.3]: https://github.com/toreda/chk/compare/v0.5.0...v0.5.3

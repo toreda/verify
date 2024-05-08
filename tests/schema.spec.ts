@@ -8,11 +8,11 @@ import {type Primitive} from '@toreda/types';
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
-interface SampleData extends SchemaData<Primitive> {
-	str1: string;
-	int1: number;
-	bool1: boolean;
-}
+const base = new Log({
+	globalLevel: Levels.ALL,
+	groupsStartEnabled: true,
+	consoleEnabled: true
+});
 
 class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 	constructor() {
@@ -32,9 +32,16 @@ class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 					types: ['boolean', 'null']
 				}
 			],
-			options: {}
+			options: {},
+			base: base
 		});
 	}
+}
+
+interface SampleData extends SchemaData<Primitive> {
+	str1: string;
+	int1: number;
+	bool1: boolean;
 }
 
 describe('schemaVerify', () => {
@@ -43,11 +50,6 @@ describe('schemaVerify', () => {
 	let base: Log;
 
 	beforeAll(() => {
-		base = new Log({
-			globalLevel: Levels.ALL,
-			groupsStartEnabled: true,
-			consoleEnabled: true
-		});
 		schema = new SampleSchema();
 	});
 
@@ -623,7 +625,7 @@ describe('schemaVerify', () => {
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'null' with value is undefined`, async () => {
+			it(`should return false whenzz type is 'null' with value is undefined`, async () => {
 				const result = await schema.verifyValue('null', undefined);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);

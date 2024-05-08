@@ -23,29 +23,13 @@
  *
  */
 
+import {Log} from '@toreda/log';
+import {type CustomTypesData} from '../../schema/custom/data';
+
 /**
- * @category Schemas
+ * @category Custom Types
  */
-export type SchemaFieldType =
-	| 'array'
-	| 'custom'
-	| 'bigint'
-	| 'boolean'
-	| 'datetime'
-	| 'double'
-	| 'dbl'
-	| 'float'
-	| 'json'
-	| 'iterable'
-	| 'json-serialized'
-	| 'int'
-	| 'schema'
-	| 'null'
-	| 'number'
-	| 'real'
-	| 'string'
-	| 'uint'
-	| 'undefined'
-	| 'url'
-	| 'time'
-	| string;
+export interface CustomTypesInit {
+	data?: CustomTypesData;
+	base: Log;
+}

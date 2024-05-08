@@ -28,7 +28,6 @@ import {SchemaField} from './schema/field';
 import {schemaError} from './schema/error';
 import type {SchemaFieldType} from './schema/field/type';
 import {Log} from '@toreda/log';
-import {isBoolean} from './is/boolean';
 import {isString} from './is/string';
 import {SchemaConfig} from './schema/config';
 import type {SchemaInit} from './schema/init';
@@ -39,6 +38,7 @@ import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
+import {CustomTypes} from './custom/types';
 
 /**
  * @category Schemas
@@ -47,12 +47,20 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly schemaName: string;
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
-	public readonly factory: SchemaOutputTransformer<DataT, VerifiedT>;
+	public readonly factory: SchemaOutputTransformer<DataT | null, VerifiedT>;
+	public readonly customTypes: CustomTypes;
+	public readonly base: Log;
 
-	constructor(init: SchemaInit<DataT, InputT, VerifiedT>) {
+	constructor(init: SchemaInit<DataT | null, InputT, VerifiedT>) {
 		this.schemaName = init.name;
 		this.fields = this.makeFields(init.fields);
 		this.cfg = new SchemaConfig(init.options);
+
+		this.base = init.base.makeLog(`schema___${init.name}`);
+		this.customTypes = new CustomTypes({
+			data: init.customTypes,
+			base: this.base
+		});
 		this.factory = init.factory ? init.factory : schemaSimpleOutput;
 	}
 
@@ -70,8 +78,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return result;
 	}
 
-	public async verifyField(name: string, field: SchemaField<InputT>, value: unknown): Promise<Fate<never>> {
-		const fate = new Fate<never>();
+	public async verifyField(name: string, field: SchemaField<InputT>, value: unknown): Promise<Fate<DataT>> {
+		const fate = new Fate<DataT>();
 		if (!field) {
 			return fate.setErrorCode(
 				schemaError(`missing_field`, `${this.schemaName}.verifyField`, `${name}`)
@@ -102,6 +110,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		let matches = 0;
 		for (const type of types) {
 			const result = await this.verifyValue(type, value);
+
 			if (!result.ok()) {
 				return fate.setErrorCode(result.errorCode());
 			}
@@ -118,57 +127,107 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 	}
 
-	public async verifyValue(type: SchemaFieldType, value: unknown): Promise<Fate<boolean>> {
-		const fate = new Fate<boolean>();
+	public customTypeSupported(type: SchemaFieldType, _value: unknown): _value is SchemaData<unknown> {
+		const custom = this.customTypes.get(type);
+
+		return custom !== null;
+	}
+
+	/**
+	 * Check if `type` is supported by the schema. Doesn't check if value actuallyz
+	 * conforms to the specified type.
+	 * @param type
+	 * @param value
+	 */
+	public typeSupported(type: SchemaFieldType, value: unknown): value is DataT | null {
+		if (typeof type !== 'string' || !type) {
+			return false;
+		}
 
 		switch (type) {
 			case 'null':
-				fate.data = value === null;
-				break;
+				return value === null;
 			case 'bigint':
-				fate.data = typeof value === 'bigint';
-				break;
+				return typeof value === 'bigint';
 			case 'boolean':
-				fate.data = isBoolean(value);
-				break;
+				return typeof value === 'boolean';
 			case 'double':
-				fate.data = isDbl(value as number);
-				break;
+				return isDbl(value as number);
 			case 'dbl':
-				fate.data = isDbl(value as number);
-				break;
+				return isDbl(value as number);
 			case 'float':
-				fate.data = isFloat(value as number);
-				break;
+				return isFloat(value as number);
 			case 'int':
-				fate.data = isInt(value);
-				break;
+				return isInt(value);
 			case 'number':
-				fate.data = typeof value === 'number' && isFinite(value);
-				break;
+				return typeof value === 'number' && isFinite(value);
 			case 'string':
-				fate.data = isString(value);
-				break;
+				return isString(value);
 			case 'undefined':
-				fate.data = value === undefined;
-				break;
+				return value === undefined;
 			case 'uint':
-				fate.data = isUInt(value);
-				break;
+				return isUInt(value);
 			case 'url':
-				fate.data = isUrl(value as string);
-				break;
-			default:
-				fate.data = false;
-				fate.setErrorCode(`unsupported_type:${type?.toString()}`);
-				break;
+				return isUrl(value as string);
 		}
 
-		if (!fate.errorCode()) {
-			return fate.setSuccess(true);
-		} else {
-			return fate;
+		return false;
+	}
+
+	public async verifySchemaData(
+		type: SchemaFieldType,
+		value: SchemaData<unknown>
+	): Promise<Fate<SchemaData<unknown> | null>> {
+		const fate = new Fate<SchemaData<unknown> | null>({
+			data: null
+		});
+
+		const custom = this.customTypes.get(type);
+		if (!custom) {
+			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
 		}
+
+		const result = await custom.verify(value as SchemaData<unknown>, this.base);
+		if (!result.ok()) {
+			return fate.setErrorCode(`bad_schema_property:${result.errorCode()}`);
+		}
+
+		fate.data = result.data;
+		return fate.setSuccess(true);
+	}
+
+	/**
+	 * Check if value's content matches `type`. Some types are primitives verified by type checks.
+	 * Others require more in depth validation, like URLs or Schema Data.
+	 * @param type
+	 * @param value
+	 */
+	public async verifyValue(
+		type: SchemaFieldType,
+		value: unknown
+	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
+		const fate = new Fate<DataT | null>();
+
+		if (this.typeSupported(type, value)) {
+			fate.data = value;
+			return fate.setSuccess(true);
+		}
+
+		if (!this.customTypeSupported(type, value)) {
+			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+		}
+
+		const custom = this.customTypes.get(type);
+		if (!custom) {
+			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+		}
+
+		const result = await custom.verify(value, this.base);
+		if (!result.data) {
+			return fate.setErrorCode(`schema_verify_returned_no_data:${type?.toString()}`);
+		}
+
+		return result;
 	}
 
 	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT | null>> {
@@ -205,18 +264,18 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		const total = this.fields.size;
 		let processed = 0;
 
-		const mapped = new Map<string, DataT>();
+		const mapped = new Map<string, DataT | null>();
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const valid = await this.verifyField(field.name.toString(), field, data[name]);
+			const verified = await this.verifyField(field.name.toString(), field, data[name]);
 
-			if (!valid.ok()) {
-				return fate.setErrorCode(valid.errorCode());
+			if (!verified.ok()) {
+				return fate.setErrorCode(verified.errorCode());
 			}
 
 			processed++;
-			mapped.set(name, data[name]);
+			mapped.set(name, verified.data);
 		}
 
 		if (total >= processed) {

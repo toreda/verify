@@ -37,7 +37,7 @@ import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
-import {CustomSchemas} from './custom/schemas';
+import {CustomTypes} from './custom/types';
 import {schemaBuiltIns} from './schema/built/ins';
 
 /**
@@ -48,7 +48,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
 	public readonly outputTransform: SchemaOutputTransformer<DataT, VerifiedT | null>;
-	public readonly customSchemas: CustomSchemas;
+	public readonly customTypes: CustomTypes<DataT, InputT, VerifiedT>;
 	public readonly base: Log;
 
 	constructor(init: SchemaInit<DataT | null, InputT, VerifiedT>) {
@@ -57,8 +57,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		this.cfg = new SchemaConfig(init.options);
 
 		this.base = init.base.makeLog(`schema___${init.name}`);
-		this.customSchemas = new CustomSchemas({
-			data: init.customSchemas,
+		this.customTypes = new CustomTypes<DataT, InputT, VerifiedT>({
+			data: init.customTypes,
 			base: this.base
 		});
 		this.outputTransform = init.outputTransform ? init.outputTransform : simpleOutputTransform;
@@ -139,12 +139,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		);
 	}
 
-	public customTypeSupported(type: SchemaFieldType, _value: unknown): _value is SchemaData<unknown> {
-		const custom = this.customSchemas.get(type);
-
-		return custom !== null && custom !== undefined;
-	}
-
 	public isBuiltIn(type: SchemaFieldType): boolean {
 		if (typeof type !== 'string') {
 			return false;
@@ -158,7 +152,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return true;
 		}
 
-		return this.customSchemas.has(type);
+		return this.customTypes.has(type);
 	}
 	/**
 	 * Check if `type` is supported by the schema. Doesn't check if value actuallyz
@@ -201,28 +195,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 	}
 
-	public async verifySchemaData(
-		type: SchemaFieldType,
-		value: SchemaData<unknown>
-	): Promise<Fate<SchemaData<unknown> | null>> {
-		const fate = new Fate<SchemaData<unknown> | null>({
-			data: null
-		});
-
-		const custom = this.customSchemas.get(type);
-		if (!custom) {
-			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
-		}
-
-		const result = await custom.verify(value as SchemaData<unknown>, this.base);
-		if (!result.ok()) {
-			return fate.setErrorCode(`bad_schema_property:${result.errorCode()}`);
-		}
-
-		fate.data = result.data;
-		return fate.setSuccess(true);
-	}
-
 	/**
 	 * Check if value's content matches `type`. Some types are primitives verified by type checks.
 	 * Others require more in depth validation, like URLs or Schema Data.
@@ -231,32 +203,32 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 */
 	public async verifyValue(
 		type: SchemaFieldType,
-		value: unknown
+		value: unknown | SchemaData<unknown>
 	): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
 
 		if (this.valueIsBuiltInType(type, value)) {
+			// TODO: Add validation here. Type match does not automatically prove valid content.
 			fate.data = value;
 			return fate.setSuccess(true);
 		}
 
-		if (!this.customTypeSupported(type, value)) {
+		if (!this.customTypes.has(type)) {
 			return fate.setErrorCode(
 				schemaError(`unsupported_type:${typeof value}`, `${this.schemaName}.verifyValue`)
 			);
 		}
 
-		const custom = this.customSchemas.get(type);
-		if (!custom) {
-			return fate.setErrorCode(`field_does_not_support_custom_type:${type?.toString()}`);
+		if (this.customTypes.hasSchema(type)) {
+			return this.customTypes.verifySchema(type, value);
 		}
 
-		const result = await custom.verify(value, this.base);
-		if (!result.data) {
-			return fate.setErrorCode(`schema_verify_returned_no_data:${type?.toString()}`);
+		//const custom = await this.customTypes.verify(type, value, this.base);
+		if (this.customTypes.hasVerifier(type)) {
+			return this.customTypes.verifyValue(type, value);
 		}
 
-		return result;
+		return fate.setErrorCode(`field_cant_verify_custom_type:${type?.toString()}`);
 	}
 
 	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT>> {

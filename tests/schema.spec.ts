@@ -9,6 +9,53 @@ import {SchemaField} from '../src';
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
+class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> {
+	constructor(base: Log) {
+		super({
+			name: 'SchemaB',
+			fields: [
+				{
+					name: 'str2b',
+					types: ['string']
+				},
+				{
+					name: 'int2b',
+					types: ['number']
+				}
+			],
+			options: {},
+			base: base
+		});
+	}
+}
+
+class SampleSchemaSubA extends Schema<Primitive, SampleData, SampleData> {
+	constructor(schemaB: SampleSchemaSubB, base: Log) {
+		super({
+			name: 'SampleSchema',
+			fields: [
+				{
+					name: 'str1a',
+					types: ['string']
+				},
+				{
+					name: 'int1a',
+					types: ['number']
+				},
+				{
+					name: 'bool1a',
+					types: ['boolean', 'null']
+				}
+			],
+			options: {},
+			customTypes: {
+				customtype2: schemaB
+			},
+			base: base
+		});
+	}
+}
+
 class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 	constructor(base: Log) {
 		super({
@@ -39,9 +86,16 @@ interface SampleData extends SchemaData<Primitive> {
 	bool1: boolean;
 }
 
+interface SampleBData extends SchemaData<Primitive> {
+	str2b: string;
+	int2b: number;
+}
+
 describe('schemaVerify', () => {
 	let sampleData: SampleData;
 	let schema: SampleSchema;
+	let schemaSubA: SampleSchemaSubA;
+	let schemaSubB: SampleSchemaSubB;
 	let base: Log;
 
 	beforeAll(() => {
@@ -50,7 +104,8 @@ describe('schemaVerify', () => {
 			groupsStartEnabled: true,
 			consoleEnabled: true
 		});
-
+		schemaSubB = new SampleSchemaSubB(base);
+		schemaSubA = new SampleSchemaSubA(schemaSubB, base);
 		schema = new SampleSchema(base);
 	});
 

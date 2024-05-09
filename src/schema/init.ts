@@ -27,7 +27,7 @@ import {type SchemaFieldData} from './field/data';
 import type {SchemaOptions} from './options';
 import {type SchemaOutputTransformer} from './output/transformer';
 import {Log} from '@toreda/log';
-import {type CustomSchemasData} from '../custom/schemas/data';
+import {type CustomTypesData} from '../custom/types/data';
 
 /**
  * @name Schema Init
@@ -51,6 +51,6 @@ export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	 */
 	options?: SchemaOptions;
 	outputTransform?: SchemaOutputTransformer<DataT, OutputT>;
-	customSchemas?: CustomSchemasData;
+	customTypes?: CustomTypesData;
 	base: Log;
 }

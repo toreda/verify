@@ -23,31 +23,13 @@
  *
  */
 
-import {type SchemaFieldType} from './type';
+import {Log} from '@toreda/log';
+import {type CustomTypesData} from './data';
 
 /**
- * Iterable field types supported by schema system.
- *
- * @category Schemas
+ * @category Schemas - Custom Types
  */
-export const schemaFieldTypes: SchemaFieldType[] = [
-	'array',
-	'bigint',
-	'boolean',
-	'datetime',
-	'dbl',
-	'double',
-	'float',
-	'int',
-	'iterable',
-	'json-serialized',
-	'json',
-	'null',
-	'number',
-	'real',
-	'string',
-	'time',
-	'uint',
-	'undefined',
-	'url'
-];
+export interface CustomTypesInit {
+	data?: CustomTypesData;
+	base: Log;
+}

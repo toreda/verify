@@ -26,24 +26,26 @@
 import {Log} from '@toreda/log';
 import {Schema} from '../schema';
 import {type SchemaData} from '../schema/data';
-import {type CustomSchemasInit} from './schemas/init';
-import {type CustomSchemasData} from './schemas/data';
+import {type CustomTypesInit} from './types/init';
+import {type CustomTypesData} from './types/data';
+import {CustomTypeVerifier} from './type/verifier';
+import {Fate} from '@toreda/fate';
 
 /**
- * @category Schemas
+ * @category Schemas - Custom Types
  */
-export class CustomSchemas {
+export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> {
 	public readonly log: Log;
 	public readonly registered: Map<string, Schema<unknown, SchemaData<unknown>>>;
 
-	constructor(init: CustomSchemasInit) {
+	constructor(init: CustomTypesInit) {
 		this.registered = new Map<string, Schema<unknown, SchemaData<unknown>>>();
 		this.log = init.base.makeLog('schemaTypes');
 
 		this.registerTypes(init.data);
 	}
 
-	public registerTypes(data?: CustomSchemasData): void {
+	public registerTypes(data?: CustomTypesData): void {
 		if (!data) {
 			return;
 		}
@@ -64,6 +66,26 @@ export class CustomSchemas {
 		}
 
 		return this.registered.has(id);
+	}
+
+	public hasSchema(id: string): boolean {
+		if (!this.has(id)) {
+			return false;
+		}
+
+		const o = this.registered.get(id);
+
+		return typeof o?.verify === 'function';
+	}
+
+	public hasVerifier(id: string): boolean {
+		if (!this.has(id)) {
+			return false;
+		}
+
+		const o = this.registered.get(id);
+
+		return typeof o === 'function';
 	}
 
 	public register(id: string, schema: Schema<unknown, SchemaData<unknown>>): boolean {
@@ -91,5 +113,43 @@ export class CustomSchemas {
 		const schema = this.registered.get(id);
 
 		return schema ? schema : null;
+	}
+
+	public getVerifier(id: string): CustomTypeVerifier<DataT> | null {
+		if (typeof id !== 'string') {
+			return null;
+		}
+
+		const o = this.registered.get(id);
+
+		return typeof o === 'function' ? o : null;
+	}
+
+	public getSchema(id: string): Schema<unknown, SchemaData<unknown>> | null {
+		if (typeof id !== 'string') {
+			return null;
+		}
+
+		const schema = this.registered.get(id);
+		if (typeof schema?.verify !== 'function') {
+			return null;
+		}
+
+		return schema;
+	}
+
+	public async verifyValue(type: string, value: unknown): Promise<Fate<DataT>> {
+		const fate = new Fate<DataT>();
+
+		return fate;
+	}
+
+	public async verifySchema(
+		type: string,
+		value: unknown | SchemaData<unknown>
+	): Promise<Fate<SchemaData<unknown>>> {
+		const fate = new Fate<SchemaData<unknown>>();
+
+		return fate;
 	}
 }

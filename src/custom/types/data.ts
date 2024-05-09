@@ -23,13 +23,12 @@
  *
  */
 
-import {Log} from '@toreda/log';
-import {type CustomSchemasData} from './data';
+import {Schema} from '../../schema';
+import {type SchemaData} from '../../schema/data';
 
 /**
- * @category Custom Types
+ * @category Schemas - Custom Types
  */
-export interface CustomSchemasInit {
-	data?: CustomSchemasData;
-	base: Log;
+export interface CustomTypesData {
+	[k: string]: Schema<any, any, any>;
 }

@@ -27,5 +27,5 @@
  * @category Schemas
  */
 export interface SchemaData<DataT> {
-	[k: string]: DataT;
+	[k: string]: DataT | null;
 }

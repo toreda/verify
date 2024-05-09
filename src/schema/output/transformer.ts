@@ -25,6 +25,7 @@
 
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
+import {type SchemaData} from '../data';
 
 /**
  * Transforms schema parser output.
@@ -32,6 +33,6 @@ import {Log} from '@toreda/log';
  * @category Schemas
  */
 export type SchemaOutputTransformer<DataT, VerifiedT> = (
-	mapped: Map<string, DataT>,
+	mapped: Map<string, DataT | SchemaData<unknown> | null>,
 	base: Log
 ) => Promise<Fate<VerifiedT | null>>;

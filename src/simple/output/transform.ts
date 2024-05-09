@@ -25,7 +25,7 @@
 
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
-import {schemaError} from '../error';
+import {schemaError} from '../../schema/error';
 import {type Verified} from '../../verified';
 
 /**
@@ -37,21 +37,21 @@ import {type Verified} from '../../verified';
  *
  * @category Schemas
  */
-export async function schemaSimpleOutput<DataT, VerifiedT>(
+export async function simpleOutputTransform<DataT, VerifiedT>(
 	input: Map<string, DataT>,
 	base: Log
 ): Promise<Fate<VerifiedT | null>> {
-	const log = base.makeLog('schemaPrimitiveTransformer');
+	const log = base.makeLog('simpleOutputTransform');
 	const fate = new Fate<VerifiedT | null>();
 
 	if (!input) {
 		log.error(`Missing argument: mapped`);
-		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveTransformer', 'data'));
+		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'data'));
 	}
 
 	if (!base) {
 		log.error(`Missing argument: base`);
-		return fate.setErrorCode(schemaError('missing_argument', 'schemaPrimitiveTransformer', 'base'));
+		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
 	}
 
 	try {
@@ -68,7 +68,7 @@ export async function schemaSimpleOutput<DataT, VerifiedT>(
 		const msg = e instanceof Error ? e.message : 'unknown_err_type';
 
 		log.error(`Exception: ${msg}.`);
-		fate.setErrorCode(schemaError('exception', 'schemaPrimitiveTransformer', `Error: ${msg}`));
+		fate.setErrorCode(schemaError('exception', 'simpleOutputTransform', `Error: ${msg}`));
 	}
 
 	return fate;

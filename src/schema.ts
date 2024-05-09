@@ -28,12 +28,11 @@ import {SchemaField} from './schema/field';
 import {schemaError} from './schema/error';
 import type {SchemaFieldType} from './schema/field/type';
 import {Log} from '@toreda/log';
-import {isString} from './is/string';
 import {SchemaConfig} from './schema/config';
 import type {SchemaInit} from './schema/init';
 import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
-import {schemaSimpleOutput} from './schema/simple/output';
+import {simpleOutputTransform} from './simple/output/transform';
 import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
@@ -47,13 +46,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly schemaName: string;
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
-	public readonly factory: SchemaOutputTransformer<DataT | null, VerifiedT>;
+	public readonly outputTransform: SchemaOutputTransformer<DataT, VerifiedT | null>;
 	public readonly customTypes: CustomTypes;
 	public readonly base: Log;
 
 	constructor(init: SchemaInit<DataT | null, InputT, VerifiedT>) {
 		this.schemaName = init.name;
-		this.fields = this.makeFields(init.fields);
+		this.fields = this._makeFields(init.fields);
 		this.cfg = new SchemaConfig(init.options);
 
 		this.base = init.base.makeLog(`schema___${init.name}`);
@@ -61,10 +60,14 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			data: init.customTypes,
 			base: this.base
 		});
-		this.factory = init.factory ? init.factory : schemaSimpleOutput;
+		this.outputTransform = init.outputTransform ? init.outputTransform : simpleOutputTransform;
 	}
 
-	private makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
+	/**
+	 * Build and set schema fields from schema init data.
+	 * @param fields
+	 */
+	private _makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
 		const result = new Map<keyof InputT, SchemaField<InputT>>();
 
 		if (!Array.isArray(fields)) {
@@ -78,59 +81,61 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return result;
 	}
 
-	public async verifyField(name: string, field: SchemaField<InputT>, value: unknown): Promise<Fate<DataT>> {
-		const fate = new Fate<DataT>();
+	public async verifyField(
+		name: string,
+		field: SchemaField<InputT>,
+		value: unknown
+	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
+		const fate = new Fate<DataT | SchemaData<unknown> | null>();
+
 		if (!field) {
-			return fate.setErrorCode(
-				schemaError(`missing_field`, `${this.schemaName}.verifyField`, `${name}`)
-			);
+			return fate.setErrorCode(schemaError(`missing_field`, `${this.schemaName}.${name}`));
 		}
 
 		if (value === undefined) {
-			return fate.setErrorCode(
-				schemaError('missing_field_value', `${this.schemaName}.verifyField`, `${name}`)
-			);
+			return fate.setErrorCode(schemaError('missing_field_value', `${this.schemaName}.${name}`));
 		}
 
-		const valid = await this.verifyFieldType(field.types, value);
-		if (!valid.ok()) {
-			return fate.setErrorCode(schemaError(valid.errorCode(), `${this.schemaName}.verifyField`, name));
+		const verified = await this.fieldSupportsValue(field, value);
+		if (!verified.ok()) {
+			return fate.setErrorCode(verified.errorCode());
 		}
+
+		fate.data = verified.data;
 
 		return fate.setSuccess(true);
 	}
 
-	public async verifyFieldType(types: SchemaFieldType[], value: unknown): Promise<Fate<never>> {
-		const fate = new Fate<never>();
+	public async fieldSupportsValue(
+		field: SchemaField<InputT>,
+		value: unknown
+	): Promise<Fate<DataT | SchemaData<unknown>>> {
+		const fate = new Fate<DataT | SchemaData<unknown>>();
 
-		if (!types.includes('null') && value === null) {
-			return fate.setErrorCode('null_value_disallowed');
+		if (value === null && !field.types.includes('null')) {
+			return fate.setErrorCode(
+				schemaError('unsupported_type:null', `${this.schemaName}.${field.name}`)
+			);
 		}
 
-		let matches = 0;
-		for (const type of types) {
+		for (const type of field.types) {
 			const result = await this.verifyValue(type, value);
 
-			if (!result.ok()) {
-				return fate.setErrorCode(result.errorCode());
-			}
-
-			if (result.data === true) {
-				matches++;
+			if (result.ok() === true) {
+				fate.data = result.data;
+				return fate.setSuccess(true);
 			}
 		}
 
-		if (matches > 0) {
-			return fate.setSuccess(true);
-		} else {
-			return fate.setErrorCode(`field_type_mismatch:${typeof value}`);
-		}
+		return fate.setErrorCode(
+			schemaError(`unsupported_type:${typeof value}`, `${this.schemaName}.${field.name}`)
+		);
 	}
 
 	public customTypeSupported(type: SchemaFieldType, _value: unknown): _value is SchemaData<unknown> {
 		const custom = this.customTypes.get(type);
 
-		return custom !== null;
+		return custom !== null && custom !== undefined;
 	}
 
 	/**
@@ -139,8 +144,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * @param type
 	 * @param value
 	 */
-	public typeSupported(type: SchemaFieldType, value: unknown): value is DataT | null {
-		if (typeof type !== 'string' || !type) {
+	public valueIsBuiltInType(type: SchemaFieldType, value: unknown): value is DataT {
+		if (typeof type !== 'string') {
 			return false;
 		}
 
@@ -162,16 +167,16 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			case 'number':
 				return typeof value === 'number' && isFinite(value);
 			case 'string':
-				return isString(value);
+				return typeof value === 'string';
 			case 'undefined':
 				return value === undefined;
 			case 'uint':
 				return isUInt(value);
 			case 'url':
 				return isUrl(value as string);
+			default:
+				return false;
 		}
-
-		return false;
 	}
 
 	public async verifySchemaData(
@@ -205,21 +210,23 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public async verifyValue(
 		type: SchemaFieldType,
 		value: unknown
-	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
-		const fate = new Fate<DataT | null>();
+	): Promise<Fate<DataT | SchemaData<unknown>>> {
+		const fate = new Fate<DataT | SchemaData<unknown>>();
 
-		if (this.typeSupported(type, value)) {
+		if (this.valueIsBuiltInType(type, value)) {
 			fate.data = value;
 			return fate.setSuccess(true);
 		}
 
 		if (!this.customTypeSupported(type, value)) {
-			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+			return fate.setErrorCode(
+				schemaError(`unsupported_type:${typeof value}`, `${this.schemaName}.verifyValue`)
+			);
 		}
 
 		const custom = this.customTypes.get(type);
 		if (!custom) {
-			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
+			return fate.setErrorCode(`field_does_not_support_custom_type:${type?.toString()}`);
 		}
 
 		const result = await custom.verify(value, this.base);
@@ -230,8 +237,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return result;
 	}
 
-	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT | null>> {
-		const fate = new Fate<VerifiedT | null>();
+	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT>> {
+		const fate = new Fate<VerifiedT>();
 
 		const fnPath = `${this.schemaName}.verify`;
 
@@ -251,24 +258,24 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return fate.setErrorCode(schemaError('empty_schema_object', fnPath));
 		}
 
-		if (!this.factory) {
-			log.error(`Missing argument: factory`);
-			return fate.setErrorCode(schemaError('missing_argument', fnPath, 'factory'));
+		if (!this.outputTransform) {
+			log.error(`Missing argument: outputTransform`);
+			return fate.setErrorCode(schemaError('missing_argument', fnPath, 'outputTransform'));
 		}
 
-		if (typeof this.factory !== 'function') {
-			log.error(`Non-function argument: factory`);
-			return fate.setErrorCode(schemaError('nonfunction_argument', fnPath, 'factory'));
+		if (typeof this.outputTransform !== 'function') {
+			log.error(`Non-function argument: outputTransform`);
+			return fate.setErrorCode(schemaError('nonfunction_argument', fnPath, 'outputTransform'));
 		}
 
 		const total = this.fields.size;
 		let processed = 0;
 
-		const mapped = new Map<string, DataT | null>();
+		const mapped = new Map<string, DataT | SchemaData<unknown> | null>();
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const verified = await this.verifyField(field.name.toString(), field, data[name]);
+			const verified = await this.verifyField(name, field, data[name]);
 
 			if (!verified.ok()) {
 				return fate.setErrorCode(verified.errorCode());
@@ -280,15 +287,20 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		if (total >= processed) {
 			try {
-				const result = await this.factory(mapped, log);
+				const result = await this.outputTransform(mapped, log);
 				if (result.ok()) {
-					fate.data = result.data;
-					fate.setSuccess(true);
+					if (result.data !== null) {
+						fate.data = result.data;
+						fate.setSuccess(true);
+					} else {
+						fate.setErrorCode(schemaError(`null_transform_output`, `${this.schemaName}.verify`));
+					}
 				} else {
 					fate.setErrorCode(result.errorCode());
 				}
 			} catch (e: unknown) {
 				const msg = e instanceof Error ? e.message : 'unknown_err_type';
+				fate.data = null;
 				fate.setErrorCode(schemaError('exception', 'schema.verify', `error: ${msg}.`));
 				log.error(`Exception parsing schema: ${msg}.`);
 			}

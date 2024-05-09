@@ -95,7 +95,7 @@ export {schemaFieldTypes} from './schema/field/types';
 export {SchemaInit} from './schema/init';
 export {SchemaOptions} from './schema/options';
 export {SchemaOutputTransformer} from './schema/output/transformer';
-export {schemaSimpleOutput} from './schema/simple/output';
+export {simpleOutputTransform} from './simple/output/transform';
 export {Statement} from './statement';
 export {stringIdVerify} from './string/id/verify';
 export {urlVerify} from './url/verify';

@@ -4,18 +4,13 @@ import {Schema} from '../src/schema';
 import {stringValue} from '@toreda/strong-types';
 import {type SchemaData} from '../src/schema/data';
 import {type Primitive} from '@toreda/types';
+import {SchemaField} from '../src';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
-const base = new Log({
-	globalLevel: Levels.ALL,
-	groupsStartEnabled: true,
-	consoleEnabled: true
-});
-
 class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
-	constructor() {
+	constructor(base: Log) {
 		super({
 			name: 'SampleSchema',
 			fields: [
@@ -50,7 +45,13 @@ describe('schemaVerify', () => {
 	let base: Log;
 
 	beforeAll(() => {
-		schema = new SampleSchema();
+		base = new Log({
+			globalLevel: Levels.ALL,
+			groupsStartEnabled: true,
+			consoleEnabled: true
+		});
+
+		schema = new SampleSchema(base);
 	});
 
 	beforeEach(() => {
@@ -59,6 +60,33 @@ describe('schemaVerify', () => {
 			int1: 11,
 			str1: 'one'
 		};
+		schema.fields.clear();
+		schema.fields.set(
+			'str1',
+			new SchemaField<SampleData>({
+				name: 'str1',
+				types: ['string'],
+				defaultValue: sampleData.str1
+			})
+		);
+
+		schema.fields.set(
+			'int1',
+			new SchemaField<SampleData>({
+				name: 'int1',
+				types: ['number'],
+				defaultValue: sampleData.int1
+			})
+		);
+
+		schema.fields.set(
+			'bool1',
+			new SchemaField<SampleData>({
+				name: 'bool1',
+				types: ['boolean'],
+				defaultValue: sampleData.bool1
+			})
+		);
 	});
 
 	describe('Parsing', () => {
@@ -90,7 +118,7 @@ describe('schemaVerify', () => {
 		describe('Types', () => {
 			describe('unsupported', () => {
 				it(`should fail when field type is not supported`, async () => {
-					const customSchema = new SampleSchema();
+					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('int1');
 
 					if (!field) {
@@ -101,12 +129,9 @@ describe('schemaVerify', () => {
 					const fieldType = 'aaaaa' as any;
 					field.types.push(fieldType);
 					const result = await customSchema.verify(sampleData, base);
+
 					expect(result.errorCode()).toBe(
-						schemaError(
-							`unsupported_type:${fieldType}`,
-							`${schema.schemaName}.verifyField`,
-							field.name
-						)
+						schemaError(`unsupported_type:${fieldType}`, `${schema.schemaName}.${field.name}`)
 					);
 					expect(result.ok()).toBe(false);
 				});
@@ -129,14 +154,14 @@ describe('schemaVerify', () => {
 					sampleData.str1 = expectedOutput;
 					const result = await schema.verify(sampleData, base);
 
-					expect(result.data?.str1).toBe(expectedOutput);
 					expect(result.ok()).toBe(true);
+					expect(result.data?.str1).toBe(expectedOutput);
 				});
 
 				it(`should succeed when value is a null and null values are allowed`, async () => {
 					sampleData.str1 = null as any;
 
-					const customSchema = new SampleSchema();
+					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('str1');
 					field?.types.push('null');
 
@@ -175,7 +200,7 @@ describe('schemaVerify', () => {
 				});
 
 				it(`should fail when value is a truthy non-boolean`, async () => {
-					const customSchema = new SampleSchema();
+					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('bool1');
 
 					if (!field) {
@@ -190,7 +215,7 @@ describe('schemaVerify', () => {
 				it(`should fail when value is null and null is disallowed`, async () => {
 					sampleData.bool1 = null as any;
 
-					const customSchema = new SampleSchema();
+					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('bool1');
 
 					if (!field) {
@@ -203,15 +228,15 @@ describe('schemaVerify', () => {
 					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(
-						schemaError('null_value_disallowed', `${schema.schemaName}.verifyField`, field.name)
+						schemaError('unsupported_type:null', `${schema.schemaName}.${field.name}`)
 					);
 					expect(result.ok()).toBe(false);
 				});
 
-				it(`should succeed when value is null and null allowed`, async () => {
+				it(`should succeed when field supports nulls`, async () => {
 					sampleData.bool1 = null as any;
 
-					const customSchema = new SampleSchema();
+					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('bool1');
 					field?.types.push('null');
 
@@ -219,7 +244,7 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					const result = await schema.verify(sampleData, base);
+					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(EMPTY_STRING);
 					expect(result.ok()).toBe(true);
@@ -230,7 +255,7 @@ describe('schemaVerify', () => {
 
 	describe('verify', () => {
 		it(`should fail when data arg is undefined`, async () => {
-			const customSchema = new SampleSchema();
+			const customSchema = new SampleSchema(base);
 			const result = await customSchema.verify(undefined as any, base);
 
 			expect(result.errorCode()).toBe(
@@ -244,7 +269,7 @@ describe('schemaVerify', () => {
 		it(`should fail when field argument is undefined`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema();
+			const customSchema = new SampleSchema(base);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
@@ -253,7 +278,7 @@ describe('schemaVerify', () => {
 			const result = await customSchema.verifyField(field.name, undefined as any, null);
 
 			expect(result.errorCode()).toBe(
-				schemaError('missing_field', `${customSchema.schemaName}.verifyField`, field.name)
+				schemaError('missing_field', `${customSchema.schemaName}.${field.name}`)
 			);
 			expect(result.ok()).toBe(false);
 		});
@@ -261,7 +286,7 @@ describe('schemaVerify', () => {
 		it(`should fail when value is null and null type is not allowed`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema();
+			const customSchema = new SampleSchema(base);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
@@ -272,15 +297,15 @@ describe('schemaVerify', () => {
 			const result = await customSchema.verifyField(field.name, field, null);
 
 			expect(result.errorCode()).toBe(
-				schemaError('null_value_disallowed', `${customSchema.schemaName}.verifyField`, field.name)
+				schemaError('unsupported_type:null', `${customSchema.schemaName}.${field.name}`)
 			);
 			expect(result.ok()).toBe(false);
 		});
 
-		it(`should succeed when value is a null and null is allowed`, async () => {
+		it(`should succeed when value is a null and null is allowed !!`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema();
+			const customSchema = new SampleSchema(base);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
@@ -297,494 +322,609 @@ describe('schemaVerify', () => {
 
 	describe('verifyValue', () => {
 		describe('boolean', () => {
-			it(`should return true when type is 'boolean' and value is true`, async () => {
-				const result = await schema.verifyValue('boolean', true);
+			it(`should succeed and return value when type is 'boolean' and value is true`, async () => {
+				const value = true;
+				const result = await schema.verifyValue('boolean', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'boolean' and value is false`, async () => {
-				const result = await schema.verifyValue('boolean', false);
+			it(`should succeed and return value when type is 'boolean' and value is false`, async () => {
+				const value = false;
+				const result = await schema.verifyValue('boolean', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'boolean' and value is 0`, async () => {
-				const result = await schema.verifyValue('boolean', 0 as any);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+			it(`should fail when type is 'boolean' and value is 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('boolean', value);
+
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return true when type is 'boolean' and value is 1`, async () => {
-				const result = await schema.verifyValue('boolean', 1 as any);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+			it(`should fail when type is 'boolean' and value is 1`, async () => {
+				const value = 1;
+				const result = await schema.verifyValue('boolean', value);
+
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return true when type is 'boolean' and value is an empty object`, async () => {
-				const result = await schema.verifyValue('boolean', {} as any);
+			it(`should fail when type is 'boolean' and value is an empty object`, async () => {
+				const value = {};
+				const result = await schema.verifyValue('boolean', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return true when type is 'boolean' and value is null`, async () => {
-				const result = await schema.verifyValue('boolean', null as any);
+			it(`should fail when type is 'boolean' and value is null`, async () => {
+				const value = null;
+				const result = await schema.verifyValue('boolean', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return true when type is 'boolean' and value is undefined`, async () => {
-				const result = await schema.verifyValue('boolean', undefined as any);
+			it(`should fail when type is 'boolean' and value is undefined`, async () => {
+				const value = undefined;
+				const result = await schema.verifyValue('boolean', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 
 		describe('string', () => {
-			it(`should return true when type is 'string' and value is empty string`, async () => {
+			it(`should return value when type is 'string' and value is empty string`, async () => {
 				const result = await schema.verifyValue('string', EMPTY_STRING);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(EMPTY_STRING);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'string' and value is a single char`, async () => {
-				const result = await schema.verifyValue('string', 'a');
+			it(`should validate successfully and return value when type is 'string' and value is a single char`, async () => {
+				const value = 'a';
+				const result = await schema.verifyValue('string', value);
 
+				expect(result.data).toBe(value);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
 			it(`should return true when type is 'string' and value is a short string`, async () => {
-				const result = await schema.verifyValue('string', '19714-9194714');
+				const value = '19714-9194714';
+				const result = await schema.verifyValue('string', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'string' and value is undefined`, async () => {
-				const result = await schema.verifyValue('string', undefined as any);
+			it(`should fail when type is 'string' and value is undefined`, async () => {
+				const value = undefined;
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'string' and value is null`, async () => {
-				const result = await schema.verifyValue('string', null as any);
+			it(`should fail when type is 'string' and value is null`, async () => {
+				const value = null;
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'string' and value is 0`, async () => {
-				const result = await schema.verifyValue('string', 0 as any);
+			it(`should fail when type is 'string' and value is 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'string' and value is 1`, async () => {
-				const result = await schema.verifyValue('string', 1 as any);
+			it(`should fail when type is 'string' and value is 1`, async () => {
+				const value = 1;
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.ok()).toBe(false);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
 			});
 
-			it(`should return false when type is 'string' and value is an empty array`, async () => {
-				const result = await schema.verifyValue('string', [] as any);
+			it(`should fail when type is 'string' and value is an empty array`, async () => {
+				const value = [] as unknown[];
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.ok()).toBe(false);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
 			});
 
-			it(`should return false when type is 'string' and value is an empty object`, async () => {
-				const result = await schema.verifyValue('string', {} as any);
+			it(`should fail when type is 'string' and value is an empty object`, async () => {
+				const value = {};
+				const result = await schema.verifyValue('string', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.ok()).toBe(false);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
 			});
 		});
 
 		describe('bigint', () => {
-			it(`should return true when type is 'bigint' and value is a BigInt of value 0`, async () => {
-				const result = await schema.verifyValue('bigint', BigInt('0'));
+			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 0`, async () => {
+				const value = BigInt('0');
+				const result = await schema.verifyValue('bigint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'bigint' and value is a BigInt of value 1`, async () => {
-				const result = await schema.verifyValue('bigint', BigInt('1'));
+			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 1`, async () => {
+				const value = BigInt('1');
+				const result = await schema.verifyValue('bigint', value);
+
+				expect(result.data).toBe(value);
+				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.ok()).toBe(true);
+			});
+
+			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a large number`, async () => {
+				const value = BigInt('9007199254740991');
+				const result = await schema.verifyValue('bigint', value);
+
+				expect(result.data).toBe(value);
+				expect(result.errorCode()).toBe(EMPTY_STRING);
+				expect(result.ok()).toBe(true);
+			});
+
+			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a huge octal`, async () => {
+				const value = BigInt('0o377777777777777777');
+				const result = await schema.verifyValue('bigint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toStrictEqual(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'bigint' and value is a BigInt with a large number`, async () => {
-				const result = await schema.verifyValue('bigint', BigInt('9007199254740991'));
+			it(`should fail when type is 'bigint' and value is undefined`, async () => {
+				const value = undefined;
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return true when type is 'bigint' and value is a BigInt with a huge octal`, async () => {
-				const result = await schema.verifyValue('bigint', BigInt('0o377777777777777777'));
+			it(`should fail when type is 'bigint' and value is null`, async () => {
+				const value = null;
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'bigint' and value is undefined`, async () => {
-				const result = await schema.verifyValue('bigint', undefined as any);
+			it(`should fail when type is 'bigint' and value is 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'bigint' and value is null`, async () => {
-				const result = await schema.verifyValue('bigint', null as any);
+			it(`should fail when type is 'bigint' and value is 1`, async () => {
+				const value = 1;
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'bigint' and value is 0`, async () => {
-				const result = await schema.verifyValue('bigint', 0 as any);
+			it(`should fail when type is 'bigint' and value is an empty array`, async () => {
+				const value: string[] = [];
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'bigint' and value is 1`, async () => {
-				const result = await schema.verifyValue('bigint', 1 as any);
+			it(`should fail when type is 'bigint' and value is an empty object`, async () => {
+				const value = {};
+				const result = await schema.verifyValue('bigint', value);
 
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
-			});
-
-			it(`should return false when type is 'bigint' and value is an empty array`, async () => {
-				const result = await schema.verifyValue('bigint', [] as any);
-
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
-			});
-
-			it(`should return false when type is 'bigint' and value is an empty object`, async () => {
-				const result = await schema.verifyValue('bigint', {} as any);
-
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 
 		describe('undefined', () => {
-			it(`should return true when type is 'undefined' with value is undefined`, async () => {
-				const result = await schema.verifyValue('undefined', undefined);
+			it(`should succeed when type is 'undefined' when value is undefined`, async () => {
+				const value = undefined;
+				const result = await schema.verifyValue('undefined', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'undefined' with null value`, async () => {
-				const result = await schema.verifyValue('undefined', null);
+			it(`should fail when type is 'undefined' with null value`, async () => {
+				const value = null;
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value 'undefined'`, async () => {
-				const result = await schema.verifyValue('undefined', 'undefined');
+			it(`should fail when type is 'undefined' with value 'undefined'`, async () => {
+				const value = 'undefined';
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value 'null'`, async () => {
-				const result = await schema.verifyValue('undefined', 'null');
-
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+			it(`should fail when type is 'undefined' with value 'null'`, async () => {
+				const value = 'null';
+				const result = await schema.verifyValue('undefined', value);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value is 0`, async () => {
-				const result = await schema.verifyValue('undefined', 0);
+			it(`should fail when type is 'undefined' with value is 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value is EMPTY_STRING`, async () => {
-				const result = await schema.verifyValue('undefined', EMPTY_STRING);
+			it(`should fail when type is 'undefined' and value is EMPTY_STRING`, async () => {
+				const value = EMPTY_STRING;
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value is true`, async () => {
-				const result = await schema.verifyValue('undefined', true);
+			it(`should fail when type is 'undefined' with value is true`, async () => {
+				const value = true;
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'undefined' with value is false`, async () => {
-				const result = await schema.verifyValue('undefined', false);
+			it(`should fail when type is 'undefined' with value is false`, async () => {
+				const value = false;
+				const result = await schema.verifyValue('undefined', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 
 		describe('uint', () => {
-			it(`should return true when type is 'uint' and value is 0`, async () => {
-				const result = await schema.verifyValue('uint', 0);
+			it(`should succeed and return value when type is 'uint' and value is 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('uint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'uint' and value is 1`, async () => {
-				const result = await schema.verifyValue('uint', 1);
+			it(`should succeed and return value when type is 'uint' and value is 1`, async () => {
+				const value = 1;
+				const result = await schema.verifyValue('uint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'uint' and value is 100`, async () => {
-				const result = await schema.verifyValue('uint', 100);
+			it(`should succeed and return value when type is 'uint' and value is 100`, async () => {
+				const value = 100;
+				const result = await schema.verifyValue('uint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'uint' and value is MAX_SAFE_INTEGER`, async () => {
-				const result = await schema.verifyValue('uint', Number.MAX_SAFE_INTEGER);
+			it(`should succeed and return value when type is 'uint' and value is MAX_SAFE_INTEGER`, async () => {
+				const value = Number.MAX_SAFE_INTEGER;
+				const result = await schema.verifyValue('uint', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'uint' and value is -1`, async () => {
-				const result = await schema.verifyValue('uint', -1);
+			it(`should fail when type is 'uint' and value is -1`, async () => {
+				const value = -1;
+				const result = await schema.verifyValue('uint', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'uint' and value is 1.1`, async () => {
-				const result = await schema.verifyValue('uint', 1.1);
+			it(`should fail when type is 'uint' and value is 1.1`, async () => {
+				const value = 1.1;
+				const result = await schema.verifyValue('uint', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 
 		describe('null', () => {
-			it(`should return true when value is null and null is allowed`, async () => {
-				const result = await schema.verifyValue('null', null);
+			it(`should succeed when value is null and null is allowed`, async () => {
+				const value = null;
+				const result = await schema.verifyValue('null', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBeNull();
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'undefined' with value 'null'`, async () => {
+			it(`should fail when type is 'undefined' with value 'null'`, async () => {
+				const value = 'null';
 				const result = await schema.verifyValue('undefined', 'null');
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false whenzz type is 'null' with value is undefined`, async () => {
-				const result = await schema.verifyValue('null', undefined);
+			it(`should fail when type is 'null' with value is undefined`, async () => {
+				const value = undefined;
+				const result = await schema.verifyValue('null', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'null' with value is 0`, async () => {
-				const result = await schema.verifyValue('null', 0);
+			it(`should fail when type is 'null' with value 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('null', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'null' with value is EMPTY_STRING`, async () => {
-				const result = await schema.verifyValue('null', EMPTY_STRING);
+			it(`should fail when type is 'null' with value is EMPTY_STRING`, async () => {
+				const value = EMPTY_STRING;
+				const result = await schema.verifyValue('null', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'null' with value is true`, async () => {
-				const result = await schema.verifyValue('null', true);
+			it(`should fail when type is 'null' with value is true`, async () => {
+				const value = true;
+				const result = await schema.verifyValue('null', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'null' with value is false`, async () => {
-				const result = await schema.verifyValue('null', false);
+			it(`should fail when type is 'null' with value is false`, async () => {
+				const value = false;
+				const result = await schema.verifyValue('null', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 
 		describe('number', () => {
-			it(`should return true when type is 'number' with value -10`, async () => {
-				const result = await schema.verifyValue('number', -10);
+			it(`should succeed and return value when type is 'number' with value -10`, async () => {
+				const value = -10;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with value -0`, async () => {
-				const result = await schema.verifyValue('number', -0);
+			it(`should succeed and return value when type is 'number' with value -0`, async () => {
+				const value = -0;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with value 0`, async () => {
-				const result = await schema.verifyValue('number', 0);
+			it(`should succeed and return value when type is 'number' with value 0`, async () => {
+				const value = 0;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with value 1`, async () => {
-				const result = await schema.verifyValue('number', 1);
+			it(`should succeed and return value when type is 'number' with value 1`, async () => {
+				const value = 1;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with max safe int value`, async () => {
-				const result = await schema.verifyValue('number', Number.MAX_SAFE_INTEGER);
+			it(`should succeed and return value when type is 'number' with max safe int value`, async () => {
+				const value = Number.MAX_SAFE_INTEGER;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with min safe int value`, async () => {
-				const result = await schema.verifyValue('number', Number.MIN_SAFE_INTEGER);
+			it(`should succeed and return value when type is 'number' with min safe int value`, async () => {
+				const value = Number.MIN_SAFE_INTEGER;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with min value`, async () => {
-				const result = await schema.verifyValue('number', Number.MIN_VALUE);
+			it(`should succeed and return value when type is 'number' with min value`, async () => {
+				const value = Number.MIN_VALUE;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with max value`, async () => {
-				const result = await schema.verifyValue('number', Number.MAX_VALUE);
+			it(`should succeed and return value when type is 'number' with max value`, async () => {
+				const value = Number.MAX_VALUE;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return true when type is 'number' with epsilon value`, async () => {
-				const result = await schema.verifyValue('number', Number.EPSILON);
+			it(`should succeed and return value when type is 'number' with epsilon value`, async () => {
+				const value = Number.EPSILON;
+				const result = await schema.verifyValue('number', value);
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(true);
+				expect(result.data).toBe(value);
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should return false when type is 'number' with NaN value`, async () => {
-				const result = await schema.verifyValue('number', Number.NaN);
+			it(`should fail when type is 'number' with NaN value`, async () => {
+				const value = Number.NaN;
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'number' with string value '0'`, async () => {
-				const result = await schema.verifyValue('number', '0');
+			it(`should fail when type is 'number' with string value '0'`, async () => {
+				const value = '0';
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'number' with string value '0.00000000'`, async () => {
-				const result = await schema.verifyValue('number', '0.00000000');
+			it(`should fail when type is 'number' with string value '0.00000000'`, async () => {
+				const value = '0.00000000';
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'number' with string value '1'`, async () => {
-				const result = await schema.verifyValue('number', '1');
+			it(`should fail when type is 'number' with string value '1'`, async () => {
+				const value = '1';
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'number' with positive infinite value`, async () => {
-				const result = await schema.verifyValue('number', Number.POSITIVE_INFINITY);
+			it(`should fail when type is 'number' with positive infinite value`, async () => {
+				const value = Number.POSITIVE_INFINITY;
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 
-			it(`should return false when type is 'number' with negative infinite value`, async () => {
-				const result = await schema.verifyValue('number', Number.NEGATIVE_INFINITY);
+			it(`should fail when type is 'number' with negative infinite value`, async () => {
+				const value = Number.NEGATIVE_INFINITY;
+				const result = await schema.verifyValue('number', value);
 
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.data).toBe(false);
-				expect(result.ok()).toBe(true);
+				expect(result.errorCode()).toBe(
+					schemaError(`unsupported_type:${typeof value}`, `${schema.schemaName}.verifyValue`)
+				);
+				expect(result.ok()).toBe(false);
 			});
 		});
 	});

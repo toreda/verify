@@ -12,6 +12,7 @@ module.exports = {
 		'.github',
 		'docs'
 	],
+	moduleDirectories: ['node_modules'],
 	moduleFileExtensions: ['ts', 'js', 'json'],
 	moduleNameMapper: {'^src/(.*)': '<rootDir>/src/$1'},
 	testEnvironment: 'node',

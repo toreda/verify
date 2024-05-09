@@ -117,7 +117,7 @@ describe('schemaVerify', () => {
 
 		describe('Types', () => {
 			describe('unsupported', () => {
-				it(`should fail when field type is not supported`, async () => {
+				it(`should fail when schema does not support field type`, async () => {
 					const customSchema = new SampleSchema(base);
 					const field = customSchema.fields.get('int1');
 
@@ -131,7 +131,10 @@ describe('schemaVerify', () => {
 					const result = await customSchema.verify(sampleData, base);
 
 					expect(result.errorCode()).toBe(
-						schemaError(`unsupported_type:${fieldType}`, `${schema.schemaName}.${field.name}`)
+						schemaError(
+							`unsupported_schema_type:${fieldType}`,
+							`${schema.schemaName}.${field.name}`
+						)
 					);
 					expect(result.ok()).toBe(false);
 				});

@@ -28,8 +28,8 @@
  */
 export type SchemaFieldType =
 	| 'array'
-	| 'custom'
 	| 'bigint'
+	| 'BigInt'
 	| 'boolean'
 	| 'datetime'
 	| 'double'
@@ -39,7 +39,6 @@ export type SchemaFieldType =
 	| 'iterable'
 	| 'json-serialized'
 	| 'int'
-	| 'schema'
 	| 'null'
 	| 'number'
 	| 'real'
@@ -47,5 +46,4 @@ export type SchemaFieldType =
 	| 'uint'
 	| 'undefined'
 	| 'url'
-	| 'time'
-	| string;
+	| 'time';

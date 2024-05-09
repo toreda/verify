@@ -38,6 +38,7 @@ import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
 import {CustomTypes} from './custom/types';
+import {schemaBuiltIns} from './schema/built/ins';
 
 /**
  * @category Schemas
@@ -119,6 +120,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		for (const type of field.types) {
+			if (!this.schemaSupportsType(type)) {
+				return fate.setErrorCode(
+					schemaError(`unsupported_schema_type:${type}`, `${this.schemaName}.${field.name}`)
+				);
+			}
+
 			const result = await this.verifyValue(type, value);
 
 			if (result.ok() === true) {
@@ -138,6 +145,21 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return custom !== null && custom !== undefined;
 	}
 
+	public isBuiltIn(type: SchemaFieldType): boolean {
+		if (typeof type !== 'string') {
+			return false;
+		}
+
+		return schemaBuiltIns.includes(type);
+	}
+
+	public schemaSupportsType(type: SchemaFieldType): boolean {
+		if (this.isBuiltIn(type)) {
+			return true;
+		}
+
+		return this.customTypes.has(type);
+	}
 	/**
 	 * Check if `type` is supported by the schema. Doesn't check if value actuallyz
 	 * conforms to the specified type.

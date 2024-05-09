@@ -58,6 +58,14 @@ export class CustomTypes {
 		}
 	}
 
+	public has(id: string): boolean {
+		if (typeof id !== 'string') {
+			return false;
+		}
+
+		return this.registered.has(id);
+	}
+
 	public register(id: string, schema: Schema<unknown, SchemaData<unknown>>): boolean {
 		if (typeof id !== 'string') {
 			return false;

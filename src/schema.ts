@@ -37,7 +37,7 @@ import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
-import {CustomTypes} from './custom/types';
+import {CustomSchemas} from './custom/schemas';
 import {schemaBuiltIns} from './schema/built/ins';
 
 /**
@@ -48,7 +48,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
 	public readonly outputTransform: SchemaOutputTransformer<DataT, VerifiedT | null>;
-	public readonly customTypes: CustomTypes;
+	public readonly customSchemas: CustomSchemas;
 	public readonly base: Log;
 
 	constructor(init: SchemaInit<DataT | null, InputT, VerifiedT>) {
@@ -57,8 +57,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		this.cfg = new SchemaConfig(init.options);
 
 		this.base = init.base.makeLog(`schema___${init.name}`);
-		this.customTypes = new CustomTypes({
-			data: init.customTypes,
+		this.customSchemas = new CustomSchemas({
+			data: init.customSchemas,
 			base: this.base
 		});
 		this.outputTransform = init.outputTransform ? init.outputTransform : simpleOutputTransform;
@@ -140,7 +140,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	}
 
 	public customTypeSupported(type: SchemaFieldType, _value: unknown): _value is SchemaData<unknown> {
-		const custom = this.customTypes.get(type);
+		const custom = this.customSchemas.get(type);
 
 		return custom !== null && custom !== undefined;
 	}
@@ -158,7 +158,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return true;
 		}
 
-		return this.customTypes.has(type);
+		return this.customSchemas.has(type);
 	}
 	/**
 	 * Check if `type` is supported by the schema. Doesn't check if value actuallyz
@@ -209,7 +209,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			data: null
 		});
 
-		const custom = this.customTypes.get(type);
+		const custom = this.customSchemas.get(type);
 		if (!custom) {
 			return fate.setErrorCode(`unsupported_type:${type?.toString()}`);
 		}
@@ -246,7 +246,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			);
 		}
 
-		const custom = this.customTypes.get(type);
+		const custom = this.customSchemas.get(type);
 		if (!custom) {
 			return fate.setErrorCode(`field_does_not_support_custom_type:${type?.toString()}`);
 		}

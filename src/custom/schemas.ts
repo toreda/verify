@@ -26,24 +26,24 @@
 import {Log} from '@toreda/log';
 import {Schema} from '../schema';
 import {type SchemaData} from '../schema/data';
-import {type CustomTypesInit} from './types/init';
-import {CustomTypesData} from '../schema/custom/data';
+import {type CustomSchemasInit} from './schemas/init';
+import {type CustomSchemasData} from './schemas/data';
 
 /**
  * @category Schemas
  */
-export class CustomTypes {
+export class CustomSchemas {
 	public readonly log: Log;
 	public readonly registered: Map<string, Schema<unknown, SchemaData<unknown>>>;
 
-	constructor(init: CustomTypesInit) {
+	constructor(init: CustomSchemasInit) {
 		this.registered = new Map<string, Schema<unknown, SchemaData<unknown>>>();
 		this.log = init.base.makeLog('schemaTypes');
 
 		this.registerTypes(init.data);
 	}
 
-	public registerTypes(data?: CustomTypesData): void {
+	public registerTypes(data?: CustomSchemasData): void {
 		if (!data) {
 			return;
 		}

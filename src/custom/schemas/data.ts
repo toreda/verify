@@ -24,11 +24,11 @@
  */
 
 import {Schema} from '../../schema';
-import {type SchemaData} from '../data';
+import {type SchemaData} from '../../schema/data';
 
 /**
  * @category Schemas
  */
-export interface CustomTypesData {
+export interface CustomSchemasData {
 	[k: string]: Schema<unknown, SchemaData<unknown>>;
 }

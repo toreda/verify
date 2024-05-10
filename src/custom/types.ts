@@ -28,8 +28,9 @@ import {Schema} from '../schema';
 import {type SchemaData} from '../schema/data';
 import {type CustomTypesInit} from './types/init';
 import {type CustomTypesData} from './types/data';
-import {CustomTypeVerifier} from './type/verifier';
+import {type CustomTypeVerifier} from './type/verifier';
 import {Fate} from '@toreda/fate';
+import {schemaError} from '../schema/error';
 
 /**
  * @category Schemas - Custom Types
@@ -138,18 +139,25 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return schema;
 	}
 
-	public async verifyValue(type: string, value: unknown): Promise<Fate<DataT>> {
+	public async verifyValue(type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
 		const fate = new Fate<DataT>();
-
+zzs
+		const verifier = this.getVerifier(type);
 		return fate;
 	}
 
 	public async verifySchema(
 		type: string,
-		value: unknown | SchemaData<unknown>
+		value: SchemaData<DataT>,
+		base: Log
 	): Promise<Fate<SchemaData<unknown>>> {
 		const fate = new Fate<SchemaData<unknown>>();
+		const schema = this.getSchema(type);
 
-		return fate;
+		if (!schema) {
+			return fate.setErrorCode(schemaError('missing_custom_type_schema', type));
+		}
+
+		return schema.verify(value, base);
 	}
 }

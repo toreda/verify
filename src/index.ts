@@ -102,6 +102,7 @@ export {simpleOutputTransform} from './simple/output/transform';
 export {Statement} from './statement';
 export {stringIdVerify} from './string/id/verify';
 export {urlVerify} from './url/verify';
+export {valueTypeLabel} from './value/type/label';
 export {Verified} from './verified';
 export {Verifier} from './verifier';
 export {VerifierCounts} from './verifier/counts';

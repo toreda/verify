@@ -26,7 +26,7 @@
 /**
  * @category Schemas
  */
-export type SchemaFieldType =
+export type SchemaFieldType<CustomT = unknown> =
 	| 'array'
 	| 'bigint'
 	| 'BigInt'
@@ -46,4 +46,5 @@ export type SchemaFieldType =
 	| 'uint'
 	| 'undefined'
 	| 'url'
-	| 'time';
+	| 'time'
+	| keyof CustomT;

@@ -28,8 +28,8 @@ import type {SchemaFieldType} from './type';
 /**
  * @category Schemas
  */
-export interface SchemaFieldData<InputT> {
+export interface SchemaFieldData<InputT = unknown> {
 	name: keyof InputT;
-	types: SchemaFieldType | SchemaFieldType[];
+	types: SchemaFieldType | (SchemaFieldType | keyof InputT)[] | keyof InputT[];
 	defaultValue?: unknown;
 }

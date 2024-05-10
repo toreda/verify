@@ -39,6 +39,7 @@ import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
 import {CustomTypes} from './custom/types';
 import {schemaBuiltIns} from './schema/built/ins';
+import {valueTypeLabel} from './value/type/label';
 
 /**
  * @category Schemas
@@ -85,7 +86,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public async verifyField(
 		name: string,
 		field: SchemaField<InputT>,
-		value: unknown
+		value: unknown,
+		base: Log
 	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
 		const fate = new Fate<DataT | SchemaData<unknown> | null>();
 
@@ -97,7 +99,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return fate.setErrorCode(schemaError('missing_field_value', `${this.schemaName}.${name}`));
 		}
 
-		const verified = await this.fieldSupportsValue(field, value);
+		const verified = await this.fieldSupportsValue(field, value, base);
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
 		}
@@ -109,24 +111,25 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async fieldSupportsValue(
 		field: SchemaField<InputT>,
-		value: unknown
+		value: unknown,
+		base: Log
 	): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
 
 		if (value === null && !field.types.includes('null')) {
 			return fate.setErrorCode(
-				schemaError('unsupported_type:null', `${this.schemaName}.${field.name}`)
+				schemaError('field_does_not_support_type:null', `${this.schemaName}.${field.name}`)
 			);
 		}
 
 		for (const type of field.types) {
 			if (!this.schemaSupportsType(type)) {
 				return fate.setErrorCode(
-					schemaError(`unsupported_schema_type:${type}`, `${this.schemaName}.${field.name}`)
+					schemaError(`field_does_not_support_type:${type}`, `${this.schemaName}.${field.name}`)
 				);
 			}
 
-			const result = await this.verifyValue(type, value);
+			const result = await this.verifyValue(type, value, base);
 
 			if (result.ok() === true) {
 				fate.data = result.data;
@@ -135,7 +138,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`unsupported_type:${typeof value}`, `${this.schemaName}.${field.name}`)
+			schemaError(
+				`field_does_not_support_type:${valueTypeLabel(value)}`,
+				`${this.schemaName}.${field.name}`
+			)
 		);
 	}
 
@@ -203,32 +209,38 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 */
 	public async verifyValue(
 		type: SchemaFieldType,
-		value: unknown | SchemaData<unknown>
+		value: unknown | SchemaData<DataT>,
+		base: Log
 	): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
-
-		if (this.valueIsBuiltInType(type, value)) {
-			// TODO: Add validation here. Type match does not automatically prove valid content.
-			fate.data = value;
-			return fate.setSuccess(true);
+		if (this.isBuiltIn(type)) {
+			if (this.valueIsBuiltInType(type, value)) {
+				// TODO: Add validation here. Type match does not automatically prove valid content.
+				fate.data = value;
+				return fate.setSuccess(true);
+			} else {
+				return fate.setErrorCode(
+					schemaError(
+						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
+						`${this.schemaName}.verifyValue`
+					)
+				);
+			}
 		}
 
-		if (!this.customTypes.has(type)) {
-			return fate.setErrorCode(
-				schemaError(`unsupported_type:${typeof value}`, `${this.schemaName}.verifyValue`)
-			);
-		}
-
-		if (this.customTypes.hasSchema(type)) {
-			return this.customTypes.verifySchema(type, value);
+		base.debug(`@@@@@@@@@@@@@@@ TYPE: ${type} // TYPEOF VAL: ${valueTypeLabel(value)}`);
+		if (this.customTypes.hasSchema(type) && typeof value === 'object') {
+			return this.customTypes.verifySchema(type, value as SchemaData<DataT>, base);
 		}
 
 		//const custom = await this.customTypes.verify(type, value, this.base);
 		if (this.customTypes.hasVerifier(type)) {
-			return this.customTypes.verifyValue(type, value);
+			return this.customTypes.verifyValue(type, value, base);
 		}
 
-		return fate.setErrorCode(`field_cant_verify_custom_type:${type?.toString()}`);
+		return fate.setErrorCode(
+			schemaError(`field_does_not_support_type:${type}`, `${this.schemaName}.verifyValue`)
+		);
 	}
 
 	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT>> {
@@ -269,7 +281,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const verified = await this.verifyField(name, field, data[name]);
+			const verified = await this.verifyField(name, field, data[name], base);
 
 			if (!verified.ok()) {
 				return fate.setErrorCode(verified.errorCode());

@@ -24,7 +24,6 @@
  */
 
 import {Schema} from '../../schema';
-import {type SchemaData} from '../../schema/data';
 
 /**
  * @category Schemas - Custom Types

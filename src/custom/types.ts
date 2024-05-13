@@ -41,13 +41,16 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 
 	constructor(init: CustomTypesInit) {
 		this.registered = new Map<string, Schema<unknown, SchemaData<unknown>>>();
-		this.log = init.base.makeLog('schemaTypes');
+		this.log = init.base.makeLog('customTypes');
 
 		this.registerTypes(init.data);
 	}
 
 	public registerTypes(data?: CustomTypesData): void {
+		const log = this.log.makeLog('registerTypes');
+
 		if (!data) {
+			log.error(`No data in custom types init.`);
 			return;
 		}
 
@@ -56,7 +59,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		for (const key of keys) {
 			const result = this.register(key, data[key]);
 			if (!result) {
-				this.log.error(`Error in custom type registration for '${key}'.`);
+				log.error(`Custom type registration error for '${key}'.`);
 			}
 		}
 	}
@@ -141,7 +144,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 
 	public async verifyValue(type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
 		const fate = new Fate<DataT>();
-zzs
+
 		const verifier = this.getVerifier(type);
 		return fate;
 	}

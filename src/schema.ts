@@ -123,6 +123,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		for (const type of field.types) {
+			base.debug(`CHECKING TYPE: ${type}`);
 			if (!this.schemaSupportsType(type)) {
 				return fate.setErrorCode(
 					schemaError(`field_does_not_support_type:${type}`, `${this.schemaName}.${field.name}`)
@@ -139,7 +140,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		return fate.setErrorCode(
 			schemaError(
-				`field_does_not_support_type:${valueTypeLabel(value)}`,
+				`field_does_not_support_type:${valueTypeLabel(value)}____`,
 				`${this.schemaName}.${field.name}`
 			)
 		);
@@ -213,6 +214,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		base: Log
 	): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
+
 		if (this.isBuiltIn(type)) {
 			if (this.valueIsBuiltInType(type, value)) {
 				// TODO: Add validation here. Type match does not automatically prove valid content.
@@ -228,8 +230,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			}
 		}
 
+		base.debug(`CUSTOM TYPES: ${JSON.stringify(this.customTypes.registered.keys())}`);
 		base.debug(`@@@@@@@@@@@@@@@ TYPE: ${type} // TYPEOF VAL: ${valueTypeLabel(value)}`);
 		if (this.customTypes.hasSchema(type) && typeof value === 'object') {
+			base.debug(`VERIFYING  DATA WITH SCHEMA: ${type}`);
 			return this.customTypes.verifySchema(type, value as SchemaData<DataT>, base);
 		}
 

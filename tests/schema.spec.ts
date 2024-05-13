@@ -1,102 +1,19 @@
 import {Levels, Log} from '@toreda/log';
 import {schemaError} from '../src/schema/error';
-import {Schema} from '../src/schema';
 import {stringValue} from '@toreda/strong-types';
-import {type SchemaData} from '../src/schema/data';
-import {type Primitive} from '@toreda/types';
 import {SchemaField} from '../src';
 import {valueTypeLabel} from '../src/value/type/label';
+import {
+	SampleAData,
+	SampleBData,
+	SampleData,
+	SampleSchema,
+	SampleSchemaSubA,
+	SampleSchemaSubB
+} from './_data/schema';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
-
-interface SampleData extends SchemaData<Primitive> {
-	str1: string;
-	int1: number;
-	bool1: boolean;
-}
-
-interface SampleBData extends SchemaData<Primitive> {
-	str2b: string;
-	int2b: number;
-}
-
-interface SampleAData extends SchemaData<Primitive> {
-	str1a: string;
-	int1a: number;
-	subValue: SampleBData;
-}
-
-class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> {
-	constructor(base: Log) {
-		super({
-			name: 'SchemaB',
-			fields: [
-				{
-					name: 'str2b',
-					types: ['string']
-				},
-				{
-					name: 'int2b',
-					types: ['number']
-				}
-			],
-			options: {},
-			base: base
-		});
-	}
-}
-
-class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData> {
-	constructor(schemaB: SampleSchemaSubB, base: Log) {
-		super({
-			name: 'SampleSchemaSubA',
-			fields: [
-				{
-					name: 'str1a',
-					types: ['string']
-				},
-				{
-					name: 'int1a',
-					types: ['number']
-				},
-				{
-					name: 'subValue',
-					types: ['ct2', 'null']
-				}
-			],
-			options: {},
-			customTypes: {
-				ct2: schemaB
-			},
-			base: base
-		});
-	}
-}
-
-class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
-	constructor(base: Log) {
-		super({
-			name: 'SampleSchema',
-			fields: [
-				{
-					name: 'str1',
-					types: ['string']
-				},
-				{
-					name: 'int1',
-					types: ['number']
-				},
-				{
-					name: 'bool1',
-					types: ['boolean', 'null']
-				}
-			],
-			options: {},
-			base: base
-		});
-	}
-}
 
 describe('schemaVerify', () => {
 	let sampleData: SampleData;
@@ -1219,7 +1136,7 @@ describe('schemaVerify', () => {
 				expect(result.ok()).toBe(true);
 			});
 
-			it(`should fail when value in sub-schema field is not supported`, async () => {
+			it(`should fail when sub-schema field value doesn't match field type`, async () => {
 				aData.subValue.int2b = 'aaaa' as any;
 				const int2b = schemaSubB.fields.get('int2b');
 				int2b!.types.length = 0;
@@ -1228,7 +1145,7 @@ describe('schemaVerify', () => {
 
 				base.debug(`aData: ${JSON.stringify(aData)}`);
 				expect(result.errorCode()).toBe(
-					schemaError('field_does_not_support_type:aa', `SampleSchemaSubA.subValue`)
+					schemaError('field_does_not_support_type:string', `SampleSchemaSubA.subValue`)
 				);
 				expect(result.ok()).toBe(false);
 			});

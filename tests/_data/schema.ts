@@ -23,7 +23,7 @@ export interface SampleAData extends SchemaData<Primitive> {
 export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> {
 	constructor(base: Log) {
 		super({
-			name: 'SchemaB',
+			name: 'SubSchemaB',
 			fields: [
 				{
 					name: 'str2b',
@@ -35,7 +35,8 @@ export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> 
 				}
 			],
 			options: {},
-			base: base
+			base: base,
+			parentPath: ['SubSchemaA']
 		});
 	}
 }
@@ -43,7 +44,7 @@ export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> 
 export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData> {
 	constructor(schemaB: SampleSchemaSubB, base: Log) {
 		super({
-			name: 'SampleSchemaSubA',
+			name: 'SubSchemaA',
 			fields: [
 				{
 					name: 'str1a',
@@ -58,7 +59,6 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 					types: ['ct2']
 				}
 			],
-			options: {},
 			customTypes: {
 				ct2: schemaB
 			},

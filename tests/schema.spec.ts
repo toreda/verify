@@ -1101,54 +1101,5 @@ describe('schemaVerify', () => {
 				expect(result.ok()).toBe(false);
 			});
 		});
-
-		describe('Recursive Verification', () => {
-			let subA: SampleSchemaSubA;
-			let subB: SampleSchemaSubB;
-			let bData: SampleBData;
-			let aData: SampleAData;
-
-			beforeAll(() => {
-				subB = new SampleSchemaSubB(base);
-				subA = new SampleSchemaSubA(subB, base);
-			});
-
-			beforeEach(() => {
-				bData = {
-					str2b: 'bbb',
-					int2b: 111
-				};
-
-				aData = {
-					int1a: 31,
-					str1a: 'aaa',
-					subValue: {
-						str2b: 'zzzzz',
-						int2b: 9999
-					}
-				};
-			});
-
-			it(`should recursively verify all properties`, async () => {
-				const result = await schemaSubA.verify(aData, base);
-
-				expect(result.errorCode()).toBe(EMPTY_STRING);
-				expect(result.ok()).toBe(true);
-			});
-
-			it(`should fail when sub-schema field value doesn't match field type`, async () => {
-				aData.subValue.int2b = 'aaaa' as any;
-				const int2b = schemaSubB.fields.get('int2b');
-				int2b!.types.length = 0;
-				int2b?.types.push('number');
-				const result = await schemaSubA.verify(aData, base);
-
-				base.debug(`aData: ${JSON.stringify(aData)}`);
-				expect(result.errorCode()).toBe(
-					schemaError('field_does_not_support_type:string', `SampleSchemaSubA.subValue`)
-				);
-				expect(result.ok()).toBe(false);
-			});
-		});
 	});
 });

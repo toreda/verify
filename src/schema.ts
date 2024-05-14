@@ -51,6 +51,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly outputTransform: SchemaOutputTransformer<DataT, VerifiedT | null>;
 	public readonly customTypes: CustomTypes<DataT, InputT, VerifiedT>;
 	public readonly base: Log;
+	public readonly parsePath: string[];
 
 	constructor(init: SchemaInit<DataT | null, InputT, VerifiedT>) {
 		this.schemaName = init.name;
@@ -62,7 +63,17 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			data: init.customTypes,
 			base: this.base
 		});
+
+		this.parsePath = Array.isArray(init.parentPath) ? init.parentPath : [];
+		this.parsePath.push(this.schemaName);
+
 		this.outputTransform = init.outputTransform ? init.outputTransform : simpleOutputTransform;
+	}
+
+	public getParsePath(callerName: string): string {
+		const root = this.parsePath.join('.');
+
+		return `${root}.${callerName}`;
 	}
 
 	/**
@@ -91,12 +102,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
 		const fate = new Fate<DataT | SchemaData<unknown> | null>();
 
+		const parsePath = this.getParsePath(name);
 		if (!field) {
-			return fate.setErrorCode(schemaError(`missing_field`, `${this.schemaName}.${name}`));
+			return fate.setErrorCode(schemaError(`missing_field`, parsePath));
 		}
 
 		if (value === undefined) {
-			return fate.setErrorCode(schemaError('missing_field_value', `${this.schemaName}.${name}`));
+			return fate.setErrorCode(schemaError('missing_field_value', parsePath));
 		}
 
 		const verified = await this.fieldSupportsValue(field, value, base);
@@ -118,31 +130,29 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		if (value === null && !field.types.includes('null')) {
 			return fate.setErrorCode(
-				schemaError('field_does_not_support_type:null', `${this.schemaName}.${field.name}`)
+				schemaError('field_does_not_support_type:null', this.getParsePath(field.name))
 			);
 		}
 
 		for (const type of field.types) {
-			base.debug(`CHECKING TYPE: ${type}`);
 			if (!this.schemaSupportsType(type)) {
 				return fate.setErrorCode(
-					schemaError(`field_does_not_support_type:${type}`, `${this.schemaName}.${field.name}`)
+					schemaError(`field_does_not_support_type:${type}`, this.getParsePath(field.name))
 				);
 			}
 
-			const result = await this.verifyValue(type, value, base);
+			const result = await this.verifyValue(field.name, type, value, base);
 
-			if (result.ok() === true) {
-				fate.data = result.data;
-				return fate.setSuccess(true);
+			if (!result.ok()) {
+				return fate.setErrorCode(result.errorCode());
 			}
+
+			fate.data = result.data;
+			return fate.setSuccess(true);
 		}
 
 		return fate.setErrorCode(
-			schemaError(
-				`field_does_not_support_type:${valueTypeLabel(value)}____`,
-				`${this.schemaName}.${field.name}`
-			)
+			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, this.getParsePath(field.name))
 		);
 	}
 
@@ -209,6 +219,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * @param value
 	 */
 	public async verifyValue(
+		fieldId: string,
 		type: SchemaFieldType,
 		value: unknown | SchemaData<DataT>,
 		base: Log
@@ -224,33 +235,30 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 				return fate.setErrorCode(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${this.schemaName}.verifyValue`
+						this.getParsePath(fieldId)
 					)
 				);
 			}
 		}
 
-		base.debug(`CUSTOM TYPES: ${JSON.stringify(this.customTypes.registered.keys())}`);
-		base.debug(`@@@@@@@@@@@@@@@ TYPE: ${type} // TYPEOF VAL: ${valueTypeLabel(value)}`);
 		if (this.customTypes.hasSchema(type) && typeof value === 'object') {
-			base.debug(`VERIFYING  DATA WITH SCHEMA: ${type}`);
-			return this.customTypes.verifySchema(type, value as SchemaData<DataT>, base);
+			return this.customTypes.verifySchema(fieldId, type, value as SchemaData<DataT>, base);
 		}
 
 		//const custom = await this.customTypes.verify(type, value, this.base);
 		if (this.customTypes.hasVerifier(type)) {
-			return this.customTypes.verifyValue(type, value, base);
+			return this.customTypes.verifyValue(fieldId, type, value, base);
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${type}`, `${this.schemaName}.verifyValue`)
+			schemaError(`field_does_not_support_type:${type}`, this.getParsePath('verifyValue'))
 		);
 	}
 
 	public async verify(data: SchemaData<DataT>, base: Log): Promise<Fate<VerifiedT>> {
 		const fate = new Fate<VerifiedT>();
 
-		const fnPath = `${this.schemaName}.verify`;
+		const fnPath = this.getParsePath('verify');
 
 		if (!base) {
 			console.error(`Missing argument: base`);

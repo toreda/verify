@@ -142,7 +142,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return schema;
 	}
 
-	public async verifyValue(type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
+	public async verifyValue(fieldId: string, type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
 		const fate = new Fate<DataT>();
 
 		const verifier = this.getVerifier(type);
@@ -150,6 +150,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	}
 
 	public async verifySchema(
+		fieldId: string,
 		type: string,
 		value: SchemaData<DataT>,
 		base: Log

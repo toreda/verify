@@ -294,7 +294,7 @@ describe('schemaVerify', () => {
 			});
 
 			expect(result.errorCode()).toBe(
-				schemaError('missing_schema_data', `${schema.schemaName}`, 'verify', 'init')
+				schemaError('missing_schema_data', `${schema.schemaName}`, 'verify', 'init.data')
 			);
 			expect(result.ok()).toBe(false);
 		});
@@ -355,11 +355,15 @@ describe('schemaVerify', () => {
 	});
 
 	describe('verifyValue', () => {
+		beforeEach(() => {
+			schemaPath.path.push(schema.schemaName);
+		});
 		describe('boolean', () => {
 			it(`should succeed and return value when type is 'boolean' and value is true`, async () => {
+				const fieldId = '11-9841709';
 				const value = true;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
 					path: schemaPath,
@@ -372,9 +376,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should succeed and return value when type is 'boolean' and value is false`, async () => {
+				const fieldId = 'r1-888a144';
 				const value = false;
 				const result = await schema.verifyValue({
-					fieldId: 'value',
+					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
 					path: schemaPath,
@@ -535,9 +540,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'string' and value is undefined`, async () => {
+				const fieldId = '19-98711';
 				const value = undefined;
 				const result = await schema.verifyValue({
-					fieldId: 'id',
+					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
 					path: schemaPath,
@@ -547,7 +553,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -716,9 +722,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is undefined`, async () => {
+				const fieldId = '9x-41648111';
 				const value = undefined;
 				const result = await schema.verifyValue({
-					fieldId: 'id',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
 					path: schemaPath,
@@ -728,16 +735,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:undefined`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'bigint' and value is null`, async () => {
+				const fieldId = 'x1-999183474';
 				const value = null;
 				const result = await schema.verifyValue({
-					fieldId: 'id',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
 					path: schemaPath,
@@ -745,15 +753,16 @@ describe('schemaVerify', () => {
 				});
 
 				expect(result.errorCode()).toBe(
-					schemaError(`field_does_not_support_value_type:null`, `${schema.schemaName}:verifyValue`)
+					schemaError(`field_does_not_support_value_type:null`, `${schema.schemaName}.${fieldId}`)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'bigint' and value is 0`, async () => {
+				const fieldId = 'a3-33212710';
 				const value = 0;
 				const result = await schema.verifyValue({
-					fieldId: 'id',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
 					path: schemaPath,
@@ -763,16 +772,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'bigint' and value is 1`, async () => {
+				const fieldId = `j19-88818746456`;
 				const value = 1;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					path: schemaPath,
 					value: value,
@@ -782,16 +792,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'bigint' and value is an empty array`, async () => {
+				const fieldId = '44-887719890';
 				const value: string[] = [];
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
 					path: schemaPath,
@@ -801,16 +812,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'bigint' and value is an empty object`, async () => {
+				const fieldId = '881-999191745';
 				const value = {};
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
 					path: schemaPath,
@@ -820,7 +832,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -829,9 +841,10 @@ describe('schemaVerify', () => {
 
 		describe('undefined', () => {
 			it(`should succeed when type is 'undefined' when value is undefined`, async () => {
+				const fieldId = 'rr81-98871749';
 				const value = undefined;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
 					path: schemaPath,
@@ -843,9 +856,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'undefined' with null value`, async () => {
+				const fieldId = '78166-44910';
 				const value = null;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
 					path: schemaPath,
@@ -855,7 +869,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -875,8 +889,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}.${fieldId}`,
-						'verifyValue'
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -962,9 +975,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'undefined' with value is false`, async () => {
+				const fieldId = '99-9991194';
 				const value = false;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
 					path: schemaPath,
@@ -974,7 +988,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -983,9 +997,10 @@ describe('schemaVerify', () => {
 
 		describe('uint', () => {
 			it(`should succeed and return value when type is 'uint' and value is 0`, async () => {
+				const fieldId = 'aa-8i410717';
 				const value = 0;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
 					path: schemaPath,
@@ -998,9 +1013,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should succeed and return value when type is 'uint' and value is 1`, async () => {
+				const fieldId = 'bb-90917732';
 				const value = 1;
 				const result = await schema.verifyValue({
-					fieldId: 'aaa',
+					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
 					base: base,
@@ -1013,9 +1029,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should succeed and return value when type is 'uint' and value is 100`, async () => {
+				const fieldId = 'cx-08714008';
 				const value = 100;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'uint',
 					path: schemaPath,
 					value: value,
@@ -1028,9 +1045,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should succeed and return value when type is 'uint' and value is MAX_SAFE_INTEGER`, async () => {
+				const fieldId = '88-89178147';
 				const value = Number.MAX_SAFE_INTEGER;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'uint',
 					path: schemaPath,
 					value: value,
@@ -1043,9 +1061,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'uint' and value is -1`, async () => {
+				const fieldId = 'aa-33208714';
 				const value = -1;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'uint',
 					path: schemaPath,
 					value: value,
@@ -1055,17 +1074,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'uint' and value is 1.1`, async () => {
-				const id = 'aa41';
+				const fieldId = 'cz-992223178';
 				const value = 1.1;
 				const result = await schema.verifyValue({
-					fieldId: id,
+					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
 					path: schemaPath,
@@ -1075,7 +1094,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}. ${id}`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -1084,9 +1103,10 @@ describe('schemaVerify', () => {
 
 		describe('null', () => {
 			it(`should succeed when value is null and null is allowed`, async () => {
+				const fieldId = 'zz-4314977';
 				const value = null;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'null',
 					value: value,
 					base: base,
@@ -1099,10 +1119,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'undefined' with value 'null'`, async () => {
-				const id = 'undefinedField';
+				const fieldId = 'z4-367910';
 				const value = 'null';
 				const result = await schema.verifyValue({
-					fieldId: id,
+					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: 'null',
 					path: schemaPath,
@@ -1112,7 +1132,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}.${id}`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -1179,9 +1199,10 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'null' with value is true`, async () => {
+				const fieldId = '77-8777733110';
 				const value = true;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'null',
 					path: schemaPath,
 					value: value,
@@ -1191,16 +1212,17 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'null' with value is false`, async () => {
+				const fieldId = '7980-99108741';
 				const value = false;
 				const result = await schema.verifyValue({
-					fieldId: 'aa',
+					fieldId: fieldId,
 					fieldType: 'null',
 					value: value,
 					base: base,
@@ -1210,7 +1232,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
@@ -1354,10 +1376,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail when type is 'number' with NaN value`, async () => {
+				const fieldId = `j4-391999`;
 				const value = Number.NaN;
 				const result = await schema.verifyValue({
 					fieldType: 'number',
-					fieldId: 'aa',
+					fieldId: fieldId,
 					value: value,
 					base: base,
 					path: schemaPath
@@ -1366,17 +1389,18 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'number' with string value '0'`, async () => {
+				const fieldId = 'v13-8314400';
 				const value = '0';
 				const result = await schema.verifyValue({
 					fieldType: 'number',
-					fieldId: 'aa',
+					fieldId: fieldId,
 					value: value,
 					base: base,
 					path: schemaPath
@@ -1385,17 +1409,18 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'number' with string value '0.00000000'`, async () => {
+				const fieldId = 'v88-8226600';
 				const value = '0.00000000';
 				const result = await schema.verifyValue({
 					fieldType: 'number',
-					fieldId: 'aa',
+					fieldId: fieldId,
 					value: value,
 					base: base,
 					path: schemaPath
@@ -1404,17 +1429,18 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'number' with string value '1'`, async () => {
+				const fieldId = 'x8-89112231';
 				const value = '1';
 				const result = await schema.verifyValue({
 					fieldType: 'number',
-					fieldId: 'aa',
+					fieldId: fieldId,
 					value: value,
 					base: base,
 					path: schemaPath
@@ -1423,17 +1449,18 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);
 			});
 
 			it(`should fail when type is 'number' with positive infinite value`, async () => {
+				const fieldId = '11-3838188';
 				const value = Number.POSITIVE_INFINITY;
 				const result = await schema.verifyValue({
 					fieldType: 'number',
-					fieldId: 'aa',
+					fieldId: fieldId,
 					value: value,
 					base: base,
 					path: schemaPath
@@ -1442,7 +1469,7 @@ describe('schemaVerify', () => {
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
-						`${schema.schemaName}:verifyValue`
+						`${schema.schemaName}.${fieldId}`
 					)
 				);
 				expect(result.ok()).toBe(false);

@@ -220,6 +220,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 */
 	public async verifyValue(init: SchemaVerifyValue): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
+		const currPath = init.path.mkChild(init.fieldId);
 
 		if (this.isBuiltIn(init.fieldType)) {
 			if (this.valueIsBuiltInType(init.fieldType, init.value)) {
@@ -230,7 +231,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 				return fate.setErrorCode(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(init.value)}`,
-						init.path.getValue()
+						currPath.getValue()
 					)
 				);
 			}
@@ -241,7 +242,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 				init.fieldId,
 				init.fieldType,
 				init.value as SchemaData<DataT>,
-				init.path,
+				currPath,
 				init.base
 			);
 		}
@@ -252,7 +253,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${init.fieldType}`, init.path.getValue())
+			schemaError(`field_does_not_support_type:${init.fieldType}`, currPath.getValue())
 		);
 	}
 

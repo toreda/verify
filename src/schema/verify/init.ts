@@ -1,7 +1,3 @@
-import {Log} from '@toreda/log';
-import {SchemaPath} from '../path';
-import {type SchemaData} from '../data';
-
 /**
  *	MIT License
  *
@@ -25,6 +21,14 @@ import {type SchemaData} from '../data';
  *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * 	SOFTWARE.
  *
+ */
+
+import {Log} from '@toreda/log';
+import {SchemaPath} from '../path';
+import {type SchemaData} from '../data';
+
+/**
+ * @category Schemas
  */
 export interface SchemaVerifyInit<DataT = unknown> {
 	id?: string;

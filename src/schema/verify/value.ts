@@ -1,8 +1,3 @@
-import {Log} from '@toreda/log';
-import {SchemaFieldType} from '../field/type';
-import {SchemaPath} from '../path';
-import {SchemaData} from '../data';
-
 /**
  *	MIT License
  *
@@ -27,10 +22,19 @@ import {SchemaData} from '../data';
  * 	SOFTWARE.
  *
  */
+
+import {Log} from '@toreda/log';
+import {type SchemaFieldType} from '../field/type';
+import {SchemaPath} from '../path';
+import {type SchemaData} from '../data';
+
+/**
+ * @category Schemas
+ */
 export interface SchemaVerifyValue<DataT = unknown> {
 	fieldId: string;
 	fieldType: SchemaFieldType;
-	value: unknown | SchemaData<DataT>;
 	path: SchemaPath;
+	value: unknown | SchemaData<DataT>;
 	base: Log;
 }

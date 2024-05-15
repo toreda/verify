@@ -33,7 +33,7 @@ import type {SchemaInit} from './schema/init';
 import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
 import {simpleOutputTransform} from './simple/output/transform';
-import {isDbl, isFloat, isUrl} from '@toreda/strong-types';
+import {isDbl, isFloat, isUrl, stringValue} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
@@ -41,8 +41,8 @@ import {CustomTypes} from './custom/types';
 import {schemaBuiltIns} from './schema/built/ins';
 import {valueTypeLabel} from './value/type/label';
 import {SchemaPath} from './schema/path';
-import {SchemaVerifyInit} from './schema/verify/init';
-import {SchemaVerifyValue} from './schema/verify/value';
+import {type SchemaVerifyInit} from './schema/verify/init';
+import {type SchemaVerifyValue} from './schema/verify/value';
 
 /**
  * @category Schemas
@@ -92,7 +92,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	}
 
 	public async verifyField(
-		name: string,
 		field: SchemaField<InputT>,
 		value: unknown,
 		path: SchemaPath,
@@ -259,23 +258,24 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async verify(init: SchemaVerifyInit): Promise<Fate<VerifiedT>> {
 		const fate = new Fate<VerifiedT>();
-
-		const currPath = init.path.mkChild('aaa');
+		const currPath = init.path.mkChild(stringValue(init.id, this.schemaName));
 
 		if (!init.base) {
 			console.error(`Missing argument: base`);
-			return fate.setErrorCode(schemaError('missing_argument', currPath.getValue(), 'base'));
+			return fate.setErrorCode(schemaError('missing_argument', currPath.getValue(), 'verify', 'base'));
 		}
 
 		const log = init.base.makeLog(`schema:${currPath.getValue()}`);
 
 		if (init.data === undefined || init.data === null) {
 			log.error(`Missing argument: data`);
-			return fate.setErrorCode(schemaError('missing_schema_data', currPath.getValue()));
+			return fate.setErrorCode(
+				schemaError('missing_schema_data', currPath.getValue(), 'verify', 'init.data')
+			);
 		}
 
 		if (Object.keys(init.data)?.length === 0) {
-			return fate.setErrorCode(schemaError('empty_schema_object', currPath.getValue()));
+			return fate.setErrorCode(schemaError('empty_schema_object', currPath.getValue(), 'verify'));
 		}
 
 		if (!this.outputTransform) {
@@ -297,7 +297,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const verified = await this.verifyField(name, field, init.data[name], currPath, init.base);
+			const verified = await this.verifyField(field, init.data[name], currPath, init.base);
 
 			if (!verified.ok()) {
 				return fate.setErrorCode(verified.errorCode());
@@ -315,7 +315,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 						fate.data = result.data;
 						fate.setSuccess(true);
 					} else {
-						fate.setErrorCode(schemaError(`null_transform_output`, `${this.schemaName}.verify`));
+						fate.setErrorCode(schemaError(`null_transform_output`, `${this.schemaName}:verify`));
 					}
 				} else {
 					fate.setErrorCode(result.errorCode());

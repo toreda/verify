@@ -98,6 +98,8 @@ export {schemaFieldTypes} from './schema/field/types';
 export {SchemaInit} from './schema/init';
 export {SchemaOptions} from './schema/options';
 export {SchemaOutputTransformer} from './schema/output/transformer';
+export {SchemaPath} from './schema/path';
+export {SchemaVerifyInit} from './schema/verify/init';
 export {simpleOutputTransform} from './simple/output/transform';
 export {Statement} from './statement';
 export {stringIdVerify} from './string/id/verify';

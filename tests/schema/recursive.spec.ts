@@ -1,13 +1,7 @@
 import {Levels, Log} from '@toreda/log';
-import {
-	SampleAData,
-	SampleBData,
-	SampleData,
-	SampleSchema,
-	SampleSchemaSubA,
-	SampleSchemaSubB
-} from '../_data/schema';
-import {schemaError} from '../../src';
+import {SampleAData, SampleBData, SampleSchema, SampleSchemaSubA, SampleSchemaSubB} from '../_data/schema';
+import {schemaError} from '../../src/schema/error';
+import {SchemaPath} from '../../src/schema/path';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
@@ -21,6 +15,7 @@ describe('Schema - Recursive Parsing', () => {
 		let bData: SampleBData;
 		let aData: SampleAData;
 		let schema: SampleSchema;
+		let schemaPath: SchemaPath;
 
 		beforeAll(() => {
 			base = new Log({
@@ -31,6 +26,7 @@ describe('Schema - Recursive Parsing', () => {
 			schemaSubB = new SampleSchemaSubB(base);
 			schemaSubA = new SampleSchemaSubA(schemaSubB, base);
 			schema = new SampleSchema(base);
+			schemaPath = new SchemaPath();
 		});
 
 		beforeEach(() => {
@@ -50,7 +46,12 @@ describe('Schema - Recursive Parsing', () => {
 		});
 
 		it(`should recursively verify all properties`, async () => {
-			const result = await schemaSubA.verify('aaa', aData, base);
+			const result = await schemaSubA.verify({
+				id: 'aaa',
+				data: aData,
+				base: base,
+				path: schemaPath
+			});
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
@@ -61,7 +62,11 @@ describe('Schema - Recursive Parsing', () => {
 			const customA = new SampleSchemaSubA(customB, base);
 			aData.subValue.int2b = 'aaaa' as any;
 
-			const result = await customA.verify(aData, base);
+			const result = await customA.verify({
+				data: aData,
+				base: base,
+				path: schemaPath
+			});
 
 			//base.debug(`aData: ${JSON.stringify(aData)}`);
 			expect(result.errorCode()).toBe(

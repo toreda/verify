@@ -3,14 +3,8 @@ import {schemaError} from '../src/schema/error';
 import {stringValue} from '@toreda/strong-types';
 import {SchemaField} from '../src';
 import {valueTypeLabel} from '../src/value/type/label';
-import {
-	SampleAData,
-	SampleBData,
-	SampleData,
-	SampleSchema,
-	SampleSchemaSubA,
-	SampleSchemaSubB
-} from './_data/schema';
+import {SampleData, SampleSchema, SampleSchemaSubA, SampleSchemaSubB} from './_data/schema';
+import {SchemaPath} from '../src/schema/path';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
@@ -21,6 +15,7 @@ describe('schemaVerify', () => {
 	let schemaSubA: SampleSchemaSubA;
 	let schemaSubB: SampleSchemaSubB;
 	let base: Log;
+	let schemaPath: SchemaPath;
 
 	beforeAll(() => {
 		base = new Log({
@@ -28,6 +23,7 @@ describe('schemaVerify', () => {
 			groupsStartEnabled: true,
 			consoleEnabled: true
 		});
+		schemaPath = new SchemaPath();
 		schemaSubB = new SampleSchemaSubB(base);
 		schemaSubA = new SampleSchemaSubA(schemaSubB, base);
 		schema = new SampleSchema(base);
@@ -66,11 +62,17 @@ describe('schemaVerify', () => {
 				defaultValue: sampleData.bool1
 			})
 		);
+
+		schemaPath.path.length = 0;
 	});
 
 	describe('Parsing', () => {
 		it(`should fail with code when provided data is an empty object`, async () => {
-			const result = await schema.verify(EMPTY_OBJECT as any, base);
+			const result = await schema.verify({
+				data: EMPTY_OBJECT as any,
+				path: schemaPath,
+				base: base
+			});
 
 			expect(result.ok()).toBe(false);
 		});
@@ -78,7 +80,11 @@ describe('schemaVerify', () => {
 		it(`should fail with code when a data field is undefined`, async () => {
 			sampleData.int1 = undefined as any;
 
-			const result = await schema.verify(sampleData, base);
+			const result = await schema.verify({
+				data: sampleData,
+				path: schemaPath,
+				base: base
+			});
 
 			expect(result.ok()).toBe(false);
 		});
@@ -88,7 +94,11 @@ describe('schemaVerify', () => {
 			sampleData.int1 = 70714;
 			sampleData.str1 = '149714';
 
-			const result = await schema.verify(sampleData, base);
+			const result = await schema.verify({
+				data: sampleData,
+				base: base,
+				path: schemaPath
+			});
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
@@ -107,7 +117,11 @@ describe('schemaVerify', () => {
 					field.types.length = 0;
 					const fieldType = 'aaaaa' as any;
 					field.types.push(fieldType);
-					const result = await customSchema.verify(sampleData, base);
+					const result = await customSchema.verify({
+						data: sampleData,
+						base: base,
+						path: schemaPath
+					});
 
 					expect(result.errorCode()).toBe(
 						schemaError(
@@ -124,7 +138,11 @@ describe('schemaVerify', () => {
 					const expectedOutput = '7r9197-1919872';
 
 					sampleData.str1 = expectedOutput;
-					const result = await schema.verify(sampleData, base);
+					const result = await schema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 
 					expect(result.data?.str1).toBe(expectedOutput);
 					expect(result.ok()).toBe(true);
@@ -134,7 +152,11 @@ describe('schemaVerify', () => {
 					const expectedOutput = '';
 
 					sampleData.str1 = expectedOutput;
-					const result = await schema.verify(sampleData, base);
+					const result = await schema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 
 					expect(result.ok()).toBe(true);
 					expect(result.data?.str1).toBe(expectedOutput);
@@ -151,7 +173,11 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					const result = await customSchema.verify(sampleData, base);
+					const result = await customSchema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 
 					expect(result.ok()).toBe(true);
 				});
@@ -164,7 +190,11 @@ describe('schemaVerify', () => {
 					sampleData.bool1 = expectedOutput;
 					const field = schema.fields.get('bool1');
 					field?.types.push('null');
-					const result = await schema.verify(sampleData, base);
+					const result = await schema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 
 					expect(result.data).not.toBeNull();
 					expect(result.data?.bool1).toBe(expectedOutput);
@@ -175,7 +205,11 @@ describe('schemaVerify', () => {
 					const expectedOutput = false;
 
 					sampleData.bool1 = expectedOutput;
-					const result = await schema.verify(sampleData, base);
+					const result = await schema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 					expect(result.data).not.toBeNull();
 					expect(result.data?.bool1).toBe(expectedOutput);
 					expect(result.ok()).toBe(true);
@@ -189,7 +223,11 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 					sampleData.bool1 = 1 as any;
-					const result = await customSchema.verify(sampleData, base);
+					const result = await customSchema.verify({
+						data: sampleData,
+						path: schemaPath,
+						base: base
+					});
 
 					expect(result.ok()).toBe(false);
 				});
@@ -207,7 +245,12 @@ describe('schemaVerify', () => {
 					field.types.length = 0;
 					field.types.push('boolean');
 
-					const result = await customSchema.verify(sampleData, base);
+					const result = await customSchema.verify({
+						id: customSchema.schemaName,
+						data: sampleData,
+						base: base,
+						path: schemaPath
+					});
 
 					expect(result.errorCode()).toBe(
 						schemaError('field_does_not_support_type:null', `${schema.schemaName}.${field.name}`)
@@ -226,7 +269,12 @@ describe('schemaVerify', () => {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
 
-					const result = await customSchema.verify(sampleData, base);
+					const result = await customSchema.verify({
+						id: customSchema.schemaName,
+						path: schemaPath,
+						data: sampleData,
+						base: base
+					});
 
 					expect(result.errorCode()).toBe(EMPTY_STRING);
 					expect(result.ok()).toBe(true);
@@ -238,7 +286,12 @@ describe('schemaVerify', () => {
 	describe('verify', () => {
 		it(`should fail when data arg is undefined`, async () => {
 			const customSchema = new SampleSchema(base);
-			const result = await customSchema.verify(undefined as any, base);
+			const result = await customSchema.verify({
+				id: customSchema.schemaName,
+				data: undefined as any,
+				path: schemaPath,
+				base: base
+			});
 
 			expect(result.errorCode()).toBe(
 				schemaError('missing_schema_data', `${schema.schemaName}.verify`)
@@ -257,7 +310,13 @@ describe('schemaVerify', () => {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
 
-			const result = await customSchema.verifyField(field.name, undefined as any, null, base);
+			const result = await customSchema.verifyField(
+				field.name,
+				undefined as any,
+				null,
+				schemaPath,
+				base
+			);
 
 			expect(result.errorCode()).toBe(
 				schemaError('missing_field', `${customSchema.schemaName}.${field.name}`)
@@ -276,7 +335,7 @@ describe('schemaVerify', () => {
 
 			field.types.length = 0;
 			field.types.push('boolean');
-			const result = await customSchema.verifyField(field.name, field, null, base);
+			const result = await customSchema.verifyField(field.name, field, null, schemaPath, base);
 
 			expect(result.errorCode()).toBe(
 				schemaError('field_does_not_support_type:null', `${customSchema.schemaName}.${field.name}`)
@@ -295,7 +354,7 @@ describe('schemaVerify', () => {
 
 			field.types?.push('null');
 			const fieldName = stringValue(field?.name, '__field_name__');
-			const result = await customSchema.verifyField(fieldName, field!, null, base);
+			const result = await customSchema.verifyField(fieldName, field!, null, schemaPath, base);
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
@@ -306,7 +365,13 @@ describe('schemaVerify', () => {
 		describe('boolean', () => {
 			it(`should succeed and return value when type is 'boolean' and value is true`, async () => {
 				const value = true;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -315,7 +380,13 @@ describe('schemaVerify', () => {
 
 			it(`should succeed and return value when type is 'boolean' and value is false`, async () => {
 				const value = false;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'value',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -324,7 +395,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'boolean' and value is 0`, async () => {
 				const value = 0;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'value',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -337,7 +414,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'boolean' and value is 1`, async () => {
 				const value = 1;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -350,7 +433,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'boolean' and value is an empty object`, async () => {
 				const value = {};
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -363,7 +452,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'boolean' and value is null`, async () => {
 				const value = null;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -376,7 +471,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'boolean' and value is undefined`, async () => {
 				const value = undefined;
-				const result = await schema.verifyValue('boolean', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'boolean',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -390,7 +491,13 @@ describe('schemaVerify', () => {
 
 		describe('string', () => {
 			it(`should return value when type is 'string' and value is empty string`, async () => {
-				const result = await schema.verifyValue('string', EMPTY_STRING, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: EMPTY_STRING,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(EMPTY_STRING);
@@ -399,7 +506,13 @@ describe('schemaVerify', () => {
 
 			it(`should validate successfully and return value when type is 'string' and value is a single char`, async () => {
 				const value = 'a';
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.data).toBe(value);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -408,7 +521,13 @@ describe('schemaVerify', () => {
 
 			it(`should return true when type is 'string' and value is a short string`, async () => {
 				const value = '19714-9194714';
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -417,7 +536,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is undefined`, async () => {
 				const value = undefined;
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -430,7 +555,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is null`, async () => {
 				const value = null;
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -443,7 +574,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is 0`, async () => {
 				const value = 0;
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -456,7 +593,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is 1`, async () => {
 				const value = 1;
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -469,7 +612,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is an empty array`, async () => {
 				const value = [] as unknown[];
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -482,7 +631,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'string' and value is an empty object`, async () => {
 				const value = {};
-				const result = await schema.verifyValue('string', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'string',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -497,7 +652,13 @@ describe('schemaVerify', () => {
 		describe('bigint', () => {
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 0`, async () => {
 				const value = BigInt('0');
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -506,7 +667,13 @@ describe('schemaVerify', () => {
 
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 1`, async () => {
 				const value = BigInt('1');
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.data).toBe(value);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -515,7 +682,13 @@ describe('schemaVerify', () => {
 
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a large number`, async () => {
 				const value = BigInt('9007199254740991');
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.data).toBe(value);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -524,7 +697,13 @@ describe('schemaVerify', () => {
 
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a huge octal`, async () => {
 				const value = BigInt('0o377777777777777777');
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toStrictEqual(value);
@@ -533,7 +712,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is undefined`, async () => {
 				const value = undefined;
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -546,7 +731,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is null`, async () => {
 				const value = null;
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(`field_does_not_support_value_type:null`, `${schema.schemaName}.verifyValue`)
@@ -556,7 +747,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is 0`, async () => {
 				const value = 0;
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -569,7 +766,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is 1`, async () => {
 				const value = 1;
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'bigint',
+					path: schemaPath,
+					value: value,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -582,7 +785,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is an empty array`, async () => {
 				const value: string[] = [];
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -595,7 +804,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'bigint' and value is an empty object`, async () => {
 				const value = {};
-				const result = await schema.verifyValue('bigint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'bigint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -610,7 +825,13 @@ describe('schemaVerify', () => {
 		describe('undefined', () => {
 			it(`should succeed when type is 'undefined' when value is undefined`, async () => {
 				const value = undefined;
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.ok()).toBe(true);
@@ -618,7 +839,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' with null value`, async () => {
 				const value = null;
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -631,7 +858,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' with value 'undefined'`, async () => {
 				const value = 'undefined';
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'id',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -644,7 +877,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' with value 'null'`, async () => {
 				const value = 'null';
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldType: 'undefined',
+					fieldId: 'aaa',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 				expect(result.errorCode()).toBe(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(value)}`,
@@ -656,7 +895,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' with value is 0`, async () => {
 				const value = 0;
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -669,7 +914,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' and value is EMPTY_STRING`, async () => {
 				const value = EMPTY_STRING;
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -695,7 +946,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'undefined' with value is false`, async () => {
 				const value = false;
-				const result = await schema.verifyValue('undefined', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'undefined',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -710,7 +967,13 @@ describe('schemaVerify', () => {
 		describe('uint', () => {
 			it(`should succeed and return value when type is 'uint' and value is 0`, async () => {
 				const value = 0;
-				const result = await schema.verifyValue('uint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'uint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -719,7 +982,13 @@ describe('schemaVerify', () => {
 
 			it(`should succeed and return value when type is 'uint' and value is 1`, async () => {
 				const value = 1;
-				const result = await schema.verifyValue('uint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'uint',
+					value: value,
+					base: base,
+					path: schemaPath
+				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
 				expect(result.data).toBe(value);
@@ -759,7 +1028,13 @@ describe('schemaVerify', () => {
 
 			it(`should fail when type is 'uint' and value is 1.1`, async () => {
 				const value = 1.1;
-				const result = await schema.verifyValue('uint', value, base);
+				const result = await schema.verifyValue({
+					fieldId: 'aaa',
+					fieldType: 'uint',
+					value: value,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.errorCode()).toBe(
 					schemaError(
@@ -1034,7 +1309,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail with code when data arg is null`, async () => {
-				const result = await schema.verify(null as any, base);
+				const result = await schema.verify({
+					data: null as any,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -1043,7 +1322,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
-				const result = await schema.verify(sampleData, undefined as any);
+				const result = await schema.verify({
+					data: sampleData,
+					path: schemaPath,
+					base: undefined as any
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -1061,7 +1344,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail with code when input is undefined`, async () => {
-				const result = await schema.verify(undefined as any, base);
+				const result = await schema.verify({
+					data: undefined as any,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -1070,7 +1357,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail with code when input is null`, async () => {
-				const result = await schema.verify(null as any, base);
+				const result = await schema.verify({
+					data: null as any,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -1079,7 +1370,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should fail with code when input is an empty object`, async () => {
-				const result = await schema.verify(EMPTY_OBJECT, base);
+				const result = await schema.verify({
+					data: EMPTY_OBJECT,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
@@ -1088,7 +1383,11 @@ describe('schemaVerify', () => {
 			});
 
 			it(`should return true when all properties match the schema`, async () => {
-				const result = await schema.verify(sampleData, base);
+				const result = await schema.verify({
+					data: sampleData,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(true);
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1096,7 +1395,11 @@ describe('schemaVerify', () => {
 
 			it(`should return false when a schema property is missing`, async () => {
 				sampleData.bool1 = undefined as any;
-				const result = await schema.verify(sampleData, base);
+				const result = await schema.verify({
+					data: sampleData,
+					path: schemaPath,
+					base: base
+				});
 
 				expect(result.ok()).toBe(false);
 			});

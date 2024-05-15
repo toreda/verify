@@ -50,7 +50,7 @@ describe('Schema - Recursive Parsing', () => {
 		});
 
 		it(`should recursively verify all properties`, async () => {
-			const result = await schemaSubA.verify(aData, base);
+			const result = await schemaSubA.verify('aaa', aData, base);
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);

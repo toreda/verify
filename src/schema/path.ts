@@ -46,12 +46,24 @@ export class SchemaPath {
 	public readonly idSeparator: string;
 
 	constructor(init?: SchemaPathInit) {
-		this.path = Array.isArray(init?.path) ? init.path : [];
+		this.path = this.mkPath(init?.path);
 		this.idSeparator = stringValue(init?.idSeparator, '.');
 	}
 
 	public getValue(): string {
 		return this.path.join(this.idSeparator);
+	}
+
+	private mkPath(parts?: string | string[]): string[] {
+		if (Array.isArray(parts)) {
+			return parts;
+		}
+
+		if (typeof parts === 'string') {
+			return [parts];
+		}
+
+		return [];
 	}
 
 	public mkChild(id: string): SchemaPath {

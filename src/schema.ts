@@ -99,11 +99,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	): Promise<Fate<DataT | SchemaData<unknown> | null>> {
 		const fate = new Fate<DataT | SchemaData<unknown> | null>();
 
-		const currPath = path.mkChild(field.name);
-		//const parsePath = this.getParsePath(propPath);
 		if (!field) {
-			return fate.setErrorCode(schemaError(`missing_field`, currPath.getValue()));
+			return fate.setErrorCode(schemaError(`missing_field`, path.getValue()));
 		}
+
+		const currPath = path.mkChild(field.name);
 
 		if (value === undefined) {
 			return fate.setErrorCode(schemaError('missing_field_value', currPath.getValue()));
@@ -126,8 +126,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		base: Log
 	): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
-		if (value === null && !field.types.includes('null')) {
-			return fate.setErrorCode(schemaError('field_does_not_support_type:null', path.getValue()));
+		if (value === null) {
+			if (field.types.includes('null')) {
+				return fate.setSuccess(true);
+			} else {
+				return fate.setErrorCode(schemaError('field_does_not_support_type:null', path.getValue()));
+			}
 		}
 
 		for (const type of field.types) {
@@ -172,7 +176,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return this.customTypes.has(type);
 	}
 	/**
-	 * Check if `type` is supported by the schema. Doesn't check if value actuallyz
+	 * Check if `type` is supported by the schema. Doesn't check if value actually
 	 * conforms to the specified type.
 	 * @param type
 	 * @param value
@@ -213,14 +217,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	}
 
 	/**
-	 * Check if value's content matches `type`. Some types are primitives verified by type checks.
-	 * Others require more in depth validation, like URLs or Schema Data.
+	 * Check if value type matches type for primitives, and whether the content matches
+	 * the expected range or format (if any).
 	 * @param type
 	 * @param value
 	 */
 	public async verifyValue(init: SchemaVerifyValue): Promise<Fate<DataT | SchemaData<unknown>>> {
 		const fate = new Fate<DataT | SchemaData<unknown>>();
-		const currPath = init.path.mkChild(init.fieldId);
 
 		if (this.isBuiltIn(init.fieldType)) {
 			if (this.valueIsBuiltInType(init.fieldType, init.value)) {
@@ -231,20 +234,21 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 				return fate.setErrorCode(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(init.value)}`,
-						currPath.getValue()
+						init.path.getValue()
 					)
 				);
 			}
 		}
 
 		if (this.customTypes.hasSchema(init.fieldType) && typeof init.value === 'object') {
-			return this.customTypes.verifySchema(
-				init.fieldId,
-				init.fieldType,
-				init.value as SchemaData<DataT>,
-				currPath,
-				init.base
-			);
+			return this.customTypes.verify({
+				id: init.fieldId,
+				type: init.fieldType,
+				data: init.value as SchemaData<DataT>,
+				path: init.path,
+				base: init.base,
+				childSchema: true
+			});
 		}
 
 		//const custom = await this.customTypes.verify(type, value, this.base);
@@ -253,13 +257,24 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${init.fieldType}`, currPath.getValue())
+			schemaError(`field_does_not_support_type:${init.fieldType}`, init.path.getValue())
 		);
 	}
 
+	/**
+	 * Verify provided data object's structure, content, and types against this schema.
+	 * @param init
+	 */
 	public async verify(init: SchemaVerifyInit): Promise<Fate<VerifiedT>> {
 		const fate = new Fate<VerifiedT>();
-		const currPath = init.path.mkChild(stringValue(init.id, this.schemaName));
+
+		const schemaName = stringValue(this.schemaName, '__missing_schemaName__');
+		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
+		// set their own path because they have no way to know their property name in parent schema.
+
+		const parentPath = init?.path ? init.path : new SchemaPath();
+		const currPath =
+			init?.childSchema === true ? parentPath : parentPath.mkChild(stringValue(init.id, schemaName));
 
 		if (!init.base) {
 			console.error(`Missing argument: base`);

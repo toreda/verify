@@ -64,13 +64,11 @@ describe('Schema - Recursive Parsing', () => {
 
 			const result = await customA.verify({
 				data: aData,
-				base: base,
-				path: schemaPath
+				base: base
 			});
 
-			//base.debug(`aData: ${JSON.stringify(aData)}`);
 			expect(result.errorCode()).toBe(
-				schemaError('field_does_not_support_value_type:string', `SubSchemaA.SubSchemaB.subValue`)
+				schemaError('field_does_not_support_value_type:string', `SubSchemaA.subValue.int2b`)
 			);
 			expect(result.ok()).toBe(false);
 		});

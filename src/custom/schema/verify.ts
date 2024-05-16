@@ -23,17 +23,11 @@
  *
  */
 
+import {type SchemaVerifyInit} from '../../schema/verify/init';
+
 /**
- * Possible error codes returned by schema functions.
- *
- * @category Schemas
+ * @category Schemas - Custom Types
  */
-export type SchemaErrorCode =
-	| 'empty_schema_object'
-	| 'exception'
-	| 'missing_argument'
-	| 'missing_schema_data'
-	| 'nonfunction_argument'
-	| 'null_transform_output'
-	| 'schema_field_mismatch'
-	| string;
+export interface CustomSchemaVerify extends SchemaVerifyInit {
+	type: string;
+}

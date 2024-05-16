@@ -31,7 +31,7 @@
 		"compilerOptions": {
 			"allowSyntheticDefaultImports": true,
 			"noLib": true,
-			"noEmit": true,
+			"noEmit": false,
 			"sourceMap": true
 		}
 	}

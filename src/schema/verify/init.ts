@@ -28,11 +28,19 @@ import {SchemaPath} from '../path';
 import {type SchemaData} from '../data';
 
 /**
+ * Arguments needed for schema verification.
+ *
  * @category Schemas
  */
 export interface SchemaVerifyInit<DataT = unknown> {
+	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */
 	id?: string;
+	/** Data object to verify against this schema. */
 	data: SchemaData<DataT>;
-	path: SchemaPath;
+	/** Current path of properties accessed to reach this point. */
+	path?: SchemaPath;
 	base: Log;
+	/** Whether schema being processed is a child property of another schema. */
+	childSchema?: boolean;
+	type?: string;
 }

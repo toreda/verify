@@ -1,4 +1,4 @@
 export interface SchemaPathInit {
-	path?: string[];
+	path?: string | string[];
 	idSeparator?: string;
 }

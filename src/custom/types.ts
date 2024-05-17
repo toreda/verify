@@ -24,32 +24,32 @@
  */
 
 import {Log} from '@toreda/log';
-import {Schema} from '../schema';
 import {type SchemaData} from '../schema/data';
 import {type CustomTypesInit} from './types/init';
 import {type CustomTypesData} from './types/data';
 import {type CustomTypeVerifier} from './type/verifier';
 import {Fate} from '@toreda/fate';
 import {schemaError} from '../schema/error';
-import {SchemaPath} from '../schema/path';
-import {SchemaVerifyInit} from '../schema/verify/init';
-import {CustomSchemaVerify} from './schema/verify';
+import {type CustomSchemaVerify} from './schema/verify';
+import {type Resettable} from '@toreda/types';
+import {type CustomSchemaType} from './schema/type';
+import {Schema} from '../schema';
 
 /**
  * @category Schemas - Custom Types
  */
-export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> {
+export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> implements Resettable {
 	public readonly log: Log;
-	public readonly registered: Map<string, Schema<unknown, SchemaData<unknown>>>;
+	public readonly registered: Map<string, Schema<DataT, InputT, VerifiedT> | CustomTypeVerifier<DataT>>;
 
-	constructor(init: CustomTypesInit) {
-		this.registered = new Map<string, Schema<unknown, SchemaData<unknown>>>();
+	constructor(init: CustomTypesInit<DataT>) {
+		this.registered = new Map<string, Schema<DataT, InputT, VerifiedT> | CustomTypeVerifier<DataT>>();
 		this.log = init.base.makeLog('customTypes');
 
 		this.registerTypes(init.data);
 	}
 
-	public registerTypes(data?: CustomTypesData): void {
+	public registerTypes(data?: CustomTypesData<DataT> | null): void {
 		const log = this.log.makeLog('registerTypes');
 
 		if (!data) {
@@ -60,8 +60,12 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		const keys = Object.keys(data);
 
 		for (const key of keys) {
-			const result = this.register(key, data[key]);
-			if (!result) {
+			const o = data[key];
+			if (this.isCustomVerifier(o)) {
+				const result = this.registerVerifier(key, o);
+			} else if (this.isSchema(o)) {
+				const result = this.registerSchema(key, o);
+			} else {
 				log.error(`Custom type registration error for '${key}'.`);
 			}
 		}
@@ -81,6 +85,9 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		}
 
 		const o = this.registered.get(id);
+		if (typeof o === 'function') {
+			return false;
+		}
 
 		return typeof o?.verify === 'function';
 	}
@@ -95,7 +102,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof o === 'function';
 	}
 
-	public register(id: string, schema: Schema<unknown, SchemaData<unknown>>): boolean {
+	public registerVerifier(id: string, fn: CustomTypeVerifier<DataT>): boolean {
 		if (typeof id !== 'string') {
 			return false;
 		}
@@ -104,7 +111,24 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		if (!schema) {
+		if (typeof fn !== 'function') {
+			return false;
+		}
+
+		this.registered.set(id, fn);
+		return true;
+	}
+
+	public registerSchema(id: string, schema: Schema<DataT, InputT, VerifiedT>): boolean {
+		if (typeof id !== 'string') {
+			return false;
+		}
+
+		if (this.registered.has(id)) {
+			return false;
+		}
+
+		if (!this.isSchema(schema)) {
 			return false;
 		}
 
@@ -112,17 +136,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return true;
 	}
 
-	public get(id: string): Schema<unknown, SchemaData<unknown>> | null {
-		if (typeof id !== 'string') {
-			return null;
-		}
-
-		const schema = this.registered.get(id);
-
-		return schema ? schema : null;
-	}
-
-	public getVerifier(id: string): CustomTypeVerifier<DataT> | null {
+	public getVerifier(id?: string): CustomTypeVerifier<DataT> | null {
 		if (typeof id !== 'string') {
 			return null;
 		}
@@ -132,17 +146,33 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof o === 'function' ? o : null;
 	}
 
-	public getSchema(id?: string): Schema<unknown, SchemaData<unknown>> | null {
+	public getSchema(id?: string): CustomSchemaType<DataT, InputT, VerifiedT> | null {
 		if (typeof id !== 'string') {
 			return null;
 		}
 
-		const schema = this.registered.get(id);
-		if (typeof schema?.verify !== 'function') {
+		const o = this.registered.get(id);
+		if (!this.isSchema(o)) {
 			return null;
 		}
 
-		return schema;
+		return o;
+	}
+
+	public isCustomVerifier(o: unknown): o is CustomTypeVerifier<DataT> {
+		return typeof o === 'function';
+	}
+
+	public isSchema(o: unknown): o is Schema<DataT, InputT, VerifiedT> {
+		if (!o) {
+			return false;
+		}
+
+		if (typeof o === 'function') {
+			return false;
+		}
+
+		return true;
 	}
 
 	public async verifyValue(id: string, type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
@@ -152,8 +182,8 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return fate;
 	}
 
-	public async verify(init: CustomSchemaVerify): Promise<Fate<SchemaData<unknown>>> {
-		const fate = new Fate<SchemaData<unknown>>();
+	/* 	public async verify(init: CustomSchemaVerify): Promise<Fate<DataT | SchemaData<DataT>>> {
+		const fate = new Fate<DataT | SchemaData<DataT>>();
 		const schema = this.getSchema(init.type);
 
 		if (!schema) {
@@ -161,5 +191,23 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		}
 
 		return schema.verify(init);
+	} */
+
+	public async verifyChildSchema(init: CustomSchemaVerify): Promise<Fate<VerifiedT | null>> {
+		const fate = new Fate<VerifiedT | null>({
+			data: null
+		});
+
+		const schema = this.getSchema(init.type);
+
+		if (!schema) {
+			return fate.setErrorCode(schemaError('missing_custom_type_schema', init.type));
+		}
+
+		return schema.verify(init);
+	}
+
+	public reset(): void {
+		this.registered.clear();
 	}
 }

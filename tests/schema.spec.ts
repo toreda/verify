@@ -2,7 +2,7 @@ import {Levels, Log} from '@toreda/log';
 import {schemaError} from '../src/schema/error';
 import {SchemaField} from '../src/schema/field';
 import {valueTypeLabel} from '../src/value/type/label';
-import {SampleData, SampleSchema, SampleSchemaSubA, SampleSchemaSubB} from './_data/schema';
+import {SampleData, SampleSchema} from './_data/schema';
 import {SchemaPath} from '../src/schema/path';
 
 const EMPTY_OBJECT = {};
@@ -11,8 +11,6 @@ const EMPTY_STRING = '';
 describe('schemaVerify', () => {
 	let sampleData: SampleData;
 	let schema: SampleSchema;
-	let schemaSubA: SampleSchemaSubA;
-	let schemaSubB: SampleSchemaSubB;
 	let base: Log;
 	let schemaPath: SchemaPath;
 
@@ -23,8 +21,6 @@ describe('schemaVerify', () => {
 			consoleEnabled: true
 		});
 		schemaPath = new SchemaPath();
-		schemaSubB = new SampleSchemaSubB(base);
-		schemaSubA = new SampleSchemaSubA(schemaSubB, base);
 		schema = new SampleSchema(base);
 	});
 

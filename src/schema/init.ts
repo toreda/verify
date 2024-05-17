@@ -51,7 +51,7 @@ export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	 */
 	options?: SchemaOptions;
 	outputTransform?: SchemaOutputTransformer<DataT, OutputT>;
-	customTypes?: CustomTypesData;
+	customTypes?: CustomTypesData<DataT> | null;
 	base: Log;
 	parentPath?: string[];
 }

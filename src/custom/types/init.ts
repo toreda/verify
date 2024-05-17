@@ -29,7 +29,7 @@ import {type CustomTypesData} from './data';
 /**
  * @category Schemas - Custom Types
  */
-export interface CustomTypesInit {
-	data?: CustomTypesData;
+export interface CustomTypesInit<DataT = unknown> {
+	data?: CustomTypesData<DataT> | null;
 	base: Log;
 }

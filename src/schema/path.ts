@@ -25,6 +25,7 @@
 
 import {stringValue} from '@toreda/strong-types';
 import {type SchemaPathInit} from './path/init';
+import Defaults from '../defaults';
 
 /**
  * Create a readable string to uniquely identify element instances based on their
@@ -47,10 +48,10 @@ export class SchemaPath {
 
 	constructor(init?: SchemaPathInit) {
 		this.path = this.mkPath(init?.path);
-		this.idSeparator = stringValue(init?.idSeparator, '.');
+		this.idSeparator = stringValue(init?.idSeparator, Defaults.SchemaPath.IdSeparator);
 	}
 
-	public getValue(): string {
+	public current(): string {
 		return this.path.join(this.idSeparator);
 	}
 
@@ -66,8 +67,8 @@ export class SchemaPath {
 		return [];
 	}
 
-	public mkChild(id: string): SchemaPath {
-		if (typeof id !== 'string') {
+	public child(id: string): SchemaPath {
+		if (typeof id !== 'string' || !id) {
 			return this;
 		}
 

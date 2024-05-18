@@ -24,11 +24,6 @@
  */
 
 /**
- * Optional arguments used when instantiating `SchemaPath`.
- *
  * @category Schemas
  */
-export interface SchemaPathInit {
-	path?: string | string[];
-	idSeparator?: string;
-}
+export type VerifiedSchema<DataT> = Map<string, DataT | VerifiedSchema<DataT> | null>;

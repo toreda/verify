@@ -361,7 +361,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -377,7 +377,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -393,7 +393,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -414,7 +414,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -434,7 +434,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -454,7 +454,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -474,7 +474,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -495,7 +495,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: EMPTY_STRING,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -511,7 +511,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -527,7 +527,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -543,7 +543,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -563,7 +563,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -583,7 +583,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -603,7 +603,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -623,7 +623,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -643,7 +643,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -665,7 +665,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -681,7 +681,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -697,7 +697,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -713,7 +713,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -729,7 +729,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -749,7 +749,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -766,7 +766,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -785,7 +785,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -806,7 +806,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -826,7 +826,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -848,7 +848,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -863,7 +863,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -883,7 +883,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -903,7 +903,7 @@ describe('schemaVerify', () => {
 					fieldType: 'undefined',
 					fieldId: fieldId,
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 				expect(result.errorCode()).toBe(
@@ -922,7 +922,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -942,7 +942,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -962,7 +962,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -982,7 +982,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -1004,7 +1004,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -1021,7 +1021,7 @@ describe('schemaVerify', () => {
 					fieldType: 'uint',
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1035,7 +1035,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1052,7 +1052,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1068,7 +1068,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1089,7 +1089,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -1113,7 +1113,7 @@ describe('schemaVerify', () => {
 					fieldType: 'null',
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1129,7 +1129,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: 'null',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -1149,7 +1149,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1172,7 +1172,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1190,7 +1190,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1210,7 +1210,7 @@ describe('schemaVerify', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1232,7 +1232,7 @@ describe('schemaVerify', () => {
 					fieldType: 'null',
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1253,7 +1253,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					fieldType: 'number',
 					value: value,
-					path: schemaPath.mkChild(fieldId),
+					path: schemaPath.child(fieldId),
 					base: base
 				});
 
@@ -1270,7 +1270,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1286,7 +1286,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1302,7 +1302,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1318,7 +1318,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1334,7 +1334,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1350,7 +1350,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1366,7 +1366,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1382,7 +1382,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1398,7 +1398,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1418,7 +1418,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1438,7 +1438,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1458,7 +1458,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1478,7 +1478,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1498,7 +1498,7 @@ describe('schemaVerify', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.mkChild(fieldId)
+					path: schemaPath.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1546,7 +1546,7 @@ describe('schemaVerify', () => {
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
-					schemaError('missing_argument', `${schema.schemaName}`, 'verify', 'base')
+					schemaError('missing_argument:init.base', `${schema.schemaName}.verify`)
 				);
 			});
 
@@ -1558,7 +1558,7 @@ describe('schemaVerify', () => {
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
-					schemaError('missing_argument', `${schema.schemaName}`, 'verify', 'base')
+					schemaError('missing_argument:init.base', `${schema.schemaName}.verify`)
 				);
 			});
 

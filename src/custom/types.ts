@@ -34,6 +34,7 @@ import {type CustomSchemaVerify} from './schema/verify';
 import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
+import {VerifiedSchema} from '../verified/schema';
 
 /**
  * @category Schemas - Custom Types
@@ -182,21 +183,8 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return fate;
 	}
 
-	/* 	public async verify(init: CustomSchemaVerify): Promise<Fate<DataT | SchemaData<DataT>>> {
-		const fate = new Fate<DataT | SchemaData<DataT>>();
-		const schema = this.getSchema(init.type);
-
-		if (!schema) {
-			return fate.setErrorCode(schemaError('missing_custom_type_schema', init.type));
-		}
-
-		return schema.verify(init);
-	} */
-
-	public async verifyChildSchema(init: CustomSchemaVerify): Promise<Fate<VerifiedT | null>> {
-		const fate = new Fate<VerifiedT | null>({
-			data: null
-		});
+	public async verifyOnly(init: CustomSchemaVerify): Promise<Fate<VerifiedSchema<DataT>>> {
+		const fate = new Fate<VerifiedSchema<DataT>>();
 
 		const schema = this.getSchema(init.type);
 
@@ -204,7 +192,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return fate.setErrorCode(schemaError('missing_custom_type_schema', init.type));
 		}
 
-		return schema.verify(init);
+		return schema.verifyOnly(init);
 	}
 
 	public reset(): void {

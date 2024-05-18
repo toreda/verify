@@ -42,4 +42,8 @@ export default class Defaults {
 		MaxFails: 0 as const,
 		MaxErrors: 0 as const
 	} as const;
+
+	public static SchemaPath = {
+		IdSeparator: '.' as const
+	} as const;
 }

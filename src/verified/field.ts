@@ -23,12 +23,9 @@
  *
  */
 
+import {type VerifiedSchema} from './schema';
+
 /**
- * Optional arguments used when instantiating `SchemaPath`.
- *
  * @category Schemas
  */
-export interface SchemaPathInit {
-	path?: string | string[];
-	idSeparator?: string;
-}
+export type VerifiedField<DataT> = DataT | VerifiedSchema<DataT> | null;

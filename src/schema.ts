@@ -43,7 +43,8 @@ import {valueTypeLabel} from './value/type/label';
 import {SchemaPath} from './schema/path';
 import {type SchemaVerifyInit} from './schema/verify/init';
 import {type SchemaVerifyValue} from './schema/verify/value';
-import {SchemaDataVerified} from './schema/data/verified';
+import {type VerifiedSchema} from './verified/schema';
+import {VerifiedField} from './verified/field';
 
 /**
  * @category Schemas
@@ -52,7 +53,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly schemaName: string;
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
-	public readonly outputTransform: SchemaOutputTransformer<DataT, VerifiedT | null>;
+	public readonly transformOutput: SchemaOutputTransformer<DataT, VerifiedT | null>;
 	public readonly customTypes: CustomTypes<DataT, InputT, VerifiedT>;
 	public readonly base: Log;
 	public readonly parsePath: string[];
@@ -71,7 +72,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		this.parsePath = Array.isArray(init.parentPath) ? init.parentPath : [];
 		this.parsePath.push(this.schemaName);
 
-		this.outputTransform = init.outputTransform ? init.outputTransform : simpleOutputTransform;
+		this.transformOutput = init.transformOutput ? init.transformOutput : simpleOutputTransform;
 	}
 
 	/**
@@ -97,17 +98,17 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		value: unknown,
 		path: SchemaPath,
 		base: Log
-	): Promise<Fate<DataT | SchemaData<DataT> | null>> {
-		const fate = new Fate<DataT | SchemaData<DataT> | null>();
+	): Promise<Fate<VerifiedField<DataT>>> {
+		const fate = new Fate<VerifiedField<DataT>>();
 
 		if (!field) {
-			return fate.setErrorCode(schemaError(`missing_field`, path.getValue()));
+			return fate.setErrorCode(schemaError(`missing_field`, path.current()));
 		}
 
-		const currPath = path.mkChild(field.name);
+		const currPath = path.child(field.name);
 
 		if (value === undefined) {
-			return fate.setErrorCode(schemaError('missing_field_value', currPath.getValue()));
+			return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
 		}
 
 		const verified = await this.fieldSupportsValue(field, value, currPath, base);
@@ -125,19 +126,19 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		value: unknown,
 		path: SchemaPath,
 		base: Log
-	): Promise<Fate<DataT | SchemaData<DataT>>> {
-		const fate = new Fate<DataT | SchemaData<DataT>>();
+	): Promise<Fate<VerifiedField<DataT>>> {
+		const fate = new Fate<VerifiedField<DataT>>();
 		if (value === null) {
 			if (field.types.includes('null')) {
 				return fate.setSuccess(true);
 			} else {
-				return fate.setErrorCode(schemaError('field_does_not_support_type:null', path.getValue()));
+				return fate.setErrorCode(schemaError('field_does_not_support_type:null', path.current()));
 			}
 		}
 
 		for (const type of field.types) {
 			if (!this.schemaSupportsType(type)) {
-				return fate.setErrorCode(schemaError(`field_does_not_support_type:${type}`, path.getValue()));
+				return fate.setErrorCode(schemaError(`field_does_not_support_type:${type}`, path.current()));
 			}
 
 			const result = await this.verifyValue({
@@ -157,7 +158,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, path.getValue())
+			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, path.current())
 		);
 	}
 
@@ -223,8 +224,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * @param type
 	 * @param value
 	 */
-	public async verifyValue(init: SchemaVerifyValue): Promise<Fate<DataT | SchemaData<DataT>>> {
-		const fate = new Fate<DataT | SchemaData<DataT>>();
+	public async verifyValue(init: SchemaVerifyValue): Promise<Fate<VerifiedField<DataT>>> {
+		const fate = new Fate<VerifiedField<DataT>>();
 
 		if (this.isBuiltIn(init.fieldType)) {
 			if (this.valueIsBuiltInType(init.fieldType, init.value)) {
@@ -235,14 +236,14 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 				return fate.setErrorCode(
 					schemaError(
 						`field_does_not_support_value_type:${valueTypeLabel(init.value)}`,
-						init.path.getValue()
+						init.path.current()
 					)
 				);
 			}
 		}
 
 		if (this.customTypes.hasSchema(init.fieldType) && typeof init.value === 'object') {
-			return this.customTypes.verifyChildSchema({
+			return this.customTypes.verifyOnly({
 				id: init.fieldId,
 				type: init.fieldType,
 				data: init.value as SchemaData<DataT>,
@@ -258,26 +259,42 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${init.fieldType}`, init.path.getValue())
+			schemaError(`field_does_not_support_type:${init.fieldType}`, init.path.current())
 		);
 	}
 
-	public async verifyAndTransform(init: SchemaVerifyInit): Promise<Fate<VerifiedT | null>> {
+	public async verify(init: SchemaVerifyInit): Promise<Fate<VerifiedT | null>> {
 		const fate = new Fate<VerifiedT | null>();
+		if (!init) {
+			return fate.setErrorCode(schemaError('missing_argument:init', this.schemaName));
+		}
 
-		const verified = await this.verify(init);
+		const parentPath = init?.path ? init.path : new SchemaPath();
+		const currPath =
+			init?.childSchema === true ? parentPath : parentPath.child(stringValue(init.id, this.schemaName));
+
+		if (!init?.base) {
+			return fate.setErrorCode(
+				schemaError('missing_argument:init.base', currPath.child('verify').current())
+			);
+		}
+
+		init.path = currPath;
+		const log = init.base.makeLog('verify');
+
+		const verified = await this.verifyOnly(init);
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
 		}
 
 		if (!verified.data) {
 			return fate.setErrorCode(
-				schemaError('no_transform_data_returned', `${this.schemaName}.verifyAndTransform`)
+				schemaError('no_transform_data_returned', currPath.child('verify').current())
 			);
 		}
 
 		try {
-			const result = await this.outputTransform(verified.data, init.base);
+			const result = await this.transformOutput(verified.data, init.base);
 			if (result.ok()) {
 				if (result.data !== null) {
 					fate.data = result.data;
@@ -297,55 +314,53 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		return fate;
 	}
+
 	/**
 	 * Verify provided data object's structure, content, and types against this schema.
 	 * @param init
 	 */
-	public async verify(init: SchemaVerifyInit): Promise<Fate<SchemaDataVerified<DataT>>> {
-		const fate = new Fate<SchemaDataVerified<DataT>>();
+	public async verifyOnly(init: SchemaVerifyInit): Promise<Fate<VerifiedSchema<DataT>>> {
+		const fate = new Fate<VerifiedSchema<DataT>>();
 
 		const schemaName = stringValue(this.schemaName, '__missing_schemaName__');
+		const currPath = init.path ? init.path : new SchemaPath();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
 		// set their own path because they have no way to know their property name in parent schema.
 
-		const parentPath = init?.path ? init.path : new SchemaPath();
-		const currPath =
-			init?.childSchema === true ? parentPath : parentPath.mkChild(stringValue(init.id, schemaName));
-
 		if (!init.base) {
 			console.error(`Missing argument: base`);
-			return fate.setErrorCode(schemaError('missing_argument', currPath.getValue(), 'verify', 'base'));
+			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'verify', 'base'));
 		}
 
-		const log = init.base.makeLog(`schema:${currPath.getValue()}`);
+		const log = init.base.makeLog(`schema:${currPath.current()}`);
 
 		if (init.data === undefined || init.data === null) {
 			log.error(`Missing argument: data`);
 			return fate.setErrorCode(
-				schemaError('missing_schema_data', currPath.getValue(), 'verify', 'init.data')
+				schemaError('missing_schema_data', currPath.current(), 'verify', 'init.data')
 			);
 		}
 
 		if (Object.keys(init.data)?.length === 0) {
-			return fate.setErrorCode(schemaError('empty_schema_object', currPath.getValue(), 'verify'));
+			return fate.setErrorCode(schemaError('empty_schema_object', currPath.current(), 'verify'));
 		}
 
-		if (!this.outputTransform) {
-			log.error(`Missing argument: outputTransform`);
-			return fate.setErrorCode(schemaError('missing_argument', currPath.getValue(), 'outputTransform'));
+		if (!this.transformOutput) {
+			log.error(`Missing argument: transformOutput`);
+			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'transformOutput'));
 		}
 
-		if (typeof this.outputTransform !== 'function') {
-			log.error(`Non-function argument: outputTransform`);
+		if (typeof this.transformOutput !== 'function') {
+			log.error(`Non-function argument: transformOutput`);
 			return fate.setErrorCode(
-				schemaError('nonfunction_argument', currPath.getValue(), 'outputTransform')
+				schemaError('nonfunction_argument', currPath.current(), 'transformOutput')
 			);
 		}
 
 		const total = this.fields.size;
 		let processed = 0;
 
-		const mapped = new Map<string, DataT | SchemaData<DataT> | null>();
+		const mapped: VerifiedSchema<DataT> = new Map<string, DataT | VerifiedSchema<DataT> | null>();
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();

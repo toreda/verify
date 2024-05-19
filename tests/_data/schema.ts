@@ -2,6 +2,7 @@ import {Log} from '@toreda/log';
 import {Schema} from '../../src/schema';
 import {Primitive} from '@toreda/types';
 import {SchemaData} from '../../src/schema/data';
+import {SchemaInit} from '../../src';
 
 export interface SampleData extends SchemaData<Primitive> {
 	str1: string;
@@ -68,7 +69,7 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 }
 
 export class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
-	constructor(base: Log) {
+	constructor(init: SchemaInit<Primitive, SampleData, SampleData>) {
 		super({
 			name: 'SampleSchema',
 			fields: [
@@ -85,8 +86,8 @@ export class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
 					types: ['boolean', 'null']
 				}
 			],
-			options: {},
-			base: base
+			options: init?.options,
+			base: init.base
 		});
 	}
 }

@@ -1,6 +1,8 @@
-module.exports = {
+import {Config} from 'jest';
+const config: Config = {
 	roots: ['./'],
 	coverageDirectory: './coverage',
+	coverageProvider: 'v8',
 	coveragePathIgnorePatterns: [
 		'tests/',
 		'node_modules/',
@@ -22,3 +24,5 @@ module.exports = {
 	transform: {'^.+\\.(t|j)sx?$': '@swc/jest'},
 	transformIgnorePatterns: ['node_modules/(?!@ngrx|(?!core-js/)|(?!deck.gl)|ng-dynamic)']
 };
+
+export default config;

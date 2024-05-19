@@ -1,7 +1,16 @@
 import {Levels, Log} from '@toreda/log';
-import {SampleAData, SampleBData, SampleSchema, SampleSchemaSubA, SampleSchemaSubB} from '../_data/schema';
+import {
+	SampleAData,
+	SampleBData,
+	SampleData,
+	SampleSchema,
+	SampleSchemaSubA,
+	SampleSchemaSubB
+} from '../_data/schema';
 import {schemaError} from '../../src/schema/error';
 import {SchemaPath} from '../../src/schema/path';
+import {SchemaInit} from '../../src';
+import {Primitive} from '@toreda/types';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
@@ -16,6 +25,7 @@ describe('Schema - Recursive Parsing', () => {
 		let aData: SampleAData;
 		let schema: SampleSchema;
 		let schemaPath: SchemaPath;
+		let init: SchemaInit<Primitive, SampleData, SampleData>;
 
 		beforeAll(() => {
 			base = new Log({
@@ -23,9 +33,27 @@ describe('Schema - Recursive Parsing', () => {
 				groupsStartEnabled: true,
 				consoleEnabled: true
 			});
+
 			schemaSubB = new SampleSchemaSubB(base);
 			schemaSubA = new SampleSchemaSubA(schemaSubB, base);
-			schema = new SampleSchema(base);
+			schema = new SampleSchema({
+				base: base,
+				name: 'SampleSchema',
+				fields: [
+					{
+						name: 'str1',
+						types: ['string']
+					},
+					{
+						name: 'int1',
+						types: ['number']
+					},
+					{
+						name: 'bool1',
+						types: ['boolean', 'null']
+					}
+				]
+			});
 			schemaPath = new SchemaPath();
 		});
 

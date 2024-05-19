@@ -29,11 +29,10 @@ import {schemaError} from '../../schema/error';
 import {type Verified} from '../../verified';
 
 /**
- * Default transformer that expects a map of string -> primitive values and produces
- * a simple object of the same mapping.
- * @param data
+ * Default transformer when one isn't provided to a schema. Expects a
+ * string -> primitive map and produces a simple object of the same mapping.
+ * @param input
  * @param base
- * @returns
  *
  * @category Schemas
  */
@@ -41,17 +40,17 @@ export async function simpleOutputTransform<DataT, VerifiedT>(
 	input: Map<string, DataT>,
 	base: Log
 ): Promise<Fate<VerifiedT | null>> {
-	const log = base.makeLog('simpleOutputTransform');
 	const fate = new Fate<VerifiedT | null>();
 
-	if (!input) {
-		log.error(`Missing argument: mapped`);
-		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'data'));
+	if (!base) {
+		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
 	}
 
-	if (!base) {
-		log.error(`Missing argument: base`);
-		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
+	const log = base.makeLog('simpleOutputTransform');
+
+	if (!input) {
+		log.error(`Missing argument: input`);
+		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'input'));
 	}
 
 	try {

@@ -2,14 +2,24 @@ import {Levels, Log} from '@toreda/log';
 import {CustomTypes} from '../../src/custom/types';
 import {type SampleData, SampleSchema} from '../_data/schema';
 import {type Primitive} from '@toreda/types';
-import {CustomTypeVerifier} from '../../src/custom/type/verifier';
+import {type CustomTypeVerifier} from '../../src/custom/type/verifier';
 import {Fate} from '@toreda/fate';
+import {type SchemaInit} from '../../src/schema/init';
 
 describe('CustomTypes', () => {
 	let base: Log;
+	let init: SchemaInit<Primitive, SampleData, SampleData>;
 	let instance: CustomTypes<Primitive, SampleData, SampleData>;
+	let sampleSchema: SampleSchema;
+	let typeVerifier: CustomTypeVerifier<any>;
 
 	beforeAll(() => {
+		typeVerifier = async (): Promise<Fate<any>> => {
+			const fate = new Fate<any>();
+
+			return fate.setSuccess(true);
+		};
+
 		base = new Log({
 			globalLevel: Levels.ALL,
 			groupsStartEnabled: true,
@@ -23,6 +33,24 @@ describe('CustomTypes', () => {
 
 	beforeEach(() => {
 		instance.reset();
+		init = {
+			name: 'SampleSchema',
+			base: base,
+			fields: [
+				{
+					name: 'str1',
+					types: ['string']
+				},
+				{
+					name: 'int1',
+					types: ['number']
+				},
+				{
+					name: 'bool1',
+					types: ['boolean', 'null']
+				}
+			]
+		};
 	});
 
 	describe('Constructor', () => {
@@ -44,7 +72,7 @@ describe('CustomTypes', () => {
 		});
 
 		it(`should register types provided by init.data`, () => {
-			const schema = new SampleSchema(base);
+			const schema = new SampleSchema(init);
 			const custom = new CustomTypes({
 				base: base,
 				data: {
@@ -56,7 +84,7 @@ describe('CustomTypes', () => {
 		});
 
 		it(`should register schema provided by init.data`, () => {
-			const schema = new SampleSchema(base);
+			const schema = new SampleSchema(init);
 			const custom = new CustomTypes({
 				base: base,
 				data: {
@@ -81,6 +109,53 @@ describe('CustomTypes', () => {
 	});
 
 	describe('Implementation', () => {
+		describe('has', () => {
+			it('should return false when id arg is undefined', () => {
+				instance.registered.set('a', sampleSchema);
+				instance.registered.set('b', sampleSchema);
+
+				expect(instance.registered.size).toBe(2);
+				const result = instance.has(undefined as any);
+				expect(result).toBe(false);
+			});
+
+			it('should return false when id arg is null', () => {
+				instance.registered.set('a', sampleSchema);
+				instance.registered.set('b', sampleSchema);
+
+				expect(instance.registered.size).toBe(2);
+				const result = instance.has(null as any);
+				expect(result).toBe(false);
+			});
+
+			it('should return false when id is not a registered type', () => {
+				instance.registered.set('a', sampleSchema);
+				instance.registered.set('b', sampleSchema);
+
+				expect(instance.registered.size).toBe(2);
+				const result = instance.has('c');
+				expect(result).toBe(false);
+			});
+
+			it('should return true when id is a registered schema', () => {
+				instance.registered.set('a', sampleSchema);
+				instance.registered.set('b', sampleSchema);
+
+				expect(instance.registered.size).toBe(2);
+				const result = instance.has('a');
+				expect(result).toBe(true);
+			});
+
+			it('should return true when id is a registered verifier', () => {
+				instance.registered.set('a', sampleSchema);
+				instance.registered.set('b', typeVerifier);
+
+				expect(instance.registered.size).toBe(2);
+				const result = instance.has('b');
+				expect(result).toBe(true);
+			});
+		});
+
 		describe('getVerifier', () => {
 			it(`should return null when no registered verifier matching id`, async () => {
 				expect(instance.registered.size).toBe(0);
@@ -97,7 +172,7 @@ describe('CustomTypes', () => {
 
 			it(`should return null when registered id matches a schema, not a verifier`, () => {
 				const id = 'j41-09008r97359735';
-				const sample = new SampleSchema(base);
+				const sample = new SampleSchema(init);
 				expect(instance.registered.size).toBe(0);
 				instance.registerSchema(id, sample);
 				expect(instance.registered.size).toBe(1);

@@ -4,15 +4,18 @@ import {SchemaField} from '../src/schema/field';
 import {valueTypeLabel} from '../src/value/type/label';
 import {SampleData, SampleSchema} from './_data/schema';
 import {SchemaPath} from '../src/schema/path';
+import {SchemaInit} from '../src';
+import {Primitive} from '@toreda/types';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
-describe('schemaVerify', () => {
+describe('Schema', () => {
 	let sampleData: SampleData;
 	let schema: SampleSchema;
 	let base: Log;
 	let schemaPath: SchemaPath;
+	let init: SchemaInit<Primitive, SampleData, SampleData>;
 
 	beforeAll(() => {
 		base = new Log({
@@ -21,10 +24,46 @@ describe('schemaVerify', () => {
 			consoleEnabled: true
 		});
 		schemaPath = new SchemaPath();
-		schema = new SampleSchema(base);
+		schema = new SampleSchema({
+			base: base,
+			name: 'SampleSchema',
+			fields: [
+				{
+					name: 'str1',
+					types: ['string']
+				},
+				{
+					name: 'int1',
+					types: ['number']
+				},
+				{
+					name: 'bool1',
+					types: ['boolean', 'null']
+				}
+			]
+		});
 	});
 
 	beforeEach(() => {
+		init = {
+			base: base,
+			name: 'SampleSchema',
+			fields: [
+				{
+					name: 'str1',
+					types: ['string']
+				},
+				{
+					name: 'int1',
+					types: ['number']
+				},
+				{
+					name: 'bool1',
+					types: ['boolean', 'null']
+				}
+			]
+		};
+
 		sampleData = {
 			bool1: false,
 			int1: 11,
@@ -59,6 +98,12 @@ describe('schemaVerify', () => {
 		);
 
 		schemaPath.path.length = 0;
+	});
+
+	describe('Init', () => {
+		it(`should use the default transformer when init.transformOutput is undefined`, () => {
+			const custom = new SampleSchema(init);
+		});
 	});
 
 	describe('Parsing', () => {
@@ -102,7 +147,7 @@ describe('schemaVerify', () => {
 		describe('Types', () => {
 			describe('unsupported', () => {
 				it(`should fail when schema does not support field type`, async () => {
-					const customSchema = new SampleSchema(base);
+					const customSchema = new SampleSchema(init);
 					const field = customSchema.fields.get('int1');
 
 					if (!field) {
@@ -159,7 +204,7 @@ describe('schemaVerify', () => {
 				it(`should succeed when value is a null and null values are allowed`, async () => {
 					sampleData.str1 = null as any;
 
-					const customSchema = new SampleSchema(base);
+					const customSchema = new SampleSchema(init);
 					const field = customSchema.fields.get('str1');
 					field?.types.push('null');
 
@@ -210,7 +255,7 @@ describe('schemaVerify', () => {
 				});
 
 				it(`should fail when value is a truthy non-boolean`, async () => {
-					const customSchema = new SampleSchema(base);
+					const customSchema = new SampleSchema(init);
 					const field = customSchema.fields.get('bool1');
 
 					if (!field) {
@@ -229,7 +274,7 @@ describe('schemaVerify', () => {
 				it(`should fail when value is null and null is disallowed`, async () => {
 					sampleData.bool1 = null as any;
 
-					const customSchema = new SampleSchema(base);
+					const customSchema = new SampleSchema(init);
 					const field = customSchema.fields.get('bool1');
 
 					if (!field) {
@@ -254,7 +299,7 @@ describe('schemaVerify', () => {
 				it(`should succeed when field supports nulls`, async () => {
 					sampleData.bool1 = null as any;
 
-					const customSchema = new SampleSchema(base);
+					const customSchema = new SampleSchema(init);
 					const field = customSchema.fields.get('bool1');
 					field?.types.push('null');
 
@@ -278,7 +323,7 @@ describe('schemaVerify', () => {
 
 	describe('verify', () => {
 		it(`should fail when data arg is undefined`, async () => {
-			const customSchema = new SampleSchema(base);
+			const customSchema = new SampleSchema(init);
 			const result = await customSchema.verify({
 				id: customSchema.schemaName,
 				data: undefined as any,
@@ -297,7 +342,7 @@ describe('schemaVerify', () => {
 		it(`should fail when field argument is undefined`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema(base);
+			const customSchema = new SampleSchema(init);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
@@ -314,7 +359,7 @@ describe('schemaVerify', () => {
 		it(`should fail when value is null and nulls values aren't allowed`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema(base);
+			const customSchema = new SampleSchema(init);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
@@ -335,7 +380,7 @@ describe('schemaVerify', () => {
 		it(`should succeed when value is a null and null is allowed !!`, async () => {
 			sampleData.bool1 = null as any;
 
-			const customSchema = new SampleSchema(base);
+			const customSchema = new SampleSchema(init);
 			const field = customSchema.fields.get('bool1');
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);

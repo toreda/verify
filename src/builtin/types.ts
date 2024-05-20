@@ -23,28 +23,30 @@
  *
  */
 
-import {type SchemaFieldType} from '../field/type';
+import {type SchemaFieldType} from '../schema/field/type';
 
 /**
  * @category Schemas
  */
-export const schemaBuiltIns: SchemaFieldType[] = [
-	'array',
-	'bigint',
-	'BigInt',
-	'boolean',
-	'datetime',
-	'dbl',
-	'float',
-	'int',
-	'iterable',
-	'json-serialized',
-	'json',
-	'null',
-	'number',
-	'string',
-	'time',
-	'uint',
-	'undefined',
-	'url'
-];
+export function builtinTypes<InputT = unknown>(): SchemaFieldType<InputT>[] {
+	return [
+		'array',
+		'bigint',
+		'BigInt',
+		'boolean',
+		'datetime',
+		'dbl',
+		'float',
+		'int',
+		'iterable',
+		'json-serialized',
+		'json',
+		'null',
+		'number',
+		'string',
+		'time',
+		'uint',
+		'undefined',
+		'url'
+	];
+}

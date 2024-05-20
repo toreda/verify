@@ -38,7 +38,7 @@ import {isUInt} from './is/uint';
 import {isInt} from './is/int';
 import {type SchemaFieldData} from './schema/field/data';
 import {CustomTypes} from './custom/types';
-import {schemaBuiltIns} from './schema/built/ins';
+import {builtinTypes} from './builtin/types';
 import {valueTypeLabel} from './value/type/label';
 import {SchemaPath} from './schema/path';
 import {type SchemaVerifyInit} from './schema/verify/init';
@@ -162,15 +162,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		);
 	}
 
-	public isBuiltIn(type: SchemaFieldType): boolean {
-		if (typeof type !== 'string') {
-			return false;
-		}
-
-		return schemaBuiltIns.includes(type);
+	public isBuiltIn(type: SchemaFieldType<InputT>): boolean {
+		return builtinTypes<InputT>().includes(type);
 	}
 
-	public schemaSupportsType(type: SchemaFieldType): boolean {
+	public schemaSupportsType(type: SchemaFieldType<InputT>): boolean {
 		if (this.isBuiltIn(type)) {
 			return true;
 		}
@@ -183,7 +179,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * @param type
 	 * @param value
 	 */
-	public valueIsBuiltInType(type: SchemaFieldType, value: unknown): value is DataT {
+	public valueHasBuiltinType(type: SchemaFieldType<InputT>, value: unknown): value is DataT {
 		if (typeof type !== 'string') {
 			return false;
 		}
@@ -224,11 +220,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * @param type
 	 * @param value
 	 */
-	public async verifyValue(init: SchemaVerifyValue): Promise<Fate<VerifiedField<DataT>>> {
+	public async verifyValue(init: SchemaVerifyValue<DataT, InputT>): Promise<Fate<VerifiedField<DataT>>> {
 		const fate = new Fate<VerifiedField<DataT>>();
 
 		if (this.isBuiltIn(init.fieldType)) {
-			if (this.valueIsBuiltInType(init.fieldType, init.value)) {
+			if (this.valueHasBuiltinType(init.fieldType, init.value)) {
 				// TODO: Add validation here. Type match does not automatically prove valid content.
 				fate.data = init.value;
 				return fate.setSuccess(true);
@@ -245,7 +241,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		if (this.customTypes.hasSchema(init.fieldType) && typeof init.value === 'object') {
 			return this.customTypes.verifyOnly({
 				id: init.fieldId,
-				type: init.fieldType,
+				typeId: init.fieldType,
 				data: init.value as SchemaData<DataT>,
 				path: init.path,
 				base: init.base,

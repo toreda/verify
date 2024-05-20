@@ -80,6 +80,11 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return this.registered.has(id);
 	}
 
+	/**
+	 * Check whether `id` is a registered custom type schema. Doesn't return true
+	 * when `id`is registered with a non-schema.
+	 * @param id
+	 */
 	public hasSchema(id: string): boolean {
 		if (!this.has(id)) {
 			return false;
@@ -90,9 +95,14 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		return typeof o?.verify === 'function';
+		return this.isSchema(o);
 	}
 
+	/**
+	 * Check whether `id` is a registered custom type schema. Doesn't return true
+	 * when `id`is registered with a non-schema.
+	 * @param id
+	 */
 	public hasVerifier(id: string): boolean {
 		if (!this.has(id)) {
 			return false;
@@ -173,7 +183,8 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		return true;
+		const schema = o as Schema<DataT, InputT, VerifiedT>;
+		return typeof schema?.verify === 'function';
 	}
 
 	public async verifyValue(id: string, type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
@@ -186,15 +197,18 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	public async verifyOnly(init: CustomSchemaVerify): Promise<Fate<VerifiedSchema<DataT>>> {
 		const fate = new Fate<VerifiedSchema<DataT>>();
 
-		const schema = this.getSchema(init.type);
+		const schema = this.getSchema(init.typeId);
 
 		if (!schema) {
-			return fate.setErrorCode(schemaError('missing_custom_type_schema', init.type));
+			return fate.setErrorCode(schemaError('missing_schema_typeId', init.typeId));
 		}
 
 		return schema.verifyOnly(init);
 	}
 
+	/**
+	 * Reset all properties to their initial values.
+	 */
 	public reset(): void {
 		this.registered.clear();
 	}

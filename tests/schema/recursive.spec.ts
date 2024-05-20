@@ -9,8 +9,8 @@ import {
 } from '../_data/schema';
 import {schemaError} from '../../src/schema/error';
 import {SchemaPath} from '../../src/schema/path';
-import {SchemaInit} from '../../src';
-import {Primitive} from '@toreda/types';
+import {type SchemaInit} from '../../src';
+import {type Primitive} from '@toreda/types';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
@@ -52,7 +52,10 @@ describe('Schema - Recursive Parsing', () => {
 						name: 'bool1',
 						types: ['boolean', 'null']
 					}
-				]
+				],
+				customTypes: {
+					ct2: schemaSubB
+				}
 			});
 			schemaPath = new SchemaPath();
 		});

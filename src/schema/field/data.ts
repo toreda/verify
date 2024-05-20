@@ -23,13 +23,16 @@
  *
  */
 
-import type {SchemaFieldType} from './type';
+import {Block} from '../../block';
+import {Statement} from '../../statement';
+import {type SchemaFieldType} from './type';
 
 /**
  * @category Schemas
  */
 export interface SchemaFieldData<InputT = unknown> {
 	name: keyof InputT;
-	types: SchemaFieldType | (SchemaFieldType | keyof InputT)[] | keyof InputT[];
+	types: SchemaFieldType<InputT> | SchemaFieldType<InputT>[];
 	defaultValue?: unknown;
+	rules?: Block<Statement<InputT>>[];
 }

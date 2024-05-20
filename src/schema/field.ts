@@ -23,6 +23,7 @@
  *
  */
 
+import {Ruleset} from '../ruleset';
 import {type SchemaFieldData} from './field/data';
 import {type SchemaFieldType} from './field/type';
 
@@ -32,12 +33,19 @@ import {type SchemaFieldType} from './field/type';
 export class SchemaField<InputT = unknown> {
 	public readonly name: string;
 	public readonly key: keyof InputT;
-	public readonly types: SchemaFieldType[];
+	public readonly types: SchemaFieldType<InputT>[];
 	public readonly defaultValue: unknown;
+	public readonly ruleset: Ruleset<InputT>;
 
 	constructor(data: SchemaFieldData<InputT>) {
 		this.key = data.name;
 		this.name = data.name.toString();
+		this.ruleset = new Ruleset<InputT>();
+
+		if (Array.isArray(data.rules)) {
+			this.ruleset.add(...data.rules);
+		}
+
 		if (Array.isArray(data.types)) {
 			this.types = data.types;
 		} else if (typeof data.types === 'string') {

@@ -31,9 +31,9 @@ import {type SchemaData} from '../data';
 /**
  * @category Schemas
  */
-export interface SchemaVerifyValue<DataT = unknown> {
+export interface SchemaVerifyValue<DataT = unknown, InputT = unknown> {
 	fieldId: string;
-	fieldType: SchemaFieldType;
+	fieldType: SchemaFieldType<InputT>;
 	path: SchemaPath;
 	value: unknown | SchemaData<DataT>;
 	base: Log;

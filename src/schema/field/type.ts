@@ -26,7 +26,7 @@
 /**
  * @category Schemas
  */
-export type SchemaFieldType<CustomT = unknown> =
+export type SchemaFieldType<InputT = unknown> =
 	| 'array'
 	| 'bigint'
 	| 'BigInt'
@@ -47,4 +47,4 @@ export type SchemaFieldType<CustomT = unknown> =
 	| 'undefined'
 	| 'url'
 	| 'time'
-	| keyof CustomT;
+	| Extract<keyof InputT, string>;

@@ -5,6 +5,8 @@ import {type Primitive} from '@toreda/types';
 import {type CustomTypeVerifier} from '../../src/custom/type/verifier';
 import {Fate} from '@toreda/fate';
 import {type SchemaInit} from '../../src/schema/init';
+import {CustomSchemaVerify} from '../../src/custom/schema/verify';
+import {schemaError} from '../../src';
 
 describe('CustomTypes', () => {
 	let base: Log;
@@ -12,6 +14,7 @@ describe('CustomTypes', () => {
 	let instance: CustomTypes<Primitive, SampleData, SampleData>;
 	let sampleSchema: SampleSchema;
 	let typeVerifier: CustomTypeVerifier<any>;
+	let verifyInit: CustomSchemaVerify<any>;
 
 	beforeAll(() => {
 		typeVerifier = async (): Promise<Fate<any>> => {
@@ -50,6 +53,12 @@ describe('CustomTypes', () => {
 					types: ['boolean', 'null']
 				}
 			]
+		};
+
+		verifyInit = {
+			data: {},
+			base: base,
+			typeId: 'sampleSchema'
 		};
 	});
 
@@ -196,6 +205,27 @@ describe('CustomTypes', () => {
 				expect(typeof result).toBe('function');
 				expect(result).toEqual(verifier);
 			});
+		});
+
+		describe('verifyOnly', () => {
+			it(`should fail with code when init.type is undefined`, async () => {
+				verifyInit.type = undefined as any;
+				const result = await instance.verifyOnly(verifyInit);
+
+				expect(result.ok()).toBe(false);
+				expect(result.errorCode()).toBe(schemaError('missing_schema_typeId', 'sampleSchema'));
+			});
+		});
+	});
+
+	describe('reset', () => {
+		it(`should clear all registered types`, () => {
+			instance.registered.set('aa3', sampleSchema);
+			instance.registered.set('aa4', sampleSchema);
+			expect(instance.registered.size).toBe(2);
+
+			instance.reset();
+			expect(instance.registered.size).toBe(0);
 		});
 	});
 });

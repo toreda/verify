@@ -2,10 +2,10 @@ import {Levels, Log} from '@toreda/log';
 import {schemaError} from '../src/schema/error';
 import {SchemaField} from '../src/schema/field';
 import {valueTypeLabel} from '../src/value/type/label';
-import {SampleData, SampleSchema} from './_data/schema';
+import {type SampleData, SampleSchema} from './_data/schema';
 import {SchemaPath} from '../src/schema/path';
-import {SchemaInit} from '../src';
-import {Primitive} from '@toreda/types';
+import {type SchemaInit} from '../src';
+import {type Primitive} from '@toreda/types';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';

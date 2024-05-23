@@ -48,11 +48,34 @@ export class BlockAnd<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly has: BlockHave<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'and');
-		this.is = new BlockIs<InputT>(init);
-		this.contain = new BlockContains<InputT>(init);
+		super(
+			{
+				name: init.name,
+				tracer: init.tracer,
+				blockType: 'and'
+			},
+			init.stmt
+		);
+		this.is = new BlockIs<InputT>({
+			...init,
+			name: 'is',
+			tracer: this.tracer
+		});
+		this.contain = new BlockContains<InputT>({
+			...init,
+			name: 'contain',
+			tracer: this.tracer
+		});
 		this.contains = this.contain;
-		this.have = new BlockHave<InputT>(init);
-		this.has = this.have;
+		this.have = new BlockHave<InputT>({
+			...init,
+			name: 'have',
+			tracer: this.tracer
+		});
+		this.has = new BlockHave<InputT>({
+			...init,
+			name: 'has',
+			tracer: this.tracer
+		});
 	}
 }

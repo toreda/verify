@@ -68,7 +68,7 @@
 		"build:prod": "yarn gulp --prod",
 		"build:dev": "yarn gulp --dev",
 		"test": "yarn jest --coverage --maxWorkers=50%",
-		"test:silent": "yarn jest --coverage=false --maxWorkers=25% --silent --verbose=false",
+		"test:dev": "yarn jest --coverage=false --maxWorkers=25% --verbose=false",
 		"make:docs": "yarn typedoc docs --categorizeByGroup false --entryPoints ./src/index.ts --entryPointStrategy resolve",
 		"make:depgraph": "yarn madge src/index.ts --image dependency-graph.png"
 	}

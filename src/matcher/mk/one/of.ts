@@ -69,7 +69,8 @@ export function matcherMkOneOf<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'value_in_array',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

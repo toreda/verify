@@ -50,8 +50,9 @@ export function matcherMkGreaterThan<InputT = unknown>(
 
 		init.stmt.addMatcher({
 			fn: func,
-			name: '>',
-			flags: init.flags
+			name: init.name,
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

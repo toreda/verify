@@ -99,15 +99,38 @@ export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly a: BlockA<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'be');
-		this.an = new BlockAn<InputT>(init);
-		this.a = new BlockA<InputT>(init);
-		this.lessThan = matcherMkLessThan<InputT>(init);
-		this.greaterThan = matcherMkGreaterThan<InputT>(init);
-		this.equalTo = matcherMkEqual<InputT>(init);
-		this.type = matcherMkType<InputT>(init);
-		this.iterable = matcherMkIterable<InputT>(init);
+		super(
+			{
+				blockType: 'be',
+				tracer: init.tracer,
+				name: 'be'
+			},
+			init.stmt
+		);
+		this.an = new BlockAn<InputT>({
+			...init,
+			name: 'an',
+			tracer: this.tracer
+		});
+		this.a = new BlockA<InputT>({
+			...init,
+			name: 'a',
+			tracer: this.tracer
+		});
+		this.lessThan = matcherMkLessThan<InputT>({
+			...init,
+			name: '<',
+			tracer: this.tracer
+		});
+		this.greaterThan = matcherMkGreaterThan<InputT>({
+			...init,
+			name: '>',
+			tracer: this.tracer
+		});
+		this.equalTo = matcherMkEqual<InputT>({...init, name: '===', tracer: this.tracer});
+		this.type = matcherMkType<InputT>({...init, name: 'type', tracer: this.tracer});
+		this.iterable = matcherMkIterable<InputT>({...init, name: 'iterable', tracer: this.tracer});
 
-		this.truthy = matcherMkTruthy<InputT>(init);
+		this.truthy = matcherMkTruthy<InputT>({...init, name: 'truthy', tracer: this.tracer});
 	}
 }

@@ -37,6 +37,7 @@ export interface VerifierResult {
 	name: string;
 	results: VerifierResult[];
 	outcome: Outcome;
+	failedMatchers: string[];
 }
 
 /**
@@ -59,6 +60,7 @@ export function verifierResult<InputT = unknown>(params?: Partial<VerifierParams
 				skip: 0,
 				total: 0
 			}
-		}
+		},
+		failedMatchers: []
 	};
 }

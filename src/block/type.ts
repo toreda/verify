@@ -30,6 +30,8 @@
  * @category Rule Blocks
  */
 export type BlockType =
+	| 'a'
+	| 'an'
 	| 'and'
 	| 'be'
 	| 'character'

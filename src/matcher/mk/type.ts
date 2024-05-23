@@ -68,7 +68,8 @@ export function matcherMkType<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: fn,
 			name: 'istype',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

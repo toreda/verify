@@ -24,6 +24,7 @@
  */
 
 import {Statement} from '../statement';
+import {Tracer} from '../tracer';
 import {type BlockFlags} from './flags';
 
 /**
@@ -38,4 +39,6 @@ export interface BlockInit<InputT = unknown> {
 	 * @description Optional flags that alter block behavior.
 	 */
 	flags?: BlockFlags;
+	tracer: Tracer,
+	name: string;
 }

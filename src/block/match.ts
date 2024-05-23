@@ -45,9 +45,22 @@ export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly atLeastOneType: MatcherFactory<InputT, string[], Block<Statement<InputT>>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'matcher');
+		super(
+			{
+				tracer: init.tracer,
+				blockType: 'match',
+				name: init.name
+			},
+			init.stmt
+		);
 
-		this.type = matcherMkType<InputT>(init);
-		this.atLeastOneType = matcherMkTypes<InputT>(init);
+		this.type = matcherMkType<InputT>({
+			...init,
+			tracer: this.tracer
+		});
+		this.atLeastOneType = matcherMkTypes<InputT>({
+			...init,
+			tracer: this.tracer
+		});
 	}
 }

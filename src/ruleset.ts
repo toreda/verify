@@ -38,6 +38,7 @@ import {BlockMatch} from './block/match';
 import {BlockIs} from './block/is';
 import {blockWithNot} from './block/with/not';
 import {type VerifierFlags} from './verifier/flags';
+import {Tracer} from './tracer';
 
 /**
  * @category Rulesets
@@ -53,6 +54,10 @@ export class Ruleset<InputT = unknown> implements Verifier {
 
 	private bindListeners(): void {
 		this.verify = this.verify.bind(this);
+	}
+
+	public size(): number {
+		return this.rules.length;
 	}
 
 	public add(...blocks: Block<Statement<InputT>>[]): boolean {
@@ -93,7 +98,9 @@ export class Ruleset<InputT = unknown> implements Verifier {
 			get: (target: Rule<InputT>, prop: keyof Rule<InputT>): any => {
 				const stmt = new Statement<InputT>();
 				const init: BlockInit<InputT> = {
-					stmt: stmt
+					stmt: stmt,
+					tracer: new Tracer(),
+					name: 'value'
 				};
 
 				/**
@@ -104,19 +111,34 @@ export class Ruleset<InputT = unknown> implements Verifier {
 				switch (prop) {
 					case 'contains':
 						target.add(stmt);
-						return blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, init);
+						return blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, {
+							...init,
+							name: 'doesNotContain'
+						});
 					case 'must':
 						target.add(stmt);
-						return blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
+						return blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, {
+							...init,
+							name: 'mustNot'
+						});
 					case 'has':
 						target.add(stmt);
-						return blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, init);
+						return blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, {
+							...init,
+							name: 'has'
+						});
 					case 'matches':
 						target.add(stmt);
-						return blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, init);
+						return blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, {
+							...init,
+							name: 'doesNotMatch'
+						});
 					case 'is':
 						target.add(stmt);
-						return blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, init);
+						return blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, {
+							...init,
+							name: 'isNot'
+						});
 					default:
 						return target[prop];
 				}

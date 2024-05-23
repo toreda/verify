@@ -58,7 +58,8 @@ export function matcherMkTypes<InputT = unknown>(
 
 		init.stmt.addMatcher({
 			fn: func,
-			name: 'typeof value in types'
+			name: 'typeof value in types',
+			tracer: init.tracer
 		});
 
 		return link;

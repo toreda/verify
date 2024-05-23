@@ -3,7 +3,7 @@ import {schemaError} from '../src/schema/error';
 import {SchemaField} from '../src/schema/field';
 import {valueTypeLabel} from '../src/value/type/label';
 import {type SampleData, SampleSchema} from './_data/schema';
-import {SchemaPath} from '../src/schema/path';
+import {Tracer} from '../src/tracer';
 import {type SchemaInit} from '../src';
 import {type Primitive} from '@toreda/types';
 
@@ -14,7 +14,7 @@ describe('Schema', () => {
 	let sampleData: SampleData;
 	let schema: SampleSchema;
 	let base: Log;
-	let schemaPath: SchemaPath;
+	let tracer: Tracer;
 	let init: SchemaInit<Primitive, SampleData, SampleData>;
 
 	beforeAll(() => {
@@ -23,7 +23,7 @@ describe('Schema', () => {
 			groupsStartEnabled: true,
 			consoleEnabled: true
 		});
-		schemaPath = new SchemaPath();
+		tracer = new Tracer();
 		schema = new SampleSchema({
 			base: base,
 			name: 'SampleSchema',
@@ -97,7 +97,7 @@ describe('Schema', () => {
 			})
 		);
 
-		schemaPath.path.length = 0;
+		tracer.path.length = 0;
 	});
 
 	describe('Init', () => {
@@ -110,7 +110,7 @@ describe('Schema', () => {
 		it(`should fail with code when provided data is an empty object`, async () => {
 			const result = await schema.verify({
 				data: EMPTY_OBJECT as any,
-				path: schemaPath,
+				tracer: tracer,
 				base: base
 			});
 
@@ -122,7 +122,7 @@ describe('Schema', () => {
 
 			const result = await schema.verify({
 				data: sampleData,
-				path: schemaPath,
+				tracer: tracer,
 				base: base
 			});
 
@@ -137,7 +137,7 @@ describe('Schema', () => {
 			const result = await schema.verify({
 				data: sampleData,
 				base: base,
-				path: schemaPath
+				tracer: tracer
 			});
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -179,7 +179,7 @@ describe('Schema', () => {
 					sampleData.str1 = expectedOutput;
 					const result = await schema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 
@@ -193,7 +193,7 @@ describe('Schema', () => {
 					sampleData.str1 = expectedOutput;
 					const result = await schema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 
@@ -214,7 +214,7 @@ describe('Schema', () => {
 
 					const result = await customSchema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 
@@ -231,7 +231,7 @@ describe('Schema', () => {
 					field?.types.push('null');
 					const result = await schema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 
@@ -246,7 +246,7 @@ describe('Schema', () => {
 					sampleData.bool1 = expectedOutput;
 					const result = await schema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 					expect(result.data).not.toBeNull();
@@ -264,7 +264,7 @@ describe('Schema', () => {
 					sampleData.bool1 = 1 as any;
 					const result = await customSchema.verify({
 						data: sampleData,
-						path: schemaPath,
+						tracer: tracer,
 						base: base
 					});
 
@@ -309,7 +309,7 @@ describe('Schema', () => {
 
 					const result = await customSchema.verify({
 						id: customSchema.schemaName,
-						path: schemaPath,
+						tracer: tracer,
 						data: sampleData,
 						base: base
 					});
@@ -327,7 +327,7 @@ describe('Schema', () => {
 			const result = await customSchema.verify({
 				id: customSchema.schemaName,
 				data: undefined as any,
-				path: schemaPath,
+				tracer: tracer,
 				base: base
 			});
 
@@ -347,7 +347,7 @@ describe('Schema', () => {
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
-			const customPath = new SchemaPath({
+			const customPath = new Tracer({
 				path: ['SampleSchema']
 			});
 			const result = await customSchema.verifyField(undefined as any, null, customPath, base);
@@ -364,7 +364,7 @@ describe('Schema', () => {
 			if (!field) {
 				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 			}
-			const customPath = new SchemaPath({
+			const customPath = new Tracer({
 				path: ['SampleSchema']
 			});
 			field.types.length = 0;
@@ -387,7 +387,7 @@ describe('Schema', () => {
 			}
 
 			field.types?.push('null');
-			const result = await customSchema.verifyField(field!, null, schemaPath, base);
+			const result = await customSchema.verifyField(field!, null, tracer, base);
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
@@ -396,7 +396,7 @@ describe('Schema', () => {
 
 	describe('verifyValue', () => {
 		beforeEach(() => {
-			schemaPath.path.push(schema.schemaName);
+			tracer.path.push(schema.schemaName);
 		});
 		describe('boolean', () => {
 			it(`should succeed and return value when type is 'boolean' and value is true`, async () => {
@@ -406,7 +406,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -422,7 +422,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -438,7 +438,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -459,7 +459,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -479,7 +479,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -499,7 +499,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -519,7 +519,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'boolean',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -540,7 +540,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: EMPTY_STRING,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -556,7 +556,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -572,7 +572,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -588,7 +588,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -608,7 +608,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -628,7 +628,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -648,7 +648,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -668,7 +668,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -688,7 +688,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'string',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -710,7 +710,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -726,7 +726,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -742,7 +742,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -758,7 +758,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -774,7 +774,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -794,7 +794,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -811,7 +811,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -830,7 +830,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -851,7 +851,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -871,7 +871,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -893,7 +893,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -908,7 +908,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -928,7 +928,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -948,7 +948,7 @@ describe('Schema', () => {
 					fieldType: 'undefined',
 					fieldId: fieldId,
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 				expect(result.errorCode()).toBe(
@@ -967,7 +967,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -987,7 +987,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1007,7 +1007,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1027,7 +1027,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1049,7 +1049,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1066,7 +1066,7 @@ describe('Schema', () => {
 					fieldType: 'uint',
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1080,7 +1080,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1097,7 +1097,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1113,7 +1113,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1134,7 +1134,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1158,7 +1158,7 @@ describe('Schema', () => {
 					fieldType: 'null',
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1174,7 +1174,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'undefined',
 					value: 'null',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1194,7 +1194,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1217,7 +1217,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1235,7 +1235,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1255,7 +1255,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					value: value,
 					base: base
 				});
@@ -1277,7 +1277,7 @@ describe('Schema', () => {
 					fieldType: 'null',
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1298,7 +1298,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'number',
 					value: value,
-					path: schemaPath.child(fieldId),
+					tracer: tracer.child(fieldId),
 					base: base
 				});
 
@@ -1315,7 +1315,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1331,7 +1331,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1347,7 +1347,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1363,7 +1363,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1379,7 +1379,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1395,7 +1395,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1411,7 +1411,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1427,7 +1427,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(EMPTY_STRING);
@@ -1443,7 +1443,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1463,7 +1463,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1483,7 +1483,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1503,7 +1503,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1523,7 +1523,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(
@@ -1543,7 +1543,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					value: value,
 					base: base,
-					path: schemaPath.child(fieldId)
+					tracer: tracer.child(fieldId)
 				});
 
 				expect(result.errorCode()).toBe(

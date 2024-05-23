@@ -47,8 +47,10 @@ export class Statement<InputT = unknown> implements Verifier {
 	public readonly blocks: Block<Statement<InputT>>[];
 	public readonly matchers: MatcherCallable<InputT>[];
 	public readonly matcherParams: Map<MatcherParamId, unknown>;
+	public readonly id: string[];
 
 	constructor() {
+		this.id = [];
 		this.blocks = [];
 		this.matchers = [];
 		this.nextMatcherId = intMake(0);
@@ -97,8 +99,7 @@ export class Statement<InputT = unknown> implements Verifier {
 			return fate.setErrorCode(errorMkCode('nonfunction_property', 'statement', 'arg:data.fn'));
 		}
 
-		const bound = new MatcherCallable<InputT>(this.nextMatcherSlotId(), data);
-		this.matchers.push(bound);
+		this.matchers.push(new MatcherCallable<InputT>(this.nextMatcherSlotId(), data));
 
 		fate.data = true;
 		return fate.setSuccess(true);

@@ -25,6 +25,8 @@
 
 import type {BlockFlags} from '../block/flags';
 import {type Predicate} from '../predicate';
+import {Tracer} from '../tracer';
+import {type MatcherExplainData} from './explain/data';
 
 /**
  * Data used to create a callable matcher.
@@ -44,10 +46,12 @@ export interface MatcherData<InputT = unknown> {
 	 * InputT and returns a boolean indicating whether it's valid.
 	 */
 	fn: Predicate<InputT>;
+	tracer: Tracer;
 	/**
 	 * @name Matcher Call Flags
 	 * @description Optional flags passed to a matcher during binding to change
 	 * its behavior.
 	 */
 	flags?: BlockFlags;
+	explain?: MatcherExplainData<InputT>;
 }

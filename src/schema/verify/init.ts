@@ -24,8 +24,9 @@
  */
 
 import {Log} from '@toreda/log';
-import {SchemaPath} from '../path';
+import {Tracer} from '../../tracer';
 import {type SchemaData} from '../data';
+import {type SchemaVerifyFlags} from './flags';
 
 /**
  * Arguments needed for schema verification.
@@ -38,9 +39,10 @@ export interface SchemaVerifyInit<DataT = unknown> {
 	/** Data object to verify against this schema. */
 	data: SchemaData<DataT>;
 	/** Current path of properties accessed to reach this point. */
-	path?: SchemaPath;
+	tracer?: Tracer;
 	base: Log;
 	/** Whether schema being processed is a child property of another schema. */
 	childSchema?: boolean;
 	type?: string;
+	flags?: SchemaVerifyFlags;
 }

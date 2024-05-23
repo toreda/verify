@@ -51,7 +51,8 @@ export function matcherMkDivisible<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'divisibleBy',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

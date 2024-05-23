@@ -29,7 +29,6 @@ import {equalTo} from '../../../equal/to';
 import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
 import {type BlockInit} from '../../../block/init';
-
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
  * @param root		Root node in validation chain matcher will be added to.
@@ -52,7 +51,8 @@ export function matcherMkAtMost<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: '<',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

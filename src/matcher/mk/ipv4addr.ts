@@ -53,7 +53,8 @@ export function matcherMkIpv4Addr<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'ipv4addr',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

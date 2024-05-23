@@ -61,12 +61,35 @@ export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly havePropertyWithType: MatcherFactory<InputT, string, Block<Statement<InputT>>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'must');
-		this.match = new BlockMatch<InputT>(init);
-		this.equal = matcherMkEqual<InputT>(init);
-		this.haveProperty = matcherMkHaveProperty(init);
-		this.havePropertyWithType = matcherMkHavePropertyWithType(init);
-		this.be = new BlockBe<InputT>(init);
-		this.contain = new BlockContains<InputT>(init);
+		super(
+			{
+				name: init.name,
+				tracer: init.tracer,
+				blockType: 'must'
+			},
+			init.stmt
+		);
+		this.match = new BlockMatch<InputT>({
+			...init,
+			name: 'match',
+			tracer: this.tracer
+		});
+		this.equal = matcherMkEqual<InputT>({...init, name: 'equalTo', tracer: this.tracer});
+		this.haveProperty = matcherMkHaveProperty({...init, name: 'haveProperty', tracer: this.tracer});
+		this.havePropertyWithType = matcherMkHavePropertyWithType({
+			...init,
+			name: 'havePropertyWithType',
+			tracer: this.tracer
+		});
+		this.be = new BlockBe<InputT>({
+			...init,
+			name: 'be',
+			tracer: this.tracer
+		});
+		this.contain = new BlockContains<InputT>({
+			...init,
+			name: 'contain',
+			tracer: this.tracer
+		});
 	}
 }

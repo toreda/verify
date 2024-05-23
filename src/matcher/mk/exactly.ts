@@ -23,6 +23,7 @@
  *
  */
 
+import {blockIdPath} from '../../block/id/path';
 import {type BlockInit} from '../../block/init';
 import {BlockLink} from '../../block/link';
 import {equalTo} from '../../equal/to';
@@ -51,7 +52,8 @@ export function matcherMkExactly<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: '=',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer.child('exactly')
 		});
 
 		return link;

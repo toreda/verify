@@ -43,7 +43,8 @@ export default class Defaults {
 		MaxErrors: 0 as const
 	} as const;
 
-	public static SchemaPath = {
-		IdSeparator: '.' as const
+	public static Tracer = {
+		IdSeparator: '.' as const,
+		Target: '' as const
 	} as const;
 }

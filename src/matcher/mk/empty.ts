@@ -28,6 +28,7 @@ import {empty} from '../../empty';
 import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
+import {blockIdPath} from '../../block/id/path';
 
 /**
  * @param			init
@@ -51,7 +52,8 @@ export function matcherMkEmpty<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'empty',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

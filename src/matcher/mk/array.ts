@@ -48,7 +48,8 @@ export function matcherMkArray<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'isArray',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

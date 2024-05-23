@@ -38,8 +38,24 @@ export class BlockOr<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly is: BlockIs<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'or');
-		this.is = new BlockIs<InputT>(init);
-		this.contains = new BlockContains<InputT>(init);
+		super(
+			{
+				tracer: init.tracer,
+				blockType: 'or',
+				name: init.name
+			},
+			init.stmt
+		);
+
+		this.is = new BlockIs<InputT>({
+			...init,
+			name: 'is',
+			tracer: this.tracer
+		});
+		this.contains = new BlockContains<InputT>({
+			...init,
+			name: 'contains',
+			tracer: this.tracer
+		});
 	}
 }

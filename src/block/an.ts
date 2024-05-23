@@ -43,7 +43,15 @@ export class BlockAn<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly ipv6addr: MatcherFactory<InputT, never, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'have');
+		super(
+			{
+				name: init.name,
+				blockType: 'an',
+				tracer: init.tracer
+			},
+			init.stmt
+		);
+
 		this.array = matcherMkArray<InputT>(init);
 		this.int = matcherMkInt<InputT>(init);
 		this.ipv4addr = matcherMkIpv4Addr<InputT>(init);

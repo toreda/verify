@@ -38,6 +38,7 @@ import {type BlockWithNot, blockWithNot} from './block/with/not';
 import {BlockDoes} from './block/does';
 import {type Verifier} from './verifier';
 import {type VerifierFlags} from './verifier/flags';
+import {Tracer} from './tracer';
 
 /**
  * @category Rule Blocks
@@ -58,15 +59,35 @@ export class Rule<InputT> implements Resettable, Verifier {
 	constructor() {
 		const stmt = new Statement<InputT>();
 		const init: BlockInit<InputT> = {
-			stmt: stmt
+			stmt: stmt,
+			tracer: new Tracer(),
+			name: 'value'
 		};
 
-		this.does = blockWithNot<InputT, BlockDoes<InputT>>(BlockDoes<InputT>, init);
-		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, init);
-		this.is = blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, init);
-		this.matches = blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, init);
-		this.has = blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, init);
-		this.contains = blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, init);
+		this.does = blockWithNot<InputT, BlockDoes<InputT>>(BlockDoes<InputT>, {
+			...init,
+			name: 'doesNot'
+		});
+		this.must = blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, {
+			...init,
+			name: 'mustNot'
+		});
+		this.is = blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, {
+			...init,
+			name: 'isNot'
+		});
+		this.matches = blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, {
+			...init,
+			name: 'doesNotMatch'
+		});
+		this.has = blockWithNot<InputT, BlockHave<InputT>>(BlockHave<InputT>, {
+			...init,
+			name: 'hasNo'
+		});
+		this.contains = blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, {
+			...init,
+			name: 'doesNotContain'
+		});
 		this.statements = [];
 
 		this.bindListeners();

@@ -49,8 +49,19 @@ export class BlockDoes<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly contain: BlockContains<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'contains');
+		super(
+			{
+				blockType: 'contains',
+				tracer: init.tracer,
+				name: init.name
+			},
+			init.stmt
+		);
 
-		this.contain = new BlockContains<InputT>(init);
+		this.contain = new BlockContains<InputT>({
+			...init,
+			name: 'contain',
+			tracer: this.tracer
+		});
 	}
 }

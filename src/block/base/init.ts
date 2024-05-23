@@ -23,35 +23,23 @@
  *
  */
 
-import {BlockLink} from '../../block/link';
-import {between} from '../../between';
-import {type MatcherFactory} from '../factory';
-import {type Predicate} from '../../predicate';
-import {type BlockInit} from '../../block/init';
-import {blockIdPath} from '../../block/id/path';
+import {Tracer} from '../../tracer';
+import {BlockModType} from '../mod/type';
+import {type BlockType} from '../type';
 
 /**
- * @param init
+ * @category Rule Blocks
  *
- * @category 		Matcher Predicate Factories
+ * @remark
+ * Normally two types with overlap like `BlockInit` and `BlockBaseInit` would
+ * be combined into a single type, or one would extend the other and add properties. Here they should
+ * remain separate types due to complications of using the `InputT` needed by `BlockInit<InputT>` in the
+ * base block extended by all blocks. `BlockBaseInit` doesn't need `InputT`.
+ *
  */
-export function matcherMkBetween<InputT = unknown>(
-	init: BlockInit<InputT>
-): MatcherFactory<InputT, number, BlockLink<InputT>> {
-	return (left: number, right: number) => {
-		const link = new BlockLink(init);
-
-		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return between(left, value, right);
-		};
-
-		init.stmt.addMatcher({
-			fn: func,
-			name: 'lower>x>upper',
-			flags: init.flags,
-			tracer: init.tracer.child('between')
-		});
-
-		return link;
-	};
+export interface BlockBaseInit {
+	name: string;
+	blockType: BlockType;
+	modType?: BlockModType;
+	tracer: Tracer;
 }

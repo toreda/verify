@@ -35,7 +35,19 @@ export class BlockHave<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly length: BlockLength<InputT>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'have');
-		this.length = new BlockLength<InputT>(init);
+		super(
+			{
+				blockType: 'have',
+				tracer: init.tracer,
+				name: init.name
+			},
+			init.stmt
+		);
+
+		this.length = new BlockLength<InputT>({
+			...init,
+			name: 'length',
+			tracer: this.tracer
+		});
 	}
 }

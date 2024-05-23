@@ -23,8 +23,10 @@
  *
  */
 
+import {BlockBaseInit} from './block/base/init';
 import {type BlockModType} from './block/mod/type';
 import type {BlockType} from './block/type';
+import {Tracer} from './tracer';
 
 /**
  * @description Base type extended by all rule system blocks.
@@ -37,6 +39,8 @@ export abstract class Block<StatementT = unknown> {
 	 */
 	public readonly blockType: BlockType;
 	public readonly stmt: StatementT;
+	public readonly tracer: Tracer;
+	public readonly name: string;
 	/**
 	 * @description Modifier type applied to block output (if any).
 	 * @defaultValue false
@@ -44,9 +48,11 @@ export abstract class Block<StatementT = unknown> {
 	 */
 	public readonly modType: BlockModType;
 
-	constructor(stmt: StatementT, blockType: BlockType, modType?: BlockModType) {
-		this.blockType = blockType;
+	constructor(init: BlockBaseInit, stmt: StatementT) {
+		this.blockType = init.blockType;
 		this.stmt = stmt;
-		this.modType = modType !== undefined ? modType : 'none';
+		this.name = init.name;
+		this.modType = init.modType !== undefined ? init.modType : 'none';
+		this.tracer = init.tracer.child(init.name);
 	}
 }

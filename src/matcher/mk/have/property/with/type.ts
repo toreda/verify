@@ -51,7 +51,8 @@ export function matcherMkHavePropertyWithType<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'havePropWithType',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

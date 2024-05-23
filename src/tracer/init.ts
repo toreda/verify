@@ -23,35 +23,12 @@
  *
  */
 
-import {BlockLink} from '../../block/link';
-import {between} from '../../between';
-import {type MatcherFactory} from '../factory';
-import {type Predicate} from '../../predicate';
-import {type BlockInit} from '../../block/init';
-import {blockIdPath} from '../../block/id/path';
-
 /**
- * @param init
+ * Optional arguments during Trace Path creation.
  *
- * @category 		Matcher Predicate Factories
+ * @category Schemas
  */
-export function matcherMkBetween<InputT = unknown>(
-	init: BlockInit<InputT>
-): MatcherFactory<InputT, number, BlockLink<InputT>> {
-	return (left: number, right: number) => {
-		const link = new BlockLink(init);
-
-		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return between(left, value, right);
-		};
-
-		init.stmt.addMatcher({
-			fn: func,
-			name: 'lower>x>upper',
-			flags: init.flags,
-			tracer: init.tracer.child('between')
-		});
-
-		return link;
-	};
+export interface TracerInit {
+	path?: string | string[];
+	idSeparator?: string;
 }

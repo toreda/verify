@@ -59,7 +59,15 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 
 			// Error
 			if (!subResult.ok()) {
-				ctx.summary.counts.error++;
+				const subCtx = subResult.data;
+				ctx.summary.counts.error += numberValue(subCtx?.summary.counts.error, 1);
+
+				if (Array.isArray(subCtx?.failedMatchers)) {
+					ctx.failedMatchers.push(...subCtx.failedMatchers);
+					/* for (const matcher of subResult?.data.failedMatchers) {
+						ctx.failedMatchers.push(matcher);
+					} */
+				}
 				continue;
 			}
 
@@ -70,6 +78,9 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 			switch (subResult.data?.outcome) {
 				case 'fail':
 					ctx.summary.counts.fail++;
+					if (Array.isArray(subResult.data.failedMatchers)) {
+						ctx.failedMatchers.push(...subResult.data.failedMatchers);
+					}
 					break;
 				case 'pass':
 					ctx.summary.counts.pass++;

@@ -50,7 +50,8 @@ export function matcherMkAllOf<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'allOf',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

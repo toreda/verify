@@ -61,7 +61,8 @@ export function matcherMkNoneOf<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			flags: init.flags,
-			name: 'notIn'
+			name: 'notIn',
+			tracer: init.tracer
 		});
 
 		return link;

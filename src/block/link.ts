@@ -51,7 +51,14 @@ export class BlockLink<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly or: BlockWithNot<BlockOr<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'link');
+		super(
+			{
+				blockType: 'link',
+				name: init.name,
+				tracer: init.tracer
+			},
+			init.stmt
+		);
 		this.and = blockWithNot<InputT, BlockAnd<InputT>>(BlockAnd<InputT>, init);
 		this.or = blockWithNot<InputT, BlockOr<InputT>>(BlockOr<InputT>, init);
 	}

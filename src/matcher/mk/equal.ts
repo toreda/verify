@@ -50,7 +50,8 @@ export function matcherMkEqual<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: '===',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

@@ -49,7 +49,8 @@ export function matcherMkInt<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'isInt',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

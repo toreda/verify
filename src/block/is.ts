@@ -83,16 +83,59 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly truthy: MatcherFactory<InputT, never, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'is');
+		super(
+			{
+				blockType: 'is',
+				name: init.name,
+				tracer: init.tracer
+			},
+			init.stmt
+		);
 
-		this.between = matcherMkBetween<InputT>(init);
-		this.divisibleBy = matcherMkDivisible<InputT>(init);
-		this.empty = matcherMkEmpty<InputT>(init);
-		this.equalTo = matcherMkEqual<InputT>(init);
-		this.greaterThan = matcherMkGreaterThan<InputT>(init);
-		this.lessThan = matcherMkLessThan<InputT>(init);
-		this.type = matcherMkType<InputT>(init);
-		this.iterable = matcherMkIterable<InputT>(init);
-		this.truthy = matcherMkTruthy<InputT>(init);
+		this.between = matcherMkBetween<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'between'
+		});
+		this.divisibleBy = matcherMkDivisible<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'divisibleBy'
+		});
+		this.empty = matcherMkEmpty<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'empty'
+		});
+		this.equalTo = matcherMkEqual<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: '==='
+		});
+		this.greaterThan = matcherMkGreaterThan<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: '>'
+		});
+		this.lessThan = matcherMkLessThan<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: '<'
+		});
+		this.type = matcherMkType<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'type'
+		});
+		this.iterable = matcherMkIterable<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'iterable'
+		});
+		this.truthy = matcherMkTruthy<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'truthy'
+		});
 	}
 }

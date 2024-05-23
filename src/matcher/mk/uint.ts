@@ -29,6 +29,7 @@ import {BlockLink} from '../../block/link';
 
 import {type Predicate} from '../../predicate';
 import {type MatcherFactory} from '../factory';
+import {blockIdPath} from '../../block/id/path';
 
 /**
  *
@@ -53,7 +54,8 @@ export function matcherMkUint<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'isArray',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer.child('uint')
 		});
 
 		return link;

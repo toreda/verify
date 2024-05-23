@@ -8,11 +8,10 @@ import {
 	SampleSchemaSubB
 } from '../_data/schema';
 import {schemaError} from '../../src/schema/error';
-import {SchemaPath} from '../../src/schema/path';
+import {Tracer} from '../../src/tracer';
 import {type SchemaInit} from '../../src';
 import {type Primitive} from '@toreda/types';
 
-const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
 describe('Schema - Recursive Parsing', () => {
@@ -24,7 +23,7 @@ describe('Schema - Recursive Parsing', () => {
 		let bData: SampleBData;
 		let aData: SampleAData;
 		let schema: SampleSchema;
-		let schemaPath: SchemaPath;
+		let tracer: Tracer;
 		let init: SchemaInit<Primitive, SampleData, SampleData>;
 
 		beforeAll(() => {
@@ -57,7 +56,7 @@ describe('Schema - Recursive Parsing', () => {
 					ct2: schemaSubB
 				}
 			});
-			schemaPath = new SchemaPath();
+			tracer = new Tracer();
 		});
 
 		beforeEach(() => {
@@ -81,7 +80,7 @@ describe('Schema - Recursive Parsing', () => {
 				id: 'aaa',
 				data: aData,
 				base: base,
-				path: schemaPath
+				tracer: tracer
 			});
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);

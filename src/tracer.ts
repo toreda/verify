@@ -23,9 +23,9 @@
  *
  */
 
-import {stringValue} from '@toreda/strong-types';
-import {type SchemaPathInit} from './path/init';
-import Defaults from '../defaults';
+import {Id, idMake, stringValue} from '@toreda/strong-types';
+import {type TracerInit} from './tracer/init';
+import Defaults from './defaults';
 
 /**
  * Create a readable string to uniquely identify element instances based on their
@@ -42,13 +42,15 @@ import Defaults from '../defaults';
  *
  * @category Schemas
  */
-export class SchemaPath {
+export class Tracer {
 	public readonly path: string[];
 	public readonly idSeparator: string;
+	public readonly target: Id;
 
-	constructor(init?: SchemaPathInit) {
+	constructor(init?: TracerInit) {
 		this.path = this.mkPath(init?.path);
-		this.idSeparator = stringValue(init?.idSeparator, Defaults.SchemaPath.IdSeparator);
+		this.idSeparator = stringValue(init?.idSeparator, Defaults.Tracer.IdSeparator);
+		this.target = idMake(Defaults.Tracer.Target, '');
 	}
 
 	public current(): string {
@@ -67,12 +69,12 @@ export class SchemaPath {
 		return [];
 	}
 
-	public child(id: string): SchemaPath {
+	public child(id: string): Tracer {
 		if (typeof id !== 'string' || !id) {
 			return this;
 		}
 
-		return new SchemaPath({
+		return new Tracer({
 			path: [...this.path, id],
 			idSeparator: this.idSeparator
 		});

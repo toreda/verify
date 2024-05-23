@@ -33,6 +33,9 @@ import {type VerifierResult} from '../verifier/result';
 import {verifierResult} from '../verifier/result';
 import {matcherMkId} from './mk/id';
 import {type MatcherData} from './data';
+import {MatcherExplain} from './explain';
+import {type MatcherExplainData} from './explain/data';
+import {Tracer} from '../tracer';
 
 /**
  * @category Matcher Predicates
@@ -42,12 +45,31 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 	public readonly predicate: Predicate<InputT>;
 	public readonly flags: BlockFlags;
 	public readonly stored: Map<string, Primitive>;
+	public readonly tracer: Tracer;
+	public readonly explain: MatcherExplain;
 
 	constructor(matcherId: number, data: MatcherData<InputT>) {
 		this.predicate = data.fn;
 		this.stored = new Map<string, Primitive>();
 		this.flags = this.mkFlags(data?.flags);
 		this.id = matcherMkId<InputT>(matcherId, data);
+		// Traces the path & names of each block accessed to reach this matcher. Used
+		// for error reporting, debugging, and diagnostics.
+		this.tracer = data.tracer.child(this.id());
+
+		// Create explain object AFTER all other properties. It uses these
+		// properties to construct an accurate description.
+		this.explain = this._mkExplain(data.explain);
+	}
+
+	private _mkExplain(data?: MatcherExplainData<InputT>): MatcherExplain<InputT> {
+		if (!data) {
+			return new MatcherExplain<InputT>({
+				fn: this.id()
+			});
+		}
+
+		return new MatcherExplain<InputT>(data);
 	}
 
 	/**
@@ -90,7 +112,6 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 			const result = this.applyMods(fnResult);
 			//console.debug(`predicate result (mods applied): ${result}`);
 			ctx.outcome = result === true ? 'pass' : 'fail';
-
 			fate.setSuccess(true);
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : 'nonerr_type';
@@ -98,6 +119,11 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 			fate.error(e);
 			fate.setErrorCode('exception');
 			ctx.outcome = 'error';
+		}
+
+		if (ctx.outcome === 'fail' || ctx.outcome === 'error') {
+			console.error(`Matcher fail: ${this.tracer.current()}`);
+			ctx.failedMatchers.push(this.tracer.current());
 		}
 
 		return fate;

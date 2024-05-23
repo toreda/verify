@@ -43,9 +43,20 @@ export class BlockLength<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly equalTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'length');
-		this.lessThan = matcherMkLessThan<InputT>(init);
-		this.greaterThan = matcherMkGreaterThan<InputT>(init);
-		this.equalTo = matcherMkEqual<InputT>(init);
+		super(
+			{
+				tracer: init.tracer,
+				name: init.name,
+				blockType: 'length'
+			},
+			init.stmt
+		);
+		this.lessThan = matcherMkLessThan<InputT>({
+			...init,
+			name: '<',
+			tracer: this.tracer
+		});
+		this.greaterThan = matcherMkGreaterThan<InputT>({...init, name: '>', tracer: this.tracer});
+		this.equalTo = matcherMkEqual<InputT>({...init, name: '=', tracer: this.tracer});
 	}
 }

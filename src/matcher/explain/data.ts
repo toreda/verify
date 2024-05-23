@@ -23,35 +23,21 @@
  *
  */
 
-import {BlockLink} from '../../block/link';
-import {between} from '../../between';
-import {type MatcherFactory} from '../factory';
-import {type Predicate} from '../../predicate';
-import {type BlockInit} from '../../block/init';
-import {blockIdPath} from '../../block/id/path';
-
 /**
- * @param init
+ * Readable explaining the operation performed by a matcher predicate.
  *
- * @category 		Matcher Predicate Factories
+ * @category Matcher Predicates
+ *
+ * @remark
+ * Callable matchers are constructed dynamically from rules provided by the user.
+ * Although Matcher Predicates always take input and return true or false, the
+ * input can be almost anything and difficult to understand. Explain data constructs
+ * an easy to understand description of the operation and what its operating on. Used
+ * primary in failure cases to identify which matcher failed validation, and what it
+ * was doing when it failed.
  */
-export function matcherMkBetween<InputT = unknown>(
-	init: BlockInit<InputT>
-): MatcherFactory<InputT, number, BlockLink<InputT>> {
-	return (left: number, right: number) => {
-		const link = new BlockLink(init);
-
-		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return between(left, value, right);
-		};
-
-		init.stmt.addMatcher({
-			fn: func,
-			name: 'lower>x>upper',
-			flags: init.flags,
-			tracer: init.tracer.child('between')
-		});
-
-		return link;
-	};
+export interface MatcherExplainData<InputT = unknown> {
+	fn: string;
+	params?: InputT[];
+	valueName?: string;
 }

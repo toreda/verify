@@ -52,7 +52,8 @@ export function matcherMkAtLeast<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'atLeast',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

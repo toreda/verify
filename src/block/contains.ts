@@ -62,13 +62,44 @@ export class BlockContains<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly allOf: MatcherFactory<InputT, Primitive[], BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
-		super(init.stmt, 'contains');
+		super(
+			{
+				blockType: 'contains',
+				tracer: init.tracer,
+				name: 'contains'
+			},
+			init.stmt
+		);
 
-		this.allOf = matcherMkAllOf<InputT>(init);
-		this.atLeast = matcherMkAtLeast<InputT>(init);
-		this.atMost = matcherMkAtMost<InputT>(init);
-		this.exactly = matcherMkExactly<InputT>(init);
-		this.noneOf = matcherMkNoneOf<InputT>(init);
-		this.oneOf = matcherMkOneOf<InputT>(init);
+		this.allOf = matcherMkAllOf<InputT>({
+			...init,
+			name: 'allOf',
+			tracer: this.tracer
+		});
+		this.atLeast = matcherMkAtLeast<InputT>({
+			...init,
+			name: 'atLeast',
+			tracer: this.tracer
+		});
+		this.atMost = matcherMkAtMost<InputT>({
+			...init,
+			name: 'atMost',
+			tracer: this.tracer
+		});
+		this.exactly = matcherMkExactly<InputT>({
+			...init,
+			name: 'exactly',
+			tracer: this.tracer
+		});
+		this.noneOf = matcherMkNoneOf<InputT>({
+			...init,
+			name: 'noneOf',
+			tracer: this.tracer
+		});
+		this.oneOf = matcherMkOneOf<InputT>({
+			...init,
+			name: 'oneOf',
+			tracer: this.tracer
+		});
 	}
 }

@@ -50,7 +50,8 @@ export function matcherMkLessThan<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: '<',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

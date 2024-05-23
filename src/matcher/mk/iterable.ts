@@ -50,7 +50,8 @@ export function matcherMkIterable<InputT = unknown>(
 		init.stmt.addMatcher({
 			fn: func,
 			name: 'iterable',
-			flags: init.flags
+			flags: init.flags,
+			tracer: init.tracer
 		});
 
 		return link;

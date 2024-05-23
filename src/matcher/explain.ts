@@ -23,12 +23,24 @@
  *
  */
 
+import {stringValue} from '@toreda/strong-types';
+import {type MatcherExplainData} from './explain/data';
+
 /**
- * Optional arguments used when instantiating `SchemaPath`.
- *
- * @category Schemas
+ * @category Matcher Predicates
  */
-export interface SchemaPathInit {
-	path?: string | string[];
-	idSeparator?: string;
+export class MatcherExplain<InputT = unknown> {
+	public readonly fn: string;
+	public readonly valueName: string;
+	public readonly params: InputT[];
+
+	constructor(data: MatcherExplainData) {
+		this.fn = stringValue(data.fn, '__unknown__');
+		this.params = [];
+		this.valueName = stringValue(data.valueName, 'value');
+	}
+
+	public asText(): string {
+		return '';
+	}
 }

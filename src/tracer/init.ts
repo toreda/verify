@@ -35,5 +35,6 @@ export interface TracerInit {
 	pathSeparator?: string;
 	targetPropName?: string;
 	targetObjName?: string;
+	targetPropValue?: number | string | boolean | null;
 	params?: Primitive[];
 }

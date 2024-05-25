@@ -47,7 +47,7 @@ export class BlockHave<InputT = unknown> extends Block<Statement<InputT>> {
 		this.length = new BlockLength<InputT>({
 			...init,
 			name: 'length',
-			tracer: this.tracer
+			tracer: init.tracer
 		});
 	}
 }

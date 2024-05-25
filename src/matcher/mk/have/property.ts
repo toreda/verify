@@ -50,7 +50,7 @@ export function matcherMkHaveProperty<InputT = unknown>(
 
 		init.stmt.addMatcher({
 			fn: func,
-			name: 'haveProp',
+			name: init.name,
 			flags: init.flags,
 			tracer: init.tracer
 		});

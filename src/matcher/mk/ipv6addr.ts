@@ -54,10 +54,7 @@ export function matcherMkIpv6Addr<InputT = unknown>(
 			fn: func,
 			name: 'ipv6addr',
 			flags: init.flags,
-			tracer: init.tracer,
-			explain: {
-				fn: `{value} is ipv6addr`
-			}
+			tracer: init.tracer
 		});
 
 		return link;

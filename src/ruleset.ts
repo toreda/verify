@@ -48,7 +48,6 @@ export class Ruleset<InputT = unknown> implements Verifier {
 
 	constructor() {
 		this.rules = [];
-
 		this.bindListeners();
 	}
 
@@ -100,9 +99,8 @@ export class Ruleset<InputT = unknown> implements Verifier {
 				const init: BlockInit<InputT> = {
 					stmt: stmt,
 					tracer: new Tracer({
-						target: {
-							propName: prop
-						}
+						targetObjName: 'value',
+						targetPropName: prop
 					}),
 					name: 'value'
 				};

@@ -23,7 +23,7 @@
  *
  */
 
-import {type Id, idMake, stringValue} from '@toreda/strong-types';
+import {type Id, idMake, stringValue, Text, textMake} from '@toreda/strong-types';
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
@@ -48,6 +48,7 @@ export class Tracer {
 	public readonly pathSeparator: string;
 	public readonly targetObjName: Id;
 	public readonly targetPropName: Id;
+	public readonly targetPropValue: Text;
 	public readonly params: Primitive[];
 
 	constructor(init?: TracerInit) {
@@ -56,14 +57,35 @@ export class Tracer {
 		this.targetObjName = idMake(Defaults.Tracer.TargetObjName, init?.targetObjName);
 		this.targetPropName = idMake(Defaults.Tracer.TargetPropName, init?.targetPropName);
 		this.params = Array.isArray(init?.params) ? init.params : [];
+		this.targetPropValue = textMake(Defaults.Tracer.TargetPropValue);
+
+		if (init?.targetPropValue !== undefined && init?.targetPropValue !== '') {
+			this.targetPropValue(`${init.targetPropValue}`);
+		}
 	}
 
 	public current(): string {
 		return this.path.join(this.pathSeparator);
 	}
 
+	public targetLabel(): string {
+		if (this.targetObjName()) {
+			if (this.targetPropName.getNull()) {
+				if (this.targetPropValue.getNull()) {
+					return `${this.targetObjName()}.${this.targetPropName()} (curr: ${this.targetPropValue()})`;
+				} else {
+					return `${this.targetObjName()}.${this.targetPropName()}`;
+				}
+			} else {
+				return this.targetObjName();
+			}
+		} else {
+			return Defaults.Tracer.TargetObjName;
+		}
+	}
+
 	public explain(): string {
-		return `${this.targetObjName()} ${this.path.join(' ')} ${this.params.join(', ')}`;
+		return `${this.targetLabel()} ${this.path.join(' ')} ${this.params.join(', ')}`;
 	}
 
 	private mkPath(parts?: string | string[]): string[] {
@@ -85,7 +107,11 @@ export class Tracer {
 
 		return new Tracer({
 			path: [...this.path, id],
-			pathSeparator: this.pathSeparator
+			params: this.params,
+			pathSeparator: this.pathSeparator,
+			targetObjName: this.targetObjName(),
+			targetPropName: this.targetPropName(),
+			targetPropValue: this.targetPropValue()
 		});
 	}
 

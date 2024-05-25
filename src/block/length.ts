@@ -52,14 +52,14 @@ export class BlockLength<InputT = unknown> extends Block<Statement<InputT>> {
 			init.stmt
 		);
 
-		this.tracer.targetPropName('length');
+		init.tracer.targetPropName('length');
 
 		this.lessThan = matcherMkLessThan<InputT>({
 			...init,
 			name: '<',
-			tracer: this.tracer
+			tracer: init.tracer
 		});
-		this.greaterThan = matcherMkGreaterThan<InputT>({...init, name: '>', tracer: this.tracer});
-		this.equalTo = matcherMkEqual<InputT>({...init, name: '=', tracer: this.tracer});
+		this.greaterThan = matcherMkGreaterThan<InputT>({...init, name: '>', tracer: init.tracer});
+		this.equalTo = matcherMkEqual<InputT>({...init, name: '=', tracer: init.tracer});
 	}
 }

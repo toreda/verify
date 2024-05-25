@@ -46,6 +46,7 @@ export default class Defaults {
 	public static Tracer = {
 		PathSeparator: '.' as const,
 		TargetObjName: '' as const,
-		TargetPropName: '' as const
+		TargetPropName: '' as const,
+		TargetPropValue: '' as const
 	} as const;
 }

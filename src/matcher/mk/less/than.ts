@@ -43,6 +43,7 @@ export function matcherMkLessThan<InputT = unknown>(
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink<InputT>(init);
 		init.tracer.addParam(right);
+
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return lessThan(value, right);
 		};

@@ -1,6 +1,7 @@
 import {BlockFlags} from '../../src';
 import {MatcherCallable} from '../../src/matcher/callable';
 import {Predicate} from '../../src/predicate';
+import {Tracer} from '../../src/tracer';
 
 const EMPTY_STRING = '';
 
@@ -15,7 +16,8 @@ describe('MatcherCallable', () => {
 
 		instance = new MatcherCallable<string>(8, {
 			fn: predicate,
-			name: 'matcher'
+			name: 'matcher',
+			tracer: new Tracer()
 		});
 	});
 
@@ -31,7 +33,8 @@ describe('MatcherCallable', () => {
 
 			const custom = new MatcherCallable(9, {
 				fn: func,
-				name: 'matcher'
+				name: 'matcher',
+				tracer: new Tracer()
 			});
 
 			expect(custom.predicate).toStrictEqual(func);
@@ -52,7 +55,8 @@ describe('MatcherCallable', () => {
 			const custom = new MatcherCallable(10, {
 				fn: func,
 				name: 'matcher',
-				flags: flags
+				flags: flags,
+				tracer: new Tracer()
 			});
 
 			expect(custom.flags).toHaveProperty('invertResult');
@@ -149,7 +153,8 @@ describe('MatcherCallable', () => {
 				const custom = new MatcherCallable(11, {
 					fn: fn,
 					name: 'matcher',
-					flags: {}
+					flags: {},
+					tracer: new Tracer()
 				});
 
 				const result = await custom.verify('aaa');
@@ -164,7 +169,8 @@ describe('MatcherCallable', () => {
 				const custom = new MatcherCallable(12, {
 					fn: func,
 					name: 'matcher',
-					flags: {}
+					flags: {},
+					tracer: new Tracer()
 				});
 
 				const result = await custom.verify('aaa');
@@ -180,7 +186,8 @@ describe('MatcherCallable', () => {
 				const custom = new MatcherCallable(13, {
 					fn: fn,
 					name: 'matcher',
-					flags: {}
+					flags: {},
+					tracer: new Tracer()
 				});
 
 				const result = await custom.verify('aaa');

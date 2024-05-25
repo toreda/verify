@@ -13,10 +13,10 @@ describe('Tracer', () => {
 			expect(custom.path.length).toBe(0);
 		});
 
-		it(`should initialize idSeparator to Tracer default when init arg is undefined`, () => {
+		it(`should initialize pathSeparator to Tracer default when init arg is undefined`, () => {
 			const custom = new Tracer();
 
-			expect(custom.idSeparator).toBe(Defaults.Tracer.IdSeparator);
+			expect(custom.pathSeparator).toBe(Defaults.Tracer.PathSeparator);
 		});
 
 		it(`should initialize path to an empty array when init arg is null`, () => {
@@ -26,63 +26,63 @@ describe('Tracer', () => {
 			expect(custom.path.length).toBe(0);
 		});
 
-		it(`should initialize idSeparator to Tracer default when init arg is null`, () => {
+		it(`should initialize pathSeparator to Tracer default when init arg is null`, () => {
 			const custom = new Tracer(null as any);
 
-			expect(custom.idSeparator).toBe(Defaults.Tracer.IdSeparator);
+			expect(custom.pathSeparator).toBe(Defaults.Tracer.PathSeparator);
 		});
 
 		it(`should initialize path to an empty array when init.path is undefined`, () => {
 			const custom = new Tracer({
-				idSeparator: '.'
+				pathSeparator: '.'
 			});
 
 			expect(Array.isArray(custom.path)).toBe(true);
 			expect(custom.path.length).toBe(0);
 		});
 
-		it(`should initialize idSeparator to Tracer default when init.idSeparator is undefined`, () => {
+		it(`should initialize pathSeparator to Tracer default when init.pathSeparator is undefined`, () => {
 			const custom = new Tracer({
-				idSeparator: undefined
+				pathSeparator: undefined
 			});
 
-			expect(custom.idSeparator).toBe(Defaults.Tracer.IdSeparator);
+			expect(custom.pathSeparator).toBe(Defaults.Tracer.PathSeparator);
 		});
 
 		it(`should initialize path to an empty array when init.path is null`, () => {
 			const custom = new Tracer({
 				path: null as any,
-				idSeparator: '.'
+				pathSeparator: '.'
 			});
 
 			expect(Array.isArray(custom.path)).toBe(true);
 			expect(custom.path.length).toBe(0);
 		});
 
-		it(`should initialize idSeparator to Tracer default when init.idSeparator is null`, () => {
+		it(`should initialize pathSeparator to Tracer default when init.pathSeparator is null`, () => {
 			const custom = new Tracer({
-				idSeparator: null as any
+				pathSeparator: null as any
 			});
 
-			expect(custom.idSeparator).toBe(Defaults.Tracer.IdSeparator);
+			expect(custom.pathSeparator).toBe(Defaults.Tracer.PathSeparator);
 		});
 
-		it(`should initialize idSeparator to provided multi-character string value`, () => {
+		it(`should initialize pathSeparator to provided multi-character string value`, () => {
 			const value = '___';
 			const custom = new Tracer({
-				idSeparator: value
+				pathSeparator: value
 			});
 
-			expect(custom.idSeparator).toBe(value);
+			expect(custom.pathSeparator).toBe(value);
 		});
 
-		it(`should initialize idSeparator to provided single character string value`, () => {
+		it(`should initialize pathSeparator to provided single character string value`, () => {
 			const value = '+';
 			const custom = new Tracer({
-				idSeparator: value
+				pathSeparator: value
 			});
 
-			expect(custom.idSeparator).toBe(value);
+			expect(custom.pathSeparator).toBe(value);
 		});
 	});
 
@@ -123,7 +123,7 @@ describe('Tracer', () => {
 
 				for (const sep of seps) {
 					const custom = new Tracer({
-						idSeparator: sep,
+						pathSeparator: sep,
 						path: [a, b, c]
 					});
 
@@ -163,7 +163,7 @@ describe('Tracer', () => {
 			it(`should return a new Tracer copy that includes id arg`, () => {
 				const pathA = new Tracer({
 					path: ['a', 'b', 'c'],
-					idSeparator: '+'
+					pathSeparator: '+'
 				});
 				const pathB = pathA.child('d');
 

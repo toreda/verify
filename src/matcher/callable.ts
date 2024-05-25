@@ -53,19 +53,17 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 		this.stored = new Map<string, Primitive>();
 		this.flags = this.mkFlags(data?.flags);
 		this.id = matcherMkId<InputT>(matcherId, data);
+		// Create explain object AFTER all other properties except tracer.
+		this.explain = this._mkExplain(data.explain);
 		// Traces the path & names of each block accessed to reach this matcher. Used
 		// for error reporting, debugging, and diagnostics.
 		this.tracer = data.tracer.child(this.id());
-
-		// Create explain object AFTER all other properties. It uses these
-		// properties to construct an accurate description.
-		this.explain = this._mkExplain(data.explain);
 	}
 
 	private _mkExplain(data?: MatcherExplainData<InputT>): MatcherExplain<InputT> {
 		if (!data) {
 			return new MatcherExplain<InputT>({
-				fn: this.id()
+				fnLabel: this.id()
 			});
 		}
 
@@ -122,8 +120,8 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 		}
 
 		if (ctx.outcome === 'fail' || ctx.outcome === 'error') {
-			console.error(`Matcher fail: ${this.tracer.current()}`);
-			ctx.failedMatchers.push(this.tracer.current());
+			console.error(`Matcher fail: ${this.tracer.explain()}`);
+			ctx.failedMatchers.push(this.tracer.explain());
 		}
 
 		return fate;

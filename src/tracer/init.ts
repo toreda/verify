@@ -23,12 +23,17 @@
  *
  */
 
+import {type Primitive} from '@toreda/types';
+
 /**
  * Optional arguments during Trace Path creation.
  *
- * @category Schemas
+ * @category Tracer
  */
 export interface TracerInit {
 	path?: string | string[];
-	idSeparator?: string;
+	pathSeparator?: string;
+	targetPropName?: string;
+	targetObjName?: string;
+	params?: Primitive[];
 }

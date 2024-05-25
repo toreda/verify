@@ -30,17 +30,36 @@ import {type MatcherExplainData} from './explain/data';
  * @category Matcher Predicates
  */
 export class MatcherExplain<InputT = unknown> {
-	public readonly fn: string;
-	public readonly valueName: string;
+	public readonly fnLabel: string;
 	public readonly params: InputT[];
+	public readonly targetLabel: string;
 
 	constructor(data: MatcherExplainData) {
-		this.fn = stringValue(data.fn, '__unknown__');
+		this.fnLabel = stringValue(data.fnLabel, '__unknown__');
 		this.params = [];
-		this.valueName = stringValue(data.valueName, 'value');
+		this.targetLabel = this._mkTargetLabel(data);
+	}
+
+	public _mkTargetLabel(data: MatcherExplainData): string {
+		const objName = stringValue(data.targetObjName, 'value');
+		const propName = stringValue(data.targetPropName, '');
+
+		if (propName !== '') {
+			return `${objName}.${propName}`;
+		} else {
+			return `${objName}`;
+		}
 	}
 
 	public asText(): string {
-		return '';
+		return `${this.targetLabel} ${this.fnLabel} ${this.paramsText()}`;
+	}
+
+	public addParam(value: InputT): void {
+		this.params.push(value);
+	}
+
+	public paramsText(): string {
+		return this.params.join(', ');
 	}
 }

@@ -40,7 +40,7 @@ import {blockWithNot} from './block/with/not';
 import {type VerifierFlags} from './verifier/flags';
 import {Tracer} from './tracer';
 
-/**
+/**zz
  * @category Rulesets
  */
 export class Ruleset<InputT = unknown> implements Verifier {
@@ -99,7 +99,11 @@ export class Ruleset<InputT = unknown> implements Verifier {
 				const stmt = new Statement<InputT>();
 				const init: BlockInit<InputT> = {
 					stmt: stmt,
-					tracer: new Tracer(),
+					tracer: new Tracer({
+						target: {
+							propName: prop
+						}
+					}),
 					name: 'value'
 				};
 

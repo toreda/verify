@@ -44,7 +44,8 @@ export default class Defaults {
 	} as const;
 
 	public static Tracer = {
-		IdSeparator: '.' as const,
-		Target: '' as const
+		PathSeparator: '.' as const,
+		TargetObjName: '' as const,
+		TargetPropName: '' as const
 	} as const;
 }

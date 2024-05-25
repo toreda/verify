@@ -47,7 +47,7 @@ export function matcherMkArray<InputT = unknown>(
 
 		init.stmt.addMatcher({
 			fn: func,
-			name: 'isArray',
+			name: 'array',
 			flags: init.flags,
 			tracer: init.tracer
 		});

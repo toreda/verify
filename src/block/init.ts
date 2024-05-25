@@ -39,6 +39,6 @@ export interface BlockInit<InputT = unknown> {
 	 * @description Optional flags that alter block behavior.
 	 */
 	flags?: BlockFlags;
-	tracer: Tracer,
+	tracer: Tracer;
 	name: string;
 }

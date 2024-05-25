@@ -23,37 +23,14 @@
  *
  */
 
-import {type BlockInit} from '../../../block/init';
-import {BlockLink} from '../../../block/link';
-import {lessThan} from '../../../less/than';
-import {type Predicate} from '../../../predicate';
-import {type MatcherFactory} from '../../factory';
+import {type Primitive} from '@toreda/types';
+
 /**
- * Create matcher for validation chain which determines if chain value is less than target.
- * @param init
- * @returns
+ * Actions performed by the data structure being traced.
  *
- * @category Matcher Predicate Factories
+ * @category Tracer
  */
-export function matcherMkLessThan<InputT = unknown>(
-	init: BlockInit<InputT>
-): MatcherFactory<InputT, number, BlockLink<InputT>> {
-	return (right: number): BlockLink<InputT> => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<InputT>(init);
-		init.tracer.addParam(right);
-		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return lessThan(value, right);
-		};
-
-		init.stmt.addMatcher({
-			fn: func,
-			name: '<',
-			flags: init.flags,
-			tracer: init.tracer
-		});
-
-		return link;
-	};
+export interface TracerAction {
+	action: string;
+	params: Primitive[];
 }

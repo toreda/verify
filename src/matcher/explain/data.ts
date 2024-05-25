@@ -23,6 +23,8 @@
  *
  */
 
+import {type Primitive} from '@toreda/types';
+
 /**
  * Readable explaining the operation performed by a matcher predicate.
  *
@@ -37,7 +39,8 @@
  * was doing when it failed.
  */
 export interface MatcherExplainData<InputT = unknown> {
-	fn: string;
-	params?: InputT[];
-	valueName?: string;
+	fnLabel: string;
+	params?: Primitive[];
+	targetObjName?: string;
+	targetPropName?: string;
 }

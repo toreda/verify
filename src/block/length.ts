@@ -51,6 +51,9 @@ export class BlockLength<InputT = unknown> extends Block<Statement<InputT>> {
 			},
 			init.stmt
 		);
+
+		this.tracer.targetPropName('length');
+
 		this.lessThan = matcherMkLessThan<InputT>({
 			...init,
 			name: '<',

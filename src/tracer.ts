@@ -23,9 +23,10 @@
  *
  */
 
-import {Id, idMake, stringValue} from '@toreda/strong-types';
+import {type Id, idMake, stringValue} from '@toreda/strong-types';
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
+import {type Primitive} from '@toreda/types';
 
 /**
  * Create a readable string to uniquely identify element instances based on their
@@ -40,21 +41,29 @@ import Defaults from './defaults';
  * element names. e.g. schemaA.text and schemaA.schemaA.text would both look similar
  * without the full path.
  *
- * @category Schemas
+ * @category Tracer
  */
 export class Tracer {
 	public readonly path: string[];
-	public readonly idSeparator: string;
-	public readonly target: Id;
+	public readonly pathSeparator: string;
+	public readonly targetObjName: Id;
+	public readonly targetPropName: Id;
+	public readonly params: Primitive[];
 
 	constructor(init?: TracerInit) {
 		this.path = this.mkPath(init?.path);
-		this.idSeparator = stringValue(init?.idSeparator, Defaults.Tracer.IdSeparator);
-		this.target = idMake(Defaults.Tracer.Target, '');
+		this.pathSeparator = stringValue(init?.pathSeparator, Defaults.Tracer.PathSeparator);
+		this.targetObjName = idMake(Defaults.Tracer.TargetObjName, init?.targetObjName);
+		this.targetPropName = idMake(Defaults.Tracer.TargetPropName, init?.targetPropName);
+		this.params = Array.isArray(init?.params) ? init.params : [];
 	}
 
 	public current(): string {
-		return this.path.join(this.idSeparator);
+		return this.path.join(this.pathSeparator);
+	}
+
+	public explain(): string {
+		return `${this.targetObjName()} ${this.path.join(' ')} ${this.params.join(', ')}`;
 	}
 
 	private mkPath(parts?: string | string[]): string[] {
@@ -76,7 +85,16 @@ export class Tracer {
 
 		return new Tracer({
 			path: [...this.path, id],
-			idSeparator: this.idSeparator
+			pathSeparator: this.pathSeparator
 		});
+	}
+
+	public addParam(param: Primitive): void {
+		this.params.push(param);
+	}
+
+	public clearTarget(): void {
+		this.targetObjName.reset();
+		this.targetPropName.reset();
 	}
 }

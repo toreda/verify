@@ -37,7 +37,7 @@ export function matcherMkId<ValueT = unknown>(matcherId: number, data: MatcherDa
 	const id = idMake('');
 
 	const invert = data.flags?.invertResult === true ? '^' : '';
-	id(`${matcherId}_${data.name}_${invert}`);
+	id(`${matcherId} ${data.name} ${invert}`);
 
 	return id;
 }

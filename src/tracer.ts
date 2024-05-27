@@ -23,10 +23,11 @@
  *
  */
 
-import {type Id, idMake, stringValue, Text, textMake} from '@toreda/strong-types';
+import {type Id, idMake, stringValue, Text, textMake, Strong, strongMake} from '@toreda/strong-types';
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
+import {Statement} from './statement';
 
 /**
  * Create a readable string to uniquely identify element instances based on their
@@ -50,6 +51,7 @@ export class Tracer {
 	public readonly targetPropName: Id;
 	public readonly targetPropValue: Text;
 	public readonly params: Primitive[];
+	public readonly value: Strong<unknown>;
 
 	constructor(init?: TracerInit) {
 		this.path = this.mkPath(init?.path);
@@ -62,6 +64,8 @@ export class Tracer {
 		if (init?.targetPropValue !== undefined && init?.targetPropValue !== '') {
 			this.targetPropValue(`${init.targetPropValue}`);
 		}
+
+		this.value = strongMake<unknown>(init?.value !== undefined ? init.value : undefined);
 	}
 
 	public current(): string {
@@ -70,7 +74,7 @@ export class Tracer {
 
 	public targetLabel(): string {
 		if (this.targetObjName()) {
-			if (this.targetPropName.getNull()) {
+			if (this.targetPropName()) {
 				if (this.targetPropValue.getNull()) {
 					return `${this.targetObjName()}.${this.targetPropName()} (curr: ${this.targetPropValue()})`;
 				} else {
@@ -84,8 +88,21 @@ export class Tracer {
 		}
 	}
 
+	public valueContent(value: unknown): string {
+		if (Object(value) !== value) {
+			if (value === '') {
+				return ` ('')`;
+			} else {
+				return ` (${value})`;
+			}
+		} else {
+			return '';
+		}
+	}
+
 	public explain(): string {
-		return `${this.targetLabel()} ${this.path.join(' ')} ${this.params.join(', ')}`;
+		const content = this.valueContent(this.value());
+		return `${this.targetLabel()}${content} ${this.path.join(' ')} ${this.params.join(', ')}`;
 	}
 
 	private mkPath(parts?: string | string[]): string[] {
@@ -122,5 +139,10 @@ export class Tracer {
 	public clearTarget(): void {
 		this.targetObjName.reset();
 		this.targetPropName.reset();
+	}
+
+	public reset(): void {
+		this.clearTarget();
+		this.value.reset();
 	}
 }

@@ -28,7 +28,7 @@ import {empty} from '../../empty';
 import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
-import {blockIdPath} from '../../block/id/path';
+import {matcherTarget} from '../target';
 
 /**
  * @param			init
@@ -46,7 +46,9 @@ export function matcherMkEmpty<InputT = unknown>(
 		const func: Predicate<InputT | InputT[]> = async (
 			value?: InputT | InputT[] | null
 		): Promise<boolean> => {
-			return empty(value);
+			const target = matcherTarget(init.tracer, value);
+
+			return empty(target);
 		};
 
 		init.stmt.addMatcher({

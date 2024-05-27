@@ -28,6 +28,7 @@ import {greaterThan} from '../../../greater/than';
 import {type MatcherFactory} from '../../factory';
 import {type Predicate} from '../../../predicate';
 import {type BlockInit} from '../../../block/init';
+import {matcherTarget} from '../../target';
 
 /**
  * @param init
@@ -46,7 +47,9 @@ export function matcherMkGreaterThan<InputT = unknown>(
 		init.tracer.addParam(right);
 
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return greaterThan(value, right);
+			const input = matcherTarget(init.tracer, value);
+
+			return greaterThan(input, right);
 		};
 
 		init.stmt.addMatcher({

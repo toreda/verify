@@ -98,10 +98,7 @@ export class Ruleset<InputT = unknown> implements Verifier {
 				const stmt = new Statement<InputT>();
 				const init: BlockInit<InputT> = {
 					stmt: stmt,
-					tracer: new Tracer({
-						targetObjName: 'value',
-						targetPropName: prop
-					}),
+					tracer: new Tracer(),
 					name: 'value'
 				};
 
@@ -115,13 +112,13 @@ export class Ruleset<InputT = unknown> implements Verifier {
 						target.add(stmt);
 						return blockWithNot<InputT, BlockContains<InputT>>(BlockContains<InputT>, {
 							...init,
-							name: 'doesNotContain'
+							name: 'contains'
 						});
 					case 'must':
 						target.add(stmt);
 						return blockWithNot<InputT, BlockMust<InputT>>(BlockMust<InputT>, {
 							...init,
-							name: 'mustNot'
+							name: 'must'
 						});
 					case 'has':
 						target.add(stmt);
@@ -133,13 +130,13 @@ export class Ruleset<InputT = unknown> implements Verifier {
 						target.add(stmt);
 						return blockWithNot<InputT, BlockMatch<InputT>>(BlockMatch<InputT>, {
 							...init,
-							name: 'doesNotMatch'
+							name: 'matches'
 						});
 					case 'is':
 						target.add(stmt);
 						return blockWithNot<InputT, BlockIs<InputT>>(BlockIs<InputT>, {
 							...init,
-							name: 'isNot'
+							name: 'is'
 						});
 					default:
 						return target[prop];
@@ -161,6 +158,12 @@ export class Ruleset<InputT = unknown> implements Verifier {
 	 * Reset internal properties and children to their starting states.
 	 */
 	public reset(): void {
+		for (const rule of this.rules) {
+			if (rule) {
+				rule.reset();
+			}
+		}
+
 		this.rules.length = 0;
 	}
 }

@@ -36,6 +36,11 @@ describe('Schema Rulesets', () => {
 		});
 	});
 
+	beforeEach(() => {
+		ruleset.reset();
+		value.reset();
+	});
+
 	describe('Constructor', () => {
 		it(`should initialize an empty ruleset for each field`, () => {
 			const custom = new SampleRulesetSchema({
@@ -90,7 +95,7 @@ describe('Schema Rulesets', () => {
 		});
 
 		it(`should pass ruleset validation when field value satisfies all rules`, async () => {
-			const custom = new SampleRulesetSchema({
+			const custom1 = new SampleRulesetSchema({
 				base: base,
 				name: 'SampleRulesetSchema',
 				fields: [
@@ -107,7 +112,7 @@ describe('Schema Rulesets', () => {
 				]
 			});
 
-			const result = await custom.verifyOnly({
+			const result = await custom1.verifyOnly({
 				base: base,
 				data: {
 					fieldA: 'zd413834645989173',
@@ -120,7 +125,7 @@ describe('Schema Rulesets', () => {
 		});
 
 		it(`should fail ruleset validation when field value doesn't satisfy a rule`, async () => {
-			const custom = new SampleRulesetSchema({
+			const custom2 = new SampleRulesetSchema({
 				base: base,
 				name: 'SampleRulesetSchema',
 				fields: [
@@ -137,19 +142,20 @@ describe('Schema Rulesets', () => {
 				]
 			});
 
-			const fieldA = custom.fields.get('fieldA');
-			const fieldB = custom.fields.get('fieldB');
+			const fieldA = custom2.fields.get('fieldA');
+			const fieldB = custom2.fields.get('fieldB');
 			expect(fieldA).not.toBeUndefined();
 			expect(fieldB).not.toBeUndefined();
 
-			const result = await custom.verifyOnly({
+			const result = await custom2.verifyOnly({
 				base: base,
 				data: {
 					fieldA: 'aaaaaaaaaaaa',
 					fieldB: 'aaaa'
 				}
 			});
-			expect(result.errorCode()).toBe('');
+
+			expect(result.errorCode()).toBe(`fail | [fieldB (aaaa) is empty]`);
 			expect(result.ok()).toBe(false);
 		});
 	});

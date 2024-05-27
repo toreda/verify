@@ -37,8 +37,8 @@ export default class Defaults {
 		Code: '___' as const
 	} as const;
 
-	public static VarLabel = 'value' as const;
 	public static Verifier = {
+		ValueLabel: 'value' as const,
 		MaxFails: 0 as const,
 		MaxErrors: 0 as const
 	} as const;

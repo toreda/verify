@@ -117,17 +117,20 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		if (field.ruleset.size() > 0) {
-			const result = await field.ruleset.verify(value as any);
+			const result = await field.ruleset.verify(value as any, {
+				valueLabel: currPath.current()
+			});
+
 			if (!result.ok()) {
-				return fate.setErrorCode(result.errorCode());
+				return fate.setErrorCode(schemaError(result.errorCode(), currPath.current()));
 			}
 
 			const ctx = result.data;
 
 			if (ctx?.outcome !== 'pass') {
-				const e = new Error('Failed Matchers: ' + ctx?.failedMatchers.join(', '));
+				const e = new Error('Failed Matchers: ' + ctx?.failedMatchers.join(','));
 				console.error(`e: ${e.message}`);
-				return fate.setErrorCode(`${ctx?.failedMatchers.join(', ')}`);
+				return fate.setErrorCode(`fail | [${ctx?.failedMatchers.join(',')}]`);
 			}
 		}
 
@@ -416,8 +419,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			processed++;
 			mapped.set(name, verified.data);
 		}
-
-		log.debug(`####### ${processed} processed`);
 
 		if (total >= processed) {
 			fate.data = mapped;

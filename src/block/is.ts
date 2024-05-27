@@ -100,7 +100,7 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 		this.divisibleBy = matcherMkDivisible<InputT>({
 			...init,
 			tracer: this.tracer,
-			name: 'divisibleBy'
+			name: 'divisible by'
 		});
 		this.empty = matcherMkEmpty<InputT>({
 			...init,

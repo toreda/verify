@@ -63,9 +63,9 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		for (const key of keys) {
 			const o = data[key];
 			if (this.isCustomVerifier(o)) {
-				const result = this.registerVerifier(key, o);
+				const _result = this.registerVerifier(key, o);
 			} else if (this.isSchema(o)) {
-				const result = this.registerSchema(key, o);
+				const _result = this.registerSchema(key, o);
 			} else {
 				log.error(`Custom type registration error for '${key}'.`);
 			}
@@ -187,10 +187,10 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof schema?.verify === 'function';
 	}
 
-	public async verifyValue(id: string, type: string, value: unknown, base: Log): Promise<Fate<DataT>> {
+	public async verifyValue(id: string, type: string, _value: unknown, _base: Log): Promise<Fate<DataT>> {
 		const fate = new Fate<DataT>();
 
-		const verifier = this.getVerifier(type);
+		const _verifier = this.getVerifier(type);
 		return fate;
 	}
 

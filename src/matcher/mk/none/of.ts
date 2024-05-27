@@ -28,6 +28,7 @@ import {type MatcherFactory} from '../../factory';
 import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../../../predicate';
 import {type BlockInit} from '../../../block/init';
+import {matcherTarget} from '../../target';
 
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
@@ -49,8 +50,10 @@ export function matcherMkNoneOf<InputT = unknown>(
 				return false;
 			}
 
+			const target = matcherTarget(init.tracer, value);
+
 			for (const item of right) {
-				if (value === item) {
+				if (target === item) {
 					return false;
 				}
 			}

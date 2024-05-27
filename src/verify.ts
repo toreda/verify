@@ -55,7 +55,7 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 		ctx.summary.counts.total = params.collection.length;
 
 		for (const item of params.collection) {
-			const subResult = await item.verify(params.value);
+			const subResult = await item.verify(params.value, params.flags);
 
 			// Error
 			if (!subResult.ok()) {

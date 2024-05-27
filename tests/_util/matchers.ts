@@ -1,8 +1,9 @@
 import {stringValue} from '@toreda/strong-types';
 import {BlockLink} from '../../src/block/link';
 import {type Outcome} from '../../src/outcome';
-import {Ruleset} from '../../src';
+import {Ruleset} from '../../src/ruleset';
 
+const EMPTY_STRING = '';
 export interface MatcherTest {
 	block: BlockLink<any>;
 	inputLabel?: string;
@@ -25,10 +26,10 @@ export function matcherGroupTests(groups: MatcherGroup[]): void {
 		const fnName = stringValue(group.fnName, 'matcher');
 
 		describe(fnName, () => {
-			let ruleset: Ruleset<number>;
+			let ruleset: Ruleset<any>;
 
 			beforeAll(() => {
-				ruleset = new Ruleset<number>();
+				ruleset = new Ruleset<any>();
 			});
 
 			beforeEach(() => {
@@ -52,6 +53,13 @@ export function matcherGroupTests(groups: MatcherGroup[]): void {
 
 					const expectedFateResult =
 						typeof testCase.fateResult === 'boolean' ? testCase.fateResult : true;
+
+					if (testCase.errorCode) {
+						expect(result.errorCode()).toBe(testCase.errorCode);
+					} else {
+						expect(result.errorCode()).toBe(EMPTY_STRING);
+					}
+
 					expect(result.ok()).toBe(expectedFateResult);
 					expect(result.data?.outcome).toBe(testCase.outcome);
 				});

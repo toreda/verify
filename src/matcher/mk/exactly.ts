@@ -43,6 +43,7 @@ export function matcherMkExactly<InputT = unknown>(
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink(init);
+		init.tracer.addParam(right);
 
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return equalTo(value, right);
@@ -52,11 +53,7 @@ export function matcherMkExactly<InputT = unknown>(
 			fn: func,
 			name: '=',
 			flags: init.flags,
-			tracer: init.tracer,
-			explain: {
-				fnLabel: '=',
-				params: [right]
-			}
+			tracer: init.tracer
 		});
 
 		return link;

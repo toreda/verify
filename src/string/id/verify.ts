@@ -58,7 +58,7 @@ export function stringIdVerify(id: string, value: unknown, flags?: VerifierFlags
 	}
 
 	const errorRoot = typeof flags?.error?.root === 'string' ? flags?.error?.root : id;
-	const label = verifierLabel(flags?.varLabel);
+	const label = verifierLabel(flags?.valueLabel);
 
 	if (id === null || id === undefined) {
 		return fate.setErrorCode(

@@ -31,7 +31,7 @@ import {type Verifier} from './verifier';
 import {type VerifierResult} from './verifier/result';
 import {verify} from './verify';
 import {type MatcherData} from './matcher/data';
-import {type Int, intMake} from '@toreda/strong-types';
+import {type Int, intMake, Id, idMake} from '@toreda/strong-types';
 import {errorMkCode} from './error/mk/code';
 import {type VerifierFlags} from './verifier/flags';
 

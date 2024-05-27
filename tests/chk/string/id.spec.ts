@@ -23,7 +23,7 @@ describe('stringIdVerify', () => {
 
 	it(`should fail when value arg is undefined`, () => {
 		const result = stringIdVerify(ID, undefined as any, {
-			varLabel: VAR_LABEL
+			valueLabel: VAR_LABEL
 		});
 
 		expect(result.success()).toBe(false);

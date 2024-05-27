@@ -44,6 +44,7 @@ export function matcherMkAtLeast<InputT = unknown>(
 		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink<InputT>(init);
+		init.tracer.addParam(right);
 
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return greaterThan(value, right) || equalTo(value, right);

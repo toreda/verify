@@ -28,7 +28,6 @@ import {between} from '../../between';
 import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
-import {blockIdPath} from '../../block/id/path';
 
 /**
  * @param init

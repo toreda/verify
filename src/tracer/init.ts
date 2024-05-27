@@ -37,4 +37,5 @@ export interface TracerInit {
 	targetObjName?: string;
 	targetPropValue?: number | string | boolean | null;
 	params?: Primitive[];
+	value?: unknown;
 }

@@ -27,13 +27,15 @@ import {Fate} from '@toreda/fate';
 import type {BlockFlags} from '../block/flags';
 import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../predicate';
-import {type Id, booleanValue} from '@toreda/strong-types';
+import {type Id, booleanValue, stringValue} from '@toreda/strong-types';
 import {type Verifier} from '../verifier';
 import {type VerifierResult} from '../verifier/result';
 import {verifierResult} from '../verifier/result';
 import {matcherMkId} from './mk/id';
 import {type MatcherData} from './data';
 import {Tracer} from '../tracer';
+import {type VerifierFlags} from '../verifier/flags';
+import Defaults from '../defaults';
 
 /**
  * @category Matcher Predicates
@@ -81,7 +83,7 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 		return result;
 	}
 
-	public async verify(value?: InputT | null): Promise<Fate<VerifierResult>> {
+	public async verify(value?: InputT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>> {
 		const ctx = verifierResult<InputT>({
 			name: 'predicate'
 		});
@@ -89,6 +91,10 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 		const fate = new Fate<VerifierResult>({
 			data: ctx
 		});
+
+		const valueLabel = stringValue(flags?.valueLabel, Defaults.Verifier.ValueLabel);
+		this.tracer.targetObjName(valueLabel);
+		this.tracer.value(value);
 
 		try {
 			const fnResult = await this.predicate(value);

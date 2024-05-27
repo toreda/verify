@@ -7,25 +7,25 @@ describe('verifierLabel', () => {
 	it(`should return the default value when label arg is undefined`, () => {
 		const result = verifierLabel(undefined);
 
-		expect(result).toBe(Defaults.VarLabel);
+		expect(result).toBe(Defaults.Verifier.ValueLabel);
 	});
 
 	it(`should return the default value when label arg is null`, () => {
 		const result = verifierLabel(null);
 
-		expect(result).toBe(Defaults.VarLabel);
+		expect(result).toBe(Defaults.Verifier.ValueLabel);
 	});
 
 	it(`should return the default value when label arg is null`, () => {
 		const result = verifierLabel(null);
 
-		expect(result).toBe(Defaults.VarLabel);
+		expect(result).toBe(Defaults.Verifier.ValueLabel);
 	});
 
 	it(`should return the default value when label arg is an empty string`, () => {
 		const result = verifierLabel(EMPTY_STRING as any);
 
-		expect(result).toBe(Defaults.VarLabel);
+		expect(result).toBe(Defaults.Verifier.ValueLabel);
 	});
 
 	it(`should return 'value' when label arg is 'value'`, () => {
@@ -43,6 +43,6 @@ describe('verifierLabel', () => {
 	it(`should return default value when label arg is not a valid Var Label value`, () => {
 		const result = verifierLabel('somethingelse' as any);
 
-		expect(result).toBe(Defaults.VarLabel);
+		expect(result).toBe(Defaults.Verifier.ValueLabel);
 	});
 });

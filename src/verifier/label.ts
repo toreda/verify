@@ -39,11 +39,11 @@ export type VerifierLabel = 'value' | 'arg';
  */
 export function verifierLabel(label?: VerifierLabel | string | null): VerifierLabel {
 	if (!label) {
-		return Defaults.VarLabel;
+		return Defaults.Verifier.ValueLabel;
 	}
 
 	if (label !== 'arg' && label !== 'value') {
-		return Defaults.VarLabel;
+		return Defaults.Verifier.ValueLabel;
 	}
 
 	return label;

@@ -60,9 +60,7 @@ export class Rule<InputT> implements Resettable, Verifier {
 		const stmt = new Statement<InputT>();
 		const init: BlockInit<InputT> = {
 			stmt: stmt,
-			tracer: new Tracer({
-				targetObjName: 'value'
-			}),
+			tracer: new Tracer(),
 			name: 'value'
 		};
 

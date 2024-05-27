@@ -79,5 +79,5 @@ export interface VerifierFlags {
 		empty?: boolean;
 		null?: boolean;
 	};
-	varLabel?: VerifierLabel | string;
+	valueLabel?: VerifierLabel | string;
 }

@@ -23,39 +23,28 @@
  *
  */
 
-import {type BlockInit} from '../../block/init';
-import {BlockLink} from '../../block/link';
-import {equalTo} from '../../equal/to';
-import {type Predicate} from '../../predicate';
-import {type MatcherFactory} from '../factory';
+import {type BaseObject} from '@toreda/types';
+import {hasProperty} from '@toreda/strong-types';
+import {Tracer} from '../tracer';
 
 /**
- * Expects a validation chain root node and returns an equalTo matcher node.
- * @returns
  *
- * @category Matcher Factories
+ * @category Matcher Predicate Factories
  */
-export function matcherMkEqual<InputT = unknown>(
-	init: BlockInit<InputT>
-): MatcherFactory<InputT, unknown, BlockLink<InputT>> {
-	return (right: unknown) => {
-		// Link object MUST BE created during matcher func invocation. Moving it out into the surrounding closure
-		// will cause infinite recursion & stack overflow.
-		const link = new BlockLink<InputT>(init);
-		// TODO: Hacky and will break. Fix this.
-		init.tracer.addParam(right as any);
+export function matcherTarget<InputT = unknown>(tracer: Tracer, value?: unknown): unknown {
+	if (!tracer || value === null || value === undefined) {
+		return value;
+	}
 
-		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
-			return equalTo(value, right);
-		};
+	const propName = tracer.targetPropName();
+	if (!propName) {
+		return value;
+	}
 
-		init.stmt.addMatcher({
-			fn: func,
-			name: '===',
-			flags: init.flags,
-			tracer: init.tracer
-		});
+	if (!hasProperty(value, propName)) {
+		return value;
+	}
 
-		return link;
-	};
+	const base = value as BaseObject;
+	return base[propName];
 }

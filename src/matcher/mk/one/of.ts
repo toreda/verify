@@ -28,6 +28,7 @@ import {type Primitive} from '@toreda/types';
 import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
 import {type BlockInit} from '../../../block/init';
+import {matcherTarget} from '../../target';
 
 /**
  * @description Create matcher for validat * @param root		Root node in validation chain matcher will be added to.
@@ -49,16 +50,17 @@ export function matcherMkOneOf<InputT = unknown>(
 				return false;
 			}
 
-			if (value === undefined) {
+			const target = matcherTarget(init.tracer, value);
+			if (target === undefined) {
 				return false;
 			}
 
 			for (const item of right) {
-				if (value === null && item === null) {
+				if (target === null && item === null) {
 					return true;
 				}
 
-				if (value === item) {
+				if (target === item) {
 					return true;
 				}
 			}

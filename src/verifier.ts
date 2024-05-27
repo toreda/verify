@@ -25,6 +25,7 @@
 
 import {Fate} from '@toreda/fate';
 import {type VerifierResult} from './verifier/result';
+import {type VerifierFlags} from './verifier/flags';
 
 /**
  * Interface for objects providing the verification API.
@@ -32,5 +33,5 @@ import {type VerifierResult} from './verifier/result';
  * @category Verifier
  */
 export interface Verifier<ValueT = unknown> {
-	verify(value: ValueT | null): Promise<Fate<VerifierResult>>;
+	verify(value: ValueT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>>;
 }

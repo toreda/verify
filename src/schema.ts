@@ -128,8 +128,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			const ctx = result.data;
 
 			if (ctx?.outcome !== 'pass') {
-				const e = new Error('Failed Matchers: ' + ctx?.failedMatchers.join(','));
-				console.error(`e: ${e.message}`);
 				return fate.setErrorCode(`fail | [${ctx?.failedMatchers.join(',')}]`);
 			}
 		}
@@ -298,12 +296,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		const log = init.base.makeLog('verify');
 
 		if (!this.transformOutput) {
-			log.error(`Missing argument: transformOutput`);
 			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'transformOutput'));
 		}
 
 		if (typeof this.transformOutput !== 'function') {
-			log.error(`Non-function argument: transformOutput`);
 			return fate.setErrorCode(
 				schemaError('nonfunction_argument', currPath.current(), 'transformOutput')
 			);
@@ -311,7 +307,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		const verified = await this.verifyOnly(init);
 		if (!verified.ok()) {
-			log.error(`Verification fail: ${verified.errorCode()}`);
 			return fate.setErrorCode(verified.errorCode());
 		}
 
@@ -355,14 +350,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		// set their own path because they have no way to know their property name in parent schema.
 
 		if (!init.base) {
-			console.error(`Missing argument: base`);
 			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'verify', 'base'));
 		}
 
 		const log = init.base.makeLog(`schema:${currPath.current()}`);
 
 		if (init.data === undefined || init.data === null) {
-			log.error(`Missing argument: data`);
 			return fate.setErrorCode(
 				schemaError('missing_schema_data', currPath.current(), 'verify', 'init.data')
 			);

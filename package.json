@@ -12,7 +12,7 @@
 	"devDependencies": {
 		"@8hobbies/typedoc-plugin-404": "^2.0.2",
 		"@knodes/typedoc-plugin-code-blocks": "^0.23.4",
-		"@swc/core": "^1.5.5",
+		"@swc/core": "^1.5.7",
 		"@swc/jest": "^0.2.36",
 		"@toreda/build-tools": "^0.8.0",
 		"@toreda/eslint-config": "^2.2.0",

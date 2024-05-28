@@ -31,7 +31,6 @@ import {numberValue} from '@toreda/strong-types';
 import Defaults from './defaults';
 
 /**
- *
  * @param params
  *
  * @category Verifier
@@ -64,9 +63,6 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 
 				if (Array.isArray(subCtx?.failedMatchers)) {
 					ctx.failedMatchers.push(...subCtx.failedMatchers);
-					/* for (const matcher of subResult?.data.failedMatchers) {
-						ctx.failedMatchers.push(matcher);
-					} */
 				}
 				continue;
 			}

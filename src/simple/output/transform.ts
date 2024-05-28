@@ -49,7 +49,6 @@ export async function simpleOutputTransform<DataT, VerifiedT>(
 	const log = base.makeLog('simpleOutputTransform');
 
 	if (!input) {
-		log.error(`Missing argument: input`);
 		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'input'));
 	}
 
@@ -65,7 +64,7 @@ export async function simpleOutputTransform<DataT, VerifiedT>(
 		fate.setSuccess(true);
 	} catch (e: unknown) {
 		const msg = e instanceof Error ? e.message : 'unknown_err_type';
-
+		fate.error(e);
 		log.error(`Exception: ${msg}.`);
 		fate.setErrorCode(schemaError('exception', 'simpleOutputTransform', `Error: ${msg}`));
 	}

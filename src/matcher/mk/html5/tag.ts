@@ -23,7 +23,6 @@
  *
  */
 
-import {isIpv6Addr} from '@toreda/strong-types';
 import {type BlockInit} from '../../../block/init';
 import {BlockLink} from '../../../block/link';
 

@@ -23,11 +23,10 @@
  *
  */
 
-import {type Id, idMake, stringValue, Text, textMake, Strong, strongMake} from '@toreda/strong-types';
+import {type Id, idMake, stringValue, type Text, textMake, Strong, strongMake} from '@toreda/strong-types';
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
-import {Statement} from './statement';
 
 /**
  * Create a readable string to uniquely identify element instances based on their
@@ -88,12 +87,12 @@ export class Tracer {
 		}
 	}
 
-	public valueContent(value: unknown): string {
-		if (Object(value) !== value) {
-			if (value === '') {
+	public valueContent(input: unknown): string {
+		if (Object(input) !== input) {
+			if (input === '') {
 				return ` ('')`;
 			} else {
-				return ` (${value})`;
+				return ` (${input})`;
 			}
 		} else {
 			return '';
@@ -102,7 +101,10 @@ export class Tracer {
 
 	public explain(): string {
 		const content = this.valueContent(this.value());
-		return `${this.targetLabel()}${content} ${this.path.join(' ')} ${this.params.join(', ')}`;
+		const params = this.params.join(', ');
+		const paramsText = params !== '' ? ` ${params}` : '';
+
+		return `${this.targetLabel()}${content} ${this.path.join(' ')}${paramsText}`;
 	}
 
 	private mkPath(parts?: string | string[]): string[] {
@@ -132,8 +134,8 @@ export class Tracer {
 		});
 	}
 
-	public addParam(param: Primitive): void {
-		this.params.push(param);
+	public addParam(...params: Primitive[]): void {
+		this.params.push(...params);
 	}
 
 	public clearTarget(): void {
@@ -144,5 +146,6 @@ export class Tracer {
 	public reset(): void {
 		this.clearTarget();
 		this.value.reset();
+		this.params.length = 0;
 	}
 }

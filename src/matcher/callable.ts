@@ -98,21 +98,20 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 
 		try {
 			const fnResult = await this.predicate(value);
-			//console.debug(`predicate result: ${fnResult}`);
+
 			const result = this.applyMods(fnResult);
-			//console.debug(`predicate result (mods applied): ${result}`);
+
 			ctx.outcome = result === true ? 'pass' : 'fail';
 			fate.setSuccess(true);
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : 'nonerr_type';
-			console.error(`matcher.verify exception: ${msg}`);
-			fate.error(e);
-			fate.setErrorCode('exception');
+
+			fate.error(new Error(msg));
+			fate.setErrorCode(`exception: ${msg}`);
 			ctx.outcome = 'error';
 		}
 
 		if (ctx.outcome === 'fail' || ctx.outcome === 'error') {
-			console.error(`Matcher fail: ${this.tracer.explain()}`);
 			ctx.failedMatchers.push(this.tracer.explain());
 		}
 

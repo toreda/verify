@@ -159,7 +159,7 @@ describe('MatcherCallable', () => {
 
 				const result = await custom.verify('aaa');
 				expect(result.success()).toBe(false);
-				expect(result.errorCode()).toBe('exception');
+				expect(result.errorCode()).toBe('exception: mock fn throw');
 			});
 
 			it(`should return false when matcher fails`, async () => {

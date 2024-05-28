@@ -40,7 +40,7 @@ import {blockWithNot} from './block/with/not';
 import {type VerifierFlags} from './verifier/flags';
 import {Tracer} from './tracer';
 
-/**zz
+/**
  * @category Rulesets
  */
 export class Ruleset<InputT = unknown> implements Verifier {

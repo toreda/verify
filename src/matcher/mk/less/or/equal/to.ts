@@ -29,11 +29,11 @@ import {equalTo} from '../../../../../equal/to';
 import {lessThan} from '../../../../../less/than';
 import {type Predicate} from '../../../../../predicate';
 import {type MatcherFactory} from '../../../../factory';
+
 /**
  * Create matcher for validation chain which determines if chain value is less
  * than or equal to target.
  * @param init
- * @returns
  *
  * @category Matcher Predicate Factories
  */

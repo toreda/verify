@@ -1,10 +1,19 @@
-import Defaults from '../../src/defaults';
-import {Tracer} from '../../src/tracer';
+import Defaults from '../src/defaults';
+import {Tracer} from '../src/tracer';
 
 const EMPTY_STRING = '';
 const EMPTY_ARRAY: string[] = [];
 
 describe('Tracer', () => {
+	let instance: Tracer;
+	beforeAll(() => {
+		instance = new Tracer();
+	});
+
+	beforeEach(() => {
+		instance.reset();
+	});
+
 	describe('Constructor', () => {
 		it(`should initialize path to an empty array when init arg is undefined`, () => {
 			const custom = new Tracer();
@@ -132,6 +141,121 @@ describe('Tracer', () => {
 			});
 		});
 
+		describe('targetLabel', () => {
+			it(`should use default target obj name when taretObjName is an empty string`, () => {
+				instance.targetObjName(EMPTY_STRING);
+				expect(instance.targetObjName()).toBe(EMPTY_STRING);
+				const result = instance.targetLabel();
+				expect(result).toBe(Defaults.Tracer.TargetObjName);
+			});
+
+			it(`should return targetObjName only when targetPropName is an empty string`, () => {
+				const value = '41867-861486148164';
+				instance.targetObjName(value);
+				instance.targetPropName(EMPTY_STRING);
+				expect(instance.targetPropName()).toBe(EMPTY_STRING);
+				const result = instance.targetLabel();
+				expect(result).toBe(value);
+			});
+
+			it(`should return obj.prop when targetPropValue has no value`, () => {
+				instance.targetPropValue(null);
+				const obj = 'aa-917149714';
+				const prop = 'bb-H97546!';
+				instance.targetObjName(obj);
+				instance.targetPropName(prop);
+
+				const result = instance.targetLabel();
+				expect(result).toBe(`${obj}.${prop}`);
+			});
+		});
+
+		describe('clearTarget', () => {
+			it(`should reset targetObjName to empty string`, () => {
+				const value = '13-8901974';
+				instance.targetObjName(value);
+
+				expect(instance.targetObjName()).toBe(value);
+				instance.clearTarget();
+				expect(instance.targetObjName()).toBe(EMPTY_STRING);
+			});
+
+			it(`should reset targetPropName to empty string`, () => {
+				const value = '8J-BBK4108100091';
+				instance.targetPropName(value);
+
+				expect(instance.targetPropName()).toBe(value);
+				instance.clearTarget();
+				expect(instance.targetPropName()).toBe(EMPTY_STRING);
+			});
+		});
+
+		describe('addParam', () => {
+			it(`should add param to an empty params array`, () => {
+				const value = 'ff8-1971497145';
+				expect(instance.params.includes(value)).toBe(false);
+
+				instance.addParam(value);
+				expect(instance.params.includes(value)).toBe(true);
+			});
+		});
+
+		describe('reset', () => {
+			it(`should reset value to null`, () => {
+				const value = '44-097101087';
+				instance.value(value);
+				expect(instance.value.getNull()).toBe(value);
+				instance.reset();
+				expect(instance.value.getNull()).toBeNull();
+			});
+
+			it(`should reset targetObjName to empty string`, () => {
+				const value = '81-7791900091';
+				instance.targetObjName(value);
+
+				expect(instance.targetObjName()).toBe(value);
+				instance.reset();
+				expect(instance.targetObjName()).toBe(EMPTY_STRING);
+			});
+
+			it(`should reset targetPropName to empty string`, () => {
+				const value = '89-7GL4100091';
+				instance.targetPropName(value);
+
+				expect(instance.targetPropName()).toBe(value);
+				instance.reset();
+				expect(instance.targetPropName()).toBe(EMPTY_STRING);
+			});
+
+			it(`should reset params array`, () => {
+				instance.addParam('aaa', 'bbb', 'ccc');
+				expect(instance.params.length).toBe(3);
+				instance.reset();
+				expect(instance.params.length).toBe(0);
+			});
+		});
+
+		describe('valueContent', () => {
+			it(`should return formatted value input when input is an empty string`, () => {
+				expect(instance.valueContent(EMPTY_STRING)).toBe(` ('')`);
+			});
+
+			it(`should return formatted value when input is a number`, () => {
+				const input = '441-8010853896G';
+				expect(instance.valueContent(input)).toBe(` (${input})`);
+			});
+
+			it(`should return an empty string when input is non-primitive empty object`, () => {
+				const input = {};
+				expect(instance.valueContent(input)).toBe(EMPTY_STRING);
+			});
+
+			it(`should return an empty string when input is non-primitive empty array`, () => {
+				const input = [] as any;
+				expect(instance.valueContent(input)).toBe(EMPTY_STRING);
+			});
+		});
+
 		describe('child', () => {
 			it(`should return the called object when id arg is undefined`, () => {
 				const first = new Tracer({
@@ -160,7 +284,7 @@ describe('Tracer', () => {
 				expect(child).toStrictEqual(first);
 			});
 
-			it(`should return a new Tracer copy that includes id arg`, () => {
+			it(`should return a copied Tracer object that includes id`, () => {
 				const pathA = new Tracer({
 					path: ['a', 'b', 'c'],
 					pathSeparator: '+'

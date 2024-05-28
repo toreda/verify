@@ -26,6 +26,7 @@
 import {Block} from '../block';
 import {type MatcherFactory} from '../matcher/factory';
 import {matcherMkArray} from '../matcher/mk/array';
+import {matcherMkHtml5Tag} from '../matcher/mk/html5/tag';
 import {matcherMkInt} from '../matcher/mk/int';
 import {matcherMkIpv4Addr} from '../matcher/mk/ipv4addr';
 import {matcherMkIpv6Addr} from '../matcher/mk/ipv6addr';
@@ -41,6 +42,7 @@ export class BlockAn<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly int: MatcherFactory<InputT, never, BlockLink<InputT>>;
 	public readonly ipv4addr: MatcherFactory<InputT, never, BlockLink<InputT>>;
 	public readonly ipv6addr: MatcherFactory<InputT, never, BlockLink<InputT>>;
+	public readonly html5Tag: MatcherFactory<InputT, never, BlockLink<InputT>>;
 
 	constructor(init: BlockInit<InputT>) {
 		super(
@@ -56,5 +58,6 @@ export class BlockAn<InputT = unknown> extends Block<Statement<InputT>> {
 		this.int = matcherMkInt<InputT>(init);
 		this.ipv4addr = matcherMkIpv4Addr<InputT>(init);
 		this.ipv6addr = matcherMkIpv6Addr<InputT>(init);
+		this.html5Tag = matcherMkHtml5Tag<InputT>(init);
 	}
 }

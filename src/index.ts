@@ -44,6 +44,8 @@ export {ErrorContext} from './error/context';
 export {ErrorContextData} from './error/context/data';
 export {errorMkCode} from './error/mk/code';
 export {greaterThan} from './greater/than';
+export {Html5Tag} from './html5/tag';
+export {html5Tags} from './html5/tags';
 export {isArray} from './is/array';
 export {isArrayEmpty} from './is/array/empty';
 export {isArrayNotEmpty} from './is/array/not/empty';

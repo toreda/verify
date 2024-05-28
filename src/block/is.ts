@@ -38,6 +38,8 @@ import {matcherMkBetween} from '../matcher/mk/between';
 import {type Primitive} from '@toreda/types';
 import {matcherMkIterable} from '../matcher/mk/iterable';
 import {matcherMkTruthy} from '../matcher/mk/truthy';
+import {BlockA} from './a';
+import {BlockAn} from './an';
 
 /**
  * Matchers following 'is' in rule statements.
@@ -70,6 +72,9 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
 	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
+	public readonly an: BlockAn<InputT>;
+	public readonly a: BlockA<InputT>;
+
 	/**
 	 * Determine if `value` supports iteration, but does check for a specific iterable type.
 	 */
@@ -91,6 +96,17 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			},
 			init.stmt
 		);
+
+		this.an = new BlockAn<InputT>({
+			...init,
+			name: 'an',
+			tracer: this.tracer
+		});
+		this.a = new BlockA<InputT>({
+			...init,
+			name: 'a',
+			tracer: this.tracer
+		});
 
 		this.between = matcherMkBetween<InputT>({
 			...init,

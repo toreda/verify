@@ -26,12 +26,21 @@
 import {type Primitive} from '@toreda/types';
 
 /**
- * Optional arguments during Trace Path creation.
+ * @name Tracer Init
+ * @description Optional arguments during Trace Path creation.
  *
  * @category Tracer
  */
 export interface TracerInit {
 	path?: string | string[];
+	/**
+	 * @name Path Separator
+	 * @description (Optional) character used to join path elements when getting a
+	 * tracer path. Uses default separator when not set. Only set if you need to
+	 * override the default.
+	 * @remarks
+	 * See `defaults.ts` for the default tracer path separator.
+	 */
 	pathSeparator?: string;
 	targetPropName?: string;
 	targetObjName?: string;

@@ -233,8 +233,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	/**
 	 * Check if value type matches type for primitives, and whether the content matches
 	 * the expected range or format (if any).
-	 * @param type
-	 * @param value
 	 */
 	public async verifyValue(init: SchemaVerifyValue<DataT, InputT>): Promise<Fate<VerifiedField<DataT>>> {
 		const fate = new Fate<VerifiedField<DataT>>();
@@ -265,7 +263,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			});
 		}
 
-		//const custom = await this.customTypes.verify(type, value, this.base);
 		if (this.customTypes.hasVerifier(init.fieldType)) {
 			return this.customTypes.verifyValue(init.fieldId, init.fieldType, init.value, init.base);
 		}

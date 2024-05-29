@@ -45,10 +45,20 @@ import {type Primitive} from '@toreda/types';
  */
 export class Tracer {
 	public readonly path: string[];
+	/** Character separating path elements in the current path string. */
 	public readonly pathSeparator: string;
+	/**
+	 * @name Target Object Name
+	 * @description Name of the the tracer's target object.
+	 */
 	public readonly targetObjName: Id;
+	/**
+	 * @name Target Property Name
+	 * @description Name of the tracer's target property.
+	 */
 	public readonly targetPropName: Id;
 	public readonly targetPropValue: Text;
+	/** @description Parameters used in actions or to execute nodes being traced. */
 	public readonly params: Primitive[];
 	public readonly value: Strong<unknown>;
 
@@ -67,10 +77,17 @@ export class Tracer {
 		this.value = strongMake<unknown>(init?.value !== undefined ? init.value : undefined);
 	}
 
+	/**
+	 *	@description Convert the tracer's current path array to a string and return.
+	 */
 	public current(): string {
 		return this.path.join(this.pathSeparator);
 	}
 
+	/**
+	 * @description Current tracer target as a readable string. Accounts for the target object, prop,
+	 * and values (if set).
+	 */
 	public targetLabel(): string {
 		if (this.targetObjName()) {
 			if (this.targetPropName()) {

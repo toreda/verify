@@ -27,7 +27,7 @@
  *
  * @param value
  *
- * @category Schemas
+ * @category Schema
  */
 export function valueTypeLabel(value: unknown): string {
 	if (value === null) {

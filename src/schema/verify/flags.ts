@@ -26,7 +26,7 @@
 /**
  * Optional flags which alter default verification behavior.
  *
- * @category Schemas
+ * @category Schema
  */
 export interface SchemaVerifyFlags {
 	maxFieldCount?: number;

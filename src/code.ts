@@ -24,7 +24,9 @@
  */
 
 /**
- * @category Error Handling
+ * Error codes for typed error handling functions.
+ *
+ * @category		Error Handling
  */
 export type Code<CustomT = string> =
 	| 'bad_arg_format'

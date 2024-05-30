@@ -26,7 +26,7 @@
 import {type BlockFlags} from '../block/flags';
 
 /**
- * @category Matchers
+ * @category		Matcher – Configuration
  */
 export interface MatcherFlags extends BlockFlags {
 	caseSensitive?: boolean;

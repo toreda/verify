@@ -41,7 +41,8 @@ import {type VerifierFlags} from './verifier/flags';
 import {Tracer} from './tracer';
 
 /**
- * @category Rule Blocks
+ * @description 	Base type for rule blocks.
+ * @category		Rule Block
  */
 export class Rule<InputT> implements Resettable, Verifier {
 	/**

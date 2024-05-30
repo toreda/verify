@@ -32,14 +32,14 @@ import {type VerifierFlags} from '../../verifier/flags';
 /**
  * Check if value is a valid id string according to the optional validation rules when provided.
  * Uses default rules when not provided.
- * @param id
- * @param value
- * @param flags
+ * @param			id
+ * @param			value
+ * @param			flags
  * @returns
  *
- * @category Strings
+ * @category		Verify Function
  */
-export function stringIdVerify(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
+export function verifyStringId(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
 	const fate = new Fate<string>();
 
 	let pathAppend: string[] = [];

@@ -23,15 +23,16 @@
  *
  */
 
-import {BlockBaseInit} from './block/base/init';
+import {type BlockBaseInit} from './block/base/init';
 import {type BlockModType} from './block/mod/type';
 import type {BlockType} from './block/type';
 import {Tracer} from './tracer';
 
 /**
- * @description Base type extended by all rule system blocks.
- * @typeParam StatementT - Type for statement holding or that will hold this block.
- * @category Rule Blocks
+ * @name 			Block<StatementT>
+ * @description 	Base type for rule blocks.
+ * @typeParam 		StatementT - Type for statement holding or that will hold this block.
+ * @category		Rule Block
  */
 export abstract class Block<StatementT = unknown> {
 	/**

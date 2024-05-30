@@ -29,11 +29,11 @@ import {errorCodeToken} from '../code/token';
 
 /**
  * Create error code with error path details.
- * @param code
- * @param root
- * @param path
- * @param opts
- * @category Error Handling
+ * @param			code
+ * @param			root
+ * @param			path
+ * @param			opts
+ * @category		Error Handling
  */
 export function errorMkCode<CodeT extends string, RootT extends string, PathT = string | unknown>(
 	code: CodeT,

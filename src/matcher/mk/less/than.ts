@@ -30,10 +30,9 @@ import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
- * @param init
- * @returns
+ * @param 			init
  *
- * @category Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkLessThan<InputT = unknown>(
 	init: BlockInit<InputT>

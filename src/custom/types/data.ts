@@ -27,7 +27,7 @@ import {type CustomSchemaType} from '../schema/type';
 import {type CustomTypeVerifier} from '../type/verifier';
 
 /**
- * @category Schemas - Custom Types
+ * @category		Schema – Custom Type
  */
 export interface CustomTypesData<DataT = unknown> {
 	[k: string]: CustomSchemaType<any, any, any> | CustomTypeVerifier<DataT | null> | null;

@@ -34,7 +34,7 @@ import {isTruthy} from '../../is/truthy';
  * Expects a validation chain root node and returns an equalTo matcher node.
  * @returns
  *
- * @category Matcher Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkTruthy<InputT = unknown>(
 	init: BlockInit<InputT>

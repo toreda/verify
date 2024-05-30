@@ -30,10 +30,9 @@ import Defaults from '../../defaults';
  * error code path delimiter. Returns provided value if it's
  * a valid string. Returns global default delimiter when value is not
  * provided, or not a valid string.
- * @param value
- * @returns
+ * @param			value
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export function errorCodeToken(value?: string | null): string {
 	if (typeof value !== 'string') {

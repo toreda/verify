@@ -28,7 +28,7 @@ import {type Primitive} from '@toreda/types';
 /**
  * Actions performed by the data structure being traced.
  *
- * @category Tracer
+ * @category		Tracer
  */
 export interface TracerAction {
 	action: string;

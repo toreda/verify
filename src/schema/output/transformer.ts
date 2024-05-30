@@ -28,9 +28,9 @@ import {Log} from '@toreda/log';
 import {type VerifiedSchema} from '../../verified/schema';
 
 /**
- * Transforms schema parser output.
+ * Transform schema parser output.
  *
- * @category Schemas
+ * @category		Schema – Transform Output
  */
 export type SchemaOutputTransformer<DataT, VerifiedT> = (
 	mapped: VerifiedSchema<DataT>,

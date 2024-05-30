@@ -44,7 +44,7 @@ import {BlockAn} from './an';
 /**
  * Matchers following 'is' in rule statements.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  * @example
  * ```ts
  * value.is.lessThan(10)

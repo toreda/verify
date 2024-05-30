@@ -32,11 +32,9 @@ import {matcherTarget} from '../../target';
 
 /**
  * @param init
- * @returns
  *
- * @category Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
-
 export function matcherMkGreaterThan<InputT = unknown>(
 	init: BlockInit<InputT>
 ): MatcherFactory<InputT, number, BlockLink<InputT>> {

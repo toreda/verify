@@ -24,7 +24,7 @@
  */
 
 /**
- * @category Schemas
+ * @category Schema
  */
 export interface Verified {
 	[k: string]: unknown;

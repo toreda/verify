@@ -26,11 +26,9 @@
 import {isNumber} from '../number';
 
 /**
+ * @param			value
  *
- * @param value
- * @returns
- *
- * @category		Validators – Numbers
+ * @category		Matcher – Predicate Function
  */
 export function isNumberFinite(value: unknown): value is number {
 	if (!isNumber(value)) {

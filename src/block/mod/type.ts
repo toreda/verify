@@ -24,9 +24,9 @@
  */
 
 /**
- * @name Block Modifier Type
- * @description Modifier applied to block result output.
+ * @name 			Block Modifier Type
+ * @description 	Modifier applied to block result output.
  *
- * @category Rule Blocks
+ * @category		Rule Block – Modifier
  */
 export type BlockModType = 'not' | 'none';

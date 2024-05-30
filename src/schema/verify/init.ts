@@ -31,7 +31,7 @@ import {type SchemaVerifyFlags} from './flags';
 /**
  * Arguments needed for schema verification.
  *
- * @category Schemas
+ * @category		Schema
  */
 export interface SchemaVerifyInit<DataT = unknown> {
 	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */

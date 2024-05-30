@@ -32,18 +32,18 @@ import {type BlockFlags} from '../flags';
 /**
  * Interface for modifiers which wrap a `BlockT` and inject `ModKeyT` property.
  *
- * @category Block Modifiers
+ * @category		Rule Block – Modifier
  */
 export type BlockWithMod<BlockT, ModKeyT extends string> = BlockT & Record<ModKeyT, BlockT>;
 
 /**
- * Creates modifier that changes flags for subsequent blocks, altering block behavior or output.
- * @param CTOR
- * @param init
- * @param modFlags
- * @param modKey
+ * Create a modifier that changes flags for subsequent blocks, altering block behavior or output.
+ * @param 		CTOR
+ * @param 		init
+ * @param 		modFlags
+ * @param 		modKey
  *
- * @category Block Modifiers
+ * @category 	Rule Block – Modifier
  */
 export function blockWithMod<InputT, BlockT extends Block<Statement<InputT>>, ModKeyT extends string>(
 	CTOR: Constructor<BlockT>,

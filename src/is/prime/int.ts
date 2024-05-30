@@ -28,10 +28,10 @@ import {isNumberFinite} from '../number/finite';
 
 /**
  * Determine if provided value arg is a number and a prime number.
- * @param value
+ * @param 			value
  * @returns
  *
- * @category		Validators – Numbers
+ * @category		Matcher – Predicate Function
  */
 export function isPrimeInt(value: unknown): value is number {
 	if (!isNumberFinite(value)) {

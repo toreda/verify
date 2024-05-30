@@ -25,10 +25,10 @@
 
 /**
  *
- * @param value
- * @param type
+ * @param			value
+ * @param			type
  *
- * @category		Matcher Predicates – Types
+ * @category		Matcher – Predicate Function
  */
 export function matchesType(value: unknown, type: string): boolean {
 	if (type === 'array') {

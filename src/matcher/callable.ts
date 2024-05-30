@@ -38,7 +38,7 @@ import {type VerifierFlags} from '../verifier/flags';
 import Defaults from '../defaults';
 
 /**
- * @category Matcher Predicates
+ * @category		Matcher
  */
 export class MatcherCallable<InputT = unknown> implements Verifier {
 	public readonly id: Id;

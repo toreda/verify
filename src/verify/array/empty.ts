@@ -28,11 +28,11 @@ import {isArray} from '../../is/array';
 
 /**
  * Determine whether value is an array and if so, whether it's empty.
- * @param value
+ * @param value		Value to be verified as an empty array.
  *
- * @category Collections
+ * @category		Verify Function
  */
-export function emptyArrayVerify<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
+export function verifyArrayEmpty<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
 	const fate = new Fate<ValueT[]>();
 
 	if (value === undefined || value === null) {

@@ -25,6 +25,12 @@
 
 import {isNumberFinite} from './number/finite';
 
+/**
+ *
+ * @param 			value
+ *
+ * @category		Matcher – Predicate Function
+ */
 export function isUInt(value?: unknown): boolean {
 	if (typeof value !== 'number') {
 		return false;

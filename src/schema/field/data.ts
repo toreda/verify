@@ -28,7 +28,7 @@ import {Statement} from '../../statement';
 import {type SchemaFieldType} from './type';
 
 /**
- * @category Schemas
+ * @category		Schema – Field
  */
 export interface SchemaFieldData<InputT = unknown> {
 	name: keyof InputT;

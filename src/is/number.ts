@@ -25,11 +25,11 @@
 
 /**
  * Determine if value is a primitive 'number' type.
- * @param value
+ * @param			value
  * @returns 		`true` 	`value` is a valid JavaScript number primitive including infinite and NaN.
  *					`false`	`value` is not a valid JavaScript number primitive.
  *
- * @category		Validators – Numbers
+ * @category		Matcher – Predicate Function
  */
 export function isNumber(value: unknown): boolean {
 	return typeof value === 'number';

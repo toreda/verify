@@ -35,7 +35,7 @@ import {type BlockInit} from './init';
 /**
  * Contains matcher predicates for length properties.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  */
 export class BlockLength<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;

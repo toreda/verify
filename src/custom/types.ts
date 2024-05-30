@@ -37,7 +37,9 @@ import {Schema} from '../schema';
 import {VerifiedSchema} from '../verified/schema';
 
 /**
- * @category Schemas - Custom Types
+ * Registry of a single schema's registered custom types.
+ *
+ * @category		Schema – Custom Type
  */
 export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> implements Resettable {
 	public readonly log: Log;

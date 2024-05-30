@@ -30,10 +30,10 @@ import {Log} from '@toreda/log';
 import {type CustomTypesData} from '../custom/types/data';
 
 /**
- * @name Schema Init
- * @description Parameters needed to create a specific schema object.
+ * @name 			Schema Init
+ * @description		Parameters needed to create a specific schema object.
  *
- * @category Schemas
+ * @category		Schema
  */
 export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	/**

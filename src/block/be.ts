@@ -40,7 +40,7 @@ import {BlockA} from './a';
 /**
  * Matchers following 'be' in rule statements.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  * @example
  * ```ts
  * value.must.be.lessThan(10)

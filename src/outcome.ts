@@ -24,8 +24,16 @@
  */
 
 /**
- * @description Possible outcomes returned by rulesets, statements, and other systems.
+ * @description Outcomes returned by rulesets, statements, and other systems.
  *
  * @category Verifier
  */
-export type Outcome = 'pass' | 'fail' | 'error' | 'skip';
+export type Outcome =
+	/** Value passed all rule checks. */
+	| 'pass'
+	/** Value failed 1 or more rule checks. */
+	| 'fail'
+	/** One or more rule checks did not complete due to an error or exception. */
+	| 'error'
+	/** One or more rule checks was skipped. Does not indicate pass or fail.*/
+	| 'skip';

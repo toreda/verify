@@ -23,37 +23,24 @@
  *
  */
 
-import type {VerifierFlags} from '../verifier/flags';
-import {Codes} from '../codes';
 import {Fate} from '@toreda/fate';
+import {isBigInt} from '../../is/big/int';
 
 /**
+ * Deteremine if provided value is a valid BigInt.
+ * @param			value
  *
- * @param value
- * @returns
- *
- * @category Urls
+ * @category		Verifier
  */
-export function urlVerify(value?: unknown, flags?: VerifierFlags): Fate<string> {
-	const fate = new Fate<string>();
-
-	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
-	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
+export function verifyBigInt(value?: unknown): Fate<bigint> {
+	const fate = new Fate<bigint>();
 
 	if (value === undefined || value === null) {
-		return fate.setErrorCode(Codes.missing());
+		return fate.setErrorCode('missing');
 	}
 
-	if (typeof value !== 'string') {
-		return fate.setErrorCode(Codes.badFormat());
-	}
-
-	if (value.length > maxLen) {
-		return fate.setErrorCode(Codes.tooLong());
-	}
-
-	if (value.length < minLen) {
-		return fate.setErrorCode(Codes.tooShort());
+	if (!isBigInt(value)) {
+		return fate.setErrorCode('bad_value_type');
 	}
 
 	fate.data = value;

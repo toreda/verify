@@ -23,24 +23,32 @@
  *
  */
 
+import type {VerifierFlags} from '../verifier/flags';
 import {Fate} from '@toreda/fate';
-import {isBigInt} from '../../is/big/int';
 
 /**
- * Deteremine if provided value is a valid BigInt.
- * @param value
+ * Determine if value is an array and report error codes when input is invalid.
+ * @param			value
+ * @param			flags
  *
- * @category Numbers
+ * @category		Verify Function
  */
-export function bigIntVerify(value?: unknown): Fate<bigint> {
-	const fate = new Fate<bigint>();
+export function verifyArray<ValueT>(value?: unknown | unknown[], flags?: VerifierFlags): Fate<ValueT[]> {
+	const fate = new Fate<ValueT[]>();
 
 	if (value === undefined || value === null) {
 		return fate.setErrorCode('missing');
 	}
 
-	if (!isBigInt(value)) {
-		return fate.setErrorCode('bad_value_type');
+	if (!Array.isArray(value)) {
+		return fate.setErrorCode('bad_format');
+	}
+
+	const empty = value.length === 0;
+
+	// Empty arrays are valid by default unless flags.allow.empty is explicitly true.
+	if (empty && flags?.allow?.empty === false) {
+		return fate.setErrorCode('empty');
 	}
 
 	fate.data = value;

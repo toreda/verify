@@ -29,7 +29,7 @@ import {Tracer} from '../../tracer';
 import {type SchemaData} from '../data';
 
 /**
- * @category Schemas
+ * @category		Schema
  */
 export interface SchemaVerifyValue<DataT = unknown, InputT = unknown> {
 	fieldId: string;

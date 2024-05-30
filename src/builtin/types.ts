@@ -26,7 +26,7 @@
 import {type SchemaFieldType} from '../schema/field/type';
 
 /**
- * @category Schemas
+ * @category Schema
  */
 export function builtinTypes<InputT = unknown>(): SchemaFieldType<InputT>[] {
 	return [

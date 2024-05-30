@@ -31,10 +31,10 @@ import {type Verified} from '../../verified';
 /**
  * Default transformer when one isn't provided to a schema. Expects a
  * string -> primitive map and produces a simple object of the same mapping.
- * @param input
- * @param base
+ * @param			input
+ * @param			base
  *
- * @category Schemas
+ * @category		Schema – Transform Output
  */
 export async function simpleOutputTransform<DataT, VerifiedT>(
 	input: Map<string, DataT>,

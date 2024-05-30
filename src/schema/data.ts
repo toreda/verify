@@ -24,7 +24,9 @@
  */
 
 /**
- * @category Schemas
+ * Base type required to verify any data object using a schema.
+ *
+ * @category		Schema
  */
 export interface SchemaData<DataT> {
 	[k: string]: DataT | SchemaData<DataT> | null;

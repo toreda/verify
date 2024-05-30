@@ -25,10 +25,10 @@
 
 /**
  * Determine if left and right are strictly equal without type coercion.
- * @param left
- * @param right
+ * @param			left
+ * @param			right
  *
- * @category Matcher Predicates
+ * @category		Matcher – Predicate Function
  */
 export function equalTo(left: unknown, right: unknown): boolean {
 	if (left === null && right === null) {

@@ -29,7 +29,7 @@ import type {ErrorContextData} from './context/data';
 /**
  *
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export class ErrorContext<RootT extends string, PathT extends string> {
 	public readonly root: RootT | string;

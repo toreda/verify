@@ -31,7 +31,7 @@ import type {ErrorContextData} from '../context/data';
  * must be primitives or other simple data objects. Object references and recursive
  * loops are not permitted within ErrorCodeData properties.
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export interface ErrorCodeData {
 	context: ErrorContextData;

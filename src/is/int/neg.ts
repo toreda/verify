@@ -32,7 +32,7 @@ import {isInt} from '../int';
  * @returns			true	-	value is a negative integer.
  *					false	-	value is not a negative integer, but does not indicate what value is.
  *
- * @category		Validators – Numbers
+ * @category		Matcher – Predicate Function
  */
 export function isIntNeg(value?: unknown): value is number {
 	if (!isInt(value)) {

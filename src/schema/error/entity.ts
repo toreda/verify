@@ -24,7 +24,18 @@
  */
 
 /**
+ * Entity names used in schema error codes.
  *
- * @category Schemas
+ * @category		Schema – Error Handling
  */
-export type SchemaErrorEntity = 'schema' | 'field' | 'fields' | 'group' | 'record' | string;
+export type SchemaErrorEntity =
+	| 'schema'
+	| 'field'
+	| 'fields'
+	| 'group'
+	| 'record'
+	| 'child-schema'
+	| 'ruleset'
+	| 'rule'
+	| 'rule-block'
+	| string;

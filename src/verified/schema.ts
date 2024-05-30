@@ -24,6 +24,8 @@
  */
 
 /**
- * @category Schemas
+ * Verified schema data returned by a successful `schema.verify(...)` call.
+ *
+ * @category		Schema
  */
 export type VerifiedSchema<DataT> = Map<string, DataT | VerifiedSchema<DataT> | null>;

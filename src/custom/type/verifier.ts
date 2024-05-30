@@ -26,6 +26,6 @@
 import {Fate} from '@toreda/fate';
 
 /**
- * @category Schemas - Custom Types
+ * @category		Schema – Custom Type
  */
 export type CustomTypeVerifier<DataT> = (value?: unknown | null) => Promise<Fate<DataT>>;

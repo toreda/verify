@@ -26,7 +26,7 @@
 /**
  * Options provided to a schema verifier at runtime that change verifier behavior.
  *
- * @category Schemas
+ * @category		Schema
  */
 export interface SchemaOptions {
 	strict?: boolean;

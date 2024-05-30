@@ -39,7 +39,7 @@ import {type VerifierFlags} from './verifier/flags';
  * Holds matcher predicates that perform custom validation code.
  * All matchers must pass for statement execution to pass.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  */
 export class Statement<InputT = unknown> implements Verifier {
 	private readonly nextMatcherId: Int;

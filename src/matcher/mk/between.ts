@@ -32,7 +32,7 @@ import {type BlockInit} from '../../block/init';
 /**
  * @param init
  *
- * @category 		Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkBetween<InputT = unknown>(
 	init: BlockInit<InputT>

@@ -26,6 +26,6 @@
 /**
  * Use to check determine if target string is a supported config key.
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export const errorCodeConfigKeys: Set<string> = new Set<string>(['customCodeToken', 'customPathDelim']);

@@ -29,11 +29,10 @@ import {isNumberFinite} from '../is/number/finite';
  * Determines if left and right are both finite numbers to check
  * whether left > right. Returns false when left or right is not
  * a finite number.
- * @param left
- * @param right
- * @returns
+ * @param			left
+ * @param			right
  *
- * @category		Matcher Predicates – Numbers
+ * @category		Matcher – Predicate Function
  */
 export function greaterThan(left: unknown, right: unknown): boolean {
 	if (!isNumberFinite(left) || !isNumberFinite(right)) {

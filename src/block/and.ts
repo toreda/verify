@@ -31,7 +31,7 @@ import {type BlockInit} from './init';
 import {BlockIs} from './is';
 
 /**
- * @category Rule Blocks
+ * @category		Rule Block
  */
 export class BlockAnd<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly contain: BlockContains<InputT>;

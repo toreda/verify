@@ -32,8 +32,9 @@ import {type Primitive} from '@toreda/types';
  * Create a readable string to uniquely identify element instances based on their
  * position in the schema tree relative to the root schema.
  * @example
- * `schemaA.someObj.id`
- * `schemaA.someObj.subObj.name`
+ * ```typescript
+ * const tracer = new Tracer();
+ * ```
  *
  * @remark
  * Property name and parent element aren't specific enough to uniquely identify elements

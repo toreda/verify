@@ -27,7 +27,7 @@ import type {Code} from './code';
 import {CodeDefaults} from './code/defaults';
 
 /**
- * @category Error Handling
+ * @category		Error Handling
  */
 export class Codes {
 	private static instance: Codes;

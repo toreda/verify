@@ -33,7 +33,7 @@ import {matcherTarget} from '../target';
 /**
  * @param			init
  *
- * @category 		Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkEmpty<InputT = unknown>(
 	init: BlockInit<InputT>

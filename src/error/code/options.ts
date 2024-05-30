@@ -24,7 +24,7 @@
  */
 
 /**
- * @category Error Handling
+ * @category		Error Handling
  */
 export interface ErrorCodeOptions {
 	customPathDelim?: string;

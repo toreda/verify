@@ -50,7 +50,7 @@ import {matcherMkHavePropertyWithType} from '../matcher/mk/have/property/with/ty
  * ```ts
  * value.must.contain.oneOf(['a', 'b', 'c']);
  * ```
- * @category Rule Blocks
+ * @category		Rule Block
  */
 export class BlockMust<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly be: BlockBe<InputT>;

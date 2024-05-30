@@ -31,9 +31,8 @@ import {type MatcherFactory} from '../factory';
 
 /**
  * Expects a validation chain root node and returns an equalTo matcher node.
- * @returns
  *
- * @category Matcher Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkEqual<InputT = unknown>(
 	init: BlockInit<InputT>

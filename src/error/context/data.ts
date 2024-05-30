@@ -26,7 +26,7 @@
 /**
  * Contains the root entity responsible for error and path to origin involved in error.
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export interface ErrorContextData {
 	/** Root object, node, or other origin responsible for error code. */

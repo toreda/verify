@@ -47,7 +47,7 @@ import {type VerifiedSchema} from './verified/schema';
 import {type VerifiedField} from './verified/field';
 
 /**
- * @category Schemas
+ * @category Schema
  */
 export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> {
 	public readonly schemaName: string;

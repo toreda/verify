@@ -13,6 +13,72 @@ Eliminate more edge cases with less code. Automates common type checks and valid
 
 &nbsp;
 
+# Rules
+```typescript
+// Create a ruleset using the expected type to be verified
+const ruleset = new Ruleset<number>();
+// Get a 'value' object from ruleset used to create rules.
+const value = ruleset.value();
+```
+
+
+## `lessThan`
+
+```typescript
+// Validate whether number input less than 0.
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.be.lessThan(0));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(-99);
+```
+
+```typescript
+// Validate whether number input is not less than 0.
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.not.be.lessThan(0));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(1);
+```
+
+## `greaterThan`
+```typescript
+// Validate whether number input is greater than 100.
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.be.greaterThan(100));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(20000);
+```
+
+## `equalTo`
+
+### `number` values
+```typescript
+// Validate whether number input is exactly 10.
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.be.equalTo(10));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(0);
+```
+
+### `string` values
+```typescript
+// Validate whether string input matches 'one'.
+const ruleset = new Ruleset<string>();
+const value = ruleset.value();
+ruleset.add(value.must.be.equalTo('one'));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify('valuehere');
+```
+
 # Checks
 ## `verifyArray`
 Check that `value` is a valid array.

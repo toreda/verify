@@ -24,32 +24,35 @@
  */
 
 import type {VerifierFlags} from '../verifier/flags';
+import {Codes} from '../codes';
 import {Fate} from '@toreda/fate';
 
 /**
  *
- * @param value
- * @param flags
- * @returns
+ * @param			value
  *
- * @category Stand-alone Validators
+ * @category		Verify Function
  */
-export function arrayVerify<ValueT>(value?: unknown | unknown[], flags?: VerifierFlags): Fate<ValueT[]> {
-	const fate = new Fate<ValueT[]>();
+export function verifyUrl(value?: unknown, flags?: VerifierFlags): Fate<string> {
+	const fate = new Fate<string>();
+
+	const maxLen = typeof flags?.length?.max === 'number' ? flags?.length?.max : 100;
+	const minLen = typeof flags?.length?.min === 'number' ? flags?.length?.min : 1;
 
 	if (value === undefined || value === null) {
-		return fate.setErrorCode('missing');
+		return fate.setErrorCode(Codes.missing());
 	}
 
-	if (!Array.isArray(value)) {
-		return fate.setErrorCode('bad_format');
+	if (typeof value !== 'string') {
+		return fate.setErrorCode(Codes.badFormat());
 	}
 
-	const empty = value.length === 0;
+	if (value.length > maxLen) {
+		return fate.setErrorCode(Codes.tooLong());
+	}
 
-	// Empty arrays are valid by default unless flags.allow.empty is explicitly true.
-	if (empty && flags?.allow?.empty === false) {
-		return fate.setErrorCode('empty');
+	if (value.length < minLen) {
+		return fate.setErrorCode(Codes.tooShort());
 	}
 
 	fate.data = value;

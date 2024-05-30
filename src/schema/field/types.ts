@@ -28,7 +28,7 @@ import {type SchemaFieldType} from './type';
 /**
  * Iterable field types supported by schema system.
  *
- * @category Schemas
+ * @category Schema
  */
 export const schemaFieldTypes: SchemaFieldType[] = [
 	'array',

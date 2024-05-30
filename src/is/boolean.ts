@@ -26,10 +26,9 @@
 /**
  * Determine if value is a strict boolean type. Does not return true for
  * otherwise truthy non-boolean values.
- * @param value
- * @returns
+ * @param 			value
  *
- * @category		Validators – Booleans
+ * @category		Matcher – Predicate Function
  */
 export function isBoolean(value?: unknown): value is boolean {
 	return value === true || value === false;

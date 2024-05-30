@@ -27,12 +27,12 @@ import {Fate} from '@toreda/fate';
 import {isBoolean} from '../is/boolean';
 
 /**
- * @description Verifies that `value` is a boolean without type coercion.
- * @param value
+ * Verifies that `value` is a boolean without type coercion.
+ * @param 			value
  *
- * @category Booleans
+ * @category		Matcher – Predicate Function
  */
-export function booleanVerify(value?: unknown): Fate<boolean> {
+export function verifyBoolean(value?: unknown): Fate<boolean> {
 	const fate = new Fate<boolean>();
 
 	if (value === null || value === undefined) {

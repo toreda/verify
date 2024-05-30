@@ -33,7 +33,7 @@ import {isIterable} from '../../is/iterable';
 /**
  * Expects a validation chain root node and returns an isIterable matcher node.
  *
- * @category Matcher Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkIterable<InputT = unknown>(
 	init: BlockInit<InputT>

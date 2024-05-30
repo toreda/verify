@@ -29,18 +29,18 @@ import {Tracer} from '../tracer';
 
 /**
  * Data used to create a callable matcher.
- * @category Matchers
+ *
+ * @category		Matcher
  */
 export interface MatcherData<InputT = unknown> {
 	/**
 	 * @name Matcher Call Name
-	 * @description Name used in creation of a unique ID for bound matcher. There are
-	 * no character or length limitations. Short, readable, and unique names are
+	 * @description Unique name identifying bound matcher. No character or
+	 * length, or content limitations. Short, readable, and unique names are
 	 * ideal because the ID is used in debugging and stack traces.
 	 */
 	name: string;
 	/**
-	 * @name Matcher Predicate Function
 	 * @description Predicate function that expects one or more arguments of generic type
 	 * InputT and returns a boolean indicating whether it's valid.
 	 */

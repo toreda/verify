@@ -28,7 +28,9 @@ import {BlockModType} from '../mod/type';
 import {type BlockType} from '../type';
 
 /**
- * @category Rule Blocks
+ * Parameters used by rule blocks to intialize it their base block data.
+ *
+ * @category Rule Block
  *
  * @remark
  * Normally two types with overlap like `BlockInit` and `BlockBaseInit` would

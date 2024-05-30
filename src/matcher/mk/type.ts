@@ -30,9 +30,7 @@ import {type BlockInit} from '../../block/init';
 import {isInt} from '../../is/int';
 /**
  *
- * @returns
- *
- * @category Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkType<InputT = unknown>(
 	init: BlockInit<InputT>

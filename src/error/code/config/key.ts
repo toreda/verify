@@ -26,6 +26,6 @@
 /**
  * Identifies supported custom configuration keys.
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export type ErrorCodeConfigKey = 'customCodeToken' | 'customPathDelim';

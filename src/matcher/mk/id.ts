@@ -28,10 +28,9 @@ import {type MatcherData} from '../data';
 
 /**
  *
- * @param flags
- * @returns
+ * @param			flags
  *
- * @category Matchers
+ * @category		Matcher
  */
 export function matcherMkId<ValueT = unknown>(matcherId: number, data: MatcherData<ValueT>): Id {
 	const id = idMake('');

@@ -27,10 +27,9 @@ import {empty} from '../../../empty';
 
 /**
  *
- * @param value
- * @returns
+ * @param			value
  *
- * @category		Validators – Collections
+ * @category		Matcher – Predicate Function
  */
 export function isArrayNotEmpty(value: unknown[]): value is Array<unknown> {
 	return !empty(value);

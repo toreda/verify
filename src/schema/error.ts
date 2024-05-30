@@ -31,12 +31,11 @@ import type {SchemaErrorPath} from './error/path';
 /**
  * Create full error code string containing the originating entity and path from entity to
  * specific component, function, or property which produced the error.
- * @param code
- * @param entity
- * @param path
- * @returns
+ * @param 			code
+ * @param 			entity
+ * @param 			path
  *
- * @category Schemas
+ * @category		Schema – Error Handling
  */
 export function schemaError(
 	code: SchemaErrorCode,

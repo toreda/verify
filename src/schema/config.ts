@@ -30,7 +30,7 @@ import {boolMake} from '@toreda/strong-types';
 
 /**
  *
- * @category Schemas
+ * @category Schema
  */
 export class SchemaConfig extends StrongMap {
 	public readonly strict: Bool;

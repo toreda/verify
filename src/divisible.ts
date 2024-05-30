@@ -31,7 +31,7 @@ import {isNumberFinite} from './is/number/finite';
  * @param by		Number to divide value by.
  * @returns
  *
- * @category		Matcher Predicates
+ * @category		Matcher – Predicate Function
  */
 export function divisible(value: unknown, by: unknown): value is number {
 	if (!isNumberFinite(value) || !isNumberFinite(by)) {

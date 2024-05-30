@@ -39,7 +39,7 @@ import {type BlockInit} from './init';
 /**
  * Matchers following the `contain` or `contains` block in rule statements.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  *
  * @example
  * ```ts

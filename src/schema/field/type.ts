@@ -24,7 +24,9 @@
  */
 
 /**
- * @category Schemas
+ * Built-in types supported by schema fields.
+ *
+ * @category		Schema – Field
  */
 export type SchemaFieldType<InputT = unknown> =
 	| 'array'

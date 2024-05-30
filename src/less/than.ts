@@ -27,11 +27,10 @@ import {isNumberFinite} from '../is/number/finite';
 
 /**
  * Determine if chain value is less than `right` arg.
- * @param value
- * @param right
- * @returns
+ * @param 			value
+ * @param 			right
  *
- * @category Numbers
+ * @category		Matcher – Predicate Function
  */
 export function lessThan(value: unknown, right: unknown): boolean {
 	if (!isNumberFinite(value) || !isNumberFinite(right)) {

@@ -27,7 +27,7 @@ import {Log} from '@toreda/log';
 import {type CustomTypesData} from './data';
 
 /**
- * @category Schemas - Custom Types
+ * @category		Schema – Custom Type
  */
 export interface CustomTypesInit<DataT = unknown> {
 	data?: CustomTypesData<DataT> | null;

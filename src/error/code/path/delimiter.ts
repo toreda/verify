@@ -33,7 +33,7 @@ import Defaults from '../../../defaults';
  * @param value
  * @returns
  *
- * @category Error Handling
+ * @category		Error Handling
  */
 export function errorCodePathDelimiter(value?: string | null): string {
 	if (typeof value !== 'string') {

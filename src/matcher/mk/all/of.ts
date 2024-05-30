@@ -33,7 +33,7 @@ import {type BlockInit} from '../../../block/init';
 /**
  * Create matcher for validation chain which determines if chain value is less than target.
  *
- * @category Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkAllOf<InputT = unknown>(
 	init: BlockInit<InputT>

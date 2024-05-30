@@ -29,10 +29,9 @@ import {html5Tags} from '../../html5/tags';
 /**
  * Determine if value is a strict boolean type. Does not return true for
  * otherwise truthy non-boolean values.
- * @param value
- * @returns
+ * @param			value
  *
- * @category		Validators – Html5
+ * @category		Matcher – Predicate Function
  */
 export function isHtml5Tag(value: unknown): value is Html5Tag {
 	if (typeof value !== 'string') {

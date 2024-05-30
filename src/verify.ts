@@ -33,7 +33,7 @@ import Defaults from './defaults';
 /**
  * @param params
  *
- * @category Verifier
+ * @category		Verifier
  */
 export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 	params: VerifierParams<InputT, CollectionT>

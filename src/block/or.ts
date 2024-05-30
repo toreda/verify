@@ -31,7 +31,7 @@ import {BlockIs} from './is';
 /**
  * Links two or more validation chain statements to form a boolean expression.
  *
- * @category Rule Blocks
+ * @category		Rule Block
  */
 export class BlockOr<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly contains: BlockContains<InputT>;

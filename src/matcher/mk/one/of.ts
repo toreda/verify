@@ -31,11 +31,10 @@ import {type BlockInit} from '../../../block/init';
 import {matcherTarget} from '../../target';
 
 /**
- * @description Create matcher for validat * @param root		Root node in validation chain matcher will be added to.
-ion chain which determines if chain value is less than target.
- * @returns
+ * @description 	Create matcher for validator.
+ * @param root		Root node in validation chain.
  *
- * @category Matcher Predicate Factories
+ * @category		Matcher – Factory Function
  */
 export function matcherMkOneOf<InputT = unknown>(
 	init: BlockInit<InputT>

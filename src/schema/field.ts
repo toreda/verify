@@ -28,7 +28,7 @@ import {type SchemaFieldData} from './field/data';
 import {type SchemaFieldType} from './field/type';
 
 /**
- * @category Schemas
+ * @category		Schema – Field
  */
 export class SchemaField<InputT = unknown> {
 	public readonly name: string;

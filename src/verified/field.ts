@@ -26,6 +26,8 @@
 import {type VerifiedSchema} from './schema';
 
 /**
- * @category Schemas
+ * Verified field data returned by schema verification.
+ *
+ * @category		Schema – Field
  */
 export type VerifiedField<DataT> = DataT | VerifiedSchema<DataT> | null;

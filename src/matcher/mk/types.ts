@@ -44,7 +44,7 @@ export function matcherMkTypes<InputT = unknown>(
 			}
 
 			for (const name of typeNames) {
-				if (name === 'array' && Array.isArray(value)) {
+				if (name.endsWith('[]') && Array.isArray(value)) {
 					return true;
 				}
 

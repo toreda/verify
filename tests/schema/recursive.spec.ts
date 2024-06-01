@@ -50,6 +50,10 @@ describe('Schema - Recursive Parsing', () => {
 					{
 						name: 'bool1',
 						types: ['boolean', 'null']
+					},
+					{
+						name: 'subschema',
+						types: ['ct2[]', 'undefined']
 					}
 				],
 				customTypes: {
@@ -62,7 +66,13 @@ describe('Schema - Recursive Parsing', () => {
 		beforeEach(() => {
 			bData = {
 				str2b: 'bbb',
-				int2b: 111
+				int2b: 111,
+				subValues: [
+					{
+						str2b: 'zzzz',
+						int2b: 9999
+					}
+				]
 			};
 
 			aData = {
@@ -71,7 +81,13 @@ describe('Schema - Recursive Parsing', () => {
 				subValue: {
 					str2b: 'zzzzz',
 					int2b: 9999
-				}
+				},
+				subValues: [
+					{
+						str2b: 'zzzz',
+						int2b: 9999
+					}
+				]
 			};
 		});
 

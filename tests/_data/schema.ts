@@ -58,6 +58,10 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 				{
 					name: 'subValue',
 					types: ['ct2']
+				},
+				{
+					name: 'subValues',
+					types: ['ct2[]']
 				}
 			],
 			customTypes: {

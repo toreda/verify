@@ -99,6 +99,7 @@ export {schemaError} from './schema/error';
 export {SchemaErrorCode} from './schema/error/code';
 export {SchemaErrorEntity} from './schema/error/entity';
 export {SchemaField} from './schema/field';
+export {schemaFieldArraysAllowed} from './schema/field/arrays/allowed';
 export {SchemaFieldData} from './schema/field/data';
 export {SchemaFieldType} from './schema/field/type';
 export {schemaFieldTypes} from './schema/field/types';

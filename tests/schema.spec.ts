@@ -164,7 +164,7 @@ describe('Schema', () => {
 
 					expect(result.errorCode()).toBe(
 						schemaError(
-							`field_does_not_support_type:${fieldType}`,
+							`schema_does_not_support_type:${fieldType}`,
 							`${schema.schemaName}.${field.name}`
 						)
 					);

@@ -11,25 +11,18 @@ const MATCHER_GROUPS: MatcherGroup[] = [
 		opName: 'is type',
 		cases: [
 			{
-				matcherValue: 'array',
-				block: value.is.type('array'),
-				input: ['one'],
-				inputLabel: `['one']`,
+				matcherValue: 'string[]',
+				block: value.is.type('string[]'),
+				input: [],
+				inputLabel: `string[]`,
 				outcome: 'pass'
 			},
 			{
-				matcherValue: 'array',
-				block: value.is.type('array'),
+				matcherValue: 'number[]',
+				block: value.is.type('number[]'),
 				input: [],
-				inputLabel: `[]`,
+				inputLabel: `number[]`,
 				outcome: 'pass'
-			},
-			{
-				matcherValue: 'number',
-				block: value.is.type('number'),
-				input: [],
-				inputLabel: `[]`,
-				outcome: 'fail'
 			},
 			{
 				matcherValue: 'number',
@@ -80,6 +73,13 @@ const MATCHER_GROUPS: MatcherGroup[] = [
 				input: [],
 				inputLabel: '[]',
 				outcome: 'fail'
+			},
+			{
+				matcherValue: 'boolean[]',
+				block: value.is.type('boolean[]'),
+				input: [],
+				inputLabel: 'boolean[]',
+				outcome: 'pass'
 			},
 			{
 				matcherValue: 'boolean',

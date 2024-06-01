@@ -17,7 +17,6 @@ import {Ruleset} from '../src/ruleset';
 		value.must.havePropertyWithType('name', 'string'),
 		value.is.iterable(),
 		value.must.be.an.ipv4addr(),
-		value.is.type('array'),
 		value.is.an.html5Tag()
 	);
 

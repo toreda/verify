@@ -40,6 +40,7 @@ import {matcherMkIterable} from '../matcher/mk/iterable';
 import {matcherMkTruthy} from '../matcher/mk/truthy';
 import {BlockA} from './a';
 import {BlockAn} from './an';
+import {SchemaFieldType} from '../schema/field/type';
 
 /**
  * Matchers following 'is' in rule statements.
@@ -71,7 +72,7 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly equalTo: MatcherFactory<InputT, Primitive | Primitive[], BlockLink<InputT>>;
 	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
 	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
-	public readonly type: MatcherFactory<InputT, string, BlockLink<InputT>>;
+	public readonly type: MatcherFactory<InputT, SchemaFieldType<InputT>, BlockLink<InputT>>;
 	public readonly an: BlockAn<InputT>;
 	public readonly a: BlockA<InputT>;
 

@@ -1,25 +1,39 @@
+import {SchemaFieldType} from '../../src';
 import {schemaFieldTypes} from '../../src/schema/field/types';
 
-const EXPECTED_TYPES: string[] = [
-	'array',
+const EXPECTED_TYPES: SchemaFieldType[] = [
 	'bigint',
+	'BigInt',
+	'bigint[]',
+	'BigInt[]',
 	'boolean',
+	'boolean[]',
 	'datetime',
+	'datetime[]',
 	'dbl',
 	'double',
+	'double[]',
 	'float',
 	'int',
+	'int[]',
 	'iterable',
-	'json-serialized',
+	'iterable[]',
 	'json',
+	'json[]',
 	'null',
+	'null[]',
 	'number',
-	'real',
+	'number[]',
 	'string',
+	'string[]',
 	'time',
+	'time[]',
 	'uint',
+	'uint[]',
 	'undefined',
-	'url'
+	'undefined[]',
+	'url',
+	'url[]'
 ];
 
 describe('Schema Field Types (built-in)', () => {

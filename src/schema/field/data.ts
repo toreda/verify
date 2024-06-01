@@ -33,6 +33,7 @@ import {type SchemaFieldType} from './type';
 export interface SchemaFieldData<InputT = unknown> {
 	name: keyof InputT;
 	types: SchemaFieldType<InputT> | SchemaFieldType<InputT>[];
+	type?: SchemaFieldType<InputT>;
 	defaultValue?: unknown;
 	rules?: Block<Statement<InputT>>[];
 }

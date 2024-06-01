@@ -28,14 +28,20 @@ import {type MatcherFactory} from '../factory';
 import {type Predicate} from '../../predicate';
 import {type BlockInit} from '../../block/init';
 import {isInt} from '../../is/int';
+import {isUInt} from '../../is/uint';
+import {type SchemaFieldType} from '../../schema/field/type';
+import {isBoolean} from '../../is/boolean';
+import {isUrl} from '@toreda/strong-types';
+import {isString} from '../../is/string';
+
 /**
  *
  * @category		Matcher – Factory Function
  */
 export function matcherMkType<InputT = unknown>(
 	init: BlockInit<InputT>
-): MatcherFactory<InputT, string, BlockLink<InputT>> {
-	return (typeName: string): BlockLink<InputT> => {
+): MatcherFactory<InputT, SchemaFieldType<InputT>, BlockLink<InputT>> {
+	return (typeName: SchemaFieldType<InputT>): BlockLink<InputT> => {
 		const link = new BlockLink<InputT>(init);
 
 		const fn: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
@@ -44,28 +50,57 @@ export function matcherMkType<InputT = unknown>(
 				return false;
 			}
 
-			if (typeName === 'array') {
-				return Array.isArray(value);
+			const isArray = typeName.endsWith('[]');
+			if (isArray === true && !Array.isArray(value)) {
+				return false;
+			} else if (isArray === false && Array.isArray(value)) {
+				return false;
 			}
 
-			if (value === null && typeName === 'null') {
+			// Super jank. Will return true for empty array which could
+			// be filled with non-matching types in the future. But, there's
+			// nothing more to do if we dont have elements to type check.
+			if (Array.isArray(value) && value.length === 0) {
 				return true;
 			}
 
-			if (typeName === 'int') {
-				return isInt(value);
-			}
+			const baseType = isArray ? typeName.substring(0, -2) : typeName;
+			const typeValue = Array.isArray(value) ? value[0] : value;
 
-			if (value === undefined && typeName === 'undefined') {
+			if (typeValue === null && baseType === 'null') {
 				return true;
 			}
 
-			return typeof value === typeName;
+			if (baseType === 'int') {
+				return isInt(typeValue);
+			}
+
+			if (baseType === 'uint') {
+				return isUInt(typeValue);
+			}
+
+			if (baseType === 'boolean') {
+				return isBoolean(typeValue);
+			}
+
+			if (baseType === 'url') {
+				return isUrl(typeValue);
+			}
+
+			if (baseType === 'string') {
+				return isString(typeValue);
+			}
+
+			if (typeValue === undefined && baseType === 'undefined') {
+				return true;
+			}
+
+			return typeof typeValue === baseType;
 		};
 
 		init.stmt.addMatcher({
 			fn: fn,
-			name: 'istype',
+			name: 'type',
 			flags: init.flags,
 			tracer: init.tracer
 		});

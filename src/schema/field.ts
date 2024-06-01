@@ -24,10 +24,13 @@
  */
 
 import {Ruleset} from '../ruleset';
+import {schemaFieldArraysAllowed} from './field/arrays/allowed';
 import {type SchemaFieldData} from './field/data';
 import {type SchemaFieldType} from './field/type';
 
 /**
+ * Properties for a single schema field.
+ *
  * @category		Schema – Field
  */
 export class SchemaField<InputT = unknown> {
@@ -36,6 +39,7 @@ export class SchemaField<InputT = unknown> {
 	public readonly types: SchemaFieldType<InputT>[];
 	public readonly defaultValue: unknown;
 	public readonly ruleset: Ruleset<InputT>;
+	public readonly allowArrayValues: boolean;
 
 	constructor(data: SchemaFieldData<InputT>) {
 		this.key = data.name;
@@ -54,6 +58,13 @@ export class SchemaField<InputT = unknown> {
 			this.types = [];
 		}
 
+		// Convenience for cases where it makes more sense to see 'type' than 'types'
+		// with a string value.
+		if (typeof data.type === 'string') {
+			this.types.push(data.type);
+		}
+
 		this.defaultValue = typeof data.defaultValue !== 'undefined' ? data.defaultValue : undefined;
+		this.allowArrayValues = schemaFieldArraysAllowed(this.types);
 	}
 }

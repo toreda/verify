@@ -31,7 +31,7 @@
  * @category		Matcher – Predicate Function
  */
 export function matchesType(value: unknown, type: string): boolean {
-	if (type === 'array') {
+	if (type.endsWith('[]')) {
 		return Array.isArray(value);
 	}
 

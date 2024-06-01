@@ -56,7 +56,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public readonly transformOutput: SchemaOutputTransformer<DataT, VerifiedT | null>;
 	public readonly customTypes: CustomTypes<DataT, InputT, VerifiedT>;
 	public readonly base: Log;
-	public readonly parsePath: string[];
 
 	constructor(init: SchemaInit<DataT, InputT, VerifiedT>) {
 		this.schemaName = init.name;
@@ -68,9 +67,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			data: init.customTypes,
 			base: this.base
 		});
-
-		this.parsePath = Array.isArray(init.parentPath) ? init.parentPath : [];
-		this.parsePath.push(this.schemaName);
 
 		this.transformOutput = init.transformOutput ? init.transformOutput : simpleOutputTransform;
 	}
@@ -111,7 +107,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
 		}
 
-		const verified = await this.fieldSupportsValue(field, value, currPath, base);
+		const verified = await this.verifyFieldValues(field, value, path, base);
+
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
 		}
@@ -137,31 +134,71 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		return fate.setSuccess(true);
 	}
 
-	public async fieldSupportsValue(
+	public async verifyFieldValues(
+		field: SchemaField<InputT>,
+		values: unknown | unknown[],
+		tracer: Tracer,
+		base: Log
+	): Promise<Fate<VerifiedField<DataT>>> {
+		const fate = new Fate<VerifiedField<DataT>>({
+			data: null
+		});
+
+		// If the field is not an array, let the single field value verifier handle it.
+		if (!Array.isArray(values)) {
+			return this.verifyFieldValue(field, values, tracer.child(field.name), base);
+		}
+
+		const data: VerifiedField<DataT>[] = [];
+		let i = 0;
+		for (const value of values) {
+			const result = await this.verifyFieldValue(
+				field,
+				value,
+				tracer.child(`${field.name}[${i}]`),
+				base
+			);
+			i++;
+
+			if (!result.data) {
+				continue;
+			}
+
+			data.push(result.data);
+		}
+
+		return fate.setSuccess(true);
+	}
+
+	public async verifyFieldValue(
 		field: SchemaField<InputT>,
 		value: unknown,
-		path: Tracer,
+		tracer: Tracer,
 		base: Log
 	): Promise<Fate<VerifiedField<DataT>>> {
 		const fate = new Fate<VerifiedField<DataT>>();
+
 		if (value === null) {
 			if (field.types.includes('null')) {
 				return fate.setSuccess(true);
 			} else {
-				return fate.setErrorCode(schemaError('field_does_not_support_type:null', path.current()));
+				return fate.setErrorCode(schemaError('field_does_not_support_type:null', tracer.current()));
 			}
 		}
 
 		for (const type of field.types) {
-			if (!this.schemaSupportsType(type)) {
-				return fate.setErrorCode(schemaError(`field_does_not_support_type:${type}`, path.current()));
+			const baseType = (type.endsWith('[]') ? type.slice(0, -2) : type) as SchemaFieldType<InputT>;
+			if (!this.schemaSupportsType(baseType)) {
+				return fate.setErrorCode(
+					schemaError(`schema_does_not_support_type:${baseType}`, tracer.current())
+				);
 			}
 
 			const result = await this.verifyValue({
 				fieldId: field.name,
-				fieldType: type,
+				fieldType: baseType,
 				value: value,
-				tracer: path,
+				tracer: tracer,
 				base: base
 			});
 
@@ -174,7 +211,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, path.current())
+			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, tracer.current())
 		);
 	}
 
@@ -183,6 +220,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	}
 
 	public schemaSupportsType(type: SchemaFieldType<InputT>): boolean {
+		if (typeof type !== 'string' || !type) {
+			return false;
+		}
+
 		if (this.isBuiltIn(type)) {
 			return true;
 		}
@@ -252,10 +293,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			}
 		}
 
+		const baseType = init.fieldType.endsWith('[]') ? init.fieldType.substring(0, -2) : init.fieldType;
 		if (this.customTypes.hasSchema(init.fieldType) && typeof init.value === 'object') {
 			return this.customTypes.verifyOnly({
 				id: init.fieldId,
-				typeId: init.fieldType,
+				typeId: baseType,
 				data: init.value as SchemaData<DataT>,
 				tracer: init.tracer,
 				base: init.base,
@@ -264,11 +306,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		}
 
 		if (this.customTypes.hasVerifier(init.fieldType)) {
-			return this.customTypes.verifyValue(init.fieldId, init.fieldType, init.value, init.base);
+			return this.customTypes.verifyValue(init.fieldId, baseType, init.value, init.base);
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${init.fieldType}`, init.tracer.current())
+			schemaError(`field_does_not_support_type:${baseType}`, init.tracer.current())
 		);
 	}
 
@@ -365,7 +407,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		const total = this.fields.size;
 		let processed = 0;
 		const fieldCount = this.fields.size;
-		const mapped: VerifiedSchema<DataT> = new Map<string, DataT | VerifiedSchema<DataT> | null>();
+		const mapped = new Map<string, VerifiedField<DataT>>();
 
 		if (fieldCount === 0) {
 			if (init?.flags?.allowEmptyInputObject !== true) {
@@ -400,9 +442,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			const verified = await this.verifyField(field, init.data[name], currPath, init.base);
 
 			if (!verified.ok()) {
-				/* 				log.debug(
-					`@@@ FIELD ERROR - ${field.name} - ${verified.errorCode()} // ${verified.getErrors()}`
-				); */
 				return fate.setErrorCode(verified.errorCode());
 			}
 

@@ -30,23 +30,39 @@ import {type SchemaFieldType} from '../schema/field/type';
  */
 export function builtinTypes<InputT = unknown>(): SchemaFieldType<InputT>[] {
 	return [
-		'array',
 		'bigint',
+		'bigint[]',
 		'BigInt',
+		'BigInt[]',
 		'boolean',
+		'boolean[]',
 		'datetime',
+		'datetime[]',
 		'dbl',
+		'dbl[]',
 		'float',
+		'float[]',
 		'int',
+		'int[]',
 		'iterable',
-		'json-serialized',
+		'iterable[]',
+		'serialized',
+		'serialized[]',
 		'json',
+		'json[]',
 		'null',
+		'null[]',
 		'number',
+		'number[]',
 		'string',
+		'string[]',
 		'time',
+		'time[]',
 		'uint',
+		'uint[]',
 		'undefined',
-		'url'
+		'undefined[]',
+		'url',
+		'url[]'
 	];
 }

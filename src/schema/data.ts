@@ -29,5 +29,5 @@
  * @category		Schema
  */
 export interface SchemaData<DataT> {
-	[k: string]: DataT | SchemaData<DataT> | null;
+	[k: string]: DataT | DataT[] | SchemaData<DataT> | SchemaData<DataT>[] | null;
 }

@@ -23,12 +23,31 @@
  *
  */
 
+import {type SchemaFieldType} from '../type';
+
 /**
- * Verified schema data returned by a successful `schema.verify(...)` call.
+ * Determine if array support is enabled based on all supported types for a single
+ * schema field.
+ * @param items		Field types to check.
  *
- * @category		Schema
+ * @category		Schema – Field
  */
-export type VerifiedSchema<DataT> = Map<
-	string,
-	DataT | DataT[] | VerifiedSchema<DataT> | VerifiedSchema<DataT>[] | null
->;
+export function schemaFieldArraysAllowed<InputT = unknown>(items: SchemaFieldType<InputT>[]): boolean {
+	if (!Array.isArray(items) || !items.length) {
+		return false;
+	}
+
+	for (const item of items) {
+		if (!item || typeof item !== 'string') {
+			continue;
+		}
+
+		// One or more array types means array support is required.
+		// No need to continue iterating after one is found.
+		if (item.endsWith('[]')) {
+			return true;
+		}
+	}
+
+	return false;
+}

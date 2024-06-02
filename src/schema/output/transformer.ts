@@ -26,6 +26,7 @@
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
 import {type VerifiedSchema} from '../../verified/schema';
+import {type VerifiedField} from '../../verified/field';
 
 /**
  * Transform schema parser output.
@@ -33,6 +34,6 @@ import {type VerifiedSchema} from '../../verified/schema';
  * @category		Schema – Transform Output
  */
 export type SchemaOutputTransformer<DataT, VerifiedT> = (
-	mapped: VerifiedSchema<DataT>,
+	mapped: VerifiedSchema<VerifiedField<DataT> | VerifiedField<DataT>[]>,
 	base: Log
 ) => Promise<Fate<VerifiedT | null>>;

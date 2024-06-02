@@ -92,22 +92,29 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	public async verifyField(
 		field: SchemaField<InputT>,
 		value: unknown,
-		path: Tracer,
+		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT>>> {
-		const fate = new Fate<VerifiedField<DataT>>();
+	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>> {
+		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>();
 
 		if (!field) {
-			return fate.setErrorCode(schemaError(`missing_field`, path.current()));
+			return fate.setErrorCode(schemaError(`missing_field`, tracer.current()));
 		}
 
-		const currPath = path.child(field.name);
+		const currPath = tracer.child(field.name);
 
 		if (value === undefined) {
 			return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
 		}
 
-		const verified = await this.verifyFieldValues(field, value, path, base);
+		let verified: Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>;
+
+		if (Array.isArray(value)) {
+			verified = await this.verifyFieldValues(field, value, currPath, base);
+		} else {
+			// If the field is not an array, let the single field value verifier handle it.
+			verified = await this.verifyFieldValue(field, value, tracer.child(field.name), base);
+		}
 
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
@@ -136,18 +143,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async verifyFieldValues(
 		field: SchemaField<InputT>,
-		values: unknown | unknown[],
+		values: unknown[],
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT>>> {
-		const fate = new Fate<VerifiedField<DataT>>({
-			data: null
+	): Promise<Fate<VerifiedField<DataT>[]>> {
+		const fate = new Fate<VerifiedField<DataT>[]>({
+			data: []
 		});
-
-		// If the field is not an array, let the single field value verifier handle it.
-		if (!Array.isArray(values)) {
-			return this.verifyFieldValue(field, values, tracer.child(field.name), base);
-		}
 
 		const data: VerifiedField<DataT>[] = [];
 		let i = 0;
@@ -160,13 +162,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			);
 			i++;
 
-			if (!result.data) {
-				continue;
+			if (result.ok()) {
+				data.push(result.data);
 			}
-
-			data.push(result.data);
 		}
 
+		fate.data = data;
 		return fate.setSuccess(true);
 	}
 
@@ -344,6 +345,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			);
 		}
 
+		// Verify input and return result without transform.
 		const verified = await this.verifyOnly(init);
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
@@ -381,8 +383,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * Verify provided data object's structure, content, and types against this schema.
 	 * @param init
 	 */
-	public async verifyOnly(init: SchemaVerifyInit): Promise<Fate<VerifiedSchema<DataT>>> {
-		const fate = new Fate<VerifiedSchema<DataT>>();
+	public async verifyOnly(
+		init: SchemaVerifyInit
+	): Promise<Fate<VerifiedSchema<VerifiedField<DataT> | VerifiedField<DataT>[]>>> {
+		const fate = new Fate<VerifiedSchema<VerifiedField<DataT> | VerifiedField<DataT>[]>>();
 
 		const currPath = init.tracer ? init.tracer : new Tracer();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
@@ -407,7 +411,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		const total = this.fields.size;
 		let processed = 0;
 		const fieldCount = this.fields.size;
-		const mapped = new Map<string, VerifiedField<DataT>>();
+		const mapped = new Map<string, VerifiedField<DataT> | VerifiedField<DataT>[]>();
 
 		if (fieldCount === 0) {
 			if (init?.flags?.allowEmptyInputObject !== true) {

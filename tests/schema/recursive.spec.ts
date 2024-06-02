@@ -78,6 +78,7 @@ describe('Schema - Recursive Parsing', () => {
 			aData = {
 				int1a: 31,
 				str1a: 'aaa',
+				intArray: [1, 2, 3, 4, 5],
 				subValue: {
 					str2b: 'zzzzz',
 					int2b: 9999
@@ -117,6 +118,21 @@ describe('Schema - Recursive Parsing', () => {
 				schemaError('field_does_not_support_value_type:string', `SubSchemaA.subValue.int2b`)
 			);
 			expect(result.ok()).toBe(false);
+		});
+
+		it(`should verify a non-recursive array of primitives`, async () => {
+			const customB = new SampleSchemaSubB(base);
+			const customA = new SampleSchemaSubA(customB, base);
+
+			const result = await customA.verify({
+				data: aData,
+				base: base
+			});
+
+			expect(result.errorCode()).toBe(EMPTY_STRING);
+			expect(result.ok()).toBe(true);
+
+			expect(result.data?.intArray).toEqual(aData.intArray);
 		});
 	});
 });

@@ -18,6 +18,7 @@ export interface SampleBData extends SchemaData<Primitive> {
 export interface SampleAData extends SchemaData<Primitive> {
 	str1a: string;
 	int1a: number;
+	intArray: number[];
 	subValue: SampleBData;
 }
 
@@ -54,6 +55,10 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 				{
 					name: 'int1a',
 					types: ['number']
+				},
+				{
+					name: 'intArray',
+					types: ['number[]']
 				},
 				{
 					name: 'subValue',

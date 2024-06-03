@@ -204,15 +204,15 @@ describe('Schema - Recursive Parsing', () => {
 			expect(result.data?.subSchemas).toHaveLength(2);
 
 			const resultSubA = result.data?.subSchemas![0];
-			expect(resultSubA).toEqual({});
 			const resultSubB = result.data?.subSchemas![1];
+
 			expect(resultSubB).toBeDefined();
 
 			expect(resultSubA?.int2b).toBe(intSample1);
 			expect(resultSubA?.str2b).toBe(strSample1);
 
-			expect(resultSubB?.int2b).toBe(intSample1);
-			expect(resultSubB?.str2b).toBe(strSample1);
+			expect(resultSubB?.int2b).toBe(intSample2);
+			expect(resultSubB?.str2b).toBe(strSample2);
 		});
 	});
 });

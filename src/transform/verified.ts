@@ -26,9 +26,9 @@
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
 import {schemaError} from '../schema/error';
-import {type Verified} from '../verified';
 import {type VerifiedMap} from '../verified/map';
-import {type VerifiedArray} from '../verified/array';
+import {Transformed} from '../transformed';
+import {transformVerifiedField} from './verified/field';
 
 /**
  * Default transformer when one isn't provided to a schema. Expects a
@@ -38,8 +38,8 @@ import {type VerifiedArray} from '../verified/array';
  *
  * @category		Schema – Transform Output
  */
-export async function transformVerified<DataT, TransformedT>(
-	input: DataT | VerifiedMap<DataT> | VerifiedArray<DataT>,
+export async function transformVerified<DataT = unknown, TransformedT = unknown>(
+	input: VerifiedMap<DataT>,
 	base: Log
 ): Promise<Fate<TransformedT | null>> {
 	const fate = new Fate<TransformedT | null>();
@@ -55,26 +55,16 @@ export async function transformVerified<DataT, TransformedT>(
 	}
 
 	try {
-		const verified: Verified = {};
+		const transformed: Transformed = {};
 
 		for (const [id, field] of input) {
-			if (Array.isArray(field)) {
-				verified[id] = [];
-				for (const item of field) {
-				}
+			const result = await transformVerifiedField(id, field, log);
+			if (result.ok()) {
+				transformed[id] = result.data;
 			} else {
-				if (field instanceof Map) {
-					const result = await transformVerified<DataT, TransformedT>(field, base);
-					if (result.ok()) {
-						verified[id] = result.data;
-					} else {
-						log.error(`Error in schema output transform ${id}: ${result.errorCode()}`);
-						verified[id] = null;
-						// TODO: Need tracer here for detailed path info.
-					}
-				} else {
-					verified[id] = field;
-				}
+				log.error(`Error in schema output transform ${id}: ${result.errorCode()}`);
+				fate.setErrorCode(result.errorCode());
+				break;
 			}
 		}
 
@@ -84,7 +74,7 @@ export async function transformVerified<DataT, TransformedT>(
 			return fate;
 		}
 
-		fate.data = verified as TransformedT;
+		fate.data = transformed as TransformedT;
 
 		fate.setSuccess(true);
 	} catch (e: unknown) {

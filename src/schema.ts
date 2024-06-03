@@ -32,7 +32,7 @@ import {SchemaConfig} from './schema/config';
 import type {SchemaInit} from './schema/init';
 import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
-import {simpleOutputTransform} from './simple/output/transform';
+import {transformVerified} from './transform/verified';
 import {isDbl, isFloat, isUrl, numberNullValue, numberValue, stringValue} from '@toreda/strong-types';
 import {isUInt} from './is/uint';
 import {isInt} from './is/int';
@@ -68,7 +68,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			base: this.base
 		});
 
-		this.transformOutput = init.transformOutput ? init.transformOutput : simpleOutputTransform;
+		this.transformOutput = init.transformOutput ? init.transformOutput : transformVerified;
 	}
 
 	/**

@@ -25,8 +25,10 @@
 
 import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
-import {schemaError} from '../../schema/error';
-import {type Verified} from '../../verified';
+import {schemaError} from '../schema/error';
+import {type Verified} from '../verified';
+import {type VerifiedMap} from '../verified/map';
+import {type VerifiedArray} from '../verified/array';
 
 /**
  * Default transformer when one isn't provided to a schema. Expects a
@@ -36,11 +38,11 @@ import {type Verified} from '../../verified';
  *
  * @category		Schema – Transform Output
  */
-export async function simpleOutputTransform<DataT, VerifiedT>(
-	input: Map<string, DataT>,
+export async function transformVerified<DataT, TransformedT>(
+	input: DataT | VerifiedMap<DataT> | VerifiedArray<DataT>,
 	base: Log
-): Promise<Fate<VerifiedT | null>> {
-	const fate = new Fate<VerifiedT | null>();
+): Promise<Fate<TransformedT | null>> {
+	const fate = new Fate<TransformedT | null>();
 
 	if (!base) {
 		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
@@ -56,10 +58,33 @@ export async function simpleOutputTransform<DataT, VerifiedT>(
 		const verified: Verified = {};
 
 		for (const [id, field] of input) {
-			verified[id] = field;
+			if (Array.isArray(field)) {
+				verified[id] = [];
+				for (const item of field) {
+				}
+			} else {
+				if (field instanceof Map) {
+					const result = await transformVerified<DataT, TransformedT>(field, base);
+					if (result.ok()) {
+						verified[id] = result.data;
+					} else {
+						log.error(`Error in schema output transform ${id}: ${result.errorCode()}`);
+						verified[id] = null;
+						// TODO: Need tracer here for detailed path info.
+					}
+				} else {
+					verified[id] = field;
+				}
+			}
 		}
 
-		fate.data = verified as VerifiedT;
+		// Error codes may be set during map iteration but don't automatically return.
+		// Check for errors before returning.
+		if (fate.errorCode()) {
+			return fate;
+		}
+
+		fate.data = verified as TransformedT;
 
 		fate.setSuccess(true);
 	} catch (e: unknown) {

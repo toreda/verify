@@ -20,6 +20,7 @@ describe('Schema - Recursive Parsing', () => {
 	describe('Basic Input', () => {
 		let schemaSubA: SampleSchemaSubA;
 		let schemaSubB: SampleSchemaSubB;
+		let sampleData: SampleData;
 		let bData: SampleBData;
 		let aData: SampleAData;
 		let schema: SampleSchema;
@@ -35,6 +36,7 @@ describe('Schema - Recursive Parsing', () => {
 
 			schemaSubB = new SampleSchemaSubB(base);
 			schemaSubA = new SampleSchemaSubA(schemaSubB, base);
+
 			schema = new SampleSchema({
 				base: base,
 				name: 'SampleSchema',
@@ -52,7 +54,7 @@ describe('Schema - Recursive Parsing', () => {
 						types: ['boolean', 'null']
 					},
 					{
-						name: 'subschema',
+						name: 'subschemas',
 						types: ['ct2[]', 'undefined']
 					}
 				],
@@ -67,7 +69,7 @@ describe('Schema - Recursive Parsing', () => {
 			bData = {
 				str2b: 'bbb',
 				int2b: 111,
-				subValues: [
+				subSchemas: [
 					{
 						str2b: 'zzzz',
 						int2b: 9999
@@ -79,16 +81,13 @@ describe('Schema - Recursive Parsing', () => {
 				int1a: 31,
 				str1a: 'aaa',
 				intArray: [1, 2, 3, 4, 5],
-				subValue: {
+				strArray: ['a', 'b', 'c', 'd'],
+				boolArray: [true, true, false, true, false],
+				subSchema: {
 					str2b: 'zzzzz',
 					int2b: 9999
 				},
-				subValues: [
-					{
-						str2b: 'zzzz',
-						int2b: 9999
-					}
-				]
+				subSchemas: []
 			};
 		});
 
@@ -107,7 +106,7 @@ describe('Schema - Recursive Parsing', () => {
 		it(`should fail when sub-schema field value doesn't match field type`, async () => {
 			const customB = new SampleSchemaSubB(base);
 			const customA = new SampleSchemaSubA(customB, base);
-			aData.subValue.int2b = 'aaaa' as any;
+			aData.subSchema.int2b = 'aaaa' as any;
 
 			const result = await customA.verify({
 				data: aData,
@@ -115,14 +114,17 @@ describe('Schema - Recursive Parsing', () => {
 			});
 
 			expect(result.errorCode()).toBe(
-				schemaError('field_does_not_support_value_type:string', `SubSchemaA.subValue.int2b`)
+				schemaError('field_does_not_support_value_type:string', `SubSchemaA.subSchema.int2b`)
 			);
 			expect(result.ok()).toBe(false);
 		});
 
-		it(`should verify a non-recursive array of primitives`, async () => {
+		it(`should verify a non-recursive array of numbers`, async () => {
 			const customB = new SampleSchemaSubB(base);
 			const customA = new SampleSchemaSubA(customB, base);
+
+			const value: number[] = [3, 1091, 4444, 99171764];
+			aData.intArray = value;
 
 			const result = await customA.verify({
 				data: aData,
@@ -132,7 +134,85 @@ describe('Schema - Recursive Parsing', () => {
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
 
-			expect(result.data?.intArray).toEqual(aData.intArray);
+			expect(result.data?.intArray).toStrictEqual(value);
+		});
+
+		it(`should verify a non-recursive array of booleans`, async () => {
+			const customB = new SampleSchemaSubB(base);
+			const customA = new SampleSchemaSubA(customB, base);
+
+			const value: boolean[] = [false, false, true, false, true, false, false];
+			aData.boolArray = value;
+
+			const result = await customA.verify({
+				data: aData,
+				base: base
+			});
+
+			expect(result.errorCode()).toBe(EMPTY_STRING);
+			expect(result.ok()).toBe(true);
+
+			expect(result.data?.boolArray).toStrictEqual(value);
+		});
+
+		it(`should verify a non-recursive array of strings`, async () => {
+			const customB = new SampleSchemaSubB(base);
+			const customA = new SampleSchemaSubA(customB, base);
+
+			const value: string[] = ['197145', 'f8108714', 'gg018401'];
+			aData.strArray = value;
+
+			const result = await customA.verify({
+				data: aData,
+				base: base
+			});
+
+			expect(result.errorCode()).toBe(EMPTY_STRING);
+			expect(result.ok()).toBe(true);
+
+			expect(result.data?.strArray).toStrictEqual(value);
+		});
+
+		it(`should verify a non-recursive array of schemas`, async () => {
+			const customB = new SampleSchemaSubB(base);
+			const customA = new SampleSchemaSubA(customB, base);
+
+			const intSample1 = 4400014;
+			const intSample2 = 1100090;
+			const strSample1 = 'aaa8914';
+			const strSample2 = 'bbb8881';
+
+			aData.subSchemas = [
+				{
+					int2b: intSample1,
+					str2b: strSample1
+				},
+				{
+					int2b: intSample2,
+					str2b: strSample2
+				}
+			];
+
+			const result = await customA.verify({
+				data: aData,
+				base: base
+			});
+
+			expect(result.errorCode()).toBe(EMPTY_STRING);
+			expect(result.ok()).toBe(true);
+
+			expect(result.data?.subSchemas).toHaveLength(2);
+
+			const resultSubA = result.data?.subSchemas![0];
+			expect(resultSubA).toEqual({});
+			const resultSubB = result.data?.subSchemas![1];
+			expect(resultSubB).toBeDefined();
+
+			expect(resultSubA?.int2b).toBe(intSample1);
+			expect(resultSubA?.str2b).toBe(strSample1);
+
+			expect(resultSubB?.int2b).toBe(intSample1);
+			expect(resultSubB?.str2b).toBe(strSample1);
 		});
 	});
 });

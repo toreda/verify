@@ -1,5 +1,5 @@
 import {Levels, Log} from '@toreda/log';
-import {simpleOutputTransform} from '../../../src/simple/output/transform';
+import {simpleOutputTransform} from '../../../src/transform/verified';
 import {schemaError} from '../../../src';
 
 const EMPTY_OBJECT = {};

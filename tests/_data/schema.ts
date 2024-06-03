@@ -4,12 +4,6 @@ import {type Primitive} from '@toreda/types';
 import {type SchemaData} from '../../src/schema/data';
 import {type SchemaInit} from '../../src/schema/init';
 
-export interface SampleData extends SchemaData<Primitive> {
-	str1: string;
-	int1: number;
-	bool1: boolean;
-}
-
 export interface SampleBData extends SchemaData<Primitive> {
 	str2b: string;
 	int2b: number;
@@ -19,7 +13,10 @@ export interface SampleAData extends SchemaData<Primitive> {
 	str1a: string;
 	int1a: number;
 	intArray: number[];
-	subValue: SampleBData;
+	boolArray?: boolean[];
+	strArray?: string[];
+	subSchema: SampleBData;
+	subSchemas?: SampleBData[];
 }
 
 export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> {
@@ -61,12 +58,20 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 					types: ['number[]']
 				},
 				{
-					name: 'subValue',
-					types: ['ct2']
+					name: 'strArray',
+					types: ['string[]', 'undefined']
 				},
 				{
-					name: 'subValues',
-					types: ['ct2[]']
+					name: 'boolArray',
+					types: ['boolean[]', 'undefined']
+				},
+				{
+					name: 'subSchema',
+					types: ['ct2', 'undefined']
+				},
+				{
+					name: 'subSchemas',
+					types: ['ct2[]', 'undefined']
 				}
 			],
 			customTypes: {
@@ -75,6 +80,12 @@ export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData
 			base: base
 		});
 	}
+}
+
+export interface SampleData extends SchemaData<Primitive> {
+	str1: string;
+	int1: number;
+	bool1: boolean;
 }
 
 export class SampleSchema extends Schema<Primitive, SampleData, SampleData> {

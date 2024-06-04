@@ -29,6 +29,7 @@ import {matcherMkTypes} from '../matcher/mk/types';
 import {Statement} from '../statement';
 import {type MatcherFactory} from '../matcher/factory';
 import {type BlockInit} from './init';
+import {type SchemaFieldType} from '../schema/field/type';
 
 /**
  * @name			Match (Block)
@@ -41,7 +42,7 @@ import {type BlockInit} from './init';
  * @category		Rule Block
  */
 export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {
-	public readonly type: MatcherFactory<InputT, string, Block<Statement<InputT>>>;
+	public readonly type: MatcherFactory<InputT, SchemaFieldType<InputT>, Block<Statement<InputT>>>;
 	public readonly atLeastOneType: MatcherFactory<InputT, string[], Block<Statement<InputT>>>;
 
 	constructor(init: BlockInit<InputT>) {

@@ -28,6 +28,7 @@ import {type VerifiedMap} from '../../verified/map';
 import {type VerifiedArray} from '../../verified/array';
 import {type Transformed} from '../../transformed';
 import {Log} from '@toreda/log';
+import {type TransformedField} from '../../transformed/field';
 
 /**
  * Default transformer when one isn't provided to a schema. Expects a
@@ -42,23 +43,23 @@ export async function transformVerifiedField<DataT = unknown, TransformedT = unk
 	id: string,
 	data: DataT | VerifiedMap<DataT> | VerifiedArray<DataT>,
 	base: Log
-): Promise<Fate<TransformedT | TransformedT[]>> {
-	const fate = new Fate<TransformedT | TransformedT[]>();
+): Promise<Fate<TransformedField<TransformedT>>> {
+	const fate = new Fate<TransformedField<TransformedT>>();
 	const log = base.makeLog(`${id}`);
 
 	if (Array.isArray(data)) {
-		const results: TransformedT[] = [];
+		fate.data = [];
 		for (const item of data) {
 			const result = await transformVerifiedField<DataT, TransformedT>('xxxx', item, log);
+
 			if (result.ok()) {
-				results.push(result.data as any);
+				fate.data.push(result.data);
 			} else {
 				log.error(`Error in schema output transform ${id}: ${result.errorCode()}`);
 				fate.setErrorCode(result.errorCode());
 				break;
 			}
 		}
-		fate.data = results;
 	} else if (data instanceof Map) {
 		const transformed = {} as Transformed;
 		for (const [id, field] of data) {

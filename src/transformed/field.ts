@@ -24,6 +24,8 @@
  */
 
 /**
+ * Type returned by functions that transform verified field data. Fields may contain
+ * scalar values, nulls, subfields, and arrays containing the former.
  * @param			id
  * @param			data
  * @param			base

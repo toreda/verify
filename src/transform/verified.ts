@@ -27,7 +27,7 @@ import {Fate} from '@toreda/fate';
 import {Log} from '@toreda/log';
 import {schemaError} from '../schema/error';
 import {type VerifiedMap} from '../verified/map';
-import {Transformed} from '../transformed';
+import {type Transformed} from '../transformed';
 import {transformVerifiedField} from './verified/field';
 
 /**

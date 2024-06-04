@@ -26,8 +26,7 @@
 import {type SchemaFieldType} from '../type';
 
 /**
- * Determine if array support is enabled based on all supported types for a single
- * schema field.
+ * Determine if field supports array values based on field types.
  * @param items		Field types to check.
  *
  * @category		Schema – Field

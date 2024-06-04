@@ -1,11 +1,11 @@
 import {Levels, Log} from '@toreda/log';
-import {simpleOutputTransform} from '../../../src/transform/verified';
+import {transformVerified} from '../../../src/transform/verified';
 import {schemaError} from '../../../src';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
-describe('simpleOutputTransform', () => {
+describe('transformVerified', () => {
 	let base: Log;
 	let input: Map<string, any>;
 
@@ -24,42 +24,38 @@ describe('simpleOutputTransform', () => {
 
 	describe('Input Validation', () => {
 		it(`should fail with code when input arg is undefined`, async () => {
-			const result = await simpleOutputTransform(undefined as any, base);
+			const result = await transformVerified(undefined as any, base);
 
 			expect(result.ok()).toBe(false);
-			expect(result.errorCode()).toBe(
-				schemaError('missing_argument', 'simpleOutputTransform', 'input')
-			);
+			expect(result.errorCode()).toBe(schemaError('missing_argument', 'transformVerified', 'input'));
 		});
 
 		it(`should fail with code when input arg is null`, async () => {
-			const result = await simpleOutputTransform(null as any, base);
+			const result = await transformVerified(null as any, base);
 
 			expect(result.ok()).toBe(false);
-			expect(result.errorCode()).toBe(
-				schemaError('missing_argument', 'simpleOutputTransform', 'input')
-			);
+			expect(result.errorCode()).toBe(schemaError('missing_argument', 'transformVerified', 'input'));
 		});
 
 		it(`should fail with code when base arg is undefined`, async () => {
-			const result = await simpleOutputTransform(input, undefined as any);
+			const result = await transformVerified(input, undefined as any);
 
 			expect(result.ok()).toBe(false);
-			expect(result.errorCode()).toBe(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
+			expect(result.errorCode()).toBe(schemaError('missing_argument', 'transformVerified', 'base'));
 		});
 
 		it(`should fail with code when base arg is null`, async () => {
-			const result = await simpleOutputTransform(input, null as any);
+			const result = await transformVerified(input, null as any);
 
 			expect(result.ok()).toBe(false);
-			expect(result.errorCode()).toBe(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
+			expect(result.errorCode()).toBe(schemaError('missing_argument', 'transformVerified', 'base'));
 		});
 	});
 
 	describe('Output Transformation', () => {
 		it(`should return an empty object when input map is empty`, async () => {
 			expect(input.size).toBe(0);
-			const result = await simpleOutputTransform(input, base);
+			const result = await transformVerified(input, base);
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
@@ -80,7 +76,7 @@ describe('simpleOutputTransform', () => {
 			input.set('c', c);
 			input.set('d', d);
 
-			const result = await simpleOutputTransform(input, base);
+			const result = await transformVerified(input, base);
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);
 			expect(result.data).toEqual({

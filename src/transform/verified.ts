@@ -45,13 +45,13 @@ export async function transformVerified<DataT = unknown, TransformedT = unknown>
 	const fate = new Fate<TransformedT | null>();
 
 	if (!base) {
-		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'base'));
+		return fate.setErrorCode(schemaError('missing_argument', 'transformVerified', 'base'));
 	}
 
-	const log = base.makeLog('simpleOutputTransform');
+	const log = base.makeLog('transformVerified');
 
 	if (!input) {
-		return fate.setErrorCode(schemaError('missing_argument', 'simpleOutputTransform', 'input'));
+		return fate.setErrorCode(schemaError('missing_argument', 'transformVerified', 'input'));
 	}
 
 	try {
@@ -81,7 +81,7 @@ export async function transformVerified<DataT = unknown, TransformedT = unknown>
 		const msg = e instanceof Error ? e.message : 'unknown_err_type';
 		fate.error(e);
 		log.error(`Exception: ${msg}.`);
-		fate.setErrorCode(schemaError('exception', 'simpleOutputTransform', `Error: ${msg}`));
+		fate.setErrorCode(schemaError('exception', 'transformVerified', `Error: ${msg}`));
 	}
 
 	return fate;

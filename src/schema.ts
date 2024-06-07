@@ -43,27 +43,28 @@ import {valueTypeLabel} from './value/type/label';
 import {Tracer} from './tracer';
 import {type SchemaVerifyInit} from './schema/verify/init';
 import {type SchemaVerifyValue} from './schema/verify/value';
-import {type VerifiedSchema} from './verified/schema';
 import {type VerifiedField} from './verified/field';
+import {type VerifiedMap} from './verified/map';
+import {VerifiedSchema} from './verified/schema';
 
 /**
  * @category Schema
  */
-export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> {
+export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
 	public readonly schemaName: string;
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
-	public readonly transformOutput: SchemaOutputTransformer<DataT, VerifiedT | null>;
-	public readonly customTypes: CustomTypes<DataT, InputT, VerifiedT>;
+	public readonly transformOutput: SchemaOutputTransformer<DataT, TransformedT | null>;
+	public readonly customTypes: CustomTypes<DataT, InputT, TransformedT>;
 	public readonly base: Log;
 
-	constructor(init: SchemaInit<DataT, InputT, VerifiedT>) {
+	constructor(init: SchemaInit<DataT, InputT, TransformedT>) {
 		this.schemaName = init.name;
 		this.fields = this._makeFields(init.fields);
 		this.cfg = new SchemaConfig(init.options);
 
 		this.base = init.base.makeLog(`schema___${init.name}`);
-		this.customTypes = new CustomTypes<DataT, InputT, VerifiedT>({
+		this.customTypes = new CustomTypes<DataT, InputT, TransformedT>({
 			data: init.customTypes,
 			base: this.base
 		});
@@ -91,7 +92,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async verifyField(
 		field: SchemaField<InputT>,
-		value: unknown,
+		value: InputT | SchemaData<InputT>,
 		tracer: Tracer,
 		base: Log
 	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>> {
@@ -143,11 +144,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async verifyFieldValues(
 		field: SchemaField<InputT>,
-		values: unknown[],
+		values: DataT[] | SchemaData<InputT>[],
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT>[]>> {
-		const fate = new Fate<VerifiedField<DataT>[]>({
+	): Promise<Fate<VerifiedField<InputT>[]>> {
+		const fate = new Fate<VerifiedField<InputT>[]>({
 			data: []
 		});
 
@@ -173,7 +174,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 	public async verifyFieldValue(
 		field: SchemaField<InputT>,
-		value: unknown,
+		value: InputT | SchemaData<InputT>,
 		tracer: Tracer,
 		base: Log
 	): Promise<Fate<VerifiedField<DataT>>> {
@@ -276,8 +277,10 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * Check if value type matches type for primitives, and whether the content matches
 	 * the expected range or format (if any).
 	 */
-	public async verifyValue(init: SchemaVerifyValue<DataT, InputT>): Promise<Fate<VerifiedField<DataT>>> {
-		const fate = new Fate<VerifiedField<DataT>>();
+	public async verifyValue(
+		init: SchemaVerifyValue<DataT, InputT>
+	): Promise<Fate<DataT | VerifiedField<DataT>>> {
+		const fate = new Fate<DataT | VerifiedField<DataT>>();
 
 		if (this.isBuiltIn(init.fieldType)) {
 			if (this.valueHasBuiltinType(init.fieldType, init.value)) {
@@ -299,7 +302,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 			return this.customTypes.verifyOnly({
 				id: init.fieldId,
 				typeId: baseType,
-				data: init.value as SchemaData<DataT>,
+				value: init.value,
 				tracer: init.tracer,
 				base: init.base,
 				childSchema: true
@@ -315,8 +318,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 		);
 	}
 
-	public async verify(init: SchemaVerifyInit): Promise<Fate<VerifiedT | null>> {
-		const fate = new Fate<VerifiedT | null>();
+	public async verify(init: SchemaVerifyInit): Promise<Fate<TransformedT | null>> {
+		const fate = new Fate<TransformedT | null>();
 
 		if (!init) {
 			return fate.setErrorCode(schemaError('missing_argument:init', this.schemaName));
@@ -383,10 +386,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 	 * Verify provided data object's structure, content, and types against this schema.
 	 * @param init
 	 */
-	public async verifyOnly(
-		init: SchemaVerifyInit
-	): Promise<Fate<VerifiedSchema<VerifiedField<DataT> | VerifiedField<DataT>[]>>> {
-		const fate = new Fate<VerifiedSchema<VerifiedField<DataT> | VerifiedField<DataT>[]>>();
+	public async verifyOnly(init: SchemaVerifyInit): Promise<Fate<VerifiedSchema<DataT>>> {
+		const fate = new Fate<VerifiedSchema<DataT>>();
 
 		const currPath = init.tracer ? init.tracer : new Tracer();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
@@ -398,20 +399,20 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		const log = init.base.makeLog(`schema:${currPath.current()}`);
 
-		if (init.data === undefined || init.data === null) {
+		if (init.value === undefined || init.value === null) {
 			return fate.setErrorCode(
-				schemaError('missing_schema_data', currPath.current(), 'verify', 'init.data')
+				schemaError('missing_schema_data', currPath.current(), 'verify', 'init.value')
 			);
 		}
 
-		if (Object.keys(init.data)?.length === 0) {
+		if (Object.keys(init.value)?.length === 0) {
 			return fate.setErrorCode(schemaError('empty_schema_object', currPath.current(), 'verify'));
 		}
 
 		const total = this.fields.size;
 		let processed = 0;
 		const fieldCount = this.fields.size;
-		const mapped = new Map<string, VerifiedField<DataT> | VerifiedField<DataT>[]>();
+		const mapped: VerifiedMap<DataT> = new Map<string, VerifiedField<DataT> | null>();
 
 		if (fieldCount === 0) {
 			if (init?.flags?.allowEmptyInputObject !== true) {
@@ -443,7 +444,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT>
 
 		for (const [id, field] of this.fields.entries()) {
 			const name = id.toString();
-			const verified = await this.verifyField(field, init.data[name], currPath, init.base);
+			const verified = await this.verifyField(field, init.value[name], currPath, init.base);
 
 			if (!verified.ok()) {
 				return fate.setErrorCode(verified.errorCode());

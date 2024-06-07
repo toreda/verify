@@ -50,7 +50,7 @@ export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	 * @description (optional) Flags & options that change verifier behavior.
 	 */
 	options?: SchemaOptions;
-	transformOutput?: SchemaOutputTransformer<DataT, OutputT>;
+	transformOutput?: SchemaOutputTransformer<DataT, OutputT | null>;
 	customTypes?: CustomTypesData<DataT> | null;
 	base: Log;
 	parentPath?: string[];

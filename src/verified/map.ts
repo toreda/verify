@@ -23,9 +23,11 @@
  *
  */
 
+import {type VerifiedField} from './field';
+
 /**
  * Data map returned by a successful schema verification.
  *
  * @category		Schema – Transform Output
  */
-export type VerifiedMap<DataT> = Map<string, DataT | VerifiedMap<DataT> | (DataT | VerifiedMap<DataT>)[]>;
+export type VerifiedMap<DataT> = Map<string, VerifiedField<DataT> | null>;

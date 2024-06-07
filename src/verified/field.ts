@@ -30,4 +30,8 @@ import {type VerifiedSchema} from './schema';
  *
  * @category		Schema – Field
  */
-export type VerifiedField<DataT = unknown> = DataT | VerifiedSchema<DataT> | null;
+export type VerifiedField<DataT = unknown> =
+	| DataT
+	| VerifiedSchema<DataT>
+	| DataT[]
+	| VerifiedSchema<DataT>[];

@@ -28,4 +28,7 @@
  *
  * @category		Schema
  */
-export type VerifiedSchema<VerifiedT = unknown> = Map<string, VerifiedT>;
+export type VerifiedSchema<VerifiedT = unknown> = Map<
+	string,
+	VerifiedT | VerifiedT[] | VerifiedSchema<VerifiedT> | VerifiedSchema<VerifiedT>[] | null
+>;

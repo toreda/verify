@@ -25,8 +25,8 @@
 
 import {Log} from '@toreda/log';
 import {Tracer} from '../../tracer';
-import {type SchemaData} from '../data';
 import {type SchemaVerifyFlags} from './flags';
+import {type SchemaData} from '../data';
 
 /**
  * Arguments needed for schema verification.
@@ -36,8 +36,8 @@ import {type SchemaVerifyFlags} from './flags';
 export interface SchemaVerifyInit<DataT = unknown> {
 	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */
 	id?: string;
-	/** Data object to verify against this schema. */
-	data: SchemaData<DataT>;
+	/** Value to using this schema. */
+	value: DataT | SchemaData<DataT>;
 	/** Current path of properties accessed to reach this point. */
 	tracer?: Tracer;
 	base: Log;

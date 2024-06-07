@@ -39,7 +39,7 @@ import {transformVerifiedField} from './verified/field';
  * @category		Schema – Transform Output
  */
 export async function transformVerified<DataT = unknown, TransformedT = unknown>(
-	input: VerifiedMap<DataT>,
+	input: VerifiedMap<DataT> | null,
 	base: Log
 ): Promise<Fate<TransformedT | null>> {
 	const fate = new Fate<TransformedT | null>();

@@ -45,14 +45,14 @@ import {type SchemaVerifyInit} from './schema/verify/init';
 import {type SchemaVerifyValue} from './schema/verify/value';
 import {type VerifiedField} from './verified/field';
 import {type VerifiedMap} from './verified/map';
-import {VerifiedSchema} from './verified/schema';
+import {type VerifiedSchema} from './verified/schema';
 
 /**
  * @category Schema
  */
 export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
 	public readonly schemaName: string;
-	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
+	public readonly fields: Map<keyof DataT, SchemaField<DataT>>;
 	public readonly cfg: SchemaConfig;
 	public readonly transformOutput: SchemaOutputTransformer<DataT, TransformedT | null>;
 	public readonly customTypes: CustomTypes<DataT, InputT, TransformedT>;
@@ -76,27 +76,27 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Build and set schema fields from schema init data.
 	 * @param fields
 	 */
-	private _makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
-		const result = new Map<keyof InputT, SchemaField<InputT>>();
+	private _makeFields(fields: SchemaFieldData<DataT>[]): Map<keyof DataT, SchemaField<DataT>> {
+		const result = new Map<keyof DataT, SchemaField<DataT>>();
 
 		if (!Array.isArray(fields)) {
 			return result;
 		}
 
 		for (const data of fields) {
-			result.set(data.name, new SchemaField<InputT>(data));
+			result.set(data.name, new SchemaField<DataT>(data));
 		}
 
 		return result;
 	}
 
 	public async verifyField(
-		field: SchemaField<InputT>,
+		field: SchemaField<DataT>,
 		value: InputT | SchemaData<InputT>,
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>> {
-		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>();
+	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[] | null>> {
+		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[] | null>();
 
 		if (!field) {
 			return fate.setErrorCode(schemaError(`missing_field`, tracer.current()));
@@ -143,12 +143,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	public async verifyFieldValues(
-		field: SchemaField<InputT>,
-		values: DataT[] | SchemaData<InputT>[],
+		field: SchemaField<DataT>,
+		values: InputT[] | SchemaData<InputT>[],
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<InputT>[]>> {
-		const fate = new Fate<VerifiedField<InputT>[]>({
+	): Promise<Fate<VerifiedField<DataT>[] | null>> {
+		const fate = new Fate<VerifiedField<DataT>[] | null>({
 			data: []
 		});
 
@@ -173,7 +173,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	public async verifyFieldValue(
-		field: SchemaField<InputT>,
+		field: SchemaField<DataT>,
 		value: InputT | SchemaData<InputT>,
 		tracer: Tracer,
 		base: Log
@@ -189,7 +189,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		}
 
 		for (const type of field.types) {
-			const baseType = (type.endsWith('[]') ? type.slice(0, -2) : type) as SchemaFieldType<InputT>;
+			const baseType = (type.endsWith('[]') ? type.slice(0, -2) : type) as SchemaFieldType<DataT>;
 			if (!this.schemaSupportsType(baseType)) {
 				return fate.setErrorCode(
 					schemaError(`schema_does_not_support_type:${baseType}`, tracer.current())
@@ -217,11 +217,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		);
 	}
 
-	public isBuiltIn(type: SchemaFieldType<InputT>): boolean {
-		return builtinTypes<InputT>().includes(type);
+	public isBuiltIn(type: SchemaFieldType<DataT>): boolean {
+		return builtinTypes<DataT>().includes(type);
 	}
 
-	public schemaSupportsType(type: SchemaFieldType<InputT>): boolean {
+	public schemaSupportsType(type: SchemaFieldType<DataT>): boolean {
 		if (typeof type !== 'string' || !type) {
 			return false;
 		}
@@ -238,7 +238,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * @param type
 	 * @param value
 	 */
-	public valueHasBuiltinType(type: SchemaFieldType<InputT>, value: unknown): value is DataT {
+	public valueHasBuiltinType(type: SchemaFieldType<DataT>, value: unknown): value is DataT {
 		if (typeof type !== 'string') {
 			return false;
 		}
@@ -412,7 +412,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		const total = this.fields.size;
 		let processed = 0;
 		const fieldCount = this.fields.size;
-		const mapped: VerifiedMap<DataT> = new Map<string, VerifiedField<DataT> | null>();
+		const mapped = new Map<string, VerifiedField<DataT> | VerifiedField<DataT>[] | null>();
 
 		if (fieldCount === 0) {
 			if (init?.flags?.allowEmptyInputObject !== true) {

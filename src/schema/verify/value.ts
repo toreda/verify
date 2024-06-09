@@ -33,8 +33,8 @@ import {type SchemaData} from '../data';
  */
 export interface SchemaVerifyValue<DataT = unknown, InputT = unknown> {
 	fieldId: string;
-	fieldType: SchemaFieldType<InputT>;
+	fieldType: SchemaFieldType<DataT>;
 	tracer: Tracer;
-	value: DataT | SchemaData<DataT>;
+	value: InputT | SchemaData<InputT>;
 	base: Log;
 }

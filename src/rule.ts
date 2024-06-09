@@ -48,6 +48,7 @@ export class Rule<InputT> implements Resettable, Verifier {
 	/**
 	 * @description IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
+	 * @internal
 	 */
 	public readonly statements: Statement<InputT>[];
 	public readonly does: BlockWithNot<BlockDoes<InputT>>;

@@ -30,10 +30,10 @@ import {type SchemaFieldType} from './type';
 /**
  * @category		Schema – Field
  */
-export interface SchemaFieldData<InputT = unknown> {
-	name: keyof InputT;
-	types: SchemaFieldType<InputT> | SchemaFieldType<InputT>[];
-	type?: SchemaFieldType<InputT>;
+export interface SchemaFieldData<DataT = unknown> {
+	name: keyof DataT;
+	types: SchemaFieldType<DataT> | SchemaFieldType<DataT>[];
+	type?: SchemaFieldType<DataT>;
 	defaultValue?: unknown;
-	rules?: Block<Statement<InputT>>[];
+	rules?: Block<Statement<DataT>>[];
 }

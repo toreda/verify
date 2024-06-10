@@ -45,7 +45,6 @@ import {type SchemaVerifyInit} from './schema/verify/init';
 import {type SchemaVerifyValue} from './schema/verify/value';
 import {type VerifiedField} from './verified/field';
 import {type VerifiedMap} from './verified/map';
-import {type VerifiedSchema} from './verified/schema';
 
 /**
  * @category Schema
@@ -177,8 +176,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		value: InputT | SchemaData<InputT>,
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT>>> {
-		const fate = new Fate<VerifiedField<DataT>>();
+	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>> {
+		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>();
 
 		if (value === null) {
 			if (field.types.includes('null')) {
@@ -278,9 +277,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * the expected range or format (if any).
 	 */
 	public async verifyValue(
-		init: SchemaVerifyValue<DataT, InputT>
-	): Promise<Fate<DataT | VerifiedField<DataT>>> {
-		const fate = new Fate<DataT | VerifiedField<DataT>>();
+		init: SchemaVerifyValue<InputT, DataT>
+	): Promise<Fate<DataT | VerifiedMap<DataT>>> {
+		const fate = new Fate<DataT | VerifiedMap<DataT>>();
 
 		if (this.isBuiltIn(init.fieldType)) {
 			if (this.valueHasBuiltinType(init.fieldType, init.value)) {
@@ -318,7 +317,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		);
 	}
 
-	public async verify(init: SchemaVerifyInit): Promise<Fate<TransformedT | null>> {
+	public async verify(init: SchemaVerifyInit<InputT, DataT>): Promise<Fate<TransformedT | null>> {
 		const fate = new Fate<TransformedT | null>();
 
 		if (!init) {
@@ -386,8 +385,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Verify provided data object's structure, content, and types against this schema.
 	 * @param init
 	 */
-	public async verifyOnly(init: SchemaVerifyInit): Promise<Fate<VerifiedSchema<DataT>>> {
-		const fate = new Fate<VerifiedSchema<DataT>>();
+	public async verifyOnly(init: SchemaVerifyInit<InputT, DataT>): Promise<Fate<VerifiedMap<DataT>>> {
+		const fate = new Fate<VerifiedMap<DataT>>();
 
 		const currPath = init.tracer ? init.tracer : new Tracer();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT

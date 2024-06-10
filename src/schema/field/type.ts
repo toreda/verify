@@ -28,7 +28,7 @@
  *
  * @category		Schema – Field
  */
-export type SchemaFieldType<InputT = unknown> =
+export type SchemaFieldType<DataT = unknown> =
 	| 'bigint[]'
 	| 'bigint'
 	| 'BigInt'
@@ -65,4 +65,4 @@ export type SchemaFieldType<InputT = unknown> =
 	| 'url[]'
 	| 'time'
 	| 'time[]'
-	| Extract<keyof InputT, string>;
+	| Extract<keyof DataT, string>;

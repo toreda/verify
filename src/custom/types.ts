@@ -35,8 +35,7 @@ import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
 import {type VerifiedSchema} from '../verified/schema';
-import {type VerifiedField} from '../verified/field';
-import {VerifiedMap} from '../verified/map';
+import {type VerifiedMap} from '../verified/map';
 
 /**
  * Registry of a single schema's registered custom types.
@@ -203,8 +202,8 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return fate;
 	}
 
-	public async verifyOnly(init: CustomSchemaVerify): Promise<Fate<VerifiedSchema<DataT>>> {
-		const fate = new Fate<VerifiedSchema<DataT>>();
+	public async verifyOnly(init: CustomSchemaVerify<InputT, DataT>): Promise<Fate<VerifiedMap<DataT>>> {
+		const fate = new Fate<VerifiedMap<DataT>>();
 
 		const schema = this.getSchema(init.typeId);
 

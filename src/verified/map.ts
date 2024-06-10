@@ -30,4 +30,4 @@ import {type VerifiedField} from './field';
  *
  * @category		Schema – Transform Output
  */
-export type VerifiedMap<DataT> = Map<string, VerifiedField<DataT> | null>;
+export type VerifiedMap<DataT> = Map<string, VerifiedField<DataT> | VerifiedField<DataT>[] | null>;

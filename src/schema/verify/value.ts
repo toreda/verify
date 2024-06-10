@@ -31,7 +31,7 @@ import {type SchemaData} from '../data';
 /**
  * @category		Schema
  */
-export interface SchemaVerifyValue<DataT = unknown, InputT = unknown> {
+export interface SchemaVerifyValue<InputT = unknown, DataT = unknown> {
 	fieldId: string;
 	fieldType: SchemaFieldType<DataT>;
 	tracer: Tracer;

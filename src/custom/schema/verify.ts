@@ -28,6 +28,7 @@ import {type SchemaVerifyInit} from '../../schema/verify/init';
 /**
  * @category		Schema – Custom Type
  */
-export interface CustomSchemaVerify<DataT = unknown> extends SchemaVerifyInit<DataT> {
+export interface CustomSchemaVerify<InputT = unknown, DataT = unknown>
+	extends SchemaVerifyInit<InputT, DataT> {
 	typeId: string;
 }

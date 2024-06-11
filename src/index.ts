@@ -108,7 +108,7 @@ export {SchemaOptions} from './schema/options';
 export {SchemaOutputTransformer} from './schema/output/transformer';
 export {SchemaVerifyFlags} from './schema/verify/flags';
 export {SchemaVerifyInit} from './schema/verify/init';
-export {SchemaVerifyValue} from './schema/verify/value';
+export {SchemaVerifyValue} from './schema/verify/field';
 export {Statement} from './statement';
 export {Tracer} from './tracer';
 export {TracerInit} from './tracer/init';

@@ -35,7 +35,7 @@ import {type CustomTypesData} from '../custom/types/data';
  *
  * @category		Schema
  */
-export interface SchemaInit<DataT, InputT, OutputT = InputT> {
+export interface SchemaInit<DataT, InputT, TransformedT = InputT> {
 	/**
 	 * @name Schema Name
 	 */
@@ -50,7 +50,7 @@ export interface SchemaInit<DataT, InputT, OutputT = InputT> {
 	 * @description (optional) Flags & options that change verifier behavior.
 	 */
 	options?: SchemaOptions;
-	transformOutput?: SchemaOutputTransformer<DataT, OutputT | null>;
+	transformOutput?: SchemaOutputTransformer<DataT, TransformedT | null>;
 	customTypes?: CustomTypesData<DataT> | null;
 	base: Log;
 	parentPath?: string[];

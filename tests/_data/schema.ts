@@ -88,8 +88,8 @@ export interface SampleData extends SchemaData<Primitive> {
 	bool1: boolean;
 }
 
-export class SampleSchema extends Schema<Primitive, SampleData, SampleData> {
-	constructor(init: SchemaInit<Primitive, SampleData, SampleData>) {
+export class SampleSchema extends Schema<Primitive, SampleData> {
+	constructor(init: SchemaInit<Primitive, SampleData>) {
 		super({
 			name: 'SampleSchema',
 			fields: [

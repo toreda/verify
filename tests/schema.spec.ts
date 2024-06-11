@@ -322,17 +322,17 @@ describe('Schema', () => {
 	});
 
 	describe('verify', () => {
-		it(`should fail when data arg is undefined`, async () => {
+		it(`should fail when value arg is undefined`, async () => {
 			const customSchema = new SampleSchema(init);
 			const result = await customSchema.verify({
 				id: customSchema.schemaName,
-				data: undefined as any,
+				value: undefined as any,
 				tracer: tracer,
 				base: base
 			});
 
 			expect(result.errorCode()).toBe(
-				schemaError('missing_schema_data', `${schema.schemaName}`, 'verify', 'init.data')
+				schemaError('missing_schema_data', `${schema.schemaName}`, 'verify', 'init.value')
 			);
 			expect(result.ok()).toBe(false);
 		});
@@ -405,7 +405,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -421,7 +421,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -437,7 +437,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -458,7 +458,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -478,7 +478,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -498,7 +498,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -518,7 +518,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'boolean',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -555,7 +555,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -571,7 +571,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -587,7 +587,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -607,7 +607,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -627,7 +627,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -647,7 +647,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -667,7 +667,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -687,7 +687,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'string',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -709,7 +709,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -725,7 +725,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -741,7 +741,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -757,7 +757,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -773,7 +773,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -793,7 +793,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -810,7 +810,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -831,7 +831,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'bigint',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -850,7 +850,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -870,7 +870,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'bigint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -892,7 +892,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -907,7 +907,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -927,7 +927,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -947,7 +947,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'undefined',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -966,7 +966,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -986,7 +986,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1006,7 +1006,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1026,7 +1026,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'undefined',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1048,7 +1048,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1064,7 +1064,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1081,7 +1081,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1098,7 +1098,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1114,7 +1114,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'uint',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1133,7 +1133,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'uint',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1156,7 +1156,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1195,7 +1195,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'null',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1215,7 +1215,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'null',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1236,7 +1236,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'null',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1256,7 +1256,7 @@ describe('Schema', () => {
 					fieldId: fieldId,
 					fieldType: 'null',
 					tracer: tracer.child(fieldId),
-					value: value,
+					data: value,
 					base: base
 				});
 
@@ -1275,7 +1275,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'null',
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1297,7 +1297,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					fieldType: 'number',
-					value: value,
+					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
 				});
@@ -1313,7 +1313,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1329,7 +1329,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1345,7 +1345,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1361,7 +1361,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1377,7 +1377,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1393,7 +1393,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1409,7 +1409,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1425,7 +1425,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1441,7 +1441,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1461,7 +1461,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1481,7 +1481,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1501,7 +1501,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1521,7 +1521,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});
@@ -1541,7 +1541,7 @@ describe('Schema', () => {
 				const result = await schema.verifyValue({
 					fieldType: 'number',
 					fieldId: fieldId,
-					value: value,
+					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
 				});

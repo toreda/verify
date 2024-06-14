@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.2] - 2024-06-14
+* Fixed 'undefined' types not being accepted when explicitly allowed in some cases.
+
 ## [0.11.1] - 2024-06-14
 * Fixed sub-schema array processing not bubbling up their error state to the final verification result. Schema elements that failed to verify would not be added to the verified output, but would not report the failure.
 

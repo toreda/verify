@@ -105,7 +105,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		const currPath = tracer.child(field.name);
 
 		if (value === undefined) {
-			return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
+			if (field.types.includes('undefined')) {
+				fate.data = undefined;
+				return fate.setSuccess(true);
+			} else {
+				return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
+			}
 		}
 
 		let verified: Fate<VerifiedSchemaField<DataT>>;

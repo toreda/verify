@@ -6,7 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.11.0] - 2024-05-13
+## [0.11.1] - 2024-06-14
+* Fixed sub-schema array processing not bubbling up their error state to the final verification result. Schema elements that failed to verify would not be added to the verified output, but would not report the failure.
+
+## [0.11.0] - 2024-06-13
 * Added support for arrays + recursive schemas together.
 * Fixed type error caused by generic type mismatch.
 

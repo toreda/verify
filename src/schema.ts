@@ -164,15 +164,22 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				tracer.child(`${field.name}[${i}]`),
 				base
 			);
-			i++;
 
-			if (result.ok()) {
-				data.push(result.data);
+			if (!result.ok()) {
+				fate.setErrorCode(result.errorCode());
+				break;
 			}
+
+			i++;
+			data.push(result.data);
 		}
 
-		fate.data = data;
-		return fate.setSuccess(true);
+		if (i === values.length) {
+			fate.setSuccess(true);
+			fate.data = data;
+		}
+
+		return fate;
 	}
 
 	public async verifyFieldValue(

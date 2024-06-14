@@ -89,7 +89,7 @@ export interface SampleData extends SchemaData<Primitive> {
 }
 
 export class SampleSchema extends Schema<Primitive, SampleData> {
-	constructor(init: SchemaInit<Primitive, SampleData>) {
+	constructor(init: SchemaInit<Primitive, SampleData, SampleData>) {
 		super({
 			name: 'SampleSchema',
 			fields: [

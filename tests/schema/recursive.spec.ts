@@ -20,12 +20,12 @@ describe('Schema - Recursive Parsing', () => {
 	describe('Basic Input', () => {
 		let schemaSubA: SampleSchemaSubA;
 		let schemaSubB: SampleSchemaSubB;
-		let sampleData: SampleData;
+		let _sampleData: SampleData;
 		let bData: SampleBData;
 		let aData: SampleAData;
 		let schema: SampleSchema;
 		let tracer: Tracer;
-		let init: SchemaInit<Primitive, SampleData, SampleData>;
+		let _init: SchemaInit<Primitive, SampleData, SampleData>;
 
 		beforeAll(() => {
 			base = new Log({
@@ -92,7 +92,7 @@ describe('Schema - Recursive Parsing', () => {
 		});
 
 		it(`should recursively verify all properties`, async () => {
-			const result = await schemaSubA.verify({
+			const result = await schemaSubA.verifyAndTransform({
 				id: 'aaa',
 				data: aData,
 				base: base,
@@ -108,7 +108,7 @@ describe('Schema - Recursive Parsing', () => {
 			const customA = new SampleSchemaSubA(customB, base);
 			aData.subSchema.int2b = 'aaaa' as any;
 
-			const result = await customA.verify({
+			const result = await customA.verifyAndTransform({
 				data: aData,
 				base: base
 			});
@@ -126,7 +126,7 @@ describe('Schema - Recursive Parsing', () => {
 			const value: number[] = [3, 1091, 4444, 99171764];
 			aData.intArray = value;
 
-			const result = await customA.verify({
+			const result = await customA.verifyAndTransform({
 				data: aData,
 				base: base
 			});
@@ -144,7 +144,7 @@ describe('Schema - Recursive Parsing', () => {
 			const value: boolean[] = [false, false, true, false, true, false, false];
 			aData.boolArray = value;
 
-			const result = await customA.verify({
+			const result = await customA.verifyAndTransform({
 				data: aData,
 				base: base
 			});
@@ -162,7 +162,7 @@ describe('Schema - Recursive Parsing', () => {
 			const value: string[] = ['197145', 'f8108714', 'gg018401'];
 			aData.strArray = value;
 
-			const result = await customA.verify({
+			const result = await customA.verifyAndTransform({
 				data: aData,
 				base: base
 			});
@@ -193,7 +193,7 @@ describe('Schema - Recursive Parsing', () => {
 				}
 			];
 
-			const result = await customA.verify({
+			const result = await customA.verifyAndTransform({
 				data: aData,
 				base: base
 			});

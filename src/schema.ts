@@ -43,15 +43,16 @@ import {valueTypeLabel} from './value/type/label';
 import {Tracer} from './tracer';
 import {type SchemaVerifyInit} from './schema/verify/init';
 import {type SchemaVerifyField} from './schema/verify/field';
-import {type VerifiedField} from './verified/field';
-import {type VerifiedMap} from './verified/map';
+import {type VerifiedSchemaField} from './verified/schema/field';
+import {type VerifiedSchema} from './verified/schema';
+import {isSchemaDataObject} from './is/schema/data/object';
 
 /**
  * @category Schema
  */
 export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
 	public readonly schemaName: string;
-	public readonly fields: Map<keyof DataT, SchemaField<DataT>>;
+	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
 	public readonly transformOutput: SchemaOutputTransformer<DataT, TransformedT | null>;
 	public readonly customTypes: CustomTypes<DataT, InputT, TransformedT>;
@@ -75,27 +76,27 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Build and set schema fields from schema init data.
 	 * @param fields
 	 */
-	private _makeFields(fields: SchemaFieldData<DataT>[]): Map<keyof DataT, SchemaField<DataT>> {
-		const result = new Map<keyof DataT, SchemaField<DataT>>();
+	private _makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
+		const result = new Map<keyof InputT, SchemaField<InputT>>();
 
 		if (!Array.isArray(fields)) {
 			return result;
 		}
 
 		for (const data of fields) {
-			result.set(data.name, new SchemaField<DataT>(data));
+			result.set(data.name, new SchemaField<InputT>(data));
 		}
 
 		return result;
 	}
 
 	public async verifyField(
-		field: SchemaField<DataT>,
-		value: DataT | SchemaData<DataT>,
+		field: SchemaField<InputT>,
+		value: DataT | DataT[] | SchemaData<DataT> | SchemaData<DataT>[] | null,
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[] | null>> {
-		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[] | null>();
+	): Promise<Fate<VerifiedSchemaField<DataT>>> {
+		const fate = new Fate<VerifiedSchemaField<DataT>>();
 
 		if (!field) {
 			return fate.setErrorCode(schemaError(`missing_field`, tracer.current()));
@@ -107,7 +108,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			return fate.setErrorCode(schemaError('missing_field_value', currPath.current()));
 		}
 
-		let verified: Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>;
+		let verified: Fate<VerifiedSchemaField<DataT>>;
 
 		if (Array.isArray(value)) {
 			verified = await this.verifyFieldValues(field, value, currPath, base);
@@ -121,6 +122,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		}
 
 		if (field.ruleset.size() > 0) {
+			// HACK: Fix as any hhere. Use of both generics InputT and DataT conflict here berween
+			// the field value and field itself. However, value is verified according to rules and
+			// matches stated type if rule check succeeds.
 			const result = await field.ruleset.verify(value as any, {
 				valueLabel: currPath.current()
 			});
@@ -142,16 +146,16 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	public async verifyFieldValues(
-		field: SchemaField<DataT>,
-		values: InputT[] | SchemaData<InputT>[],
+		field: SchemaField<InputT>,
+		values: DataT[] | SchemaData<DataT>[],
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT>[] | null>> {
-		const fate = new Fate<VerifiedField<DataT>[] | null>({
+	): Promise<Fate<VerifiedSchemaField<DataT>>> {
+		const fate = new Fate<VerifiedSchemaField<DataT>>({
 			data: []
 		});
 
-		const data: VerifiedField<DataT>[] = [];
+		const data: DataT[] & VerifiedSchemaField<DataT>[] = [];
 		let i = 0;
 		for (const value of values) {
 			const result = await this.verifyFieldValue(
@@ -172,12 +176,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	public async verifyFieldValue(
-		field: SchemaField<DataT>,
-		value: DataT | SchemaData<DataT>,
+		field: SchemaField<InputT>,
+		value: DataT | SchemaData<DataT> | null,
 		tracer: Tracer,
 		base: Log
-	): Promise<Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>> {
-		const fate = new Fate<VerifiedField<DataT> | VerifiedField<DataT>[]>();
+	): Promise<Fate<VerifiedSchemaField<DataT>>> {
+		const fate = new Fate<VerifiedSchemaField<DataT>>();
 
 		if (value === null) {
 			if (field.types.includes('null')) {
@@ -231,13 +235,14 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 		return this.customTypes.has(type);
 	}
+
 	/**
 	 * Check if `type` is supported by the schema. Doesn't check if value actually
 	 * conforms to the specified type.
 	 * @param type
 	 * @param value
 	 */
-	public valueHasBuiltinType(type: SchemaFieldType<DataT>, value: unknown): value is DataT {
+	public valueIsBuiltinType(type: SchemaFieldType<DataT>, value: unknown): value is DataT {
 		if (typeof type !== 'string') {
 			return false;
 		}
@@ -276,11 +281,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Check if value type matches type for primitives, and whether the content matches
 	 * the expected range or format (if any).
 	 */
-	public async verifyValue(init: SchemaVerifyField<DataT>): Promise<Fate<DataT | VerifiedMap<DataT>>> {
-		const fate = new Fate<DataT | VerifiedMap<DataT>>();
+	public async verifyValue(init: SchemaVerifyField<DataT>): Promise<Fate<VerifiedSchemaField<DataT>>> {
+		const fate = new Fate<VerifiedSchemaField<DataT>>();
 
 		if (this.isBuiltIn(init.fieldType)) {
-			if (this.valueHasBuiltinType(init.fieldType, init.data)) {
+			if (this.valueIsBuiltinType(init.fieldType, init.data)) {
 				// TODO: Add validation here. Type match does not automatically prove valid content.
 				fate.data = init.data;
 				return fate.setSuccess(true);
@@ -294,12 +299,18 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			}
 		}
 
+		if (!isSchemaDataObject<DataT>(init.data)) {
+			return fate.setErrorCode(
+				schemaError('value_not_schema_data', init.tracer.current(), `${valueTypeLabel(init.data)}`)
+			);
+		}
+
 		const baseType = init.fieldType.endsWith('[]') ? init.fieldType.substring(0, -2) : init.fieldType;
 		if (this.customTypes.hasSchema(init.fieldType) && typeof init.data === 'object') {
-			return this.customTypes.verifyOnly({
+			return this.customTypes.verify({
 				id: init.fieldId,
 				typeId: baseType,
-				value: init.data,
+				data: init.data,
 				tracer: init.tracer,
 				base: init.base,
 				childSchema: true
@@ -315,7 +326,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		);
 	}
 
-	public async verify(init: SchemaVerifyInit<DataT>): Promise<Fate<TransformedT | null>> {
+	public async verifyAndTransform(init: SchemaVerifyInit<DataT>): Promise<Fate<TransformedT | null>> {
 		const fate = new Fate<TransformedT | null>();
 
 		if (!init) {
@@ -346,7 +357,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		}
 
 		// Verify input and return result without transform.
-		const verified = await this.verifyOnly(init);
+		const verified = await this.verify(init);
 		if (!verified.ok()) {
 			return fate.setErrorCode(verified.errorCode());
 		}
@@ -383,8 +394,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Verify provided data object's structure, content, and types against this schema.
 	 * @param init
 	 */
-	public async verifyOnly(init: SchemaVerifyInit<DataT>): Promise<Fate<VerifiedMap<DataT>>> {
-		const fate = new Fate<VerifiedMap<DataT>>();
+	public async verify(init: SchemaVerifyInit<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
+		const fate = new Fate<VerifiedSchema<DataT>>();
 
 		const currPath = init.tracer ? init.tracer : new Tracer();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
@@ -402,6 +413,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			);
 		}
 
+		if (!isSchemaDataObject<DataT>(init.data)) {
+			return fate.setErrorCode(
+				schemaError('data_not_schema_data_object', currPath.current(), 'verify', 'init.data')
+			);
+		}
+
 		if (Object.keys(init.data)?.length === 0) {
 			return fate.setErrorCode(schemaError('empty_schema_object', currPath.current(), 'verify'));
 		}
@@ -409,11 +426,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		const total = this.fields.size;
 		let processed = 0;
 		const fieldCount = this.fields.size;
-		const mapped = new Map<string, VerifiedField<DataT> | VerifiedField<DataT>[] | null>();
+		const mapped = new Map<string, VerifiedSchemaField<DataT>>();
 
 		if (fieldCount === 0) {
 			if (init?.flags?.allowEmptyInputObject !== true) {
-				return fate.setErrorCode(schemaError('no_schema_fields', currPath.current(), 'verifyOnly'));
+				return fate.setErrorCode(schemaError('no_schema_fields', currPath.current(), 'verify'));
 			}
 		} else {
 			const minFields = numberValue(init?.flags?.minFieldCount, 1);
@@ -422,7 +439,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 					schemaError(
 						`field_count_${fieldCount}_below_min_${minFields}`,
 						currPath.current(),
-						'verifyOnly'
+						'verify'
 					)
 				);
 			}
@@ -434,7 +451,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				schemaError(
 					`field_count_${fieldCount}_exceeds_max_${maxFields}`,
 					currPath.current(),
-					'verifyOnly'
+					'verify'
 				)
 			);
 		}

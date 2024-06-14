@@ -207,10 +207,10 @@ describe('CustomTypes', () => {
 			});
 		});
 
-		describe('verifyOnly', () => {
+		describe('verify', () => {
 			it(`should fail with code when init.type is undefined`, async () => {
 				verifyInit.type = undefined as any;
-				const result = await instance.verifyOnly(verifyInit);
+				const result = await instance.verify(verifyInit);
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(schemaError('missing_schema_typeId', 'sampleSchema'));

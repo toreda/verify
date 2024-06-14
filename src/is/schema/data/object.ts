@@ -23,11 +23,25 @@
  *
  */
 
-import {type VerifiedField} from './field';
+import {type SchemaData} from '../../../schema/data';
 
 /**
- * Data map returned by a successful schema verification.
+ * Perform basic tests to determine if `value` is safe to perform `SchemaData`
+ * operations on and provides type hint.
+ * @param data
  *
- * @category		Schema – Transform Output
+ * @category		Schema
  */
-export type VerifiedMap<DataT> = Map<string, VerifiedField<DataT> | VerifiedField<DataT>[] | null>;
+export function isSchemaDataObject<DataT>(
+	value: unknown | DataT | SchemaData<DataT>
+): value is SchemaData<DataT> {
+	if (!value) {
+		return false;
+	}
+
+	if (Array.isArray(value)) {
+		return false;
+	}
+
+	return typeof value === 'object';
+}

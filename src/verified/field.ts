@@ -32,7 +32,7 @@ import {type VerifiedSchema} from './schema';
  */
 export type VerifiedField<DataT = unknown> =
 	| DataT
-	| null
 	| VerifiedSchema<DataT>
 	| DataT[]
-	| VerifiedSchema<DataT>[];
+	| VerifiedSchema<DataT>[]
+	| null;

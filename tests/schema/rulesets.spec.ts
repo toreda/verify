@@ -112,7 +112,7 @@ describe('Schema Rulesets', () => {
 				]
 			});
 
-			const result = await custom1.verifyOnly({
+			const result = await custom1.verify({
 				base: base,
 				data: {
 					fieldA: 'zd413834645989173',
@@ -147,7 +147,7 @@ describe('Schema Rulesets', () => {
 			expect(fieldA).not.toBeUndefined();
 			expect(fieldB).not.toBeUndefined();
 
-			const result = await custom2.verifyOnly({
+			const result = await custom2.verify({
 				base: base,
 				data: {
 					fieldA: 'aaaaaaaaaaaa',

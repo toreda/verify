@@ -23,13 +23,14 @@
  *
  */
 
-import {type VerifiedMap} from './map';
-
 /**
- * Array of DataT or VerifiedMap objects.
- * @param			input
- * @param			base
+ * Arguments needed for schema verification.
  *
- * @category		Schema – Transform Output
+ * @category		Schema
  */
-export type VerifiedArray<DataT> = (DataT | VerifiedMap<DataT>)[];
+export type VerifiedSchemaField<DataT> =
+	| DataT
+	| DataT[]
+	| Map<string, VerifiedSchemaField<DataT>>
+	| Map<string, VerifiedSchemaField<DataT>>[]
+	| null;

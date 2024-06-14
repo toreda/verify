@@ -44,7 +44,7 @@ export interface SchemaInit<DataT, InputT, TransformedT = InputT> {
 	 * @name Schema Fields
 	 * @description Details for each field that should be verified.
 	 */
-	fields: SchemaFieldData<DataT>[];
+	fields: SchemaFieldData<InputT>[];
 	/**
 	 * @name Schema Options
 	 * @description (optional) Flags & options that change verifier behavior.

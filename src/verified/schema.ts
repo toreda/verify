@@ -23,12 +23,11 @@
  *
  */
 
+import {type VerifiedSchemaField} from './schema/field';
+
 /**
  * Verified schema data returned by a successful `schema.verify(...)` call.
  *
  * @category		Schema
  */
-export type VerifiedSchema<VerifiedT = unknown> = Map<
-	string,
-	VerifiedT | VerifiedT[] | VerifiedSchema<VerifiedT> | VerifiedSchema<VerifiedT>[] | null
->;
+export type VerifiedSchema<VerifiedT = unknown> = Map<string, VerifiedSchemaField<VerifiedT>>;

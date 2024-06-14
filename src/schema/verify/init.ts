@@ -37,7 +37,7 @@ export interface SchemaVerifyInit<DataT = unknown> {
 	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */
 	id?: string;
 	/** Data to be verified and optionally transformed. */
-	data: DataT | SchemaData<DataT>;
+	data: SchemaData<DataT> | null;
 	/** Current path of properties accessed to reach this point. */
 	tracer?: Tracer;
 	base: Log;

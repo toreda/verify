@@ -35,6 +35,6 @@ export interface SchemaVerifyField<DataT = unknown> {
 	fieldId: string;
 	fieldType: SchemaFieldType<DataT>;
 	tracer: Tracer;
-	data: DataT | SchemaData<DataT>;
+	data: DataT | SchemaData<DataT> | DataT[] | SchemaData<DataT>[];
 	base: Log;
 }

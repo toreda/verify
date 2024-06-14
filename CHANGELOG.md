@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.11.0] - 2024-05-13
+* Added support for arrays + recursive schemas together.
+* Fixed type error caused by generic type mismatch.
+
 ## [0.10.0] - 2024-05-29
 
 ### Added
@@ -90,7 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0]
 * *No notes available for release.*
 
-[Unreleased]: https://github.com/toreda/chk/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/toreda/chk/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/toreda/chk/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/toreda/chk/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/toreda/chk/compare/v0.6.0...v0.9.0
 [0.6.0]: https://github.com/toreda/chk/compare/v0.5.4...v0.6.0

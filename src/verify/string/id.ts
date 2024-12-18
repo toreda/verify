@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,15 @@ import {errorMkCode} from '../../error/mk/code';
 import {type VerifierFlags} from '../../verifier/flags';
 
 /**
+ * Verify String Id
+ *
  * Check if value is a valid id string according to the optional validation rules when provided.
  * Uses default rules when not provided.
  * @param			id
  * @param			value
  * @param			flags
- * @returns
  *
- * @category		Verify Function
+ * @category		Verify Functions
  */
 export function verifyStringId(id: string, value: unknown, flags?: VerifierFlags): Fate<string> {
 	const fate = new Fate<string>();

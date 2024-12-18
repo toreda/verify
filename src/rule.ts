@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -41,12 +41,15 @@ import {type VerifierFlags} from './verifier/flags';
 import {Tracer} from './tracer';
 
 /**
- * @description 	Base type for rule blocks.
+ * Base Rule
+ *
+ * Base type for rule blocks.
+ *
  * @category		Rule Block
  */
 export class Rule<InputT> implements Resettable, Verifier {
 	/**
-	 * @description IMPORTANT: New properties intended using rule syntax MUST be added to
+	 * IMPORTANT: New properties intended using rule syntax MUST be added to
 	 * the switch statement in `value.ts`.
 	 * @internal
 	 */

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,10 @@ import {type BlockInit} from './init';
 import {type SchemaFieldType} from '../schema/field/type';
 
 /**
- * @name			Match (Block)
- * @description		Adds `match` keyword to rule statements.
+ * Match (Block)
+ *
+ * Adds `match` keyword to rule statements.
+ *
  * @example
  * ```ts
  * value.must.match.type('string')

@@ -9,11 +9,20 @@
 [![license](https://img.shields.io/github/license/toreda/verify?style=for-the-badge)](https://github.com/toreda/verify/blob/master/LICENSE)
 
 # `verify` - Autoverify
-Eliminate more edge cases with less code. Automates common type checks and validation checks.
+Eliminate common edge cases. Automate common type checks and validation checks.
 
 &nbsp;
 
-# Rules
+# Sections
+1. [Rulesets](#Rulesets)
+   1. [lessThan](#lessThan)
+   2. [greaterThan](#greaterThan)
+   3. [between](#between)
+   4. [equalTo](#equalTo)
+
+&nbsp;
+
+# Rulesets
 ```typescript
 // Create a ruleset using the expected type to be verified
 const ruleset = new Ruleset<number>();
@@ -22,13 +31,13 @@ const value = ruleset.value();
 ```
 
 
-## `lessThan`
+## lessThan
 
 ```typescript
 // Validate whether number input less than 0.
 const ruleset = new Ruleset<number>();
 const value = ruleset.value();
-ruleset.add(value.must.be.lessThan(0));
+ruleset.add(value.must.be.between(0, 5));
 
 // Tests input against all rules in ruleset.
 const result = await ruleset.verify(-99);
@@ -44,7 +53,7 @@ ruleset.add(value.must.not.be.lessThan(0));
 const result = await ruleset.verify(1);
 ```
 
-## `greaterThan`
+## between
 ```typescript
 // Validate whether number input is greater than 100.
 const ruleset = new Ruleset<number>();
@@ -55,7 +64,18 @@ ruleset.add(value.must.be.greaterThan(100));
 const result = await ruleset.verify(20000);
 ```
 
-## `equalTo`
+## greaterThan
+```typescript
+// Validate whether number input is greater than 100.
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.be.greaterThan(100));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(20000);
+```
+
+## equalTo
 
 ### `number` values
 ```typescript
@@ -160,17 +180,17 @@ const result = Array.isArray(value) && value.length === 0;
 &nbsp;
 
 # Package
-`@toreda/verify` is available as an [NPM package](https://www.npmjs.com/package/@toreda/verify).
+`@toreda/verify` on [NPM](https://www.npmjs.com/package/@toreda/verify).
 
 &nbsp;
 
 # Source Code
-`@toreda/verify` source is available [here on Github](https://github.com/toreda/verify).
+`@toreda/verify` source on [Github](https://github.com/toreda/verify).
 
 
 &nbsp;
 # Contributions
-We welcome bug reports, comments, and pull requests.
+Bug reports, comments, and pull requests are welcome.
 
 &nbsp;
 # Legal
@@ -179,7 +199,7 @@ We welcome bug reports, comments, and pull requests.
 [MIT](LICENSE) &copy; Toreda, Inc.
 
 ## Copyright
-Copyright &copy; 2019 - 2024 Toreda, Inc. All Rights Reserved.
+Copyright &copy; 2019 - 2025 Toreda, Inc. All Rights Reserved.
 
 &nbsp;
 

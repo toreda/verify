@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -30,28 +30,39 @@ import {Log} from '@toreda/log';
 import {type CustomTypesData} from '../custom/types/data';
 
 /**
- * @name 			Schema Init
- * @description		Parameters needed to create a specific schema object.
+ * Schema Init
+ *
+ * Parameters needed to create a specific schema object.
  *
  * @category		Schema
  */
 export interface SchemaInit<DataT, InputT, TransformedT = InputT> {
 	/**
-	 * @name Schema Name
+	 * Schema Name
 	 */
 	name: string;
 	/**
-	 * @name Schema Fields
-	 * @description Details for each field that should be verified.
+	 * Schema Fields
+	 *
+	 * Details for each field that should be verified.
 	 */
 	fields: SchemaFieldData<InputT>[];
 	/**
-	 * @name Schema Options
-	 * @description (optional) Flags & options that change verifier behavior.
+	 * Schema Options
+	 *
+	 * (optional) Flags & options that change verifier behavior.
 	 */
 	options?: SchemaOptions;
 	transformOutput?: SchemaOutputTransformer<DataT, TransformedT | null>;
+	/**
+	 * Custom Types
+	 *
+	 * Custom schema types used by this schema.
+	 */
 	customTypes?: CustomTypesData<DataT> | null;
+	/**
+	 * Base Logger.
+	 */
 	base: Log;
 	parentPath?: string[];
 }

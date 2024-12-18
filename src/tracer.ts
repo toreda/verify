@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,8 @@ import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
 
 /**
+ * Tracer
+ *
  * Create a readable string to uniquely identify element instances based on their
  * position in the schema tree relative to the root schema.
  * @example
@@ -36,7 +38,7 @@ import {type Primitive} from '@toreda/types';
  * const tracer = new Tracer();
  * ```
  *
- * @remark
+ * @remarks
  * Property name and parent element aren't specific enough to uniquely identify elements
  * in recursively verified schemas, which may contain multiple sub-schemas with the same
  * element names. e.g. schemaA.text and schemaA.schemaA.text would both look similar
@@ -49,17 +51,23 @@ export class Tracer {
 	/** Character separating path elements in the current path string. */
 	public readonly pathSeparator: string;
 	/**
-	 * @name Target Object Name
-	 * @description Name of the the tracer's target object.
+	 * Target Object Name
+	 *
+	 * Name of the the tracer's target object.
 	 */
 	public readonly targetObjName: Id;
 	/**
-	 * @name Target Property Name
-	 * @description Name of the tracer's target property.
+	 * Target Property Name
+	 *
+	 * Name of the tracer's target property.
 	 */
 	public readonly targetPropName: Id;
 	public readonly targetPropValue: Text;
-	/** @description Parameters used in actions or to execute nodes being traced. */
+	/**
+	 * Trace Parameters
+	 *
+	 * Parameters used in actions or to execute nodes being traced.
+	 */
 	public readonly params: Primitive[];
 	public readonly value: Strong<unknown>;
 
@@ -79,14 +87,18 @@ export class Tracer {
 	}
 
 	/**
-	 *	@description Convert the tracer's current path array to a string and return.
+	 * Current Path String
+	 *
+	 *	Convert tracer's current path to a string.
 	 */
 	public current(): string {
 		return this.path.join(this.pathSeparator);
 	}
 
 	/**
-	 * @description Current tracer target as a readable string. Accounts for the target object, prop,
+	 * Target Label
+	 *
+	 * Current tracer target as a readable string. Accounts for the target object, prop,
 	 * and values (if set).
 	 */
 	public targetLabel(): string {

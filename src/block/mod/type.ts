@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -24,9 +24,10 @@
  */
 
 /**
- * @name 			Block Modifier Type
- * @description 	Modifier applied to block result output.
+ * Block Modifier Type
  *
- * @category		Rule Block – Modifier
+ * Modifier applied to block result after it's returned.
+ *
+ * @category Rule Block – Modifier
  */
 export type BlockModType = 'not' | 'none';

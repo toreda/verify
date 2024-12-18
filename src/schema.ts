@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,8 @@ import {type VerifiedSchema} from './verified/schema';
 import {isSchemaDataObject} from './is/schema/data/object';
 
 /**
+ * Base Schema class extended by user schemas.
+ *
  * @category Schema
  */
 export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
@@ -73,7 +75,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	/**
-	 * Build and set schema fields from schema init data.
+	 * Initialize schema fields from schema init data.
 	 * @param fields
 	 */
 	private _makeFields(fields: SchemaFieldData<InputT>[]): Map<keyof InputT, SchemaField<InputT>> {
@@ -232,10 +234,18 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		);
 	}
 
+	/**
+	 * Determine if `type` matches a supported 'built-in' type.
+	 * @param type
+	 */
 	public isBuiltIn(type: SchemaFieldType<DataT>): boolean {
 		return builtinTypes<DataT>().includes(type);
 	}
 
+	/**
+	 * Determine if type matches a built-in or custom type.
+	 * @param type
+	 */
 	public schemaSupportsType(type: SchemaFieldType<DataT>): boolean {
 		if (typeof type !== 'string' || !type) {
 			return false;
@@ -409,9 +419,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	public async verify(init: SchemaVerifyInit<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
 		const fate = new Fate<VerifiedSchema<DataT>>();
 
-		const currPath = init.tracer ? init.tracer : new Tracer();
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
 		// set their own path because they have no way to know their property name in parent schema.
+		const currPath = init.tracer ? init.tracer : new Tracer();
 
 		if (!init.base) {
 			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'verify', 'base'));
@@ -441,8 +451,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		const mapped = new Map<string, VerifiedSchemaField<DataT>>();
 
 		if (fieldCount === 0) {
-			if (init?.flags?.allowEmptyInputObject !== true) {
-				return fate.setErrorCode(schemaError('no_schema_fields', currPath.current(), 'verify'));
+			if (init?.flags?.failOnEmptyInputObject === true) {
+				return fate.setErrorCode(schemaError('empty_input_object', currPath.current(), 'verify'));
 			}
 		} else {
 			const minFields = numberValue(init?.flags?.minFieldCount, 1);

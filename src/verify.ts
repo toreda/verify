@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -99,8 +99,18 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 			}
 		}
 
+		// Calculate outcome percentages AFTER all outcomes have been checked.
+		const counts = ctx.summary.counts;
+		counts.errorPct = counts.error > 0 ? (counts.error / counts.total) * 100 : 0;
+		counts.failPct = counts.fail > 0 ? (counts.fail / counts.total) * 100 : 0;
+		counts.passPct = counts.pass > 0 ? (counts.pass / counts.total) * 100 : 0;
+		counts.skipPct = counts.skip > 0 ? (counts.skip / counts.total) * 100 : 0;
+
 		const maxFails = numberValue(params?.flags?.maxFails, Defaults.Verifier.MaxFails);
 		const maxErrors = numberValue(params?.flags?.maxErrors, Defaults.Verifier.MaxErrors);
+
+		ctx.summary.counts.maxErrors = maxErrors;
+		ctx.summary.counts.maxFails = maxFails;
 
 		if (ctx.summary.counts.error > maxErrors) {
 			ctx.outcome = 'error';

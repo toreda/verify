@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,13 +32,20 @@ import {type BlockFlags} from './flags';
  */
 export interface BlockInit<InputT = unknown> {
 	/**
-	 * @description Statement holding all connected blocks.
+	 * Statement
+	 *
+	 * Container for groups of connected blocks.
 	 */
 	stmt: Statement<InputT>;
 	/**
-	 * @description Optional flags that alter block behavior.
+	 * Flags
+	 *
+	 * (optional) flags that alter block behavior.
 	 */
 	flags?: BlockFlags;
 	tracer: Tracer;
+	/**
+	 * Block Name
+	 */
 	name: string;
 }

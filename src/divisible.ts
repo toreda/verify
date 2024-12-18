@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,25 @@
 import {isNumberFinite} from './is/number/finite';
 
 /**
- * Determine if 'value' can be evenly divided into provided number.
+ * Is Divisible by
+ *
+ * Can 'value' be evenly divided into provided number.
  * @param value		Number to be divided.
  * @param by		Number to divide value by.
- * @returns
  *
  * @category		Matcher – Predicate Function
+ *
+ * @example Simple division
+ * ```typescript
+ * // Returns true.
+ * const result = divisible(100, 10);
+ * ```
+ *
+ * @example Division with remainder
+ * ```typescript
+ * // Returns false
+ * const result = divisible(100, 10.5);
+ * ```
  */
 export function divisible(value: unknown, by: unknown): value is number {
 	if (!isNumberFinite(value) || !isNumberFinite(by)) {

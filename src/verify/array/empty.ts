@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,12 @@ import {Fate} from '@toreda/fate';
 import {isArray} from '../../is/array';
 
 /**
+ * Verify Array is Empty
+ *
  * Determine whether value is an array and if so, whether it's empty.
  * @param value		Value to be verified as an empty array.
  *
- * @category		Verify Function
+ * @category		Verify Functions
  */
 export function verifyArrayEmpty<ValueT>(value: unknown | unknown[]): Fate<ValueT[]> {
 	const fate = new Fate<ValueT[]>();

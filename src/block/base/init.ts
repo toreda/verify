@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import {type BlockType} from '../type';
  *
  * @category Rule Block
  *
- * @remark
+ * @remarks
  * Normally two types with overlap like `BlockInit` and `BlockBaseInit` would
  * be combined into a single type, or one would extend the other and add properties. Here they should
  * remain separate types due to complications of using the `InputT` needed by `BlockInit<InputT>` in the

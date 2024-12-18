@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -34,22 +34,25 @@ import {Tracer} from '../tracer';
  */
 export interface MatcherData<InputT = unknown> {
 	/**
-	 * @name Matcher Call Name
-	 * @description Unique name identifying bound matcher. No character or
+	 * Matcher Call Name
+	 *
+	 * Unique name identifying bound matcher. No character or
 	 * length, or content limitations. Short, readable, and unique names are
 	 * ideal because the ID is used in debugging and stack traces.
 	 */
 	name: string;
 	/**
-	 * @description Predicate function that expects one or more arguments of generic type
+	 * Predicate Function
+	 *
+	 * Predicate function that expects one or more arguments of generic type
 	 * InputT and returns a boolean indicating whether it's valid.
 	 */
 	fn: Predicate<InputT>;
 	tracer: Tracer;
 	/**
-	 * @name Matcher Call Flags
-	 * @description Optional flags passed to a matcher during binding to change
-	 * its behavior.
+	 * Matcher Call Flags
+	 *
+	 * (optional) flags passed to a matcher during binding to change  behavior.
 	 */
 	flags?: BlockFlags;
 }

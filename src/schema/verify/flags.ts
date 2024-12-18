@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,31 @@
  */
 
 /**
- * Optional flags which alter default verification behavior.
+ * Optional flags that change verification rules. Default values are used when
+ * no flag is set.
  *
  * @category Schema
  */
 export interface SchemaVerifyFlags {
 	maxFieldCount?: number;
+	/**
+	 * Minimum number of fields a schema must have to pass verification. Only requires
+	 * that a schema has at least this number, but doesn't require they pass verification.
+	 *
+	 * @remarks
+	 * Useful in cases where a schema has multiple optional fields, but some number are
+	 * needed to be valid.
+	 *
+	 * @example
+	 * When `minFieldCount` = 1, data with < 1 matching fields will fail. A schema with only
+	 * 4 fields (all optional) and `minFieldCount` = 1 requires that at least one matching
+	 * field be present to pass verification.
+	 */
 	minFieldCount?: number;
-	allowEmptyInputObject?: boolean;
+	/**
+	 * Fail Verification on Empty Schema Object
+	 *
+	 * Whether calling schema.verify({}) causes verification to fail immediately.
+	 */
+	failOnEmptyInputObject?: boolean;
 }

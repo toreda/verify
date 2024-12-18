@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@
 import {type SchemaFieldType} from '../schema/field/type';
 
 /**
+ * Types supported by default in base schema class without a custom type.
+ *
  * @category Schema
  */
 export function builtinTypes<InputT = unknown>(): SchemaFieldType<InputT>[] {

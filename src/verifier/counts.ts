@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -24,34 +24,69 @@
  */
 
 /**
- * Quick summary counts of each sub-verification.
+ * Summary counts for each sub-verification.
  *
  * @category Verifier
  */
 export interface VerifierCounts {
 	/**
-	 * @description 'error' outcomes are returned when execution interrupted or did not
+	 * Verification Errors
+	 *
+	 * 'error' outcomes are returned when execution interrupted or did not
 	 * start due to an exception or serious error.
 	 */
 	error: number;
 	/**
-	 * @description `fail` outcomes occur when a provided value fails validation in
+	 * Error Percentage
+	 *
+	 * Percentage (as decimal) of total matchers that returned error.
+	 */
+	errorPct: number;
+	/**
+	 * Verifications Failures
+	 *
+	 * `fail` outcomes occur when a provided value fails validation in
 	 * one more matchers.
 	 */
 	fail: number;
 	/**
-	 * @description Provided value passed validation in all matchers.
+	 * Fail Percentage
+	 *
+	 * Percentage (as decimal) of total matchers that returned fail.
+	 */
+	failPct: number;
+	/**
+	 * Verification Passed
+	 *
+	 * Value passed validation by all matchers.
 	 */
 	pass: number;
 	/**
-	 * @description `skip` occurs when all available matchers skip execution due to
-	 * reaching rule criteria such as reaching a threshold, time limit, or some
-	 * exclusive "this test or this test but not both" situations. `skip` is not an
-	 * implied `pass` or `fail`, just an indication that matchers opted out.
+	 * Pass Percentage
+	 *
+	 * Percentage (as decimal) of total matchers that returned pass.
+	 */
+	passPct: number;
+	/**
+	 * Verifications Skipped
+	 *
+	 * How many matchers opted out of validation due to rules, threshold, or
+	 * other criteria. Skipped validator executions never run, so don't count as
+	 * or add to `pass` or `fail` counts.
 	 */
 	skip: number;
 	/**
-	 * @description Total number of all outcomes during execution.
+	 * Skip Percentage
+	 *
+	 * Percentage (as decimal) of total matchers that returned skip.
+	 */
+	skipPct: number;
+	/**
+	 * Total Count
+	 *
+	 * Sum of attempted verification executions that ended in any status.
 	 */
 	total: number;
+	maxErrors: number;
+	maxFails: number;
 }

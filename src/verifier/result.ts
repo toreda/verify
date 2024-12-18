@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -55,10 +55,16 @@ export function verifierResult<InputT = unknown>(params?: Partial<VerifierParams
 		summary: {
 			counts: {
 				error: 0,
+				errorPct: 0,
 				fail: 0,
+				failPct: 0,
 				pass: 0,
+				passPct: 0,
 				skip: 0,
-				total: 0
+				skipPct: 0,
+				total: 0,
+				maxErrors: 0,
+				maxFails: 0
 			}
 		},
 		failedMatchers: []

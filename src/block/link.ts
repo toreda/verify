@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,10 @@ import {BlockOr} from './or';
 import {type BlockWithNot, blockWithNot} from './with/not';
 
 /**
- * @name Link (Block)
- * @description Connects 2 or more otherwise independent predicate statements into one statement
- * where all matcher predicates must return true for the entire statement to be true.
+ * Link (Block)
+ *
+ * Connect 2 or more predicate statements where all matcher predicates must return
+ * true for the entire statement to be true.
  * @example `has.length(1).and.is.type('string')
  *
  * @category		Rule Block

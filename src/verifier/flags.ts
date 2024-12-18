@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 import {type VerifierLabel} from './label';
 
 /**
- * Optional flags that alter or toggle verifier behaviors.
+ * (optional) Flags that turn verifier behaviors on/off.
  *
  * @category Verifier
  */

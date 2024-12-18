@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,16 +26,18 @@
 import {type Primitive} from '@toreda/types';
 
 /**
- * @name Tracer Init
- * @description Optional arguments during Trace Path creation.
+ * Tracer Init
+ *
+ * Optional arguments during Trace Path creation.
  *
  * @category Tracer
  */
 export interface TracerInit {
 	path?: string | string[];
 	/**
-	 * @name Path Separator
-	 * @description (Optional) character used to join path elements when getting a
+	 * Path Separator
+	 *
+	 * (Optional) character used to join path elements when getting a
 	 * tracer path. Uses default separator when not set. Only set if you need to
 	 * override the default.
 	 * @remarks

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@
 import {Block} from '../block';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
+import { matcherMkBetween } from '../matcher/mk/between';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
 import {type MatcherFactory} from '../matcher/factory';
@@ -92,6 +93,7 @@ export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
 	 * value.must.be.equalTo(99)
 	 * ```
 	 */
+	public readonly between: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly equalTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, SchemaFieldType<InputT>, BlockLink<InputT>>;
 	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;
@@ -116,6 +118,11 @@ export class BlockBe<InputT = unknown> extends Block<Statement<InputT>> {
 		this.a = new BlockA<InputT>({
 			...init,
 			name: 'a',
+			tracer: this.tracer
+		});
+		this.between = matcherMkBetween<InputT>({
+			...init,
+			name: 'between',
 			tracer: this.tracer
 		});
 		this.lessThan = matcherMkLessThan<InputT>({

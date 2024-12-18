@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -43,9 +43,11 @@ import {BlockAn} from './an';
 import {SchemaFieldType} from '../schema/field/type';
 
 /**
+ * Is (block)
+ *
  * Matchers following 'is' in rule statements.
  *
- * @category		Rule Block
+ * @category Rule Block
  * @example
  * ```ts
  * value.is.lessThan(10)
@@ -82,7 +84,7 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly iterable: MatcherFactory<InputT, never, BlockLink<InputT>>;
 	/**
 	 * Determine if value is truthy.
-	 * @remark
+	 * @remarks
 	 * `pass`	`value` is truthy.
 	 * `fail`	`value` is not truthy.
 	 */

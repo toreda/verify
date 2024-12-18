@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -36,9 +36,10 @@ import {matcherMkHaveProperty} from '../matcher/mk/have/property';
 import {matcherMkHavePropertyWithType} from '../matcher/mk/have/property/with/type';
 
 /**
- * @name Must (Block)
- * @description Adds `must` property to rule statements for grammar purposes.
- * @remark
+ * Must (Block)
+ *
+ * Adds `must` property to rule statements for grammar purposes.
+ * @remarks
  * Immediately follows: `value`, `and`, `or` blocks in a statement.
  * @example
  * ```ts

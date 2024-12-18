@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,31 @@ import {isNumberFinite} from './is/number/finite';
  * @param			right
  *
  * @category		Matcher – Predicate Function
+ *
+ * @example Value is in range
+ * ```typescript
+ * const a = 10;
+ * const b = 20;
+ * const value = 15;
+ * // Result is true, - value is more than a and less than b.
+ * const result = await between<number>(a, value, b);
+ * ```
+ * @example Value is not in range
+ * ```typescript
+ * const a = 0;
+ * const b = 10;
+ * const value = 20;
+ * // Result is false - value is more than b.
+ * const result = await between<number>(a, value, b);
+ * ```
+ * @example Value is not a number
+ * ```typescript
+ * const a = 0;
+ * const b = 10;
+ * const value = 'aaaa';
+ * // Result is false - value fails the finite number check.
+ * const result = await between<number>(a, value, b);
+ * ```
  */
 export async function between<ValueT>(left: number, value: ValueT, right: number): Promise<boolean> {
 	if (!isNumberFinite(left) || !isNumberFinite(value) || !isNumberFinite(right)) {

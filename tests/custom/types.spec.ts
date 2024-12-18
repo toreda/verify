@@ -1,6 +1,6 @@
 import {Levels, Log} from '@toreda/log';
 import {CustomTypes} from '../../src/custom/types';
-import {type SampleData, SampleSchema} from '../_data/schema';
+import {type SampleData, SimpleSchema} from '../_data/schema';
 import {type Primitive} from '@toreda/types';
 import {type CustomTypeVerifier} from '../../src/custom/type/verifier';
 import {Fate} from '@toreda/fate';
@@ -12,7 +12,7 @@ describe('CustomTypes', () => {
 	let base: Log;
 	let init: SchemaInit<Primitive, SampleData, SampleData>;
 	let instance: CustomTypes<Primitive, SampleData, SampleData>;
-	let sampleSchema: SampleSchema;
+	let sampleSchema: SimpleSchema;
 	let typeVerifier: CustomTypeVerifier<any>;
 	let verifyInit: CustomSchemaVerify<any>;
 
@@ -35,9 +35,12 @@ describe('CustomTypes', () => {
 	});
 
 	beforeEach(() => {
+		sampleSchema = new SimpleSchema(base, {
+			strict: false
+		});
 		instance.reset();
 		init = {
-			name: 'SampleSchema',
+			name: 'SimpleSchema',
 			base: base,
 			fields: [
 				{
@@ -81,7 +84,7 @@ describe('CustomTypes', () => {
 		});
 
 		it(`should register types provided by init.data`, () => {
-			const schema = new SampleSchema(init);
+			const schema = new SimpleSchema(base);
 			const custom = new CustomTypes({
 				base: base,
 				data: {
@@ -93,7 +96,7 @@ describe('CustomTypes', () => {
 		});
 
 		it(`should register schema provided by init.data`, () => {
-			const schema = new SampleSchema(init);
+			const schema = new SimpleSchema(base);
 			const custom = new CustomTypes({
 				base: base,
 				data: {
@@ -181,7 +184,7 @@ describe('CustomTypes', () => {
 
 			it(`should return null when registered id matches a schema, not a verifier`, () => {
 				const id = 'j41-09008r97359735';
-				const sample = new SampleSchema(init);
+				const sample = new SimpleSchema(base);
 				expect(instance.registered.size).toBe(0);
 				instance.registerSchema(id, sample);
 				expect(instance.registered.size).toBe(1);

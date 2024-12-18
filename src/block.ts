@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -29,21 +29,29 @@ import type {BlockType} from './block/type';
 import {Tracer} from './tracer';
 
 /**
- * @name 			Block<StatementT>
- * @description 	Base type for rule blocks.
+ * Block<StatementT>
+ *
+ * Base type for rule blocks.
  * @typeParam 		StatementT - Type for statement holding or that will hold this block.
- * @category		Rule Block
+ *
+ * @category Rule Block
  */
 export abstract class Block<StatementT = unknown> {
 	/**
-	 * @description Block's role type in statements.
+	 * Block Type
 	 */
 	public readonly blockType: BlockType;
+	/**
+	 * Statement Container
+	 */
 	public readonly stmt: StatementT;
 	public readonly tracer: Tracer;
 	public readonly name: string;
 	/**
-	 * @description Modifier type applied to block output (if any).
+	 * Modifier Type
+	 *
+	 * Modifier type applied to block output (if any).
+	 *
 	 * @defaultValue false
 	 * @remarks "not" blocks invert block output.
 	 */

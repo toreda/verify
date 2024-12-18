@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2024 Toreda, Inc.
+ *	Copyright (c) 2019 - 2025 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
  * Determines if value is considered 'empty' based on type.
  * @param 			value
  *
- * @remark
+ * @remarks
  * Arrays are empty with 0 elements. strings are empty with 0 length and when trimming
  * a string produces a 0 length string. Objects are empty when equivalent to `{}` where
  * the object has no keys defined. Unsupported types like numbers, booleans, symbols, etc

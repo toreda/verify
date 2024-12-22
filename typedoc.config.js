@@ -6,7 +6,7 @@ module.exports = {
 	emit: 'docs',
 	name: '@toreda/verify',
 	pretty: true,
-	categorizeByGroup: true,
+	categorizeByGroup: false,
 	includeVersion: true,
 	sort: 'alphabetical',
 	excludePrivate: true,

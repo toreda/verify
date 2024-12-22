@@ -1,4 +1,4 @@
-import {Ruleset} from '../src/ruleset';
+import {Ruleset} from '../../src/ruleset';
 
 (async (): Promise<void> => {
 	const ruleset = new Ruleset<number>();

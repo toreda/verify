@@ -28,7 +28,7 @@ import {type Primitive} from '@toreda/types';
 /**
  * (optional) Flags used when creating a block.
  *
- * @category Rule Block
+ * @category Rule Blocks
  */
 export interface BlockFlags {
 	/**

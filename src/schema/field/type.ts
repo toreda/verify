@@ -65,4 +65,5 @@ export type SchemaFieldType<DataT = unknown> =
 	| 'url[]'
 	| 'time'
 	| 'time[]'
+	| 'none'
 	| Extract<keyof DataT, string>;

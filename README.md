@@ -30,7 +30,6 @@ const ruleset = new Ruleset<number>();
 const value = ruleset.value();
 ```
 
-
 ## lessThan
 
 ```typescript
@@ -76,6 +75,15 @@ const result = await ruleset.verify(20000);
 ```
 
 ## equalTo
+```typescript
+// Value must be equal to this
+const ruleset = new Ruleset<number>();
+const value = ruleset.value();
+ruleset.add(value.must.be.equalTo(100));
+
+// Tests input against all rules in ruleset.
+const result = await ruleset.verify(100);
+```
 
 ### `number` values
 ```typescript

@@ -26,7 +26,7 @@
 import {isNumberFinite} from './is/number/finite';
 
 /**
- * Is Divisible by
+ * Value Divisible by
  *
  * Can 'value' be evenly divided into provided number.
  * @param value		Number to be divided.

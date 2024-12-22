@@ -35,8 +35,9 @@ import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
 import {type VerifiedSchema} from '../verified/schema';
+
 /**
- * Registry of a single schema's registered custom types.
+ * Custom type registration for a single schema instance.
  *
  * @category		Schema – Custom Type
  */
@@ -55,7 +56,6 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		const log = this.log.makeLog('registerTypes');
 
 		if (!data) {
-			log.error(`No data in custom types init.`);
 			return;
 		}
 
@@ -82,8 +82,9 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	}
 
 	/**
-	 * Check whether `id` is a registered custom type schema. Doesn't return true
+	 * Is `id` is a registered custom type schema. Doesn't return true
 	 * when `id`is registered with a non-schema.
+	 *
 	 * @param id
 	 */
 	public hasSchema(id: string): boolean {

@@ -25,7 +25,8 @@
 
 /**
  * Type (Block)
- * Identify block role and type.
+ *
+ * Identifies block role and type.
  *
  * @category Rule Block
  */

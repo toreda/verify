@@ -31,7 +31,7 @@ import {BlockContains} from './contains';
 /**
  * Matchers following the `contain` or `contains` block in rule statements.
  *
- * @category		Rule Block
+ * @category Rule Blocks
  *
  * @example
  * ```ts

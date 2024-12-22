@@ -3,7 +3,7 @@ import {SchemaFieldType} from "../type";
 export interface SchemaValueType<DataT = unknown> {
 	allowUndefined: boolean;
 	allowArray: boolean;
-	type: SchemaFieldType<DataT>;
+	typeId: SchemaFieldType<DataT>;
 }
 
 export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<DataT> | null{
@@ -18,7 +18,7 @@ export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<Data
 	const result: SchemaValueType<DataT> = {
 		allowUndefined: false,
 		allowArray: false,
-		type: 'none'
+		typeId: 'none'
 	};
 
 	let value = type;
@@ -33,7 +33,8 @@ export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<Data
 		result.allowArray = true;
 	}
 
-	result.type = value;
+	// TODO: Add typecheck here.
+	result.typeId = value as any;
 
 	return result;
 }

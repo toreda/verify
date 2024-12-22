@@ -7,6 +7,7 @@ import {Fate} from '@toreda/fate';
 import {type SchemaInit} from '../../src/schema/init';
 import {CustomSchemaVerify} from '../../src/custom/schema/verify';
 import {schemaError} from '../../src';
+import {schemaFieldValueType} from '../../src/schema/field/value/type';
 
 describe('CustomTypes', () => {
 	let base: Log;
@@ -61,7 +62,7 @@ describe('CustomTypes', () => {
 		verifyInit = {
 			data: {},
 			base: base,
-			typeId: 'sampleSchema'
+			valueType: schemaFieldValueType('sampleSchema')!
 		};
 	});
 

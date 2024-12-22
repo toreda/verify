@@ -204,10 +204,10 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
 		const fate = new Fate<VerifiedSchema<DataT>>();
 
-		const schema = this.getSchema(init.typeId);
+		const schema = this.getSchema(init.valueType.typeId);
 
 		if (!schema) {
-			return fate.setErrorCode(schemaError('missing_schema_typeId', init.typeId));
+			return fate.setErrorCode(schemaError('missing_schema_typeId', init.valueType.typeId));
 		}
 
 		return schema.verify(init);

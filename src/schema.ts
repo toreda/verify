@@ -46,6 +46,7 @@ import {type SchemaVerifyField} from './schema/verify/field';
 import {type VerifiedSchemaField} from './verified/schema/field';
 import {type VerifiedSchema} from './verified/schema';
 import {isSchemaDataObject} from './is/schema/data/object';
+import {schemaFieldValueType} from './schema/field/value/type';
 
 /**
  * Base Schema class extended by user schemas.
@@ -206,6 +207,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		}
 
 		for (const type of field.types) {
+			const valueType = schemaFieldValueType<DataT>(type);
+			if (!valueType) {
+				return fate.setErrorCode(
+					schemaError(`schema_type_invalid:${type}`, tracer.current())
+				);
+			}
+
 			const baseType = (type.endsWith('[]') ? type.slice(0, -2) : type) as SchemaFieldType<DataT>;
 			if (!this.schemaSupportsType(baseType)) {
 				return fate.setErrorCode(
@@ -215,7 +223,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 			const result = await this.verifyValue({
 				fieldId: field.name,
-				fieldType: baseType,
+				valueType: valueType,
 				data: value,
 				tracer: tracer,
 				base: base
@@ -306,8 +314,8 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	public async verifyValue(init: SchemaVerifyField<DataT>): Promise<Fate<VerifiedSchemaField<DataT>>> {
 		const fate = new Fate<VerifiedSchemaField<DataT>>();
 
-		if (this.isBuiltIn(init.fieldType)) {
-			if (this.valueIsBuiltinType(init.fieldType, init.data)) {
+		if (this.isBuiltIn(init.valueType.typeId)) {
+			if (this.valueIsBuiltinType(init.valueType.typeId, init.data)) {
 				// TODO: Add validation here. Type match does not automatically prove valid content.
 				fate.data = init.data;
 				return fate.setSuccess(true);
@@ -327,11 +335,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			);
 		}
 
-		const baseType = init.fieldType.endsWith('[]') ? init.fieldType.substring(0, -2) : init.fieldType;
-		if (this.customTypes.hasSchema(init.fieldType) && typeof init.data === 'object') {
+		//const baseType = init.valueType.endsWith('[]') ? init.fieldType.substring(0, -2) : init.fieldType;
+		if (this.customTypes.hasSchema(init.valueType.typeId) && typeof init.data === 'object') {
 			return this.customTypes.verify({
 				id: init.fieldId,
-				typeId: baseType,
+				valueType: init.valueType,
 				data: init.data,
 				tracer: init.tracer,
 				base: init.base,
@@ -339,12 +347,12 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			});
 		}
 
-		if (this.customTypes.hasVerifier(init.fieldType)) {
-			return this.customTypes.verifyValue(init.fieldId, baseType, init.data, init.base);
+		if (this.customTypes.hasVerifier(init.valueType.typeId)) {
+			return this.customTypes.verifyValue(init.fieldId, init.valueType.typeId, init.data, init.base);
 		}
 
 		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${baseType}`, init.tracer.current())
+			schemaError(`field_does_not_support_type:${init.valueType.typeId}`, init.tracer.current())
 		);
 	}
 

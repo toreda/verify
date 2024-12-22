@@ -6,6 +6,7 @@ import {type SampleData, SampleSchema} from './_data/schema';
 import {Tracer} from '../src/tracer';
 import {type SchemaInit} from '../src';
 import {type Primitive} from '@toreda/types';
+import {schemaFieldValueType} from '../src/schema/field/value/type';
 
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
@@ -403,11 +404,12 @@ describe('Schema', () => {
 		});
 		describe('boolean', () => {
 			it(`should succeed and return value when type is 'boolean' and value is true`, async () => {
+				const valueType = schemaFieldValueType('boolean');
 				const fieldId = '11-9841709';
 				const value = true;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -421,9 +423,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'boolean' and value is false`, async () => {
 				const fieldId = 'r1-888a144';
 				const value = false;
+				const valueType = schemaFieldValueType('boolean');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -437,9 +440,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'boolean' and value is 0`, async () => {
 				const fieldId = '41-99090911';
 				const value = 0;
+				const valueType = schemaFieldValueType('boolean');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -457,10 +461,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'boolean' and value is 1`, async () => {
 				const fieldId = '41-99783726';
 				const value = 1;
-
+				const valueType = schemaFieldValueType('boolean');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -477,10 +481,11 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'boolean' and value is an empty object`, async () => {
 				const value = {};
+				const valueType = schemaFieldValueType('boolean');
 				const fieldId = '44-4887198197';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -497,10 +502,11 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'boolean' and value is null`, async () => {
 				const fieldId = 'bb-8890001082';
+				const valueType = schemaFieldValueType('boolean');
 				const value = null;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -516,11 +522,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'boolean' and value is undefined`, async () => {
+				const valueType = schemaFieldValueType('boolean');
 				const value = undefined;
 				const fieldId = 'boolId';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'boolean',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -538,10 +545,11 @@ describe('Schema', () => {
 
 		describe('string', () => {
 			it(`should return value when type is 'string' and value is empty string`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = 'vm-88974972';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: EMPTY_STRING,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -553,11 +561,12 @@ describe('Schema', () => {
 			});
 
 			it(`should validate successfully and return value when type is 'string' and value is a single char`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = 'stringId';
 				const value = 'a';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -569,11 +578,12 @@ describe('Schema', () => {
 			});
 
 			it(`should return true when type is 'string' and value is a short string`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = 'vb-09900912754';
 				const value = '19714-9194714';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -585,11 +595,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is undefined`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '19-98711';
 				const value = undefined;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -605,11 +616,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is null`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '9714-111';
 				const value = null;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -625,11 +637,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is 0`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '7710-8411';
 				const value = 0;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -645,11 +658,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is 1`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '11-1874-47471';
 				const value = 1;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -665,11 +679,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is an empty array`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '881-4848481';
 				const value = [] as unknown[];
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value as any[],
 					tracer: tracer.child(fieldId),
 					base: base
@@ -685,11 +700,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'string' and value is an empty object`, async () => {
+				const valueType = schemaFieldValueType('string');
 				const fieldId = '9891-488411';
 				const value = {};
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'string',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -707,11 +723,12 @@ describe('Schema', () => {
 
 		describe('bigint', () => {
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 0`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = 'vv-89797197';
 				const value = BigInt('0');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -723,11 +740,12 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 1`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = 'vb-8891982932';
 				const value = BigInt('1');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -741,9 +759,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a large number`, async () => {
 				const fieldId = 'vx-99329711';
 				const value = BigInt('9007199254740991');
+				const valueType = schemaFieldValueType('bigint');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -757,9 +776,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt with a huge octal`, async () => {
 				const fieldId = 'fr-97259771';
 				const value = BigInt('0o377777777777777777');
+				const valueType = schemaFieldValueType('bigint');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -771,11 +791,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is undefined`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = '9x-41648111';
 				const value = undefined;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -791,11 +812,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is null`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = 'x1-999183474';
 				const value = null;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -808,11 +830,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is 0`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = 'a3-33212710';
 				const value = 0;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -828,11 +851,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is 1`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = `j19-88818746456`;
 				const value = 1;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -848,11 +872,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is an empty array`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = '44-887719890';
 				const value: string[] = [];
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -868,11 +893,12 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'bigint' and value is an empty object`, async () => {
+				const valueType = schemaFieldValueType('bigint');
 				const fieldId = '881-999191745';
 				const value = {};
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'bigint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -891,10 +917,11 @@ describe('Schema', () => {
 		describe('undefined', () => {
 			it(`should succeed when type is 'undefined' when value is undefined`, async () => {
 				const fieldId = 'rr81-98871749';
+				const valueType = schemaFieldValueType('undefined');
 				const value = undefined;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -907,9 +934,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with null value`, async () => {
 				const fieldId = '78166-44910';
 				const value = null;
+				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -927,9 +955,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with value 'undefined'`, async () => {
 				const fieldId = '41-890897971';
 				const value = 'undefined';
+				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -947,8 +976,9 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with value 'null'`, async () => {
 				const fieldId = 'f1-9098090901';
 				const value = 'null';
+				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
-					fieldType: 'undefined',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					tracer: tracer.child(fieldId),
@@ -966,9 +996,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with value is 0`, async () => {
 				const fieldId = 'f1-99273295753';
 				const value = 0;
+				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -986,9 +1017,10 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' and value is EMPTY_STRING`, async () => {
 				const fieldId = '318-89979249724';
 				const value = EMPTY_STRING;
+				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1006,9 +1038,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with true value`, async () => {
 				const fieldId = 'f8-89797259729';
 				const value = true;
+				const valueType = schemaFieldValueType('undefined');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1026,9 +1060,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with value is false`, async () => {
 				const fieldId = '99-9991194';
 				const value = false;
+				const valueType = schemaFieldValueType('undefined');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1048,9 +1084,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'uint' and value is 0`, async () => {
 				const fieldId = 'aa-8i410717';
 				const value = 0;
+				const valueType = schemaFieldValueType('uint');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1064,9 +1101,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'uint' and value is 1`, async () => {
 				const fieldId = 'bb-90917732';
 				const value = 1;
+				const valueType = schemaFieldValueType('uint');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
@@ -1080,9 +1118,11 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'uint' and value is 100`, async () => {
 				const fieldId = 'cx-08714008';
 				const value = 100;
+				const valueType = schemaFieldValueType('uint');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1095,11 +1135,12 @@ describe('Schema', () => {
 
 			it(`should succeed and return value when type is 'uint' and value is MAX_SAFE_INTEGER`, async () => {
 				const fieldId = '88-89178147';
+				const valueType = schemaFieldValueType('uint');
 
 				const value = Number.MAX_SAFE_INTEGER;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1113,9 +1154,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'uint' and value is -1`, async () => {
 				const fieldId = 'aa-33208714';
 				const value = -1;
+				const valueType = schemaFieldValueType('uint');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1133,9 +1176,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'uint' and value is 1.1`, async () => {
 				const fieldId = 'cz-992223178';
 				const value = 1.1;
+				const valueType = schemaFieldValueType('uint');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'uint',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1155,10 +1200,11 @@ describe('Schema', () => {
 			it(`should succeed when value is null and null is allowed`, async () => {
 				const fieldId = 'zz-4314977';
 				const value = null;
+				const valueType = schemaFieldValueType('null');
 
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'null',
+					valueType: valueType!,
 					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
@@ -1171,11 +1217,11 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'undefined' with value 'null'`, async () => {
 				const fieldId = 'z4-367910';
-
+				const valueType = schemaFieldValueType('undefined');
 				const value = 'null';
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'undefined',
+					valueType: valueType!,
 					data: 'null',
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1192,11 +1238,12 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'null' with value is undefined`, async () => {
 				const fieldId = 'nullField';
+				const valueType = schemaFieldValueType('null');
 
 				const value = undefined;
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'null',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1213,10 +1260,10 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'null' with value 0`, async () => {
 				const fieldId = 'nullField';
-
+				const valueType = schemaFieldValueType('null');
 				const value = 0;
 				const result = await schema.verifyValue({
-					fieldType: 'null',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1234,10 +1281,12 @@ describe('Schema', () => {
 
 			it(`should fail when type is 'null' with value is EMPTY_STRING`, async () => {
 				const fieldId = 'jj-8882932987';
+				const valueType = schemaFieldValueType('null');
 				const value = EMPTY_STRING;
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'null',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1255,9 +1304,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'null' with value is true`, async () => {
 				const fieldId = '77-8777733110';
 				const value = true;
+				const valueType = schemaFieldValueType('null');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'null',
+					valueType: valueType!,
 					tracer: tracer.child(fieldId),
 					data: value,
 					base: base
@@ -1275,9 +1326,11 @@ describe('Schema', () => {
 			it(`should fail when type is 'null' with value is false`, async () => {
 				const fieldId = '7980-99108741';
 				const value = false;
+				const valueType = schemaFieldValueType('null');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'null',
+					valueType: valueType!,
 					data: value,
 					base: base,
 					tracer: tracer.child(fieldId)
@@ -1297,9 +1350,11 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'number' with value -10`, async () => {
 				const fieldId = 'aa-1146187';
 				const value = -10;
+				const valueType = schemaFieldValueType('number');
+
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
-					fieldType: 'number',
+					valueType: valueType!,
 					data: value,
 					tracer: tracer.child(fieldId),
 					base: base
@@ -1313,8 +1368,10 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'number' with value -0`, async () => {
 				const fieldId = 'vb-97297235';
 				const value = -0;
+				const valueType = schemaFieldValueType('number');
+
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1329,8 +1386,9 @@ describe('Schema', () => {
 			it(`should succeed and return value when type is 'number' with value 0`, async () => {
 				const value = 0;
 				const fieldId = 'ax-0754932753';
+				const valueType = schemaFieldValueType('number');
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1343,10 +1401,11 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with value 1`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const value = 1;
 				const fieldId = 'ax-778990781';
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1359,10 +1418,11 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with max safe int value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = '11-8829275';
 				const value = Number.MAX_SAFE_INTEGER;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1375,10 +1435,11 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with min safe int value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'bc-97529732535';
 				const value = Number.MIN_SAFE_INTEGER;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1391,10 +1452,11 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with min value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'rj-09725198723';
 				const value = Number.MIN_VALUE;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1407,10 +1469,12 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with max value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'rj-307999710';
 				const value = Number.MAX_VALUE;
+
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1423,10 +1487,11 @@ describe('Schema', () => {
 			});
 
 			it(`should succeed and return value when type is 'number' with epsilon value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const value = Number.EPSILON;
 				const fieldId = 'ab-097777712';
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1439,10 +1504,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with NaN value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = `j4-391999`;
 				const value = Number.NaN;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1459,10 +1525,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with string value '0'`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'v13-8314400';
 				const value = '0';
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1479,10 +1546,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with string value '0.00000000'`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'v88-8226600';
 				const value = '0.00000000';
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1499,10 +1567,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with string value '1'`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = 'x8-89112231';
 				const value = '1';
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1519,10 +1588,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with positive infinite value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = '11-3838188';
 				const value = Number.POSITIVE_INFINITY;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,
@@ -1539,10 +1609,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail when type is 'number' with negative infinite value`, async () => {
+				const valueType = schemaFieldValueType('number');
 				const fieldId = '411-88481876';
 				const value = Number.NEGATIVE_INFINITY;
 				const result = await schema.verifyValue({
-					fieldType: 'number',
+					valueType: valueType!,
 					fieldId: fieldId,
 					data: value,
 					base: base,

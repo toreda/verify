@@ -37,6 +37,11 @@ const TEST_CASES: TestCase[] = [
 		result: true
 	},
 	{
+		label: 'string value',
+		value: 'aaa098484',
+		result: false
+	},
+	{
 		label: 'NaN',
 		value: Number.NaN,
 		result: false

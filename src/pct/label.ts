@@ -28,7 +28,8 @@ import {type PctLabelInit} from './label/init';
 import {pctLabelRound} from './label/round';
 
 /**
- * Format numeric values
+ * Format decimal values as string percentage labels (xxx%').
+ *
  * @param init
  *
  * @category Labels
@@ -72,8 +73,8 @@ export function pctLabel(init: PctLabelInit): string {
 		value = `${prependText}${value}`;
 	}
 
-	// Always appends `appendText` (when set to string), or appends '%' when `appendPctSign`
-	// is true (default), but not both.
+	// Append `appendText` (when set to string), or append '%' when `appendPctSign` is true
+	// (default), but not both.
 	if (appendText !== null) {
 		value = `${value}${appendText}`;
 	} else if (appendPctSign === true) {

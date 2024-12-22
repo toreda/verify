@@ -26,6 +26,7 @@
 import {isNumberFinite} from './number/finite';
 
 /**
+ * Determines whether `value` is an unsigned int value.
  *
  * @param 			value
  *

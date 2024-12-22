@@ -197,6 +197,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		base: Log
 	): Promise<Fate<VerifiedSchemaField<DataT>>> {
 		const fate = new Fate<VerifiedSchemaField<DataT>>();
+		let matches = 0;
 
 		if (value === null) {
 			if (field.types.includes('null')) {
@@ -209,9 +210,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		for (const type of field.types) {
 			const valueType = schemaFieldValueType<DataT>(type);
 			if (!valueType) {
-				return fate.setErrorCode(
-					schemaError(`schema_type_invalid:${type}`, tracer.current())
-				);
+				return fate.setErrorCode(schemaError(`schema_type_invalid:${type}`, tracer.current()));
 			}
 
 			const baseType = (type.endsWith('[]') ? type.slice(0, -2) : type) as SchemaFieldType<DataT>;
@@ -229,17 +228,25 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				base: base
 			});
 
-			if (!result.ok()) {
-				return fate.setErrorCode(result.errorCode());
+			// Stop iterating after successful validation.
+			if (result.ok()) {
+				fate.data = result.data;
+				fate.setSuccess(true);
+				matches++;
+				break;
 			}
-
-			fate.data = result.data;
-			return fate.setSuccess(true);
 		}
 
-		return fate.setErrorCode(
-			schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, tracer.current())
-		);
+		// fate.ok is false by default until set true by fate.setSuccess().
+		// It should only be true in this context when at least type matched
+		// the provided value.
+		if (fate.ok()) {
+			return fate;
+		} else {
+			return fate.setErrorCode(
+				schemaError(`field_does_not_support_type:${valueTypeLabel(value)}`, tracer.current())
+			);
+		}
 	}
 
 	/**

@@ -232,7 +232,7 @@ describe('Schema', () => {
 					const field = schema.fields.get('bool1');
 					field?.types.push('null');
 					const result = await schema.verifyAndTransform({
-						data: sampleData,
+					 	data: sampleData,
 						tracer: tracer,
 						base: base
 					});
@@ -392,6 +392,22 @@ describe('Schema', () => {
 
 			field.types?.push('null');
 			const result = await customSchema.verifyField(field!, null, tracer, base);
+
+			expect(result.errorCode()).toBe(EMPTY_STRING);
+			expect(result.ok()).toBe(true);
+		});
+
+		it(`should succeed when allowed type is not the first type in 'types'`, async () => {
+			const customSchema = new SampleSchema(init);
+			const field = customSchema.fields.get('bool1');
+			if (!field) {
+				throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
+			}
+
+			field.types?.push('null');
+			field.types?.push('string');
+			const value = 'aaa901448';
+			const result = await customSchema.verifyField(field!, value, tracer, base);
 
 			expect(result.errorCode()).toBe(EMPTY_STRING);
 			expect(result.ok()).toBe(true);

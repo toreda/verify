@@ -108,7 +108,7 @@ describe('Schema - Recursive Parsing', () => {
 			const customA = new SampleSchemaSubA(customB, base);
 			aData.subSchema.int2b = 'aaaa' as any;
 
-			const result = await customA.verifyAndTransform({
+			const result = await customA.verify({
 				data: aData,
 				base: base
 			});

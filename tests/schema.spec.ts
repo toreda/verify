@@ -232,7 +232,7 @@ describe('Schema', () => {
 					const field = schema.fields.get('bool1');
 					field?.types.push('null');
 					const result = await schema.verifyAndTransform({
-					 	data: sampleData,
+						data: sampleData,
 						tracer: tracer,
 						base: base
 					});
@@ -1724,7 +1724,10 @@ describe('Schema', () => {
 			it(`should fail with code when input is an empty object`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: EMPTY_OBJECT,
-					base: base
+					base: base,
+					flags: {
+						failOnEmptyInputObject: true
+					}
 				});
 
 				expect(result.ok()).toBe(false);

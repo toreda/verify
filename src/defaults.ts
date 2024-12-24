@@ -37,6 +37,11 @@ export default class Defaults {
 		Code: '___' as const
 	} as const;
 
+	public static Schema = {
+		FailOnEmptyInputObject: false as const,
+		MinFieldCount: 1 as const,
+		MaxFieldCount: 0 as const
+	} as const;
 	public static Verifier = {
 		ValueLabel: 'value' as const,
 		MaxFails: 0 as const,

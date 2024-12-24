@@ -26,7 +26,8 @@
 import {Log} from '@toreda/log';
 import {Tracer} from '../../tracer';
 import {type SchemaData} from '../data';
-import {SchemaValueType} from '../field/value/type';
+import {type SchemaValueType} from '../field/value/type';
+import {type SchemaVerifyFlags} from './flags';
 
 /**
  * @category		Schema
@@ -37,4 +38,5 @@ export interface SchemaVerifyField<DataT = unknown> {
 	tracer: Tracer;
 	data: DataT | SchemaData<DataT> | DataT[] | SchemaData<DataT>[];
 	base: Log;
+	flags?: SchemaVerifyFlags;
 }

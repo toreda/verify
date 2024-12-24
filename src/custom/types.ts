@@ -35,6 +35,7 @@ import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
 import {type VerifiedSchema} from '../verified/schema';
+import {Tracer} from '../tracer';
 
 /**
  * Custom type registration for a single schema instance.
@@ -203,11 +204,13 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 
 	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
 		const fate = new Fate<VerifiedSchema<DataT>>();
-
 		const schema = this.getSchema(init.valueType.typeId);
+		const tracer = init.tracer ?? new Tracer({});
 
 		if (!schema) {
-			return fate.setErrorCode(schemaError('missing_schema_typeId', init.valueType.typeId));
+			return fate.setErrorCode(
+				schemaError('missing_schema_typeId', tracer.current(), init.valueType.typeId)
+			);
 		}
 
 		return schema.verify(init);

@@ -12,7 +12,6 @@
  * @category Labels
  */
 export interface PctLabelWrap {
-	
 	before: string;
 	after: string;
 }

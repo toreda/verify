@@ -98,7 +98,7 @@ describe('Schema', () => {
 			})
 		);
 
-		tracer.path.length = 0;
+		tracer.reset();
 	});
 
 	describe('Init', () => {
@@ -154,13 +154,11 @@ describe('Schema', () => {
 					if (!field) {
 						throw new Error(`Missing bool1 field in schema '${customSchema.schemaName}`);
 					}
-					const currTracer = tracer.child(customSchema.schemaName);
 					field.types.length = 0;
 					const fieldType = 'aaaaa' as any;
 					field.types.push(fieldType);
 					const result = await customSchema.verify({
 						data: sampleData,
-						tracer: currTracer,
 						base: base
 					});
 
@@ -327,11 +325,10 @@ describe('Schema', () => {
 	describe('verify', () => {
 		it(`should fail when value arg is undefined`, async () => {
 			const customSchema = new SampleSchema(init);
-			const currTracer = tracer.child(customSchema.schemaName);
 			const result = await customSchema.verify({
 				id: customSchema.schemaName,
 				data: undefined as any,
-				tracer: currTracer,
+				tracer: tracer,
 				base: base
 			});
 
@@ -560,6 +557,11 @@ describe('Schema', () => {
 		});
 
 		describe('string', () => {
+			beforeEach(() => {
+				tracer.reset();
+				tracer.addPath(schema.schemaName);
+			});
+
 			it(`should return value when type is 'string' and value is empty string`, async () => {
 				const valueType = schemaFieldValueType('string');
 				const fieldId = 'vm-88974972';
@@ -738,6 +740,11 @@ describe('Schema', () => {
 		});
 
 		describe('bigint', () => {
+			beforeEach(() => {
+				tracer.reset();
+				tracer.addPath(schema.schemaName);
+			});
+
 			it(`should succeed and return value when type is 'bigint' and value is a BigInt of value 0`, async () => {
 				const valueType = schemaFieldValueType('bigint');
 				const fieldId = 'vv-89797197';
@@ -931,6 +938,11 @@ describe('Schema', () => {
 		});
 
 		describe('undefined', () => {
+			beforeEach(() => {
+				tracer.reset();
+				tracer.addPath(schema.schemaName);
+			});
+
 			it(`should succeed when type is 'undefined' when value is undefined`, async () => {
 				const fieldId = 'rr81-98871749';
 				const valueType = schemaFieldValueType('undefined');
@@ -992,6 +1004,7 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' with value 'null'`, async () => {
 				const fieldId = 'f1-9098090901';
 				const value = 'null';
+
 				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					valueType: valueType!,
@@ -1009,7 +1022,7 @@ describe('Schema', () => {
 				expect(result.ok()).toBe(false);
 			});
 
-			it(`should fail when type is 'undefined' with value is 0`, async () => {
+			it(`should fail when type is 'undefined' with value 0`, async () => {
 				const fieldId = 'f1-99273295753';
 				const value = 0;
 				const valueType = schemaFieldValueType('undefined');
@@ -1033,6 +1046,7 @@ describe('Schema', () => {
 			it(`should fail when type is 'undefined' and value is EMPTY_STRING`, async () => {
 				const fieldId = '318-89979249724';
 				const value = EMPTY_STRING;
+
 				const valueType = schemaFieldValueType('undefined');
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
@@ -1097,6 +1111,11 @@ describe('Schema', () => {
 		});
 
 		describe('uint', () => {
+			beforeEach(() => {
+				tracer.reset();
+				tracer.addPath(schema.schemaName);
+			});
+
 			it(`should succeed and return value when type is 'uint' and value is 0`, async () => {
 				const fieldId = 'aa-8i410717';
 				const value = 0;
@@ -1213,6 +1232,15 @@ describe('Schema', () => {
 		});
 
 		describe('null', () => {
+			beforeEach(() => {
+				// Schema name is added to tracer path once before each test in this section.
+				// `verifyValue` is called directly for testing, but won't have the correct tracer
+				// path unless it's set before each test.
+				// `verifyValue` normally receives a tracer when called by `verifyField`.
+				tracer.reset();
+				tracer.addPath(schema.schemaName);
+			});
+
 			it(`should succeed when value is null and null is allowed`, async () => {
 				const fieldId = 'zz-4314977';
 				const value = null;
@@ -1278,6 +1306,7 @@ describe('Schema', () => {
 				const fieldId = 'nullField';
 				const valueType = schemaFieldValueType('null');
 				const value = 0;
+
 				const result = await schema.verifyValue({
 					valueType: valueType!,
 					fieldId: fieldId,
@@ -1299,7 +1328,6 @@ describe('Schema', () => {
 				const fieldId = 'jj-8882932987';
 				const valueType = schemaFieldValueType('null');
 				const value = EMPTY_STRING;
-
 				const result = await schema.verifyValue({
 					fieldId: fieldId,
 					valueType: valueType!,
@@ -1363,6 +1391,11 @@ describe('Schema', () => {
 		});
 
 		describe('number', () => {
+			beforeEach(() => {
+				tracer.reset();
+				tracer.addPath('SampleSchema');
+			});
+
 			it(`should succeed and return value when type is 'number' with value -10`, async () => {
 				const fieldId = 'aa-1146187';
 				const value = -10;
@@ -1652,6 +1685,7 @@ describe('Schema', () => {
 			it(`should fail with code when data arg is undefined`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: undefined as any,
+					tracer: tracer,
 					base: base
 				});
 
@@ -1664,6 +1698,7 @@ describe('Schema', () => {
 			it(`should fail with code when data arg is null`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: null as any,
+					tracer: tracer,
 					base: base
 				});
 
@@ -1674,9 +1709,11 @@ describe('Schema', () => {
 			});
 
 			it(`should fail with code when base arg is undefined`, async () => {
+
 				const result = await schema.verifyAndTransform({
 					data: sampleData,
-					base: undefined as any
+					base: undefined as any,
+					tracer: tracer
 				});
 
 				expect(result.ok()).toBe(false);
@@ -1688,6 +1725,7 @@ describe('Schema', () => {
 			it(`should fail with code when base arg is undefined`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: sampleData,
+					tracer: tracer,
 					base: undefined as any
 				});
 
@@ -1700,6 +1738,7 @@ describe('Schema', () => {
 			it(`should fail with code when input is undefined`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: undefined as any,
+					tracer: tracer,
 					base: base
 				});
 
@@ -1712,6 +1751,7 @@ describe('Schema', () => {
 			it(`should fail with code when input is null`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: null as any,
+					tracer: tracer,
 					base: base
 				});
 
@@ -1725,6 +1765,7 @@ describe('Schema', () => {
 				const result = await schema.verifyAndTransform({
 					data: EMPTY_OBJECT,
 					base: base,
+					tracer: tracer,
 					flags: {
 						failOnEmptyInputObject: true
 					}
@@ -1739,6 +1780,7 @@ describe('Schema', () => {
 			it(`should return true when all properties match the schema`, async () => {
 				const result = await schema.verifyAndTransform({
 					data: sampleData,
+					tracer: tracer,
 					base: base
 				});
 
@@ -1748,8 +1790,10 @@ describe('Schema', () => {
 
 			it(`should return false when a schema property is missing`, async () => {
 				sampleData.bool1 = undefined as any;
+
 				const result = await schema.verifyAndTransform({
 					data: sampleData,
+					tracer: tracer,
 					base: base
 				});
 

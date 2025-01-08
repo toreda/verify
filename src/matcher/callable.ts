@@ -62,7 +62,6 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 	 * Create fully formed flags object with each property set to either a valid provided
 	 * value, or set to the default value.
 	 * @param input
-	 * @returns
 	 */
 	public mkFlags(input?: Partial<BlockFlags>): BlockFlags {
 		return {
@@ -73,7 +72,6 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 	/**
 	 * Apply relevant result modifiers and transform the result value accordingly.
 	 * @param result
-	 * @returns
 	 */
 	public applyMods(result: boolean): boolean {
 		if (this.flags.invertResult === true) {

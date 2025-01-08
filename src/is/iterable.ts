@@ -36,16 +36,19 @@ export function isIterable(value: unknown): boolean {
 		return false;
 	}
 
+	let result: boolean = false;
 	const o = value as BaseObject;
 	try {
 		if (Symbol.iterator in o) {
-			return true;
+			result = true;
+		} else if (Symbol.asyncIterator in o) {
+			result = true;
 		}
+	} catch (e: unknown) {
+		const msg = e instanceof Error ? e.message : 'non-exception error';
+		console.error(`isIterable threw: ${msg}`);
+		result = false;
+	}
 
-		if (Symbol.asyncIterator in o) {
-			return true;
-		}
-	} catch (e: unknown) {}
-
-	return false;
+	return result;
 }

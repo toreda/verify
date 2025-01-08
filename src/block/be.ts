@@ -26,7 +26,7 @@
 import {Block} from '../block';
 import {matcherMkEqual} from '../matcher/mk/equal';
 import {matcherMkGreaterThan} from '../matcher/mk/greater/than';
-import { matcherMkBetween } from '../matcher/mk/between';
+import {matcherMkBetween} from '../matcher/mk/between';
 import {matcherMkLessThan} from '../matcher/mk/less/than';
 import {Statement} from '../statement';
 import {type MatcherFactory} from '../matcher/factory';

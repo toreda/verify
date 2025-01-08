@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2022 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -23,47 +23,18 @@
  *
  */
 
-import {type SchemaFieldData} from './field/data';
-import type {SchemaOptions} from './options';
-import {type SchemaOutputTransformer} from './output/transformer';
-import {Log} from '@toreda/log';
-import {type CustomTypesData} from '../custom/types/data';
-import {SchemaData} from './data';
-
-/**
- * Schema Init
- *
- * Parameters needed to create a specific schema object.
- *
- * @category		Schema
- */
-export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
-	/**
-	 * Schema Name
-	 */
-	name: string;
-	/**
-	 * Schema Fields
-	 *
-	 * Details for each field that should be verified.
-	 */
-	fields: SchemaFieldData<InputT>[];
-	/**
-	 * Schema Options
-	 *
-	 * (optional) Flags & options that change verifier behavior.
-	 */
-	options?: SchemaOptions;
-	transformOutput?: SchemaOutputTransformer<DataT, TransformedT | null>;
-	/**
-	 * Custom Types
-	 *
-	 * Custom schema types used by this schema.
-	 */
-	customTypes?: CustomTypesData<DataT, InputT, TransformedT> | null;
-	/**
-	 * Base Logger.
-	 */
-	base: Log;
-	parentPath?: string[];
-}
+module.exports = {
+	extends: ['@toreda/eslint-config'],
+	rules: {
+		'@typescript-eslint/no-namespace': 'off',
+		'@typescript-eslint/prefer-namespace-keyword': 'error'
+	},
+	overrides: [
+		{
+			files: ['*.spec.ts'],
+			rules: {
+				'max-len': 'off'
+			}
+		}
+	]
+};

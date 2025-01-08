@@ -43,6 +43,6 @@ export interface SchemaVerifyInit<DataT = unknown> {
 	base: Log;
 	/** Whether schema being processed is a child property of another schema. */
 	childSchema?: boolean;
-	type?: string;
+	typeId?: string;
 	flags?: SchemaVerifyFlags;
 }

@@ -36,24 +36,27 @@ import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
 import {type VerifiedSchema} from '../verified/schema';
 import {Tracer} from '../tracer';
+import {type CustomType} from './type';
 
 /**
  * Custom type registration for a single schema instance.
  *
- * @category		Schema – Custom Type
+ * @category Schema – Custom Types
  */
-export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> implements Resettable {
+export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT>
+	implements Resettable
+{
 	public readonly log: Log;
-	public readonly registered: Map<string, Schema<DataT, InputT, VerifiedT> | CustomTypeVerifier<DataT>>;
+	public readonly registered: Map<string, CustomType<DataT, InputT, TransformedT>>;
 
-	constructor(init: CustomTypesInit<DataT>) {
-		this.registered = new Map<string, Schema<DataT, InputT, VerifiedT> | CustomTypeVerifier<DataT>>();
+	constructor(init: CustomTypesInit<DataT, InputT, TransformedT>) {
+		this.registered = new Map<string, CustomType<DataT, InputT, TransformedT>>();
 		this.log = init.base.makeLog('customTypes');
 
 		this.registerTypes(init.data);
 	}
 
-	public registerTypes(data?: CustomTypesData<DataT> | null): void {
+	public registerTypes(data?: CustomTypesData<DataT, InputT, TransformedT> | null): void {
 		const log = this.log.makeLog('registerTypes');
 
 		if (!data) {
@@ -74,6 +77,13 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		}
 	}
 
+	/**
+	 * Is a Custom Type Schema OR Custom Type verifier registered to `id`? Returns true when
+	 * a Schema OR verifier is registered. Use `hasSchema` or `hasVerifier` when a more
+	 * specific check is needed.
+	 *
+	 * @param id
+	 */
 	public has(id: string): boolean {
 		if (typeof id !== 'string') {
 			return false;
@@ -116,7 +126,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof o === 'function';
 	}
 
-	public registerVerifier(id: string, fn: CustomTypeVerifier<DataT>): boolean {
+	public registerVerifier(id: string, custom: CustomTypeVerifier<DataT>): boolean {
 		if (typeof id !== 'string') {
 			return false;
 		}
@@ -125,15 +135,15 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		if (typeof fn !== 'function') {
+		if (typeof custom !== 'function') {
 			return false;
 		}
 
-		this.registered.set(id, fn);
+		this.registered.set(id, custom);
 		return true;
 	}
 
-	public registerSchema(id: string, schema: Schema<DataT, InputT, VerifiedT>): boolean {
+	public registerSchema(id: string, custom: CustomSchemaType<DataT, InputT, TransformedT>): boolean {
 		if (typeof id !== 'string') {
 			return false;
 		}
@@ -142,11 +152,11 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		if (!this.isSchema(schema)) {
+		if (!this.isSchema(custom)) {
 			return false;
 		}
 
-		this.registered.set(id, schema);
+		this.registered.set(id, custom);
 		return true;
 	}
 
@@ -160,7 +170,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof o === 'function' ? o : null;
 	}
 
-	public getSchema(id?: string): CustomSchemaType<DataT, InputT, VerifiedT> | null {
+	public getSchema(id?: string): CustomSchemaType<DataT, InputT, TransformedT> | null {
 		if (typeof id !== 'string') {
 			return null;
 		}
@@ -177,7 +187,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 		return typeof o === 'function';
 	}
 
-	public isSchema(o: unknown): o is Schema<DataT, InputT, VerifiedT> {
+	public isSchema(o: unknown): o is Schema<DataT, InputT, TransformedT> {
 		if (!o) {
 			return false;
 		}
@@ -186,7 +196,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 			return false;
 		}
 
-		const schema = o as Schema<DataT, InputT, VerifiedT>;
+		const schema = o as Schema<DataT, InputT, TransformedT>;
 		return typeof schema?.verify === 'function';
 	}
 
@@ -205,12 +215,13 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
 		const fate = new Fate<VerifiedSchema<DataT>>();
 		const schema = this.getSchema(init.valueType.typeId);
-		const tracer = init.tracer ?? new Tracer({});
+		const tracer = init.tracer ?? new Tracer();
+		const currPath = tracer.child(init.valueType.typeId);
+
+		init.tracer = tracer;
 
 		if (!schema) {
-			return fate.setErrorCode(
-				schemaError('missing_schema_typeId', tracer.current(), init.valueType.typeId)
-			);
+			return fate.setErrorCode(schemaError('missing_schema_typeId', currPath.current()));
 		}
 
 		return schema.verify(init);
@@ -220,6 +231,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, VerifiedT = In
 	 * Reset all properties to their initial values.
 	 */
 	public reset(): void {
+		// Clear all registered types.
 		this.registered.clear();
 	}
 }

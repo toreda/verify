@@ -31,6 +31,9 @@ import {numberValue} from '@toreda/strong-types';
 import Defaults from './defaults';
 
 /**
+ * Invokes the `verify` method on an unordered item collection and returns
+ * the results with summary counts.
+ *
  * @param params
  *
  * @category		Verifier
@@ -53,6 +56,9 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 	try {
 		ctx.summary.counts.total = params.collection.length;
 
+		// Verify all items regardless of outcome returned by preceding items.
+		// Caller determines how results will be handled based on outcome
+		// counts (`pass`, `fail`, `error`, `skip`).
 		for (const item of params.collection) {
 			const subResult = await item.verify(params.value, params.flags);
 
@@ -81,8 +87,7 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 				case 'pass':
 					ctx.summary.counts.pass++;
 					break;
-				// Serious error encountered, but was able to return without an uncaught
-				// exception.
+				// Serious error but returned without uncaught exception.
 				case 'error':
 					ctx.summary.counts.error++;
 					break;
@@ -106,6 +111,7 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 		counts.passPct = counts.pass > 0 ? (counts.pass / counts.total) * 100 : 0;
 		counts.skipPct = counts.skip > 0 ? (counts.skip / counts.total) * 100 : 0;
 
+		// Stop iterating over collection when
 		const maxFails = numberValue(params?.flags?.maxFails, Defaults.Verifier.MaxFails);
 		const maxErrors = numberValue(params?.flags?.maxErrors, Defaults.Verifier.MaxErrors);
 
@@ -119,6 +125,7 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 		} else {
 			ctx.outcome = 'pass';
 		}
+
 		// No exceptions during verifier. Fate return status is separate from executor outcome.
 		fate.setSuccess(true);
 	} catch (e: unknown) {

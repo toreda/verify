@@ -23,12 +23,13 @@
  *
  */
 
+import {type SchemaData} from '../../schema/data';
 import {type CustomSchemaType} from '../schema/type';
 import {type CustomTypeVerifier} from '../type/verifier';
 
 /**
- * @category		Schema – Custom Type
+ * @category Schema – Custom Type
  */
-export interface CustomTypesData<DataT = unknown> {
-	[k: string]: CustomSchemaType<any, any, any> | CustomTypeVerifier<DataT | null> | null;
+export interface CustomTypesData<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
+	[k: string]: CustomSchemaType<DataT, InputT, TransformedT> | CustomTypeVerifier<DataT | null> | null;
 }

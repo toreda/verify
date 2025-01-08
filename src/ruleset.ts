@@ -39,6 +39,7 @@ import {BlockIs} from './block/is';
 import {blockWithNot} from './block/with/not';
 import {type VerifierFlags} from './verifier/flags';
 import {Tracer} from './tracer';
+import {type BlockWrapper} from './block/wrapper';
 
 /**
  * @category Rulesets
@@ -94,7 +95,7 @@ export class Ruleset<InputT = unknown> implements Verifier {
 	 */
 	public value(): Rule<InputT> {
 		return new Proxy(new Rule<InputT>(), {
-			get: (target: Rule<InputT>, prop: keyof Rule<InputT>): any => {
+			get: (target: Rule<InputT>, prop: keyof Rule<InputT>): BlockWrapper<InputT> => {
 				const stmt = new Statement<InputT>();
 				const init: BlockInit<InputT> = {
 					stmt: stmt,

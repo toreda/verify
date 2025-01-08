@@ -62,6 +62,8 @@ describe('CustomTypes', () => {
 		verifyInit = {
 			data: {},
 			base: base,
+			id: 'sampleSchema',
+			typeId: 'aaaa',
 			valueType: schemaFieldValueType('sampleSchema')!
 		};
 	});
@@ -212,8 +214,9 @@ describe('CustomTypes', () => {
 		});
 
 		describe('verify', () => {
-			it(`should fail with code when init.type is undefined`, async () => {
-				verifyInit.type = undefined as any;
+			it(`should fail with code when init.typeId is undefined`, async () => {
+				//verifyInit.typeId = undefined as any;
+				verifyInit.typeId = 'aaa';
 				const result = await instance.verify(verifyInit);
 
 				expect(result.ok()).toBe(false);

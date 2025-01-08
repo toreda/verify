@@ -23,47 +23,15 @@
  *
  */
 
-import {type SchemaFieldData} from './field/data';
-import type {SchemaOptions} from './options';
-import {type SchemaOutputTransformer} from './output/transformer';
-import {Log} from '@toreda/log';
-import {type CustomTypesData} from '../custom/types/data';
-import {SchemaData} from './data';
+import {type SchemaData} from '../schema/data';
+import {type CustomSchemaType} from './schema/type';
+import {type CustomTypeVerifier} from './type/verifier';
 
 /**
- * Schema Init
+ * Data for a single registered custom schema or verifier type.
  *
- * Parameters needed to create a specific schema object.
- *
- * @category		Schema
+ * @category Schema – Custom Types
  */
-export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
-	/**
-	 * Schema Name
-	 */
-	name: string;
-	/**
-	 * Schema Fields
-	 *
-	 * Details for each field that should be verified.
-	 */
-	fields: SchemaFieldData<InputT>[];
-	/**
-	 * Schema Options
-	 *
-	 * (optional) Flags & options that change verifier behavior.
-	 */
-	options?: SchemaOptions;
-	transformOutput?: SchemaOutputTransformer<DataT, TransformedT | null>;
-	/**
-	 * Custom Types
-	 *
-	 * Custom schema types used by this schema.
-	 */
-	customTypes?: CustomTypesData<DataT, InputT, TransformedT> | null;
-	/**
-	 * Base Logger.
-	 */
-	base: Log;
-	parentPath?: string[];
-}
+export type CustomType<DataT, InputT extends SchemaData<DataT>, TransformedT> =
+	| CustomSchemaType<DataT, InputT, TransformedT>
+	| CustomTypeVerifier<DataT>;

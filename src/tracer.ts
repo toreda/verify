@@ -23,7 +23,15 @@
  *
  */
 
-import {type Id, idMake, stringValue, type Text, textMake, Strong, strongMake} from '@toreda/strong-types';
+import {
+	type Id,
+	idMake,
+	stringValue,
+	type Text,
+	textMake,
+	type Strong,
+	strongMake
+} from '@toreda/strong-types';
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
@@ -134,7 +142,7 @@ export class Tracer {
 		const params = this.params.join(', ');
 		const paramsText = params !== '' ? ` ${params}` : '';
 
-		return `${this.targetLabel()}${content} ${this.path.join(' ')}${paramsText}`;
+		return `${this.targetLabel()}${content} [${this.path.length} items] ${this.path.join(' ')}${paramsText}`;
 	}
 
 	private mkPath(parts?: string | string[]): string[] {
@@ -164,6 +172,24 @@ export class Tracer {
 		});
 	}
 
+	public addPath(...parts: Primitive[]): number {
+		let added = 0;
+		for (const part of parts) {
+			try {
+				const str = part?.toString();
+				if (typeof str === 'string') {
+					this.path.push(str);
+					added++;
+				}
+			} catch (e: unknown) {
+				const msg = stringValue('cant read error message', (e as Error)?.message);
+				console.error(`tracer.addPath error: ${msg}`);
+			}
+		}
+
+		return added;
+	}
+
 	public addParam(...params: Primitive[]): void {
 		this.params.push(...params);
 	}
@@ -177,5 +203,9 @@ export class Tracer {
 		this.clearTarget();
 		this.value.reset();
 		this.params.length = 0;
+		this.path.length = 0;
+		this.targetObjName.reset();
+		this.targetPropName.reset();
+		this.targetPropValue.reset();
 	}
 }

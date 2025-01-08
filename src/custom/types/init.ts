@@ -25,11 +25,14 @@
 
 import {Log} from '@toreda/log';
 import {type CustomTypesData} from './data';
+import {type SchemaData} from '../../schema/data';
 
 /**
- * @category		Schema – Custom Type
+ * Arguments needed when constructing a new CustomTypes object.a
+ *
+ * @category Schema – Custom Types
  */
-export interface CustomTypesInit<DataT = unknown> {
-	data?: CustomTypesData<DataT> | null;
+export interface CustomTypesInit<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
+	data?: CustomTypesData<DataT, InputT, TransformedT> | null;
 	base: Log;
 }

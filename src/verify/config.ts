@@ -1,8 +1,12 @@
-import {Bool, boolMake, UInt, uIntMake} from '@toreda/strong-types';
+import {type Bool, boolMake, type UInt, uIntMake} from '@toreda/strong-types';
 import {type SchemaVerifyFlags} from '../schema/verify/flags';
 import Defaults from '../defaults';
+import {type Resettable} from '@toreda/types';
 
-export class SchemaVerifyConfig {
+/**
+ * @category Schema
+ */
+export class SchemaVerifyConfig implements Resettable {
 	public readonly failOnEmptyInputObject: Bool;
 	public readonly minFieldCount: UInt;
 	public readonly maxFieldCount: UInt;
@@ -15,5 +19,11 @@ export class SchemaVerifyConfig {
 
 		this.maxFieldCount = uIntMake(Defaults.Schema.MaxFieldCount, flags?.maxFieldCount);
 		this.minFieldCount = uIntMake(Defaults.Schema.MinFieldCount, flags?.minFieldCount);
+	}
+
+	public reset(): void {
+		this.maxFieldCount.reset();
+		this.minFieldCount.reset();
+		this.failOnEmptyInputObject.reset();
 	}
 }

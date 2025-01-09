@@ -27,7 +27,7 @@
  * Determine if `value` is a string primitive of length 0 or greater.
  * @param value		Value to check.
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isString(value: unknown): boolean {
 	return typeof value === 'string';

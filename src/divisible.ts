@@ -32,7 +32,7 @@ import {isNumberFinite} from './is/number/finite';
  * @param value		Number to be divided.
  * @param by		Number to divide value by.
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  *
  * @example Simple division
  * ```typescript

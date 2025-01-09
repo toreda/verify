@@ -28,6 +28,6 @@
  *
  * Modifier applied to block result after it's returned.
  *
- * @category Rule Block – Modifier
+ * @category Rule Block Modifiers
  */
 export type BlockModType = 'not' | 'none';

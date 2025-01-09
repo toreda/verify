@@ -32,7 +32,7 @@ import {isHtml5Tag} from '../../../is/html5/tag';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkHtml5Tag<InputT = unknown>(
 	init: BlockInit<InputT>

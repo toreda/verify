@@ -34,7 +34,7 @@ import {Tracer} from './tracer';
  * Base type for rule blocks.
  * @typeParam 		StatementT - Type for statement holding or that will hold this block.
  *
- * @category Rule Block
+ * @category Rule Blocks
  */
 export abstract class Block<StatementT = unknown> {
 	/**

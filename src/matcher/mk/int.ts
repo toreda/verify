@@ -32,7 +32,7 @@ import {isInt} from '../../is/int';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkInt<InputT = unknown>(
 	init: BlockInit<InputT>

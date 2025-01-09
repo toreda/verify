@@ -32,7 +32,7 @@ import {type MatcherFactory} from '../factory';
 /**
  * Expects a validation chain root node and returns an equalTo matcher node.
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkEqual<InputT = unknown>(
 	init: BlockInit<InputT>
@@ -42,7 +42,7 @@ export function matcherMkEqual<InputT = unknown>(
 		// will cause infinite recursion & stack overflow.
 		const link = new BlockLink<InputT>(init);
 		// TODO: Hacky and will break. Fix this.
-		init.tracer.addParam(right as any);
+		init.tracer.addParam(right);
 
 		const func: Predicate<InputT> = async (value?: InputT | null): Promise<boolean> => {
 			return equalTo(value, right);

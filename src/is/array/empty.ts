@@ -44,7 +44,7 @@
  * const result = isArrayEmpty(value);
  * ```
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isArrayEmpty(value: unknown | unknown[]): value is Array<unknown> {
 	if (!Array.isArray(value)) {

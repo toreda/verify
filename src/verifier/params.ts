@@ -26,7 +26,7 @@
 import {type VerifierFlags} from './flags';
 
 /**
- * @category Verifier
+ * @category Verifiers
  */
 export interface VerifierParams<ValueT = unknown, CollectionT = unknown> {
 	/**

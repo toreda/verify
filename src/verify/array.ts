@@ -33,7 +33,7 @@ import {Fate} from '@toreda/fate';
  * @param			value
  * @param			flags
  *
- * @category		Verify Functions
+ * @category Verifiers
  */
 export function verifyArray<ValueT>(value?: unknown | unknown[], flags?: VerifierFlags): Fate<ValueT[]> {
 	const fate = new Fate<ValueT[]>();

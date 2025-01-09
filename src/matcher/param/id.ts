@@ -24,6 +24,6 @@
  */
 
 /**
- * @category		Matcher
+ * @category Matchers
  */
 export type MatcherParamId = 'contains.character';

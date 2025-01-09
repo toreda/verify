@@ -23,19 +23,36 @@
  *
  */
 
+import {stringValue} from "@toreda/strong-types";
+import {type ValueTypeId} from "./id";
+
 /**
+ * Get the type string for a value to be displayed in tracers, debugging, or
+ * other human readable formats.
  *
  * @param value
+ * @param typeId
  *
- * @category Schema
+ * @category Schemas
+ * @remarks
+ * Identifying value types beyond JS native types is difficult without reflection.
+ * Type labels are used to compare the value
  */
-export function valueTypeLabel(value: unknown): string {
+export function valueTypeLabel(value: unknown, id?: ValueTypeId): string {
 	if (value === null) {
 		return 'null';
 	}
 
 	if (Array.isArray(value)) {
-		return 'array';
+		if (typeof id?.array === 'string') {
+			return `${id.array}[]`;
+		} else {
+			return 'array';
+		}
+	}
+
+	if (typeof value === 'object') {
+		return stringValue(id?.object, 'object');
 	}
 
 	return typeof value;

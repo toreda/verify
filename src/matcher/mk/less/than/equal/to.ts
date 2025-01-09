@@ -35,7 +35,7 @@ import {type MatcherFactory} from '../../../../factory';
  * than or equal to target.
  * @param init
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkLessThanOrEqualTo<InputT = unknown>(
 	init: BlockInit<InputT>

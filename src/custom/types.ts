@@ -34,14 +34,14 @@ import {type CustomSchemaVerify} from './schema/verify';
 import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
-import {type VerifiedSchema} from '../verified/schema';
+import {type SchemaVerified} from '../schema/verified';
 import {Tracer} from '../tracer';
 import {type CustomType} from './type';
 
 /**
  * Custom type registration for a single schema instance.
  *
- * @category Schema – Custom Types
+ * @category Schemas Custom Types
  */
 export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT>
 	implements Resettable
@@ -205,15 +205,15 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 		type: string,
 		_value: unknown,
 		_base: Log
-	): Promise<Fate<DataT | VerifiedSchema<DataT>>> {
-		const fate = new Fate<DataT | VerifiedSchema<DataT>>();
+	): Promise<Fate<DataT | SchemaVerified<DataT>>> {
+		const fate = new Fate<DataT | SchemaVerified<DataT>>();
 
 		const _verifier = this.getVerifier(type);
 		return fate;
 	}
 
-	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<VerifiedSchema<DataT>>> {
-		const fate = new Fate<VerifiedSchema<DataT>>();
+	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<SchemaVerified<DataT>>> {
+		const fate = new Fate<SchemaVerified<DataT>>();
 		const schema = this.getSchema(init.valueType.typeId);
 		const tracer = init.tracer ?? new Tracer();
 		const currPath = tracer.child(init.valueType.typeId);

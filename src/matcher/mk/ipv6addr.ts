@@ -32,7 +32,7 @@ import {type MatcherFactory} from '../factory';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkIpv6Addr<InputT = unknown>(
 	init: BlockInit<InputT>

@@ -4,7 +4,7 @@ import Defaults from '../defaults';
 import {type Resettable} from '@toreda/types';
 
 /**
- * @category Schema
+ * @category Schemas
  */
 export class SchemaVerifyConfig implements Resettable {
 	public readonly failOnEmptyInputObject: Bool;

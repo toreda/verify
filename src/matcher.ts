@@ -30,6 +30,6 @@ import {Rule} from './rule';
  *
  * Type signature for matcher functions.
  *
- * @category		Matchers
+ * @category Matchers
  */
 export type Matcher<InputT, ParamT = unknown> = (...params: ParamT[]) => Rule<InputT>;

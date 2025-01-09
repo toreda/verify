@@ -41,7 +41,7 @@ import {type SchemaFieldType} from '../schema/field/type';
  * value.must.match.type('string')
  * ```
  *
- * @category		Rule Block
+ * @category Rule Blocks
  */
 export class BlockMatch<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly type: MatcherFactory<InputT, SchemaFieldType<InputT>, Block<Statement<InputT>>>;

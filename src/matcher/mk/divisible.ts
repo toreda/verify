@@ -33,7 +33,7 @@ import {type MatcherFactory} from '../factory';
  * Factory function producing `divisible` matcher predicate functions used in ruleset chains.
  * @param			init
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkDivisible<InputT = unknown>(
 	init: BlockInit<InputT>

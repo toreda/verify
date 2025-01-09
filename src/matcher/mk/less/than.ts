@@ -32,7 +32,7 @@ import {type MatcherFactory} from '../../factory';
  * Create matcher for validation chain which determines if chain value is less than target.
  * @param 			init
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkLessThan<InputT = unknown>(
 	init: BlockInit<InputT>

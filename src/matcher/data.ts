@@ -30,7 +30,7 @@ import {Tracer} from '../tracer';
 /**
  * Data used to create a callable matcher.
  *
- * @category		Matcher
+ * @category Matchers
  */
 export interface MatcherData<InputT = unknown> {
 	/**

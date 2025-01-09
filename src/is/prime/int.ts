@@ -31,7 +31,7 @@ import {isNumberFinite} from '../number/finite';
  * @param 			value
  * @returns
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isPrimeInt(value: unknown): value is number {
 	if (!isNumberFinite(value)) {

@@ -26,14 +26,13 @@
 import {hasProperty} from '@toreda/strong-types';
 import {type BlockInit} from '../../../block/init';
 import {BlockLink} from '../../../block/link';
-
 import {type Predicate} from '../../../predicate';
 import {type MatcherFactory} from '../../factory';
 
 /**
  * Expects a validation chain root node and returns an equalTo matcher node.
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkHaveProperty<InputT = unknown>(
 	init: BlockInit<InputT>

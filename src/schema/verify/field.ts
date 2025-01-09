@@ -30,7 +30,7 @@ import {type SchemaValueType} from '../field/value/type';
 import {type SchemaVerifyFlags} from './flags';
 
 /**
- * @category		Schema
+ * @category Schema Fields
  */
 export interface SchemaVerifyField<DataT = unknown> {
 	fieldId: string;

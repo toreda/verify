@@ -29,7 +29,7 @@ import {empty} from '../../../empty';
  *
  * @param			value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isArrayNotEmpty(value: unknown[]): value is Array<unknown> {
 	return !empty(value);

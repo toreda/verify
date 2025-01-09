@@ -35,7 +35,7 @@ import type {SchemaErrorPath} from './error/path';
  * @param 			entity
  * @param 			path
  *
- * @category		Schema – Error Handling
+ * @category Schema Errors
  */
 export function schemaError(
 	code: SchemaErrorCode,

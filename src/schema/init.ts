@@ -35,7 +35,7 @@ import {SchemaData} from './data';
  *
  * Parameters needed to create a specific schema object.
  *
- * @category		Schema
+ * @category Schemas
  */
 export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
 	/**

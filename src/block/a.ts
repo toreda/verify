@@ -34,7 +34,7 @@ import {type BlockInit} from './init';
 import {BlockLink} from './link';
 
 /**
- * @category		Rule Block
+ * @category Rule Blocks
  */
 export class BlockA<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly array: MatcherFactory<InputT, never, BlockLink<InputT>>;

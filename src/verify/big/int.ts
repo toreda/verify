@@ -28,9 +28,9 @@ import {isBigInt} from '../../is/big/int';
 
 /**
  * Deteremine if provided value is a valid BigInt.
- * @param			value
+ * @param value
  *
- * @category		Verifier
+ * @category Verifiers
  */
 export function verifyBigInt(value?: unknown): Fate<bigint> {
 	const fate = new Fate<bigint>();

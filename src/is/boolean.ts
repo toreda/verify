@@ -28,7 +28,7 @@
  * otherwise truthy non-boolean values.
  * @param 			value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isBoolean(value?: unknown): value is boolean {
 	return value === true || value === false;

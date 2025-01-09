@@ -26,7 +26,7 @@
 /**
  * Built-in types supported by schema fields.
  *
- * @category		Schema – Field
+ * @category Schema Fields
  */
 export type SchemaFieldType<DataT = unknown> =
 	| 'bigint[]'

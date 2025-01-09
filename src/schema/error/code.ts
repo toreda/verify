@@ -26,7 +26,7 @@
 /**
  * Error & failure codes returned by schema functions.
  *
- * @category		Schema – Error Handling
+ * @category Schema Errors
  */
 export type SchemaErrorCode =
 	| 'empty_schema_object'

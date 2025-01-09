@@ -24,9 +24,11 @@
  */
 
 /**
- * @category Tracer
+ * @category Tracers
  */
 export interface TracerTarget {
+	/** Label for the root object identified by this tracer. */
 	objName?: string;
+	/** Label for the property identified by this tracer. */
 	propName?: string;
 }

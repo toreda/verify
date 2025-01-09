@@ -32,7 +32,7 @@ import {type MatcherFactory} from '../factory';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkUint<InputT = unknown>(
 	init: BlockInit<InputT>

@@ -33,7 +33,7 @@ import {type MatcherFactory} from '../../../../factory';
 /**
  * Expects a validation chain root node and returns an equalTo matcher node.
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkHavePropertyWithType<InputT = unknown>(
 	init: BlockInit<InputT>

@@ -28,7 +28,7 @@ import {Tracer} from '../tracer';
 import {type BlockFlags} from './flags';
 
 /**
- * @category		Rule Block
+ * @category Rule Blocks
  */
 export interface BlockInit<InputT = unknown> {
 	/**

@@ -28,7 +28,7 @@ import {Log} from '@toreda/log';
 import {schemaError} from '../schema/error';
 import {type Transformed} from '../transformed';
 import {transformVerifiedField} from './verified/field';
-import {type VerifiedSchema} from '../verified/schema';
+import {type SchemaVerified} from '../schema/verified';
 
 /**
  * Default transformer when one isn't provided to a schema. Expects a
@@ -36,10 +36,10 @@ import {type VerifiedSchema} from '../verified/schema';
  * @param			input
  * @param			base
  *
- * @category		Schema – Transform Output
+ * @category Schema Transforms
  */
 export async function transformVerified<DataT = unknown, TransformedT = unknown>(
-	input: VerifiedSchema<DataT> | null,
+	input: SchemaVerified<DataT> | null,
 	base: Log
 ): Promise<Fate<TransformedT | null>> {
 	const fate = new Fate<TransformedT | null>();

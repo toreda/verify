@@ -34,7 +34,7 @@ import {matcherTarget} from '../../target';
  * @description 	Create matcher for validator.
  * @param root		Root node in validation chain.
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkOneOf<InputT = unknown>(
 	init: BlockInit<InputT>

@@ -28,7 +28,7 @@ import {type SchemaFieldType} from '../schema/field/type';
 /**
  * Types supported by default in base schema class without a custom type.
  *
- * @category Schema
+ * @category Schemas
  */
 export function builtinTypes<InputT = unknown>(): SchemaFieldType<InputT>[] {
 	return [

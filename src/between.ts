@@ -31,7 +31,7 @@ import {isNumberFinite} from './is/number/finite';
  * @param			value
  * @param			right
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  *
  * @example Value is in range
  * ```typescript

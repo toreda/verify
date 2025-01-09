@@ -28,7 +28,7 @@
  *
  * Outcomes returned by rulesets, statements, and other systems.
  *
- * @category Verifier
+ * @category Verifiers
  */
 export type Outcome =
 	/** Value passed all rule checks. */

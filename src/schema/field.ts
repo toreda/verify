@@ -31,7 +31,7 @@ import {type SchemaFieldType} from './field/type';
 /**
  * Properties for a single schema field.
  *
- * @category		Schema – Field
+ * @category Schema Fields
  */
 export class SchemaField<InputT = unknown> {
 	public readonly name: string;

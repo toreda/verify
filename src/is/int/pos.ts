@@ -32,7 +32,7 @@ import {isInt} from '../int';
  * @returns			true	-	value is a positive integer.
  *					false	-	value is not a positive integer, but does not indicate what value is.
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isIntPos(value?: unknown): value is number {
 	if (!isInt(value)) {

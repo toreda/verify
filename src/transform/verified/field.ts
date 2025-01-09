@@ -32,11 +32,11 @@ import {type VerifiedSchemaField} from '../../verified/schema/field';
 /**
  * Default transformer when one isn't provided to a schema. Expects a
  * string -> primitive map and produces a simple object of the same mapping.
- * @param			id
- * @param			data
- * @param			base
+ * @param id
+ * @param data
+ * @param base
  *
- * @category		Schema – Transform Output
+ * @category Schema Transforms
  */
 export async function transformVerifiedField<DataT = unknown, TransformedT = unknown>(
 	id: string,

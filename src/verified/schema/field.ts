@@ -26,7 +26,7 @@
 /**
  * Arguments needed for schema verification.
  *
- * @category		Schema
+ * @category Schema Fields
  */
 export type VerifiedSchemaField<DataT> =
 	| DataT

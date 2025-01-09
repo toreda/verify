@@ -31,7 +31,7 @@ import {type SchemaData} from '../data';
 /**
  * Arguments needed for schema verification.
  *
- * @category		Schema
+ * @category Schemas
  */
 export interface SchemaVerifyInit<DataT = unknown> {
 	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */

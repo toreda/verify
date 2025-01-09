@@ -31,7 +31,7 @@ import {html5Tags} from '../../html5/tags';
  * otherwise truthy non-boolean values.
  * @param			value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isHtml5Tag(value: unknown): value is Html5Tag {
 	if (typeof value !== 'string') {

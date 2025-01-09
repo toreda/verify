@@ -27,7 +27,7 @@
  * Determine if provided value arg is an array.
  * @param			value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isArray(value: unknown): boolean {
 	return Array.isArray(value);

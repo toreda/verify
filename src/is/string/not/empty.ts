@@ -27,7 +27,7 @@
  * Determine if provided value arg is a non-empty string.
  * @param value		Value to be verified as a non-empty string.
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isStringNotEmpty(value: unknown): value is string {
 	if (typeof value !== 'string') {

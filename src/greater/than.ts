@@ -32,7 +32,7 @@ import {isNumberFinite} from '../is/number/finite';
  * @param			left
  * @param			right
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function greaterThan(left: unknown, right: unknown): boolean {
 	if (!isNumberFinite(left) || !isNumberFinite(right)) {

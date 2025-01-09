@@ -28,7 +28,7 @@
  *
  * Identifies block role and type.
  *
- * @category Rule Block
+ * @category Rule Blocks
  */
 export type BlockType =
 	| 'a'

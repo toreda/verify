@@ -29,7 +29,7 @@ import {type BlockInit} from './init';
 import {BlockLength} from './length';
 
 /**
- * @category		Rule Block
+ * @category Rule Blocks
  */
 export class BlockHave<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly length: BlockLength<InputT>;

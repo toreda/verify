@@ -30,7 +30,7 @@ import {type SchemaData} from '../../../schema/data';
  * operations on and provides type hint.
  * @param data
  *
- * @category		Schema
+ * @category Schemas
  */
 export function isSchemaDataObject<DataT>(
 	value: unknown | DataT | SchemaData<DataT>

@@ -32,7 +32,7 @@ import type {Primitive} from '@toreda/types';
  * @param			value
  * @param			types
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function matchesAnyType(value: unknown, types?: Primitive[]): boolean {
 	if (!Array.isArray(types)) {

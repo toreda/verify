@@ -27,9 +27,9 @@ import {isNumberFinite} from '../is/number/finite';
 
 /**
  * Determine if `value` arg is a power of `pow` arg.
- * @param 			value
+ * @param value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function powOf(value: unknown, exponent: number): boolean {
 	if (!isNumberFinite(value) || !isNumberFinite(exponent)) {

@@ -37,7 +37,7 @@ import {type BlockWithNot, blockWithNot} from './with/not';
  * true for the entire statement to be true.
  * @example `has.length(1).and.is.type('string')
  *
- * @category		Rule Block
+ * @category Rule Blocks
  */
 export class BlockLink<InputT = unknown> extends Block<Statement<InputT>> {
 	/**

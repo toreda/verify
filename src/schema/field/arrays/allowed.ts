@@ -29,7 +29,7 @@ import {type SchemaFieldType} from '../type';
  * Determine if field supports array values based on field types.
  * @param items		Field types to check.
  *
- * @category		Schema – Field
+ * @category Schema Fields
  */
 export function schemaFieldArraysAllowed<InputT = unknown>(items: SchemaFieldType<InputT>[]): boolean {
 	if (!Array.isArray(items) || !items.length) {

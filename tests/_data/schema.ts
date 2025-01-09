@@ -10,17 +10,8 @@ export interface SampleBData extends SchemaData<Primitive> {
 	int2b: number;
 }
 
-export interface SampleAData extends SchemaData<Primitive> {
-	str1a: string;
-	int1a: number;
-	intArray: number[];
-	boolArray?: boolean[];
-	strArray?: string[];
-	subSchema: SampleBData;
-	subSchemas?: SampleBData[];
-}
 
-export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> {
+export class SampleSchemaSubB extends Schema<Primitive, SampleBData, SampleBData> {
 	constructor(base: Log) {
 		super({
 			name: 'SubSchemaB',
@@ -41,7 +32,18 @@ export class SampleSchemaSubB extends Schema<Primitive, SampleData, SampleData> 
 	}
 }
 
-export class SampleSchemaSubA extends Schema<Primitive, SampleAData, SampleAData> {
+export interface SampleAData extends SchemaData<Primitive | SampleBData> {
+	str1a: string;
+	int1a: number;
+	intArray: number[];
+	boolArray?: boolean[];
+	strArray?: string[];
+	subSchema: SampleBData;
+	subSchemas?: SampleBData[];
+}
+
+
+export class SampleSchemaSubA extends Schema<Primitive | SampleBData, SampleAData, SampleAData> {
 	constructor(schemaB: SampleSchemaSubB, base: Log) {
 		super({
 			name: 'SubSchemaA',

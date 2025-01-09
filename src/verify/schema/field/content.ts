@@ -36,6 +36,8 @@ import {SchemaFieldType} from '../../../schema/field/type';
  *
  * @param type
  * @param value
+ *
+ * @category Schema Fields
  */
 export function verifySchemaFieldContent<DataT = unknown>(
 	type: SchemaFieldType<DataT>,

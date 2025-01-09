@@ -24,7 +24,7 @@
  */
 
 /**
- * @category Schema
+ * @category Schemas
  */
 export interface Transformed {
 	[k: string]: unknown;

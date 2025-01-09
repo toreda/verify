@@ -29,7 +29,7 @@
  * @returns 		`true` 	`value` is a valid JavaScript number primitive including infinite and NaN.
  *					`false`	`value` is not a valid JavaScript number primitive.
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isNumber(value: unknown): boolean {
 	return typeof value === 'number';

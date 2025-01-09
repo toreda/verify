@@ -47,7 +47,7 @@ import {SchemaFieldType} from '../schema/field/type';
  *
  * Matchers following 'is' in rule statements.
  *
- * @category Rule Block
+ * @category Rule Blocks
  * @example
  * ```ts
  * value.is.lessThan(10)

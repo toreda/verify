@@ -27,9 +27,9 @@ import {type BaseObject} from '@toreda/types';
 
 /**
  * Determine if provided value arg is an array.
- * @param			value
+ * @param value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function isIterable(value: unknown): boolean {
 	if (!value) {

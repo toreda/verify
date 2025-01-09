@@ -25,12 +25,18 @@
 
 import {type SchemaFieldType} from '../type';
 
+/**
+ * @category Schema Fields
+ */
 export interface SchemaValueType<DataT = unknown> {
 	allowUndefined: boolean;
 	allowArray: boolean;
 	typeId: SchemaFieldType<DataT>;
 }
 
+/**
+ * @category Schema Fields
+ */
 export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<DataT> | null {
 	if (typeof type !== 'string') {
 		return null;

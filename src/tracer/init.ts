@@ -30,7 +30,7 @@ import {type Primitive} from '@toreda/types';
  *
  * Optional arguments during Trace Path creation.
  *
- * @category Tracer
+ * @category Tracers
  */
 export interface TracerInit {
 	path?: string | string[];

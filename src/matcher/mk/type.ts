@@ -36,7 +36,7 @@ import {isString} from '../../is/string';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkType<InputT = unknown>(
 	init: BlockInit<InputT>

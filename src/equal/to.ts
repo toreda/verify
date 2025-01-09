@@ -28,7 +28,7 @@
  * @param			left
  * @param			right
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function equalTo(left: unknown, right: unknown): boolean {
 	if (left === null && right === null) {

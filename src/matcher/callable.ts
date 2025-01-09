@@ -38,7 +38,7 @@ import {type VerifierFlags} from '../verifier/flags';
 import Defaults from '../defaults';
 
 /**
- * @category		Matcher
+ * @category Matchers
  */
 export class MatcherCallable<InputT = unknown> implements Verifier {
 	public readonly id: Id;
@@ -61,6 +61,7 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 	/**
 	 * Create fully formed flags object with each property set to either a valid provided
 	 * value, or set to the default value.
+	 *
 	 * @param input
 	 */
 	public mkFlags(input?: Partial<BlockFlags>): BlockFlags {
@@ -71,6 +72,7 @@ export class MatcherCallable<InputT = unknown> implements Verifier {
 
 	/**
 	 * Apply relevant result modifiers and transform the result value accordingly.
+	 *
 	 * @param result
 	 */
 	public applyMods(result: boolean): boolean {

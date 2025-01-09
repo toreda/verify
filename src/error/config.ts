@@ -26,7 +26,7 @@
 /**
  * Optional configuration values that override built-in defaults.
  *
- * @category		Error Handling
+ * @category Errors
  */
 export interface ErrorConfig {
 	customCodeToken?: string;

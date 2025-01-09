@@ -28,7 +28,7 @@
  * @param			value
  * @param			type
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function matchesType(value: unknown, type: string): boolean {
 	if (type.endsWith('[]')) {

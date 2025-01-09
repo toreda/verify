@@ -17,8 +17,8 @@
  *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * 	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHEWISE, ARISING FROM,
- *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTRHER DEALINGS IN THE
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * 	SOFTWARE.
  *
  */
@@ -30,7 +30,7 @@ import {stringValue} from '@toreda/strong-types';
 
 /**
  *
- * @category Verifier
+ * @category Verifiers
  */
 export interface VerifierResult {
 	summary: VerifierSummary;
@@ -45,7 +45,7 @@ export interface VerifierResult {
  * none provided.
  * @param params
  *
- * @category Verifier
+ * @category Verifiers
  */
 export function verifierResult<InputT = unknown>(params?: Partial<VerifierParams<InputT>>): VerifierResult {
 	return {

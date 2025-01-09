@@ -27,7 +27,7 @@ import {Rule} from '../rule';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export type MatcherFactory<InputT, BoundaryT = unknown, ReturnT = Rule<InputT>> = (
 	...boundaries: BoundaryT[]

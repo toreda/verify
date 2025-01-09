@@ -42,7 +42,7 @@ import {type SchemaFieldType} from '../schema/field/type';
 /**
  * Matchers following 'be' in rule statements.
  *
- * @category		Rule Block
+ * @category Rule Blocks
  * @example
  * ```ts
  * value.must.be.lessThan(10)

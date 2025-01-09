@@ -28,6 +28,6 @@ import type {SchemaErrorEntity} from './entity';
 /**
  * Property names and related strings used in schema error codes.
  *
- * @category		Schema – Error Handling
+ * @category Schema Errors
  */
 export type SchemaErrorPath = 'record_property' | 'schema_property' | SchemaErrorEntity;

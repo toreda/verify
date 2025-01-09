@@ -23,11 +23,24 @@
  *
  */
 
-import {type VerifiedSchemaField} from './schema/field';
+/**
+ * Values added to tracer paths or params should support
+ * this type.
+ *
+ * @category Tracers
+ */
+export interface TracerPrintable {
+	toString(): string;
+}
 
 /**
- * Verified schema data returned by a successful `schema.verify(...)` call.
+ * Check if value supports toString().
+ * @param value
  *
- * @category		Schema
+ * @category Tracers
  */
-export type VerifiedSchema<VerifiedT = unknown> = Map<string, VerifiedSchemaField<VerifiedT>>;
+export function tracerPrintable(value: unknown): value is TracerPrintable {
+	const target = value as TracerPrintable;
+
+	return typeof target?.toString === 'function';
+}

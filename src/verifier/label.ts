@@ -26,14 +26,14 @@
 import Defaults from '../defaults';
 
 /**
- * @category Verifier
+ * @category Verifiers
  */
 export type VerifierLabel = 'value' | 'arg';
 
 /**
  * @param label
  *
- * @category Verifier
+ * @category Verifiers
  */
 export function verifierLabel(label?: VerifierLabel | string | null): VerifierLabel {
 	if (!label) {

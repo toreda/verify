@@ -28,7 +28,7 @@ import {type SchemaFieldType} from './type';
 /**
  * Iterable field types supported by schema system.
  *
- * @category Schema
+ * @category Schema Fields
  */
 export const schemaFieldTypes: SchemaFieldType[] = [
 	'bigint',

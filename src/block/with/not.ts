@@ -32,13 +32,15 @@ import {type BlockFlags} from '../flags';
 
 /**
  * Block wrapped with a `not` (negation) modifier.
- * @category		Rule Block – Modifier
+ *
+ * @category Rule Block Modifiers
  */
 export type BlockWithNot<BlockT> = BlockWithMod<BlockT, 'not'>;
 
 /**
  * Create a `not` modifier wrapped rule block.
- * @category		Rule Block – Modifier
+ *
+ * @category Rule Block Modifiers
  */
 export function blockWithNot<InputT, BlockT extends Block<Statement<InputT>>>(
 	block: Constructor<BlockT>,

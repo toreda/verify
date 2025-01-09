@@ -30,7 +30,7 @@ import {isBoolean} from '../is/boolean';
  * Verifies that `value` is a boolean without type coercion.
  * @param 			value
  *
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function verifyBoolean(value?: unknown): Fate<boolean> {
 	const fate = new Fate<boolean>();

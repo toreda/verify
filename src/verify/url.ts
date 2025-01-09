@@ -32,7 +32,7 @@ import {Fate} from '@toreda/fate';
  *
  * @param			value
  *
- * @category		Verify Functions
+ * @category Verifiers
  */
 export function verifyUrl(value?: unknown, flags?: VerifierFlags): Fate<string> {
 	const fate = new Fate<string>();

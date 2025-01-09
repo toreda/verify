@@ -26,7 +26,7 @@
 /**
  * Entity names used in schema error codes.
  *
- * @category		Schema – Error Handling
+ * @category Schema Errors
  */
 export type SchemaErrorEntity =
 	| 'schema'

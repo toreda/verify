@@ -29,7 +29,7 @@ import {Tracer} from '../tracer';
 
 /**
  *
- * @category Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherTarget(tracer: Tracer, value?: unknown): unknown {
 	if (!tracer || value === null || value === undefined) {

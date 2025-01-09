@@ -30,7 +30,7 @@ import {type VerifierFlags} from './verifier/flags';
 /**
  * Interface implemented by objects that perform verification.
  *
- * @category Verifier
+ * @category Verifiers
  */
 export interface Verifier<ValueT = unknown> {
 	verify(value: ValueT | null, flags?: VerifierFlags): Promise<Fate<VerifierResult>>;

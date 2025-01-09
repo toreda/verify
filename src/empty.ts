@@ -39,7 +39,7 @@
  * empty<string[]>([]) -> true
  * @example
  * empty<string>('word') -> false
- * @category		Matcher – Predicate Function
+ * @category Matcher Predicate Functions
  */
 export function empty<ValueT>(value?: ValueT | null): boolean {
 	if (value === undefined || value === null) {

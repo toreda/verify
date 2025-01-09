@@ -30,7 +30,7 @@ import {type BlockType} from '../type';
 /**
  * Parameters used by rule blocks to intialize it their base block data.
  *
- * @category Rule Block
+ * @category Rule Blocks
  *
  * @remarks
  * Normally two types with overlap like `BlockInit` and `BlockBaseInit` would

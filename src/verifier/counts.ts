@@ -26,7 +26,7 @@
 /**
  * Summary counts for each sub-verification.
  *
- * @category Verifier
+ * @category Verifiers
  */
 export interface VerifierCounts {
 	/**

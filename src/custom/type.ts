@@ -30,7 +30,7 @@ import {type CustomTypeVerifier} from './type/verifier';
 /**
  * Data for a single registered custom schema or verifier type.
  *
- * @category Schema – Custom Types
+ * @category Schema Custom Types
  */
 export type CustomType<DataT, InputT extends SchemaData<DataT>, TransformedT> =
 	| CustomSchemaType<DataT, InputT, TransformedT>

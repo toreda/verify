@@ -26,7 +26,9 @@
 import {type VerifierCounts} from './counts';
 
 /**
- * @category Verifier
+ * Summarized counts of outcomes produced by each verifier execution.
+ *
+ * @category Verifiers
  */
 export interface VerifierSummary {
 	counts: VerifierCounts;

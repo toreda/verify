@@ -27,7 +27,7 @@
  * Optional flags that change verification rules. Default values are used when
  * no flag is set.
  *
- * @category Schema
+ * @category Schemas
  */
 export interface SchemaVerifyFlags {
 	maxFieldCount?: number;

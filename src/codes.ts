@@ -29,7 +29,7 @@ import {CodeDefaults} from './code/defaults';
 /**
  * Global Error codes.
  *
- * @category Error Handling
+ * @category Errors
  */
 export class Codes {
 	private static instance: Codes;

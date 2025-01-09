@@ -33,7 +33,7 @@ import {matcherTarget} from '../../target';
 /**
  * @param init
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkGreaterThan<InputT = unknown>(
 	init: BlockInit<InputT>

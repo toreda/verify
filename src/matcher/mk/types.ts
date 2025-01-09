@@ -30,7 +30,7 @@ import {type BlockInit} from '../../block/init';
 
 /**
  *
- * @category		Matcher – Factory Function
+ * @category Matcher Factory Functions
  */
 export function matcherMkTypes<InputT = unknown>(
 	init: BlockInit<InputT>

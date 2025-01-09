@@ -35,6 +35,7 @@ import {
 import {type TracerInit} from './tracer/init';
 import Defaults from './defaults';
 import {type Primitive} from '@toreda/types';
+import {tracerPrintable} from './tracer/printable';
 
 /**
  * Tracer
@@ -52,7 +53,7 @@ import {type Primitive} from '@toreda/types';
  * element names. e.g. schemaA.text and schemaA.schemaA.text would both look similar
  * without the full path.
  *
- * @category Tracer
+ * @category Tracers
  */
 export class Tracer {
 	public readonly path: string[];
@@ -190,8 +191,25 @@ export class Tracer {
 		return added;
 	}
 
-	public addParam(...params: Primitive[]): void {
-		this.params.push(...params);
+	/**
+	 * Add any type that supports `toString()` to tracer params. Used for
+	 * debugging and var identification.
+	 * @param params
+	 */
+	public addParam(...params: unknown[]): void {
+		if (!Array.isArray(params)) {
+			return;
+		}
+
+		for (const param of params) {
+			try {
+				if (tracerPrintable(param)) {
+					this.params.push(param.toString());
+				} else {
+					this.params.push('not_printable');
+				}
+			} catch (e) {}
+		}
 	}
 
 	public clearTarget(): void {

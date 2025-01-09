@@ -30,7 +30,7 @@ import {type SchemaData} from '../../schema/data';
 /**
  * Arguments needed when constructing a new CustomTypes object.a
  *
- * @category Schema – Custom Types
+ * @category Schemas Custom Types
  */
 export interface CustomTypesInit<DataT, InputT extends SchemaData<DataT>, TransformedT = InputT> {
 	data?: CustomTypesData<DataT, InputT, TransformedT> | null;

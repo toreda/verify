@@ -28,7 +28,7 @@ import {type SchemaFieldType} from '../type';
 /**
  * @category Schema Fields
  */
-export interface SchemaValueType<DataT = unknown> {
+export interface SchemaFieldValueType<DataT = unknown> {
 	allowUndefined: boolean;
 	allowArray: boolean;
 	typeId: SchemaFieldType<DataT>;
@@ -37,7 +37,7 @@ export interface SchemaValueType<DataT = unknown> {
 /**
  * @category Schema Fields
  */
-export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<DataT> | null {
+export function schemaFieldValueType<DataT>(type?: string): SchemaFieldValueType<DataT> | null {
 	if (typeof type !== 'string') {
 		return null;
 	}
@@ -46,7 +46,7 @@ export function schemaFieldValueType<DataT>(type?: string): SchemaValueType<Data
 		return null;
 	}
 
-	const result: SchemaValueType<DataT> = {
+	const result: SchemaFieldValueType<DataT> = {
 		allowUndefined: false,
 		allowArray: false,
 		typeId: 'none'

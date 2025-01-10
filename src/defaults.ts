@@ -40,7 +40,8 @@ export default class Defaults {
 	public static Schema = {
 		FailOnEmptyInputObject: false as const,
 		MinFieldCount: 1 as const,
-		MaxFieldCount: 0 as const
+		MaxFieldCount: 0 as const,
+		SkipFirstTracerChild: false as const
 	} as const;
 	public static Verifier = {
 		ValueLabel: 'value' as const,

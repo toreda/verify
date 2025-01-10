@@ -34,8 +34,8 @@ import {type SchemaData} from '../data';
  * @category Schemas
  */
 export interface SchemaVerifyInit<DataT = unknown> {
-	/** Optional ID used in printed schema paths. Schema name is used when ID not provided. */
-	id?: string;
+	/** Optional ID used in printed schema paths. Schema name is used when id not provided. */
+	schemaId?: string;
 	/** Data to be verified and optionally transformed. */
 	data: SchemaData<DataT> | null;
 	/** Current path of properties accessed to reach this point. */

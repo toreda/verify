@@ -62,7 +62,7 @@ describe('CustomTypes', () => {
 		verifyInit = {
 			data: {},
 			base: base,
-			id: 'sampleSchema',
+			schemaId: 'sampleSchema',
 			typeId: 'aaaa',
 			valueType: schemaFieldValueType('sampleSchema')!
 		};
@@ -195,7 +195,7 @@ describe('CustomTypes', () => {
 				expect(instance.getVerifier(id)).toBeNull();
 			});
 
-			it(`should return verifier whehn id matches a valid verifier`, () => {
+			it(`should return verifier when id matches a valid verifier`, () => {
 				const id = 'aa-957359735937';
 
 				const verifier: CustomTypeVerifier<any> = async (): Promise<Fate<boolean>> => {

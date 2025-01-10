@@ -10,6 +10,7 @@ export class SchemaVerifyConfig implements Resettable {
 	public readonly failOnEmptyInputObject: Bool;
 	public readonly minFieldCount: UInt;
 	public readonly maxFieldCount: UInt;
+	public readonly skipFirstTracerChild: Bool;
 
 	constructor(flags?: SchemaVerifyFlags) {
 		this.failOnEmptyInputObject = boolMake(
@@ -17,6 +18,10 @@ export class SchemaVerifyConfig implements Resettable {
 			flags?.failOnEmptyInputObject
 		);
 
+		this.skipFirstTracerChild = boolMake(
+			Defaults.Schema.SkipFirstTracerChild,
+			flags?.skipFirstTracerChild
+		);
 		this.maxFieldCount = uIntMake(Defaults.Schema.MaxFieldCount, flags?.maxFieldCount);
 		this.minFieldCount = uIntMake(Defaults.Schema.MinFieldCount, flags?.minFieldCount);
 	}
@@ -24,6 +29,7 @@ export class SchemaVerifyConfig implements Resettable {
 	public reset(): void {
 		this.maxFieldCount.reset();
 		this.minFieldCount.reset();
+		this.skipFirstTracerChild.reset();
 		this.failOnEmptyInputObject.reset();
 	}
 }

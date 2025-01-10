@@ -51,4 +51,5 @@ export interface SchemaVerifyFlags {
 	 * Whether calling schema.verify({}) causes verification to fail immediately.
 	 */
 	failOnEmptyInputObject?: boolean;
+	skipFirstTracerChild?: boolean;
 }

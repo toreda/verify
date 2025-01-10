@@ -286,7 +286,7 @@ describe('Schema', () => {
 					field.types.push('boolean');
 
 					const result = await customSchema.verifyAndTransform({
-						id: customSchema.schemaName,
+						schemaId: customSchema.schemaName,
 						data: sampleData,
 						base: base
 					});
@@ -309,7 +309,7 @@ describe('Schema', () => {
 					}
 
 					const result = await customSchema.verifyAndTransform({
-						id: customSchema.schemaName,
+						schemaId: customSchema.schemaName,
 						tracer: tracer,
 						data: sampleData,
 						base: base
@@ -326,7 +326,7 @@ describe('Schema', () => {
 		it(`should fail when value arg is undefined`, async () => {
 			const customSchema = new SampleSchema(init);
 			const result = await customSchema.verify({
-				id: customSchema.schemaName,
+				schemaId: customSchema.schemaName,
 				data: undefined as any,
 				tracer: tracer,
 				base: base

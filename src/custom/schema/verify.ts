@@ -23,12 +23,12 @@
  *
  */
 
-import {SchemaValueType} from '../../schema/field/value/type';
+import {type SchemaFieldValueType} from '../../schema/field/value/type';
 import {type SchemaVerifyInit} from '../../schema/verify/init';
 
 /**
  * @category Schema Custom Types
  */
 export interface CustomSchemaVerify<DataT = unknown> extends SchemaVerifyInit<DataT> {
-	valueType: SchemaValueType<DataT>;
+	valueType: SchemaFieldValueType<DataT>;
 }

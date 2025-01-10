@@ -26,7 +26,7 @@
 import {Fate} from '@toreda/fate';
 import {SchemaField} from './schema/field';
 import {schemaError} from './schema/error';
-import type {SchemaFieldType} from './schema/field/type';
+import {type SchemaFieldType} from './schema/field/type';
 import {Log} from '@toreda/log';
 import {SchemaConfig} from './schema/config';
 import type {SchemaInit} from './schema/init';
@@ -46,7 +46,7 @@ import {type SchemaVerifyField} from './schema/verify/field';
 import {type SchemaFieldVerified} from './schema/field/verified';
 import {type SchemaVerified} from './schema/verified';
 import {isSchemaDataObject} from './is/schema/data/object';
-import {schemaFieldValueType, SchemaValueType} from './schema/field/value/type';
+import {schemaFieldValueType, type SchemaFieldValueType} from './schema/field/value/type';
 import {SchemaVerifyConfig} from './verify/config';
 
 /**
@@ -207,14 +207,14 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		}
 
 		const schemaFails: Fate<SchemaFieldVerified<DataT>>[] = [];
-		//console.debug(`field >> ${field.name} // (${field.types.join(', ')})\nVALUE:'${value}'`);
+
 		for (const type of field.types) {
 			const fieldType = schemaFieldValueType<DataT>(type);
 
 			if (!fieldType) {
 				return fate.setErrorCode(schemaError(`schema_type_invalid:${type}`, tracer.current()));
 			}
-			console.error(`Field Type: ${fieldType.typeId}`);
+			//console.error(`Field Type: ${fieldType.typeId}`);
 			if (!this.schemaSupportsType(fieldType)) {
 				console.error(`Schema does not support type: ${fieldType.typeId}`);
 				return fate.setErrorCode(
@@ -252,7 +252,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			return fate;
 		} else {
 			// Field type is determined by verifiers with type checks for native types and duck
-			// typing for everything else via
+			// typing for everything else.
 			if (schemaFails.length > 0) {
 				const fail = schemaFails[0];
 				return fate.setErrorCode(fail.errorCode());
@@ -283,7 +283,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * Determine if type matches a built-in or custom type.
 	 * @param type
 	 */
-	public schemaSupportsType(type: SchemaValueType<DataT>): boolean {
+	public schemaSupportsType(type: SchemaFieldValueType<DataT>): boolean {
 		if (!type || typeof type.typeId !== 'string') {
 			return false;
 		}
@@ -365,7 +365,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 		if (!isSchemaDataObject<DataT>(init.data)) {
 			return fate.setErrorCode(
-				schemaError('value_not_schema_data', init.tracer.current(), `${valueTypeLabel(init.data)}`)
+				schemaError('value_does_not_contain_schema_data', init.tracer.current(), `${valueTypeLabel(init.data)}`)
 			);
 		}
 
@@ -378,7 +378,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			}
 
 			return this.customTypes.verify({
-				id: init.fieldId,
+				schemaId: init.fieldId,
 				valueType: init.valueType,
 				data: init.data,
 				tracer: init.tracer,
@@ -413,9 +413,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			return fate.setErrorCode(schemaError('missing_argument:init', this.schemaName));
 		}
 
-		const parentPath = init?.tracer ? init.tracer : new Tracer();
-		const currPath =
-			init?.childSchema === true ? parentPath : parentPath.child(stringValue(init.id, this.schemaName));
+		const parentPath = init.tracer ? init.tracer : new Tracer();
+		const childPath = parentPath.child(stringValue(init.schemaId, this.schemaName));
+		const currPath = init?.flags?.skipFirstTracerChild === true ? parentPath : childPath;
 
 		if (!init?.base) {
 			return fate.setErrorCode(
@@ -436,6 +436,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			);
 		}
 
+		if (!init.flags) {
+			init.flags = {};
+		}
+
+		init.flags.skipFirstTracerChild = true;
 		// Verify input and return result without transform.
 		const verified = await this.verify(init);
 		if (!verified.ok()) {
@@ -481,7 +486,9 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		// Root schemas (no parent) use their schema name as the first path item. Child schemas DO NOT
 		// set their own path because they have no way to know their property name in parent schema.
 		const parentPath = init.tracer ? init.tracer : new Tracer({});
-		const currPath = parentPath.child(stringValue(init.id, this.schemaName));
+		const childPath = parentPath.child(stringValue(init.schemaId, this.schemaName));
+		const currPath = init.childSchema === true ? parentPath : childPath;
+
 		if (!init.base) {
 			return fate.setErrorCode(schemaError('missing_argument', currPath.current(), 'verify', 'base'));
 		}

@@ -37,6 +37,7 @@ import {Schema} from '../schema';
 import {type SchemaVerified} from '../schema/verified';
 import {Tracer} from '../tracer';
 import {type CustomType} from './type';
+import {stringValue} from '@toreda/strong-types';
 
 /**
  * Custom type registration for a single schema instance.
@@ -216,12 +217,14 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 		const fate = new Fate<SchemaVerified<DataT>>();
 		const schema = this.getSchema(init.valueType.typeId);
 		const tracer = init.tracer ?? new Tracer();
-		const currPath = tracer.child(init.valueType.typeId);
+		//const currPath = tracer.child('custom/types/verify___' + init.valueType.typeId);
+		if (!init.flags) {
+			init.flags = {};
+		}
 
-		init.tracer = tracer;
-
+		const name = stringValue(init.schemaId, 'schema');
 		if (!schema) {
-			return fate.setErrorCode(schemaError('missing_schema_typeId', currPath.current()));
+			return fate.setErrorCode(schemaError('missing_schema_typeId', tracer.child(name).current()));
 		}
 
 		return schema.verify(init);

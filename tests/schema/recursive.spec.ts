@@ -93,7 +93,7 @@ describe('Schema - Recursive Parsing', () => {
 
 		it(`should recursively verify all properties`, async () => {
 			const result = await schemaSubA.verifyAndTransform({
-				id: 'aaa',
+				schemaId: 'aaa',
 				data: aData,
 				base: base,
 				tracer: tracer

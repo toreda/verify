@@ -34,6 +34,7 @@ import {type ValueTypeId} from "./id";
  * @param typeId
  *
  * @category Schemas
+ *
  * @remarks
  * Identifying value types beyond JS native types is difficult without reflection.
  * Type labels are used to compare the value
@@ -44,10 +45,10 @@ export function valueTypeLabel(value: unknown, id?: ValueTypeId): string {
 	}
 
 	if (Array.isArray(value)) {
-		if (typeof id?.array === 'string') {
-			return `${id.array}[]`;
-		} else {
+		if (value.length === 0) {
 			return 'array';
+		} else {
+			return `${valueTypeLabel(value[0])}[]`;
 		}
 	}
 

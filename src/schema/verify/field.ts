@@ -30,6 +30,8 @@ import {type SchemaFieldValueType} from '../field/value/type';
 import {type SchemaVerifyFlags} from './flags';
 
 /**
+ * Params needed to perform verification on a single schema field.
+ *
  * @category Schema Fields
  */
 export interface SchemaVerifyField<DataT = unknown> {

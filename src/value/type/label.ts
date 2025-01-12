@@ -23,8 +23,8 @@
  *
  */
 
-import {stringValue} from "@toreda/strong-types";
-import {type ValueTypeId} from "./id";
+import {stringValue} from '@toreda/strong-types';
+import {type ValueTypeId} from './id';
 
 /**
  * Get the type string for a value to be displayed in tracers, debugging, or

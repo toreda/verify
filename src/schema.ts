@@ -365,7 +365,11 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 		if (!isSchemaDataObject<DataT>(init.data)) {
 			return fate.setErrorCode(
-				schemaError('value_does_not_contain_schema_data', init.tracer.current(), `${valueTypeLabel(init.data)}`)
+				schemaError(
+					'value_does_not_contain_schema_data',
+					init.tracer.current(),
+					`${valueTypeLabel(init.data)}`
+				)
 			);
 		}
 

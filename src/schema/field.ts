@@ -39,7 +39,6 @@ export class SchemaField<InputT = unknown> {
 	public readonly types: SchemaFieldType<InputT>[];
 	public readonly defaultValue: unknown;
 	public readonly ruleset: Ruleset<InputT>;
-	public readonly allowArrayValues: boolean;
 
 	constructor(data: SchemaFieldData<InputT>) {
 		this.key = data.name;
@@ -65,6 +64,5 @@ export class SchemaField<InputT = unknown> {
 		}
 
 		this.defaultValue = typeof data.defaultValue !== 'undefined' ? data.defaultValue : undefined;
-		this.allowArrayValues = schemaFieldArraysAllowed(this.types);
 	}
 }

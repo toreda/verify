@@ -1,38 +1,41 @@
-import {SchemaFieldType} from '../../src';
+import {type SchemaFieldType} from '../../src';
 import {schemaFieldTypes} from '../../src/schema/field/types';
 
-const EXPECTED_TYPES: SchemaFieldType[] = [
+const BASETYPES: SchemaFieldType[] = [
 	'bigint',
 	'BigInt',
-	'bigint[]',
-	'BigInt[]',
 	'boolean',
-	'boolean[]',
-	'datetime',
-	'datetime[]',
 	'dbl',
+	'time',
 	'double',
-	'double[]',
 	'float',
 	'int',
-	'int[]',
-	'iterable',
-	'iterable[]',
-	'json',
-	'json[]',
-	'null',
-	'null[]',
-	'number',
-	'number[]',
 	'string',
-	'string[]',
-	'time',
-	'time[]',
+	'iterable',
+	'datetime',
+	'null',
 	'uint',
-	'uint[]',
+	'number',
 	'undefined',
-	'undefined[]',
 	'url',
+	'json'
+];
+
+const BASETYPE_ARRAYS: SchemaFieldType[] = [
+	'bigint[]',
+	'BigInt[]',
+	'boolean[]',
+	'datetime[]',
+	'double[]',
+	'int[]',
+	'iterable[]',
+	'json[]',
+	'null[]',
+	'number[]',
+	'string[]',
+	'time[]',
+	'uint[]',
+	'undefined[]',
 	'url[]'
 ];
 
@@ -43,9 +46,15 @@ describe('Schema Field Types (built-in)', () => {
 		fieldTypes = new Set<string>(schemaFieldTypes);
 	});
 
-	for (const expectedType of EXPECTED_TYPES) {
-		it(`should include built-in type '${expectedType}'`, () => {
-			expect(fieldTypes.has(expectedType)).toBe(true);
+	for (const type of BASETYPES) {
+		it(`should allow basetype non-array '${type}'`, () => {
+			expect(fieldTypes.has(type)).toBe(true);
+		});
+	}
+
+	for (const type of BASETYPE_ARRAYS) {
+		it(`should allow basetype array '${type}'`, () => {
+			expect(fieldTypes.has(type)).toBe(true);
 		});
 	}
 });

@@ -5,7 +5,7 @@ import {type Primitive} from '@toreda/types';
 import {type CustomTypeVerifier} from '../../src/custom/type/verifier';
 import {Fate} from '@toreda/fate';
 import {type SchemaInit} from '../../src/schema/init';
-import {CustomSchemaVerify} from '../../src/custom/schema/verify';
+import {type CustomSchemaVerify} from '../../src/custom/schema/verify';
 import {schemaError} from '../../src';
 import {schemaFieldValueType} from '../../src/schema/field/value/type';
 

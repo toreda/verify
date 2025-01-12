@@ -24,7 +24,7 @@
  */
 
 /**
- * Rounding Modes
+ * Rounding Modes supported by `pctLabel` to display decimal values as percentages.
  *
  * @category Labels
  */

@@ -66,4 +66,5 @@ export type SchemaFieldType<DataT = unknown> =
 	| 'time'
 	| 'time[]'
 	| 'none'
+	| string
 	| Extract<keyof DataT, string>;

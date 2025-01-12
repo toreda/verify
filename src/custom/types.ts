@@ -217,7 +217,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 		const fate = new Fate<SchemaVerified<DataT>>();
 		const schema = this.getSchema(init.valueType.typeId);
 		const tracer = init.tracer ?? new Tracer();
-		//const currPath = tracer.child('custom/types/verify___' + init.valueType.typeId);
+
 		if (!init.flags) {
 			init.flags = {};
 		}

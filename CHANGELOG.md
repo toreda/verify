@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.12.0] - 2025-01-11
+* Custom Types set in schema fields are now parsed before use to support additional shorthand in type names. Previously allowing `MyType[]` and `undefined` required two field entries, but can now be reduced to `MyType[]?`.
+* Fixed 'undefined' types not being accepted when explicitly allowed in some cases.
 * Minor package updates.
 * Removed some comment tags causing doc generation errors.
 * Changed `allowEmptyInputObject` flag to `failOnEmptyInputObject` used in `SchemaVerifyInit` to better describe the flag's purpose.

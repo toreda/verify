@@ -17,8 +17,8 @@
  *	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * 	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHEWISE, ARISING FROM,
- *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTRHER DEALINGS IN THE
+ *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * 	SOFTWARE.
  *
  */
@@ -26,15 +26,28 @@
 import {type SchemaFieldType} from '../type';
 
 /**
+ * Field type parsed from a single element in schema field types.
+ *
+ * @remarks
+ * Field type names are parsed because short hand types are allowed to simplify schemas.
+ * The optional operator `?` must be the LAST character in the type string.
+ *
  * @category Schema Fields
  */
 export interface SchemaFieldValueType<DataT = unknown> {
+	/** Is `undefined` a valid field value in addition to `typeId`? */
 	allowUndefined: boolean;
-	allowArray: boolean;
+	/** Is `null` allowed in addition to `typeId`? */
+	allowNull: boolean;
+	/** Does type need to be an array of `typeId` items? */
+	mustBeArray: boolean;
+	/** Parsed field type value. */
 	typeId: SchemaFieldType<DataT>;
 }
 
 /**
+ * Parse a single field type string.
+ *
  * @category Schema Fields
  */
 export function schemaFieldValueType<DataT>(type?: string): SchemaFieldValueType<DataT> | null {
@@ -48,7 +61,8 @@ export function schemaFieldValueType<DataT>(type?: string): SchemaFieldValueType
 
 	const result: SchemaFieldValueType<DataT> = {
 		allowUndefined: false,
-		allowArray: false,
+		mustBeArray: false,
+		allowNull: false,
 		typeId: 'none'
 	};
 
@@ -61,11 +75,11 @@ export function schemaFieldValueType<DataT>(type?: string): SchemaFieldValueType
 
 	if (type.endsWith('[]')) {
 		value = value.slice(0, -2);
-		result.allowArray = true;
+		result.mustBeArray = true;
 	}
 
 	// TODO: Add typecheck here.
-	result.typeId = value as any;
+	result.typeId = value;
 
 	return result;
 }

@@ -26,7 +26,6 @@
 import {Log} from '@toreda/log';
 import {type SchemaData} from '../schema/data';
 import {type CustomTypesInit} from './types/init';
-import {type CustomTypesData} from './types/data';
 import {type CustomTypeVerifier} from './type/verifier';
 import {Fate} from '@toreda/fate';
 import {schemaError} from '../schema/error';
@@ -38,6 +37,7 @@ import {type SchemaVerified} from '../schema/verified';
 import {Tracer} from '../tracer';
 import {type CustomType} from './type';
 import {stringValue} from '@toreda/strong-types';
+import {type SchemaId} from '../schema/id';
 
 /**
  * Custom type registration for a single schema instance.
@@ -48,16 +48,18 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 	implements Resettable
 {
 	public readonly log: Log;
-	public readonly registered: Map<string, CustomType<DataT, InputT, TransformedT>>;
+	public readonly schemas: Map<SchemaId, Schema<DataT, SchemaData<DataT>, unknown>>;
+	public readonly verifiers: Map<string, CustomType<DataT, SchemaData<DataT>, unknown>>;
 
 	constructor(init: CustomTypesInit<DataT, InputT, TransformedT>) {
-		this.registered = new Map<string, CustomType<DataT, InputT, TransformedT>>();
+		this.schemas = new Map<SchemaId, Schema<DataT, SchemaData<DataT>, unknown>>();
+		this.verifiers = new Map<string, CustomType<DataT, SchemaData<DataT>, unknown>>();
 		this.log = init.base.makeLog('customTypes');
 
-		this.registerTypes(init.data);
+		this.registerSchemas(init?.schemas);
 	}
 
-	public registerTypes(data?: CustomTypesData<DataT, InputT, TransformedT> | null): void {
+	/* 	public registerTypes(data?: CustomTypesData<DataT, InputT, TransformedT> | null): void {
 		const log = this.log.makeLog('registerTypes');
 
 		if (!data) {
@@ -76,22 +78,30 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 				log.error(`Custom type registration error for '${key}'.`);
 			}
 		}
-	}
+	} */
 
-	/**
-	 * Is a Custom Type Schema OR Custom Type verifier registered to `id`? Returns true when
-	 * a Schema OR verifier is registered. Use `hasSchema` or `hasVerifier` when a more
-	 * specific check is needed.
-	 *
-	 * @param id
-	 */
-	public has(id: string): boolean {
-		if (typeof id !== 'string') {
-			return false;
+	public registerSchemas(
+		items?: Record<SchemaId, CustomSchemaType<DataT, SchemaData<DataT>, unknown>>
+	): void {
+		const log = this.log.makeLog('registerTypes');
+
+		if (!items) {
+			return;
 		}
 
-		return this.registered.has(id);
+		const keys = Object.keys(items);
+
+		for (const key of keys) {
+			const item = items[key];
+			if (this.isSchema(item)) {
+				const _result = this.registerSchema(key, item);
+			} else {
+				log.error(`Custom type registration error for '${key}'.`);
+			}
+		}
 	}
+
+	public registerVerifiers(): void {}
 
 	/**
 	 * Is `id` is a registered custom type schema. Doesn't return true
@@ -100,11 +110,11 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 	 * @param id
 	 */
 	public hasSchema(id: string): boolean {
-		if (!this.has(id)) {
+		if (!this.schemas.has(id)) {
 			return false;
 		}
 
-		const o = this.registered.get(id);
+		const o = this.schemas.get(id);
 		if (typeof o === 'function') {
 			return false;
 		}
@@ -118,11 +128,11 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 	 * @param id
 	 */
 	public hasVerifier(id: string): boolean {
-		if (!this.has(id)) {
+		if (!this.verifiers.has(id)) {
 			return false;
 		}
 
-		const o = this.registered.get(id);
+		const o = this.verifiers.get(id);
 
 		return typeof o === 'function';
 	}
@@ -132,7 +142,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 			return false;
 		}
 
-		if (this.registered.has(id)) {
+		if (this.verifiers.has(id)) {
 			return false;
 		}
 
@@ -140,16 +150,16 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 			return false;
 		}
 
-		this.registered.set(id, custom);
+		this.verifiers.set(id, custom);
 		return true;
 	}
 
-	public registerSchema(id: string, custom: CustomSchemaType<DataT, InputT, TransformedT>): boolean {
+	public registerSchema(id: string, custom: CustomSchemaType<DataT, SchemaData<DataT>, unknown>): boolean {
 		if (typeof id !== 'string') {
 			return false;
 		}
 
-		if (this.registered.has(id)) {
+		if (this.schemas.has(id)) {
 			return false;
 		}
 
@@ -157,18 +167,22 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 			return false;
 		}
 
-		this.registered.set(id, custom);
+		this.schemas.set(id, custom);
 		return true;
 	}
 
-	public getVerifier(id?: string): CustomTypeVerifier<DataT> | null {
+	public getVerifier(id?: string): CustomTypeVerifier<unknown> | null {
 		if (typeof id !== 'string') {
 			return null;
 		}
 
-		const o = this.registered.get(id);
+		const o = this.verifiers.get(id);
 
 		return typeof o === 'function' ? o : null;
+	}
+
+	public has(type: string): boolean {
+		return this.schemas.has(type) || this.verifiers.has(type);
 	}
 
 	public getSchema(id?: string): CustomSchemaType<DataT, InputT, TransformedT> | null {
@@ -176,7 +190,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 			return null;
 		}
 
-		const o = this.registered.get(id);
+		const o = this.schemas.get(id);
 		if (!this.isSchema(o)) {
 			return null;
 		}
@@ -235,6 +249,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 	 */
 	public reset(): void {
 		// Clear all registered types.
-		this.registered.clear();
+		this.schemas.clear();
+		this.verifiers.clear();
 	}
 }

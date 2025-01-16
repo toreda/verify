@@ -28,7 +28,7 @@ import type {SchemaOptions} from './options';
 import {type SchemaOutputTransformer} from './output/transformer';
 import {Log} from '@toreda/log';
 import {type CustomTypesData} from '../custom/types/data';
-import {SchemaData} from './data';
+import {type SchemaData} from './data';
 
 /**
  * Schema Init
@@ -60,7 +60,7 @@ export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, Transformed
 	 *
 	 * Custom schema types used by this schema.
 	 */
-	customTypes?: CustomTypesData<DataT, InputT, TransformedT> | null;
+	custom?: CustomTypesData<DataT> | null;
 	/**
 	 * Base Logger.
 	 */

@@ -5,13 +5,12 @@ import {type SchemaData} from '../../src/schema/data';
 import {type SchemaInit} from '../../src/schema/init';
 import {type SchemaOptions} from '../../src/schema/options';
 
-export interface SampleBData extends SchemaData<Primitive> {
+export interface SampleBData extends SchemaData<string | number> {
 	str2b: string;
 	int2b: number;
 }
 
-
-export class SampleSchemaSubB extends Schema<Primitive, SampleBData, SampleBData> {
+export class SampleSchemaSubB extends Schema<string | number, SampleBData, SampleBData> {
 	constructor(base: Log) {
 		super({
 			name: 'SubSchemaB',
@@ -42,6 +41,10 @@ export interface SampleAData extends SchemaData<Primitive | SampleBData> {
 	subSchemas?: SampleBData[];
 }
 
+const sampleBData: SampleBData = {
+	int2b: 14555,
+	str2b: '18-29729275'
+};
 
 export class SampleSchemaSubA extends Schema<Primitive | SampleBData, SampleAData, SampleAData> {
 	constructor(schemaB: SampleSchemaSubB, base: Log) {
@@ -77,8 +80,10 @@ export class SampleSchemaSubA extends Schema<Primitive | SampleBData, SampleADat
 					types: ['ct2[]', 'undefined']
 				}
 			],
-			customTypes: {
-				ct2: schemaB
+			custom: {
+				schemas: {
+					ct2: schemaB
+				}
 			},
 			base: base
 		});
@@ -115,8 +120,8 @@ export class SimpleSchema extends Schema<Primitive, SampleData> {
 	}
 }
 
-export class SampleSchema extends Schema<Primitive, SampleData> {
-	constructor(init: SchemaInit<Primitive, SampleData, SampleData>) {
+export class SampleSchema extends Schema<Primitive | SampleSchemaSubB, SampleData> {
+	constructor(init: SchemaInit<Primitive | SampleSchemaSubB, SampleData, SampleData>) {
 		super({
 			name: 'SampleSchema',
 			fields: [

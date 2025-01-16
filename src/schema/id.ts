@@ -23,13 +23,9 @@
  *
  */
 
-import {type CustomSchemaTypes} from '../schema/types';
-import {type CustomTypeVerifier} from '../type/verifier';
-
 /**
- * @category Schema Custom Types
+ * Expressive alias for key type needed to lookup mapped schema registrations.
+ *
+ * @category Schemas
  */
-export interface CustomTypesData<DataT> {
-	schemas?: CustomSchemaTypes<DataT>;
-	verifiers?: CustomTypeVerifier<DataT | null> | null;
-}
+export type SchemaId = string;

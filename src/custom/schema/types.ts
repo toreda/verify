@@ -23,30 +23,11 @@
  *
  */
 
-import {type SchemaFieldType} from '../type';
+import {type SchemaData} from '../../schema/data';
+import {type CustomSchemaType} from './type';
+import {type SchemaId} from '../../schema/id';
 
 /**
- * Determine if field supports array values based on field types.
- * @param items		Field types to check.
- *
- * @category Schema Fields
+ * @category Schema Custom Types
  */
-export function schemaFieldArraysAllowed<InputT = unknown>(items: SchemaFieldType<InputT>[]): boolean {
-	if (!Array.isArray(items) || !items.length) {
-		return false;
-	}
-
-	for (const item of items) {
-		if (!item || typeof item !== 'string') {
-			continue;
-		}
-
-		// One or more array types means array support is required.
-		// No need to continue iterating after one is found.
-		if (item.endsWith('[]')) {
-			return true;
-		}
-	}
-
-	return false;
-}
+export type CustomSchemaTypes<DataT> = Record<SchemaId, CustomSchemaType<DataT, SchemaData<DataT>, unknown>>;

@@ -24,7 +24,6 @@
  */
 
 import {Ruleset} from '../ruleset';
-import {schemaFieldArraysAllowed} from './field/arrays/allowed';
 import {type SchemaFieldData} from './field/data';
 import {type SchemaFieldType} from './field/type';
 

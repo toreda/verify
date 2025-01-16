@@ -28,7 +28,7 @@ import {type CustomSchemaType} from './schema/type';
 import {type CustomTypeVerifier} from './type/verifier';
 
 /**
- * Data for a single registered custom schema or verifier type.
+ * Data for a single registered schema or verifier.
  *
  * @category Schema Custom Types
  */

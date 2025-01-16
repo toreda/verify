@@ -58,8 +58,10 @@ describe('Schema - Recursive Parsing', () => {
 						types: ['ct2[]', 'undefined']
 					}
 				],
-				customTypes: {
-					ct2: schemaSubB
+				custom: {
+					schemas: {
+						ct2: schemaSubB
+					}
 				}
 			});
 			tracer = new Tracer();

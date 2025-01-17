@@ -48,11 +48,11 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>, TransformedT =
 	implements Resettable
 {
 	public readonly log: Log;
-	public readonly schemas: Map<SchemaId, Schema<DataT, SchemaData<DataT>, unknown>>;
+	public readonly schemas: Map<SchemaId, CustomSchemaType<DataT, SchemaData<DataT>, unknown>>;
 	public readonly verifiers: Map<string, CustomType<DataT, SchemaData<DataT>, unknown>>;
 
-	constructor(init: CustomTypesInit<DataT, InputT, TransformedT>) {
-		this.schemas = new Map<SchemaId, Schema<DataT, SchemaData<DataT>, unknown>>();
+	constructor(init: CustomTypesInit<DataT, InputT>) {
+		this.schemas = new Map<SchemaId, CustomSchemaType<DataT, SchemaData<DataT>, unknown>>();
 		this.verifiers = new Map<string, CustomType<DataT, SchemaData<DataT>, unknown>>();
 		this.log = init.base.makeLog('customTypes');
 

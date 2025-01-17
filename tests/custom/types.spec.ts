@@ -77,11 +77,11 @@ describe('CustomTypes', () => {
 			}).not.toThrow();
 		});
 
-		it(`should not throw when init.data is null`, () => {
+		it(`should not throw when init.schemas is null`, () => {
 			expect(() => {
 				const _ctor = new CustomTypes({
 					base: base,
-					data: null as any
+					schemas: null as any
 				});
 			}).not.toThrow();
 		});
@@ -90,7 +90,7 @@ describe('CustomTypes', () => {
 			const schema = new SimpleSchema(base);
 			const custom = new CustomTypes({
 				base: base,
-				data: {
+				schemas: {
 					bt4: schema
 				}
 			});
@@ -102,7 +102,7 @@ describe('CustomTypes', () => {
 			const schema = new SimpleSchema(base);
 			const custom = new CustomTypes({
 				base: base,
-				data: {
+				schemas: {
 					bt8: schema
 				}
 			});
@@ -116,56 +116,56 @@ describe('CustomTypes', () => {
 		it(`should start with no custom types registered when customType init data is an empty object`, () => {
 			const custom = new CustomTypes({
 				base: base,
-				data: {}
+				schemas: {}
 			});
 
-			expect(custom.registered.size).toBe(0);
+			expect(custom.schemas.size).toBe(0);
 		});
 	});
 
 	describe('Implementation', () => {
-		describe('has', () => {
+		describe('hasSchema', () => {
 			it('should return false when id arg is undefined', () => {
-				instance.registered.set('a', sampleSchema);
-				instance.registered.set('b', sampleSchema);
+				instance.schemas.set('a', sampleSchema);
+				instance.schemas.set('b', sampleSchema);
 
-				expect(instance.registered.size).toBe(2);
-				const result = instance.has(undefined as any);
+				expect(instance.schemas.size).toBe(2);
+				const result = instance.hasSchema(undefined as any);
 				expect(result).toBe(false);
 			});
 
 			it('should return false when id arg is null', () => {
-				instance.registered.set('a', sampleSchema);
-				instance.registered.set('b', sampleSchema);
+				instance.schemas.set('a', sampleSchema);
+				instance.schemas.set('b', sampleSchema);
 
-				expect(instance.registered.size).toBe(2);
-				const result = instance.has(null as any);
+				expect(instance.schemas.size).toBe(2);
+				const result = instance.hasSchema(null as any);
 				expect(result).toBe(false);
 			});
 
 			it('should return false when id is not a registered type', () => {
-				instance.registered.set('a', sampleSchema);
-				instance.registered.set('b', sampleSchema);
+				instance.schemas.set('a', sampleSchema);
+				instance.schemas.set('b', sampleSchema);
 
-				expect(instance.registered.size).toBe(2);
-				const result = instance.has('c');
+				expect(instance.schemas.size).toBe(2);
+				const result = instance.hasSchema('c');
 				expect(result).toBe(false);
 			});
 
 			it('should return true when id is a registered schema', () => {
-				instance.registered.set('a', sampleSchema);
-				instance.registered.set('b', sampleSchema);
+				instance.schemas.set('a', sampleSchema);
+				instance.schemas.set('b', sampleSchema);
 
-				expect(instance.registered.size).toBe(2);
-				const result = instance.has('a');
+				expect(instance.schemas.size).toBe(2);
+				const result = instance.hasSchema('a');
 				expect(result).toBe(true);
 			});
 
 			it('should return true when id is a registered verifier', () => {
-				instance.registered.set('a', sampleSchema);
-				instance.registered.set('b', typeVerifier);
+				instance.schemas.set('a', sampleSchema);
+				//instance.schemas.set('b', typeVerifier);
 
-				expect(instance.registered.size).toBe(2);
+				expect(instance.schemas.size).toBe(2);
 				const result = instance.has('b');
 				expect(result).toBe(true);
 			});
@@ -173,7 +173,7 @@ describe('CustomTypes', () => {
 
 		describe('getVerifier', () => {
 			it(`should return null when no registered verifier matching id`, async () => {
-				expect(instance.registered.size).toBe(0);
+				expect(instance.verifiers.size).toBe(0);
 				expect(instance.getVerifier('aaaaaaaa9715947597337943')).toBeNull();
 			});
 
@@ -188,9 +188,9 @@ describe('CustomTypes', () => {
 			it(`should return null when registered id matches a schema, not a verifier`, () => {
 				const id = 'j41-09008r97359735';
 				const sample = new SimpleSchema(base);
-				expect(instance.registered.size).toBe(0);
+				expect(instance.schemas.size).toBe(0);
 				instance.registerSchema(id, sample);
-				expect(instance.registered.size).toBe(1);
+				expect(instance.schemas.size).toBe(1);
 
 				expect(instance.getVerifier(id)).toBeNull();
 			});
@@ -203,9 +203,9 @@ describe('CustomTypes', () => {
 					return fate.setSuccess(true);
 				};
 
-				expect(instance.registered.size).toBe(0);
+				expect(instance.verifiers.size).toBe(0);
 				instance.registerVerifier(id, verifier);
-				expect(instance.registered.size).toBe(1);
+				expect(instance.verifiers.size).toBe(1);
 
 				const result = instance.getVerifier(id);
 				expect(typeof result).toBe('function');
@@ -227,9 +227,9 @@ describe('CustomTypes', () => {
 
 	describe('reset', () => {
 		it(`should clear all registered types`, () => {
-			instance.registered.set('aa3', sampleSchema);
-			instance.registered.set('aa4', sampleSchema);
-			expect(instance.registered.size).toBe(2);
+			instance.schemas.set('aa3', sampleSchema);
+			instance.schemas.set('aa4', sampleSchema);
+			expect(instance.schemas.size).toBe(2);
 
 			instance.reset();
 			expect(instance.registered.size).toBe(0);

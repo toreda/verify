@@ -32,6 +32,6 @@ import {type CustomTypeVerifier} from './type/verifier';
  *
  * @category Schema Custom Types
  */
-export type CustomType<DataT, InputT extends SchemaData<DataT>, TransformedT> =
-	| CustomSchemaType<DataT, InputT, TransformedT>
+export type CustomType<DataT, InputT extends SchemaData<DataT>> =
+	| CustomSchemaType<DataT, InputT>
 	| CustomTypeVerifier<DataT>;

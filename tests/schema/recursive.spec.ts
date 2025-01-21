@@ -25,7 +25,7 @@ describe('Schema - Recursive Parsing', () => {
 		let aData: SampleAData;
 		let schema: SampleSchema;
 		let tracer: Tracer;
-		let _init: SchemaInit<Primitive, SampleData, SampleData>;
+		let _init: SchemaInit<Primitive, SampleData>;
 
 		beforeAll(() => {
 			base = new Log({

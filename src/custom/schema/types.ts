@@ -28,6 +28,10 @@ import {type CustomSchemaType} from './type';
 import {type SchemaId} from '../../schema/id';
 
 /**
+ *
  * @category Schema Custom Types
  */
-export type CustomSchemaTypes<DataT> = Record<SchemaId, CustomSchemaType<DataT, SchemaData<DataT>, unknown>>;
+export type CustomSchemaTypes<DataT, InputT extends SchemaData<unknown>> = Record<
+	SchemaId,
+	CustomSchemaType<DataT, InputT>
+>;

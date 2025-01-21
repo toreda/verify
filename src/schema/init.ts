@@ -60,7 +60,7 @@ export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, Transformed
 	 *
 	 * Custom schema types used by this schema.
 	 */
-	custom?: CustomTypesData<DataT> | null;
+	custom?: CustomTypesData<DataT, InputT> | null;
 	/**
 	 * Base Logger.
 	 */

@@ -33,7 +33,7 @@ import {type CustomSchemaTypes} from '../schema/types';
  * @category Schemas Custom Types
  */
 export interface CustomTypesInit<DataT, InputT extends SchemaData<DataT>> {
-	schemas?: CustomSchemaTypes<DataT>;
+	schemas?: CustomSchemaTypes<DataT, InputT>;
 	verifiers?: unknown;
 	base: Log;
 }

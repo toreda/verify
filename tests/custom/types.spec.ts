@@ -12,7 +12,7 @@ import {schemaFieldValueType} from '../../src/schema/field/value/type';
 describe('CustomTypes', () => {
 	let base: Log;
 	let init: SchemaInit<Primitive, SampleData, SampleData>;
-	let instance: CustomTypes<Primitive, SampleData, SampleData>;
+	let instance: CustomTypes<Primitive, SampleData>;
 	let sampleSchema: SimpleSchema;
 	let typeVerifier: CustomTypeVerifier<any>;
 	let verifyInit: CustomSchemaVerify<any>;
@@ -162,11 +162,11 @@ describe('CustomTypes', () => {
 			});
 
 			it('should return true when id is a registered verifier', () => {
-				instance.schemas.set('a', sampleSchema);
-				//instance.schemas.set('b', typeVerifier);
+				instance.registerVerifier('a', typeVerifier);
+				instance.registerVerifier('b', typeVerifier);
 
-				expect(instance.schemas.size).toBe(2);
-				const result = instance.has('b');
+				expect(instance.verifiers.size).toBe(2);
+				const result = instance.hasVerifier('b');
 				expect(result).toBe(true);
 			});
 		});
@@ -232,7 +232,8 @@ describe('CustomTypes', () => {
 			expect(instance.schemas.size).toBe(2);
 
 			instance.reset();
-			expect(instance.registered.size).toBe(0);
+			expect(instance.schemas.size).toBe(0);
+			expect(instance.verifiers.size).toBe(0);
 		});
 	});
 });

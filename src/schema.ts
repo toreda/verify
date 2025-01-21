@@ -59,7 +59,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	public readonly fields: Map<keyof InputT, SchemaField<InputT>>;
 	public readonly cfg: SchemaConfig;
 	public readonly transformOutput: SchemaOutputTransformer<DataT, TransformedT | null>;
-	public readonly customTypes: CustomTypes<DataT, InputT, unknown>;
+	public readonly customTypes: CustomTypes<DataT, InputT>;
 	public readonly base: Log;
 
 	constructor(init: SchemaInit<DataT, InputT, TransformedT>) {
@@ -68,7 +68,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		this.cfg = new SchemaConfig(init.options);
 
 		this.base = init.base.makeLog(`schema___${init.name}`);
-		this.customTypes = new CustomTypes<DataT, InputT, unknown>({
+		this.customTypes = new CustomTypes<DataT, InputT>({
 			schemas: init.custom?.schemas,
 			base: this.base
 		});

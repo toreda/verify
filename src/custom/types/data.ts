@@ -23,13 +23,14 @@
  *
  */
 
+import {type SchemaData} from '../../schema/data';
 import {type CustomSchemaTypes} from '../schema/types';
 import {type CustomTypeVerifier} from '../type/verifier';
 
 /**
  * @category Schema Custom Types
  */
-export interface CustomTypesData<DataT> {
-	schemas?: CustomSchemaTypes<DataT>;
+export interface CustomTypesData<DataT, InputT extends SchemaData<DataT>> {
+	schemas?: CustomSchemaTypes<DataT, InputT>;
 	verifiers?: CustomTypeVerifier<DataT | null> | null;
 }

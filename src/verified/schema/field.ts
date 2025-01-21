@@ -34,4 +34,5 @@ export type VerifiedSchemaField<DataT> =
 	| Map<string, VerifiedSchemaField<DataT>>
 	| Map<string, VerifiedSchemaField<DataT>>[]
 	| undefined
+	| unknown
 	| null;

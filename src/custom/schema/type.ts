@@ -29,8 +29,8 @@ import {type SchemaData} from '../../schema/data';
 /**
  * @category Schema Custom Types
  */
-export type CustomSchemaType<DataT, InputT extends SchemaData<DataT>, VerifiedT = InputT> = Schema<
-	DataT,
+export type CustomSchemaType<DataT, InputT extends SchemaData<DataT | unknown>> = Schema<
+	unknown,
 	InputT,
-	VerifiedT
+	unknown
 >;

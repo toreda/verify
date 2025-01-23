@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.12.0] - 2025-01-11
-* Custom Types set in schema fields are now parsed before use to support additional shorthand in type names. Previously allowing `MyType[]` and `undefined` required two field entries, but can now be reduced to `MyType[]?`.
+* Fixed type errors that could occur with sub-schema fields and recursive verification.
+* Schema fields with a custom schema type no longer share their parent's `TransformedT`. Schemas only transform `VerifiedT` -> `TransformedT` when data verification succeeds. Transform functions can produce any value as long as it's of type `TransformedT`, but there's no guarantee that a schema's `TransformedT` has any TypeScript type relationship to the `TransformedT` of a child schema property.
+* Custom Type names used schema fields are now preprocessed to support additional shorthand in type names. Previously allowing `MyType[]` and `undefined` required two field entries, but can now be reduced to `MyType[]?`.
 * Fixed 'undefined' types not being accepted when explicitly allowed in some cases.
 * Minor package updates.
 * Removed some comment tags causing doc generation errors.

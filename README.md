@@ -8,13 +8,13 @@
 
 [![license](https://img.shields.io/github/license/toreda/verify?style=for-the-badge)](https://github.com/toreda/verify/blob/master/LICENSE)
 
-# `verify` - Autoverify
-Eliminate common edge cases. Automate common type checks and validation checks.
+# `verify`
+Automated verification for forms, fields, and objects. Eliminate common edge cases. Automate common type checks and validation checks.
 
 &nbsp;
 
 # Sections
-1. [Rulesets](#Rulesets)
+1. [Rulesets](#Ruchhlesets)
    1. [lessThan](#lessThan)
    2. [greaterThan](#greaterThan)
    3. [between](#between)

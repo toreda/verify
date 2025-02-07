@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.1] - 2025-02-06
+* Fixed recursive schema verification problem where verification failed after identifying a valid sub-schema type.
+
 ## [0.12.0] - 2025-01-11
 * Fixed type errors that could occur with sub-schema fields and recursive verification.
 * Schema fields with a custom schema type no longer share their parent's `TransformedT`. Schemas only transform `VerifiedT` -> `TransformedT` when data verification succeeds. Transform functions can produce any value as long as it's of type `TransformedT`, but there's no guarantee that a schema's `TransformedT` has any TypeScript type relationship to the `TransformedT` of a child schema property.
@@ -109,7 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0]
 * *No notes available for release.*
 
-[Unreleased]: https://github.com/toreda/chk/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/toreda/chk/compare/v0.12.1...HEAD
+[0.12.1]: https://github.com/toreda/chk/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/toreda/chk/compare/v0.11.2...v0.12.0
 [0.11.2]: https://github.com/toreda/chk/compare/v0.11.1...v0.11.2
 [0.11.1]: https://github.com/toreda/chk/compare/v0.11.0...v0.11.1

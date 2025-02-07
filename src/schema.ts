@@ -74,6 +74,14 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		});
 
 		this.transformOutput = init.transformOutput ? init.transformOutput : transformVerified;
+		this.bindActions();
+	}
+
+	private bindActions(): void {
+		this.verify = this.verify.bind(this);
+		this.verifyAndTransform = this.verifyAndTransform.bind(this);
+		this.verifyField = this.verifyField.bind(this);
+		this.verifyFieldValue = this.verifyFieldValue.bind(this);
 	}
 
 	/**
@@ -375,11 +383,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 		console.error(`Looking for type ${init.valueType.typeId} (type ${typeof init.data})`);
 		if (this.customTypes.hasSchema(init.valueType.typeId)) {
-			if (init.valueType.typeId === 'ct2') {
-				console.error(`hasSchema true init: ${JSON.stringify(init)}`);
-			} else {
-				throw new Error(`schema found: ${init.valueType.typeId}`);
-			}
 
 			return this.customTypes.verify({
 				schemaId: init.fieldId,

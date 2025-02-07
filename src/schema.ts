@@ -383,7 +383,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 		console.error(`Looking for type ${init.valueType.typeId} (type ${typeof init.data})`);
 		if (this.customTypes.hasSchema(init.valueType.typeId)) {
-
 			return this.customTypes.verify({
 				schemaId: init.fieldId,
 				valueType: init.valueType,

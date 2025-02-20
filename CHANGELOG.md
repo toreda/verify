@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.12.2] - 2025-02-20
+* Removed unnecessary debug output from schema validation functions.
+
 ## [0.12.1] - 2025-02-06
 * Fixed recursive schema verification problem where verification failed after identifying a valid sub-schema type.
 
@@ -113,6 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * *No notes available for release.*
 
 [Unreleased]: https://github.com/toreda/chk/compare/v0.12.1...HEAD
+[0.12.2]: https://github.com/toreda/chk/compare/v0.12.1...v0.12.2
 [0.12.1]: https://github.com/toreda/chk/compare/v0.12.0...v0.12.1
 [0.12.0]: https://github.com/toreda/chk/compare/v0.11.2...v0.12.0
 [0.11.2]: https://github.com/toreda/chk/compare/v0.11.1...v0.11.2

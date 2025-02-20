@@ -230,7 +230,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				);
 			}
 
-			console.error(`Verifying ${field.name} as ${fieldType.typeId}`);
 			const result = await this.verifyValue({
 				fieldId: field.name,
 				valueType: fieldType,
@@ -238,8 +237,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				tracer: tracer,
 				base: base
 			});
-
-			console.error(`${field.name} verify as ${fieldType.typeId} result: ${result.errorCode()}`);
 
 			// Greedy validator - use the result from the first successful validation and
 			// stop iterating.
@@ -381,7 +378,6 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			);
 		}
 
-		console.error(`Looking for type ${init.valueType.typeId} (type ${typeof init.data})`);
 		if (this.customTypes.hasSchema(init.valueType.typeId)) {
 			return this.customTypes.verify({
 				schemaId: init.fieldId,

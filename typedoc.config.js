@@ -14,5 +14,6 @@ module.exports = {
 	cacheBust: true,
 	cleanOutputDir: true,
 	includeVersion: true,
-	alwaysCreateEntryPointModule: true
+	alwaysCreateEntryPointModule: true,
+	useHostedBaseUrlForAbsoluteLinks: true
 };

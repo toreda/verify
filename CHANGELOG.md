@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [0.12.3] - 2025-06-06
+* Updated package dependencies.
+* Removed yarn lock file and switched to `pnpm`.
+
 
 ## [0.12.2] - 2025-02-20
 * Removed unnecessary debug output from schema validation functions.

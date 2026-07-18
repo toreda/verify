@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2026 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@ import {type SchemaData} from '../../../schema/data';
 /**
  * Perform basic tests to determine if `value` is safe to perform `SchemaData`
  * operations on and provides type hint.
- * @param data
+ * @param value
  *
  * @category Schemas
  */
@@ -39,6 +39,8 @@ export function isSchemaDataObject<DataT>(
 		return false;
 	}
 
+	// Arrays are objects, but data objects cannot be an array.
+	// Check for arrayness BEFORE checking typeof.
 	if (Array.isArray(value)) {
 		return false;
 	}

@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2026 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,11 @@ import {matcherMkTruthy} from '../matcher/mk/truthy';
 import {BlockA} from './a';
 import {BlockAn} from './an';
 import {SchemaFieldType} from '../schema/field/type';
+import {matcherMkLessThanOrEqualTo} from '../matcher/mk/less/than/equal/to';
+import {matcherMkGreaterThanOrEqualTo} from '../matcher/mk/greater/than/equal/to';
+import {matcherMkOdd} from '../matcher/mk/odd';
+import {matcherMkEven} from '../matcher/mk/even';
+import {matcherMkInteger} from '../matcher/mk/integer';
 
 /**
  * Is (block)
@@ -71,9 +76,16 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 	public readonly between: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly lessThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly greaterThan: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly greaterThanOrEqualTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly lessThanOrEqualTo: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly equalTo: MatcherFactory<InputT, Primitive | Primitive[], BlockLink<InputT>>;
 	public readonly empty: MatcherFactory<InputT, unknown, BlockLink<InputT>>;
+	public readonly odd: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly even: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly divisibleBy: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly integer: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly positiveInteger: MatcherFactory<InputT, number, BlockLink<InputT>>;
+	public readonly negativeInteger: MatcherFactory<InputT, number, BlockLink<InputT>>;
 	public readonly type: MatcherFactory<InputT, SchemaFieldType<InputT>, BlockLink<InputT>>;
 	public readonly an: BlockAn<InputT>;
 	public readonly a: BlockA<InputT>;
@@ -110,7 +122,6 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			name: 'a',
 			tracer: this.tracer
 		});
-
 		this.between = matcherMkBetween<InputT>({
 			...init,
 			tracer: this.tracer,
@@ -126,6 +137,11 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			tracer: this.tracer,
 			name: 'empty'
 		});
+		this.integer = matcherMkInteger<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'isInt'
+		});
 		this.equalTo = matcherMkEqual<InputT>({
 			...init,
 			tracer: this.tracer,
@@ -136,10 +152,20 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			tracer: this.tracer,
 			name: '>'
 		});
+		this.greaterThanOrEqualTo = matcherMkGreaterThanOrEqualTo<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: '>='
+		});
 		this.lessThan = matcherMkLessThan<InputT>({
 			...init,
 			tracer: this.tracer,
 			name: '<'
+		});
+		this.lessThanOrEqualTo = matcherMkLessThanOrEqualTo<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: '<='
 		});
 		this.type = matcherMkType<InputT>({
 			...init,
@@ -150,6 +176,16 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			...init,
 			tracer: this.tracer,
 			name: 'iterable'
+		});
+		this.even = matcherMkEven<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'even'
+		});
+		this.odd = matcherMkOdd<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'odd'
 		});
 		this.truthy = matcherMkTruthy<InputT>({
 			...init,

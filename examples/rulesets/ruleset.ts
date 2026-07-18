@@ -17,7 +17,8 @@ import {Ruleset} from '../../src/ruleset';
 		value.must.havePropertyWithType('name', 'string'),
 		value.is.iterable(),
 		value.must.be.an.ipv4addr(),
-		value.is.an.html5Tag()
+		value.is.an.html5Tag(),
+		value.is.greaterThan()
 	);
 
 	console.debug(`Rules: ${ruleset.rules.length}`);

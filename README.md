@@ -23,12 +23,52 @@ Automated verification for forms, fields, and objects. Eliminate common edge cas
 &nbsp;
 
 # Rulesets
+Rulesets allow inlining of complex & reusable validation. =
+
+`Ruleset<ValueT>` is a generic collection of rules that perform custom verification. `ValueT` is
+the `TypeScript` type of the value to be verified.
+
 ```typescript
 // Create a ruleset using the expected type to be verified
 const ruleset = new Ruleset<number>();
 // Get a 'value' object from ruleset used to create rules.
 const value = ruleset.value();
 ```
+
+## How to use `Ruleset`
+1. Create a `const ruleset = new Ruleset<ValueT>` where `ValueT` is the `TypeScript` type of the object or value you wish to verify.
+2. You now have an empty set of rules.
+3. Add a rule to the empty ruleset using `ruleset.add(ruleset.value().must.be.equalTo('cheese'));`
+
+## Built-in Rules
+
+### Type Checks
+`type(typeName: string)`
+* `value.is.type('string')`
+* `value.is.type('array')`
+
+### String Rules
+* `value.is.type('type_name')`
+* `value.is.not.type('type_name')`
+* `value.is.an.html5Tag()`
+
+Some rules can be called using different phrases due to variations in the English language. In these situations, all "paths" to reach the function call produce the same result.
+The following produce the same result:
+* `value.must.be.an.html5Tag()`
+* `value.is.an.html5Tag()`
+
+### Collection Rules
+Invert any rule by using `not` before the helper. If `is.greaterThan(110)` is the helper, then use `is.not.greaterThan(110)`.
+
+* `value.is.greaterThan(110)`
+* `value.is.greaterThanOrEqualTo(110)`
+* `value.is.lessThan(110)`
+* `value.is.lessThanOrEqualTo(110)`
+* `value.is.divisibleBy(1)`
+* `value.has.length.equalTo(1)`
+
+### Math Rules
+
 
 ## lessThan
 
@@ -101,7 +141,7 @@ const result = await ruleset.verify(0);
 // Validate whether string input matches 'one'.
 const ruleset = new Ruleset<string>();
 const value = ruleset.value();
-ruleset.add(value.must.be.equalTo('one'));
+ruleset.add(value.must.be.equalTo('orange'));
 
 // Tests input against all rules in ruleset.
 const result = await ruleset.verify('valuehere');
@@ -207,7 +247,7 @@ Bug reports, comments, and pull requests are welcome.
 [MIT](LICENSE) &copy; Toreda, Inc.
 
 ## Copyright
-Copyright &copy; 2019 - 2025 Toreda, Inc. All Rights Reserved.
+Copyright &copy; 2019 - 2026 Toreda, Inc. All Rights Reserved.
 
 &nbsp;
 

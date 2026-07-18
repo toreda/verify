@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2026 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@
 
 import type {SchemaErrorCode} from './error/code';
 import type {SchemaErrorEntity} from './error/entity';
-import {errorMkCode} from '../error/mk/code';
 import type {SchemaErrorPath} from './error/path';
+import {errorMkCode} from '../error/mk/code';
 
 /**
  * Create full error code string containing the originating entity and path from entity to

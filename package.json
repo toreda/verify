@@ -1,13 +1,14 @@
 {
 	"name": "@toreda/verify",
-	"version": "0.12.3",
+	"version": "0.13.0",
 	"main": "./dist/index.js",
 	"typings": "./dist/index.d.ts",
 	"repository": "https://github.com/toreda/verify",
 	"author": "Toreda, Inc.",
 	"sideEffects": false,
 	"keywords": [
-		"schema validation",
+		"schema-validation",
+		"validation-rules",
 		"json-schema",
 		"typescript"
 	],
@@ -72,8 +73,9 @@
 		"build": "pnpm build:prod",
 		"build:prod": "pnpm gulp --prod",
 		"build:dev": "pnpm gulp --dev",
-		"test": "pnpm jest --coverage --maxWorkers=50%",
+		"test": "pnpm jest --coverage",
 		"test:dev": "pnpm jest --coverage=false --maxWorkers=25% --verbose=false",
+		"test:cli": "pnpm jest --coverage --maxWorkers=50%",
 		"make:docs": "pnpm typedoc --options ./typedoc.config.js --plugin @8hobbies/typedoc-plugin-404 --plugin @knodes/typedoc-plugin-code-blocks",
 		"make:depgraph": "pnpm madge src/index.ts --image dependency-graph.png"
 	}

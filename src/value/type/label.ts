@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2026 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,8 @@ import {type ValueTypeId} from './id';
  * Get the type string for a value to be displayed in tracers, debugging, or
  * other human readable formats.
  *
- * @param value
- * @param typeId
+ * @param value			Get the type label for this value's type.
+ * @param id
  *
  * @category Schemas
  *

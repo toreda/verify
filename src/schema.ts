@@ -1,7 +1,7 @@
 /**
  *	MIT License
  *
- *	Copyright (c) 2019 - 2025 Toreda, Inc.
+ *	Copyright (c) 2019 - 2026 Toreda, Inc.
  *
  *	Permission is hereby granted, free of charge, to any person obtaining a copy
  *	of this software and associated documentation files (the "Software"), to deal
@@ -273,10 +273,13 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	}
 
 	/**
-	 * Is `type` matches a supported 'built-in' type.
-	 * @param type
+	 * Check whether `typeId` matches the name or key of a supported built-in type.
+	 *
+	 * @param typeId
 	 */
 	public isBuiltInTypeId(typeId: SchemaFieldType<DataT>): boolean {
+		// built-in type names are strings. Thus, non-strings can't be used to identify
+		// our built-in types. We're done here.
 		if (typeof typeId !== 'string') {
 			return false;
 		}
@@ -286,6 +289,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 
 	/**
 	 * Determine if type matches a built-in or custom type.
+	 *
 	 * @param type
 	 */
 	public schemaSupportsType(type: SchemaFieldValueType<DataT>): boolean {
@@ -303,6 +307,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	/**
 	 * Check if `type` is supported by the schema. Doesn't check if value actually
 	 * conforms to the specified type.
+	 *
 	 * @param type
 	 * @param value
 	 */
@@ -406,7 +411,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	 * transformed using the schema's `transformOutput` function. The transform produces
 	 * `TransformedT` or `null`.
 	 *
-	 * @param init
+	 * @param init		Parameters needed to perform verification & transformation.
 	 */
 	public async verifyAndTransform(init: SchemaVerifyInit<DataT>): Promise<Fate<TransformedT | null>> {
 		const fate = new Fate<TransformedT | null>();
@@ -419,6 +424,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 		const childPath = parentPath.child(stringValue(init.schemaId, this.schemaName));
 		const currPath = init?.flags?.skipFirstTracerChild === true ? parentPath : childPath;
 
+		// `base` log instance is required.
 		if (!init?.base) {
 			return fate.setErrorCode(
 				schemaError('missing_argument:init.base', currPath.child('verify').current())
@@ -480,7 +486,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 	/**
 	 * Verify provided data object's structure, content, and types against this schema.
 	 *
-	 * @param init		Contains arguments needed to verify field and value.
+	 * @param init		Parameters needed to verify this field & value.
 	 */
 	public async verify(init: SchemaVerifyInit<DataT>): Promise<Fate<SchemaVerified<DataT>>> {
 		const fate = new Fate<SchemaVerified<DataT>>();

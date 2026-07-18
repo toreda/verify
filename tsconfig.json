@@ -1,7 +1,6 @@
 {
 	"exclude": ["**/node_modules", "dist/**", "**/tests/**/*.ts"],
-	"include": ["./src/*.ts", "./src/**/*.ts", "**/tests/**/*.ts", "typedoc.config.js"],
-	"filesGlob": ["./src/*.ts", "./src/**/*.ts", "!./node_modules/**"],
+	"include": ["./src/*.ts", "./src/**/*.ts", "typedoc.config.js"],
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
 		"allowUnreachableCode": false,
@@ -16,7 +15,7 @@
 		"preserveConstEnums": true,
 		"removeComments": false,
 		"resolveJsonModule": true,
-		"rootDir": ".",
+		"rootDir": "./src",
 		"sourceMap": true,
 		"strict": true,
 		"strictBindCallApply": true,

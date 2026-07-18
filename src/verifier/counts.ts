@@ -82,6 +82,15 @@ export interface VerifierCounts {
 	 */
 	skipPct: number;
 	/**
+	 * Forgiven Failures
+	 *
+	 * Total `fail` outcomes (from this verifier and all sub-verifiers) that did
+	 * not change the overall outcome because the fail count stayed within the
+	 * `maxFails` threshold. Forgiven fails are excluded from `fail` counts at
+	 * parent levels, but always surfaced here so they're never silently dropped.
+	 */
+	forgivenFails: number;
+	/**
 	 * Total Count
 	 *
 	 * Sum of attempted verification executions that ended in any status.

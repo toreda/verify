@@ -36,5 +36,7 @@ export function positiveInteger(value: unknown): boolean {
 		return false;
 	}
 
-	return isInt(value) && value >= 0;
+	// Strictly positive — zero is not a positive integer. Use `uint` for
+	// non-negative integer checks.
+	return isInt(value) && value > 0;
 }

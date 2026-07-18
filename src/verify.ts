@@ -31,8 +31,7 @@ import {numberValue} from '@toreda/strong-types';
 import Defaults from './defaults';
 
 /**
- * Invokes the `verify` method on an unordered item collection and returns
- * the results with summary counts.
+ * Verify an unordered collection, then return a summary.
  *
  * @param params
  *
@@ -66,6 +65,7 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 			if (!subResult.ok()) {
 				const subCtx = subResult.data;
 				ctx.summary.counts.error += numberValue(subCtx?.summary.counts.error, 1);
+				ctx.summary.counts.forgivenFails += numberValue(subCtx?.summary.counts.forgivenFails, 0);
 
 				if (Array.isArray(subCtx?.failedMatchers)) {
 					ctx.failedMatchers.push(...subCtx.failedMatchers);
@@ -75,14 +75,22 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 
 			if (subResult.data) {
 				fate.data?.results.push(subResult.data);
+
+				// Bubble up fails forgiven by sub-verifier maxFails thresholds, along with
+				// the matchers that failed, regardless of the sub-verifier's outcome. A
+				// forgiven fail changes the outcome, but is never silently dropped from stats.
+				ctx.summary.counts.forgivenFails += numberValue(
+					subResult.data.summary.counts.forgivenFails,
+					0
+				);
+				if (Array.isArray(subResult.data.failedMatchers)) {
+					ctx.failedMatchers.push(...subResult.data.failedMatchers);
+				}
 			}
 
 			switch (subResult.data?.outcome) {
 				case 'fail':
 					ctx.summary.counts.fail++;
-					if (Array.isArray(subResult.data.failedMatchers)) {
-						ctx.failedMatchers.push(...subResult.data.failedMatchers);
-					}
 					break;
 				case 'pass':
 					ctx.summary.counts.pass++;
@@ -106,7 +114,9 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 
 		// Calculate outcome percentages AFTER all outcomes have been checked.
 		const counts = ctx.summary.counts;
-		counts.errorPct = counts.error > 0 ? (counts.error / counts.total) * 100 : 0;
+		// Clamped at 100 because sub-verifiers may report more errors than the
+		// number of collection items counted in `total`.
+		counts.errorPct = counts.error > 0 ? Math.min((counts.error / counts.total) * 100, 100) : 0;
 		counts.failPct = counts.fail > 0 ? (counts.fail / counts.total) * 100 : 0;
 		counts.passPct = counts.pass > 0 ? (counts.pass / counts.total) * 100 : 0;
 		counts.skipPct = counts.skip > 0 ? (counts.skip / counts.total) * 100 : 0;
@@ -120,9 +130,15 @@ export async function verify<InputT, CollectionT extends Verifier<InputT>>(
 
 		if (ctx.summary.counts.error > maxErrors) {
 			ctx.outcome = 'error';
-		} else if (ctx.summary.counts.fail > maxFails) {
+		} else if (ctx.summary.counts.fail + ctx.summary.counts.forgivenFails > maxFails) {
+			// Fails forgiven by sub-verifiers count against this level's threshold,
+			// otherwise each nesting level would independently forgive up to maxFails
+			// and the total forgiven could exceed the configured limit.
 			ctx.outcome = 'fail';
 		} else {
+			// Fails within the maxFails threshold are forgiven: they don't change
+			// the outcome, but are always surfaced in stats.
+			ctx.summary.counts.forgivenFails += ctx.summary.counts.fail;
 			ctx.outcome = 'pass';
 		}
 

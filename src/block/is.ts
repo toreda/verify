@@ -46,6 +46,8 @@ import {matcherMkGreaterThanOrEqualTo} from '../matcher/mk/greater/than/equal/to
 import {matcherMkOdd} from '../matcher/mk/odd';
 import {matcherMkEven} from '../matcher/mk/even';
 import {matcherMkInteger} from '../matcher/mk/integer';
+import {matcherMkPositiveInteger} from '../matcher/mk/positive/integer';
+import {matcherMkNegativeInteger} from '../matcher/mk/negative/integer';
 
 /**
  * Is (block)
@@ -141,6 +143,16 @@ export class BlockIs<InputT = unknown> extends Block<Statement<InputT>> {
 			...init,
 			tracer: this.tracer,
 			name: 'isInt'
+		});
+		this.positiveInteger = matcherMkPositiveInteger<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'posInt'
+		});
+		this.negativeInteger = matcherMkNegativeInteger<InputT>({
+			...init,
+			tracer: this.tracer,
+			name: 'negInt'
 		});
 		this.equalTo = matcherMkEqual<InputT>({
 			...init,

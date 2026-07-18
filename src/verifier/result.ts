@@ -62,6 +62,7 @@ export function verifierResult<InputT = unknown>(params?: Partial<VerifierParams
 				passPct: 0,
 				skip: 0,
 				skipPct: 0,
+				forgivenFails: 0,
 				total: 0,
 				maxErrors: 0,
 				maxFails: 0

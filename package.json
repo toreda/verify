@@ -28,7 +28,7 @@
 	],
 	"license": "MIT",
 	"packageManager": "pnpm@11.19.0",
-	"description": "Automated validation. Eliminate edge cases with less code.",
+	"description": "Expressive, type-safe validation for TypeScript. Readable rulesets, object schemas, and standalone checks that handle the edge cases for you.",
 	"publishConfig": {
 		"access": "public"
 	},

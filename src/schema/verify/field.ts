@@ -23,7 +23,7 @@
  *
  */
 
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {Tracer} from '../../tracer';
 import {type SchemaData} from '../data';
 import {type SchemaFieldValueType} from '../field/value/type';
@@ -39,6 +39,6 @@ export interface SchemaVerifyField<DataT = unknown> {
 	valueType: SchemaFieldValueType<DataT>;
 	tracer: Tracer;
 	data: DataT | SchemaData<DataT> | DataT[] | SchemaData<DataT>[];
-	base: Log;
+	base: LogLike;
 	flags?: SchemaVerifyFlags;
 }

@@ -23,7 +23,6 @@
  *
  */
 
-import {Log} from '@toreda/log';
 import {type SchemaData} from '../schema/data';
 import {type CustomTypesInit} from './types/init';
 import {type CustomTypeVerifier} from './type/verifier';
@@ -33,12 +32,12 @@ import {type CustomSchemaVerify} from './schema/verify';
 import {type Resettable} from '@toreda/types';
 import {type CustomSchemaType} from './schema/type';
 import {Schema} from '../schema';
-import {type SchemaVerified} from '../schema/verified';
 import {Tracer} from '../tracer';
 import {type CustomType} from './type';
 import {stringValue} from '@toreda/strong-types';
 import {type SchemaId} from '../schema/id';
 import {type SchemaFieldVerified} from '../schema/field/verified';
+import {type LogLike} from '@toreda/shared-types';
 
 /**
  * Custom type registration for a single schema instance.
@@ -46,45 +45,24 @@ import {type SchemaFieldVerified} from '../schema/field/verified';
  * @category Schemas Custom Types
  */
 export class CustomTypes<DataT, InputT extends SchemaData<DataT>> implements Resettable {
-	public readonly log: Log;
+	public readonly log: LogLike;
 	public readonly schemas: Map<SchemaId, CustomSchemaType<DataT, InputT>>;
 	public readonly verifiers: Map<string, CustomType<DataT, InputT>>;
 
 	constructor(init: CustomTypesInit<DataT, InputT>) {
 		this.schemas = new Map<SchemaId, CustomSchemaType<DataT, InputT>>();
 		this.verifiers = new Map<string, CustomType<DataT, InputT>>();
-		this.log = init.base.makeLog('customTypes');
+		this.log = init.base;
 
 		this.registerSchemas(init?.schemas);
 	}
-
-	/* 	public registerTypes(data?: CustomTypesData<DataT, InputT, TransformedT> | null): void {
-		const log = this.log.makeLog('registerTypes');
-
-		if (!data) {
-			return;
-		}
-
-		const keys = Object.keys(data);
-
-		for (const key of keys) {
-			const o = data[key];
-			if (this.isCustomVerifier(o)) {
-				const _result = this.registerVerifier(key, o);
-			} else if (this.isSchema(o)) {
-				const _result = this.registerSchema(key, o);
-			} else {
-				log.error(`Custom type registration error for '${key}'.`);
-			}
-		}
-	} */
 
 	/**
 	 *
 	 * @param items
 	 */
 	public registerSchemas(items?: Record<SchemaId, CustomSchemaType<DataT, InputT>>): void {
-		const log = this.log.makeLog('registerTypes');
+		const log = this.log;
 
 		if (!items) {
 			return;
@@ -107,7 +85,7 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>> implements Res
 	 * @param items
 	 */
 	public registerVerifiers(items?: Record<SchemaId, any>): void {
-		const log = this.log.makeLog('registerVerifiers');
+		const log = this.log;
 
 		if (!items) {
 			return;
@@ -241,13 +219,29 @@ export class CustomTypes<DataT, InputT extends SchemaData<DataT>> implements Res
 	public async verifyValue(
 		id: string,
 		type: string,
-		_value: unknown,
-		_base: Log
-	): Promise<Fate<DataT | SchemaVerified<DataT>>> {
-		const fate = new Fate<DataT | SchemaVerified<DataT>>();
+		value: unknown,
+		base: LogLike
+	): Promise<Fate<SchemaFieldVerified<DataT>>> {
+		const fate = new Fate<SchemaFieldVerified<DataT>>();
 
-		const _verifier = this.getVerifier(type);
-		return fate;
+		const verifier = this.getVerifier(type);
+		if (!verifier) {
+			return fate.setErrorCode(schemaError(`missing_custom_type_verifier:${type}`, id));
+		}
+
+		try {
+			const result = await verifier(value);
+			if (!result.ok()) {
+				return fate.setErrorCode(result.errorCode());
+			}
+
+			fate.data = result.data;
+			return fate.setSuccess(true);
+		} catch (e: unknown) {
+			const msg = e instanceof Error ? e.message : 'unknown_err_type';
+			base.error(`Exception in custom type verifier for '${type}': ${msg}.`);
+			return fate.setErrorCode(schemaError('exception', id, `verifier:${type}`));
+		}
 	}
 
 	public async verify(init: CustomSchemaVerify<DataT>): Promise<Fate<SchemaFieldVerified<DataT>>> {

@@ -30,10 +30,16 @@
  * @category Schemas
  */
 export interface SchemaVerifyFlags {
+	/**
+	 * Maximum number of keys input data may contain before verification fails.
+	 * All input keys count toward the maximum, including keys without a matching
+	 * schema field. `0` disables the check.
+	 */
 	maxFieldCount?: number;
 	/**
-	 * Minimum number of fields a schema must have to pass verification. Only requires
-	 * that a schema has at least this number, but doesn't require they pass verification.
+	 * Minimum number of schema fields that must be present in input data to pass
+	 * verification. Only requires that matching fields are present, but doesn't
+	 * require they pass verification. `0` disables the check.
 	 *
 	 * @remarks
 	 * Useful in cases where a schema has multiple optional fields, but some number are

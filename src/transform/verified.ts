@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {schemaError} from '../schema/error';
 import {type Transformed} from '../transformed';
 import {transformVerifiedField} from './verified/field';
@@ -40,7 +40,7 @@ import {type SchemaVerified} from '../schema/verified';
  */
 export async function transformVerified<DataT = unknown, TransformedT = unknown>(
 	input: SchemaVerified<DataT> | null,
-	base: Log
+	base: LogLike
 ): Promise<Fate<TransformedT | null>> {
 	const fate = new Fate<TransformedT | null>();
 
@@ -48,7 +48,7 @@ export async function transformVerified<DataT = unknown, TransformedT = unknown>
 		return fate.setErrorCode(schemaError('missing_argument', 'transformVerified', 'base'));
 	}
 
-	const log = base.makeLog('transformVerified');
+	const log = base;
 
 	if (!input) {
 		return fate.setErrorCode(schemaError('missing_argument', 'transformVerified', 'input'));

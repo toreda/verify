@@ -26,7 +26,7 @@
 import {type SchemaFieldData} from './field/data';
 import type {SchemaOptions} from './options';
 import {type SchemaOutputTransformer} from './output/transformer';
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {type CustomTypesData} from '../custom/types/data';
 import {type SchemaData} from './data';
 
@@ -64,6 +64,6 @@ export interface SchemaInit<DataT, InputT extends SchemaData<DataT>, Transformed
 	/**
 	 * Base Logger.
 	 */
-	base: Log;
+	base: LogLike;
 	parentPath?: string[];
 }

@@ -35,7 +35,7 @@ import {type ExplainBannerInit} from './banner/init';
  * @category Explain
  */
 export function explainBanner(init: ExplainBannerInit): void {
-	const log = init.base.makeLog('explain');
+	const log = init.base;
 	if (!init.result) {
 		log.error(`Missing result argument in printResultBanner.`);
 		return;

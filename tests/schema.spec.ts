@@ -1773,7 +1773,7 @@ describe('Schema', () => {
 
 				expect(result.ok()).toBe(false);
 				expect(result.errorCode()).toBe(
-					schemaError('empty_schema_object', `${schema.schemaName}`, 'verify')
+					schemaError('empty_input_object', `${schema.schemaName}`, 'verify')
 				);
 			});
 

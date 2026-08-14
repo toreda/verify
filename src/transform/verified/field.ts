@@ -25,7 +25,7 @@
 
 import {Fate} from '@toreda/fate';
 import {type Transformed} from '../../transformed';
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {type TransformedField} from '../../transformed/field';
 import {type VerifiedSchemaField} from '../../verified/schema/field';
 
@@ -41,10 +41,10 @@ import {type VerifiedSchemaField} from '../../verified/schema/field';
 export async function transformVerifiedField<DataT = unknown, TransformedT = unknown>(
 	id: string,
 	data: VerifiedSchemaField<DataT>,
-	base: Log
+	base: LogLike
 ): Promise<Fate<TransformedField<TransformedT>>> {
 	const fate = new Fate<TransformedField<TransformedT>>();
-	const log = base.makeLog(`${id}`);
+	const log = base;
 
 	if (Array.isArray(data)) {
 		fate.data = [];

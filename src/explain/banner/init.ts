@@ -23,7 +23,7 @@
  *
  */
 
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {type VerifierResult} from '../../verifier/result';
 import {Fate} from '@toreda/fate';
 
@@ -35,5 +35,5 @@ import {Fate} from '@toreda/fate';
 export interface ExplainBannerInit {
 	input: unknown;
 	result: Fate<VerifierResult>;
-	base: Log;
+	base: LogLike;
 }

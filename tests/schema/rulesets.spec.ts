@@ -155,7 +155,9 @@ describe('Schema Rulesets', () => {
 				}
 			});
 
-			expect(result.errorCode()).toBe(`fail | [${custom2.schemaName}.fieldB (aaaa) [2 items] is empty]`);
+			expect(result.errorCode()).toBe(
+				`schemas:${custom2.schemaName}.fieldB|ruleset_fail:[${custom2.schemaName}.fieldB (aaaa) [2 items] is empty]`
+			);
 			expect(result.ok()).toBe(false);
 		});
 	});

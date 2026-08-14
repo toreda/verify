@@ -23,7 +23,7 @@
  *
  */
 
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {Tracer} from '../../tracer';
 import {type SchemaVerifyFlags} from './flags';
 import {type SchemaData} from '../data';
@@ -40,7 +40,7 @@ export interface SchemaVerifyInit<DataT = unknown> {
 	data: SchemaData<DataT> | null;
 	/** Current path of properties accessed to reach this point. */
 	tracer?: Tracer;
-	base: Log;
+	base: LogLike;
 	/** Whether schema being processed is a child property of another schema. */
 	childSchema?: boolean;
 	typeId?: string;

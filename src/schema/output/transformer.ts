@@ -24,7 +24,7 @@
  */
 
 import {Fate} from '@toreda/fate';
-import {Log} from '@toreda/log';
+import {type LogLike} from '@toreda/shared-types';
 import {type SchemaVerified} from '../verified';
 
 /**
@@ -34,5 +34,5 @@ import {type SchemaVerified} from '../verified';
  */
 export type SchemaOutputTransformer<DataT, TransformedT> = (
 	mapped: SchemaVerified<DataT> | null,
-	base: Log
+	base: LogLike
 ) => Promise<Fate<TransformedT | null>>;

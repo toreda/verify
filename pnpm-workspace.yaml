@@ -1,3 +1,7 @@
+allowBuilds:
+  '@swc/core': true
+  es5-ext: true
+  unrs-resolver: true
 onlyBuiltDependencies:
-    - '@swc/core'
-    - es5-ext
+  - '@swc/core'
+  - es5-ext

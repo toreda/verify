@@ -40,10 +40,12 @@ export interface PctLabelRound {
 	 *
 	 * @remarks
 	 * 	none	-		No rounding performed. Value returned as provided.
-	 *  trunc	-		Truncates digits down to `digits` value, with no rounding.
-	 * 	ceil	-		Apply ceil, then truncate significant digits.
-	 * 	floor	-		Apply floor, then truncate significant digits.
-	 * 	round			Apply round, then truncate significant digits.
+	 *  trunc	-		Truncates toward zero at `digits` precision, with no rounding.
+	 * 	ceil	-		Apply ceil at `digits` precision.
+	 * 	floor	-		Apply floor at `digits` precision.
+	 * 	round			Apply round at `digits` precision.
+	 *
+	 * 	Unrecognized modes behave like 'none'.
 	 */
 	mode?: PctLabelRoundMode | null;
 	/**
@@ -56,7 +58,8 @@ export interface PctLabelRound {
 }
 
 /**
- * Convert a decimal value to readable percentage value.
+ * Round a value to `init.digits` significant digits using `init.mode`, returning
+ * the result as a string.
  *
  * @param value
  * @param init
@@ -71,16 +74,24 @@ export function pctLabelRound(value: number, init?: PctLabelRound): string {
 		return value.toString();
 	}
 
+	// `toFixed` throws a RangeError outside 0 - 100. Clamp to keep bad input from
+	// escaping as an exception, and drop fractional digit counts.
+	const places = Math.min(Math.max(Math.trunc(digits), 0), 100);
+	// Scale so the rounding operation applies at `places` precision instead of
+	// collapsing the value to an integer.
+	const factor = Math.pow(10, places);
+
 	switch (mode) {
 		case 'ceil':
-			return Math.ceil(value).toFixed(digits);
+			return (Math.ceil(value * factor) / factor).toFixed(places);
 		case 'floor':
-			return Math.floor(value).toFixed(digits);
+			return (Math.floor(value * factor) / factor).toFixed(places);
 		case 'round':
-			return Math.round(value).toFixed(digits);
+			return (Math.round(value * factor) / factor).toFixed(places);
 		case 'trunc':
-			return value.toFixed(digits);
+			return (Math.trunc(value * factor) / factor).toFixed(places);
 		default:
-			return value.toFixed(digits);
+			// Unrecognized mode. Return the value unchanged, matching 'none'.
+			return value.toString();
 	}
 }

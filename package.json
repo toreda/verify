@@ -27,8 +27,11 @@
 		"typescript"
 	],
 	"license": "MIT",
+	"packageManager": "pnpm@11.19.0",
 	"description": "Automated validation. Eliminate edge cases with less code.",
-	"public": true,
+	"publishConfig": {
+		"access": "public"
+	},
 	"prettier": "@toreda/prettier-config",
 	"devDependencies": {
 		"@8hobbies/typedoc-plugin-404": "^3.2.1",

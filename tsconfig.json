@@ -7,7 +7,7 @@
 		"alwaysStrict": true,
 		"declaration": true,
 		"esModuleInterop": true,
-		"isolatedModules": false,
+		"isolatedModules": true,
 		"lib": ["es6", "ES2015", "ESNext"],
 		"module": "CommonJS",
 		"moduleResolution": "node",

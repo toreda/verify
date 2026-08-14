@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `greaterThanOrEqualTo` rule for rulesets. The previous usage of `value.greaterThan(value).or.equalTo(value)` still exists, but can be also used as a single call `value.is.greaterThanOrEqualTo(value)`.
 * `lessThanOrEqualTo` rule for rulesets. The previous usage of `value.greaterThan(value).or.equalTo(value)` still exists, but can be also used as a single call `value.is.lessThanOrEqualTo(value)`.
 
+### Changed
+* Added dual CommonJS and ESM output.
+* `@toreda/log` usage was converted to `LogLike` to enable `log` args to accept any object that satisfies the standard log method interface like the one `console` implements (e.g. `console.warn`, `console.info`, etc).
+
+### Fixed
+* Broken integer rule now works in `BlockIs` (e.g. `rule.is.`).
+* Custom verifiers in Schema no longer reject input in some circumstances and should always work as expected.
+* Schema fields now pass through `null` to the verified result when the field explicitly allows `null`. Previously, they came through as `undefined` if the input value was `null` even if the field allowed `null`.
+
 ## [0.12.3] - 2025-06-06
 * Updated package dependencies.
 * Removed yarn lock file and switched to `pnpm`.

@@ -28,7 +28,7 @@ import {isUInt} from '../../../is/uint';
 import {type Time} from '@toreda/time';
 import {isIterable} from '../../../is/iterable';
 import {isInt} from '../../../is/int';
-import {SchemaFieldType} from '../../../schema/field/type';
+import type {SchemaFieldType} from '../../../schema/field/type';
 
 /**
  * Determines if type name is a built-in schema type. Used to check if
@@ -69,7 +69,7 @@ export function verifySchemaFieldContent<DataT = unknown>(
 		case 'string':
 			return typeof value === 'string';
 		case 'time':
-			return (value as Time)?.type === 'time';
+			return (value as Time)?.type === 'Time';
 		case 'undefined':
 			return value === undefined;
 		case 'uint':

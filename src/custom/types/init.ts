@@ -23,17 +23,17 @@
  *
  */
 
-import {Log} from '@toreda/log';
 import {type SchemaData} from '../../schema/data';
 import {type CustomSchemaTypes} from '../schema/types';
+import { LogLike } from '@toreda/shared-types';
 
 /**
- * Arguments needed when constructing a new CustomTypes object.a
+ * Arguments needed when constructing a new CustomTypes object.
  *
  * @category Schemas Custom Types
  */
 export interface CustomTypesInit<DataT, InputT extends SchemaData<DataT>> {
 	schemas?: CustomSchemaTypes<DataT, InputT>;
 	verifiers?: unknown;
-	base: Log;
+	base: LogLike;
 }

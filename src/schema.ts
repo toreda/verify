@@ -27,8 +27,8 @@ import {Fate} from '@toreda/fate';
 import {SchemaField} from './schema/field';
 import {schemaError} from './schema/error';
 import {type SchemaFieldType} from './schema/field/type';
-import {Log} from '@toreda/log';
 import {SchemaConfig} from './schema/config';
+import type { LogLike } from '@toreda/shared-types';
 import type {SchemaInit} from './schema/init';
 import {type SchemaOutputTransformer} from './schema/output/transformer';
 import {type SchemaData} from './schema/data';
@@ -48,6 +48,7 @@ import {type SchemaVerified} from './schema/verified';
 import {isSchemaDataObject} from './is/schema/data/object';
 import {schemaFieldValueType, type SchemaFieldValueType} from './schema/field/value/type';
 import {SchemaVerifyConfig} from './verify/config';
+import { Log } from '@toreda/log';
 
 /**
  * Base Schema class extended by user schemas.
@@ -224,7 +225,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 			}
 
 			if (!this.schemaSupportsType(fieldType)) {
-				console.error(`Schema does not support type: ${fieldType.typeId}`);
+				this.base.error(`Schema does not support type: ${fieldType.typeId}`);
 				return fate.setErrorCode(
 					schemaError(`schema_does_not_support_type:${fieldType.typeId}`, tracer.current())
 				);
@@ -246,7 +247,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				break;
 			} else {
 				schemaFails.push(result);
-				console.error(`No match: ${result.errorCode()}`);
+				this.base.error(`No match: ${result.errorCode()}`);
 			}
 		}
 
@@ -394,7 +395,7 @@ export class Schema<DataT, InputT extends SchemaData<DataT>, TransformedT = Inpu
 				typeId: init.valueType.typeId
 			});
 		} else {
-			console.error(`No schema registered for type '${init.valueType.typeId}`);
+			this.base.error(`No schema registered for type '${init.valueType.typeId}`);
 		}
 
 		if (this.customTypes.hasVerifier(init.valueType.typeId)) {

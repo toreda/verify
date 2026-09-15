@@ -1,6 +1,6 @@
 {
 	"name": "@toreda/verify",
-	"version": "0.13.0",
+	"version": "0.14.0",
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.cts",
@@ -21,6 +21,7 @@
 	"author": "Toreda, Inc.",
 	"sideEffects": false,
 	"keywords": [
+		"schema-validator",
 		"schema-validation",
 		"validation-rules",
 		"json-schema",
@@ -36,13 +37,14 @@
 	"devDependencies": {
 		"@8hobbies/typedoc-plugin-404": "^3.2.1",
 		"@knodes/typedoc-plugin-code-blocks": "^0.23.4",
-		"@swc/core": "^1.15.46",
+		"@swc/core": "^1.16.2",
 		"@swc/jest": "^0.2.39",
 		"@toreda/build-tools": "^0.8.0",
-		"@toreda/eslint-config": "^2.2.0",
+		"@toreda/eslint-config": "^3.1.0",
 		"@toreda/prettier-config": "^1.0.1",
+		"@toreda/shared-types": "^3.0.0",
 		"@toreda/strong-types": "^0.28.5",
-		"@toreda/time": "^0.2.0",
+		"@toreda/time": "^0.3.1",
 		"@toreda/types": "^2.16.0",
 		"@types/babel__traverse": "^7.20.7",
 		"@types/big.js": "^6.2.2",
@@ -61,26 +63,26 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.6",
 		"gulp": "^5.0.1",
-		"jest": "^30.4.2",
-		"jest-cli": "^30.4.2",
+		"jest": "^30.5.1",
+		"jest-cli": "^30.5.1",
 		"jest-junit": "^17.0.0",
-		"madge": "^8.0.0",
 		"prettier": "^3.5.3",
 		"ts-node": "^10.9.2",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typedoc": "~0.28.20",
 		"typedoc-plugin-coverage": "^4.0.3",
 		"typedoc-plugin-extras": "^4.0.1",
 		"typedoc-plugin-include-example": "^3.0.2",
 		"typedoc-plugin-mdn-links": "^3.3.8",
 		"typedoc-plugin-pages": "^1.1.0",
-		"typescript": "^5.9.3",
+		"typescript": "^6.0.3",
 		"unrun": "^0.3.1"
 	},
 	"peerDependencies": {
 		"@toreda/fate": "^0.7.0",
+		"@toreda/shared-types": "^3.0.0",
 		"@toreda/strong-types": "^0.28.5",
-		"@toreda/time": "^0.2.0",
+		"@toreda/time": "^0.3.1",
 		"big.js": "^6.2.1"
 	},
 	"scripts": {
@@ -90,10 +92,6 @@
 		"test": "cross-env COVERAGE=full jest --coverage",
 		"test:ci": "cross-env COVERAGE=full jest --ci --coverage --maxWorkers=50% --reporters=default --reporters=jest-junit",
 		"test:fast": "cross-env COVERAGE=summary jest --bail --coverage",
-		"make:docs": "pnpm typedoc --options ./typedoc.config.js --plugin @8hobbies/typedoc-plugin-404 --plugin @knodes/typedoc-plugin-code-blocks",
-		"make:depgraph": "pnpm madge src/index.ts --image dependency-graph.png"
-	},
-	"dependencies": {
-		"@toreda/shared-types": "^3.0.0"
+		"make:docs": "pnpm typedoc --options ./typedoc.config.js --plugin @8hobbies/typedoc-plugin-404 --plugin @knodes/typedoc-plugin-code-blocks"
 	}
 }

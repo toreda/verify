@@ -4,6 +4,7 @@
 	"compilerOptions": {
 		"allowUnreachableCode": false,
 		"declaration": true,
+		"esModuleInterop": true,
 		"isolatedModules": true,
 		"lib": ["ESNext"],
 		"module": "ESNext",

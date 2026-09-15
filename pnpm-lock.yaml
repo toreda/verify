@@ -30,6 +30,9 @@ importers:
       '@toreda/eslint-config':
         specifier: ^3.1.0
         version: 3.1.0(eslint-config-prettier@10.1.8(eslint@9.39.5(supports-color@8.1.1)))(eslint-plugin-prettier@5.5.6(@types/eslint@9.6.1)(eslint-config-prettier@10.1.8(eslint@9.39.5(supports-color@8.1.1)))(eslint@9.39.5(supports-color@8.1.1))(prettier@3.5.3))(eslint@9.39.5(supports-color@8.1.1))(prettier@3.5.3)(typescript-eslint@8.70.0(eslint@9.39.5(supports-color@8.1.1))(supports-color@8.1.1)(typescript@6.0.3))
+      '@toreda/log':
+        specifier: ^0.6.16
+        version: 0.6.16
       '@toreda/prettier-config':
         specifier: ^1.0.1
         version: 1.0.1
